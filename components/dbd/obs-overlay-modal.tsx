@@ -13,7 +13,7 @@ import {
   Wrench,
   X,
 } from "lucide-react";
-import { useMemo, useRef, useState } from "react";
+import { useId, useMemo, useRef, useState } from "react";
 import { withBasePath } from "@/lib/asset-path";
 import { cn } from "@/lib/cn";
 import { useT, type Lang } from "@/lib/i18n";
@@ -21,6 +21,7 @@ import { getIdForSlug } from "@/lib/perk-ids";
 import { getPerksByRole } from "@/lib/perks";
 import type { TwitchConnectionState, TwitchPermission } from "@/lib/twitch-chat";
 import type { Perk, PerkRole } from "@/lib/types";
+import { ToggleSwitch } from "./toggle-switch";
 import {
   DEFAULT_OBS_OPTIONS,
   MAX_OBS_NAME_SCALE,
@@ -78,6 +79,19 @@ const CANVAS_PRESETS: readonly { width: number; height: number; label: { ru: str
   { width: 800, height: 220, label: { ru: "Компакт", en: "Compact" } },
   { width: 800, height: 340, label: { ru: "С именами", en: "With names" } },
   { width: 1100, height: 420, label: { ru: "Просторно", en: "Roomy" } },
+];
+// Quick presets for the two fine-grained sliders below — most people just
+// want "a bit bigger," not to reason about a raw percentage. The sliders
+// stay for the rare case that needs in-between control.
+const CARD_SIZE_PRESETS: readonly { value: number; label: string }[] = [
+  { value: 75, label: "S" },
+  { value: 100, label: "M" },
+  { value: 150, label: "L" },
+];
+const NAME_WIDTH_PRESETS: readonly { value: number; label: { ru: string; en: string } }[] = [
+  { value: 100, label: { ru: "Обычная", en: "Standard" } },
+  { value: 160, label: { ru: "Шире", en: "Wider" } },
+  { value: 250, label: { ru: "Макс.", en: "Max" } },
 ];
 const PREVIEW_BASE_ICON_PX = 34;
 const PREVIEW_BASE_NAME_MAX_WIDTH_PX = 56;
@@ -153,6 +167,16 @@ export function ObsOverlayModal({
   onTwitchPastePermissionChange: (permission: TwitchPermission) => void;
 }) {
   const t = useT();
+  const titleId = useId();
+  const descId = useId();
+  const cardSizeSliderId = useId();
+  const nameWidthSliderId = useId();
+  const canvasWidthId = useId();
+  // A single shared live region announces whichever copy action just
+  // succeeded — screen reader users get the same "it worked" feedback
+  // sighted users get from the checkmark icon, without needing one
+  // aria-live region per copy button.
+  const [announcement, setAnnouncement] = useState("");
   const [copied, setCopied] = useState(false);
   const [pasteCommandCopied, setPasteCommandCopied] = useState(false);
   const [scale, setScale] = useState(DEFAULT_OBS_OPTIONS.scale);
@@ -193,6 +217,7 @@ export function ObsOverlayModal({
       .writeText(url)
       .then(() => {
         setCopied(true);
+        setAnnouncement(t({ ru: "Ссылка скопирована", en: "Link copied" }));
         setTimeout(() => setCopied(false), 2000);
       })
       .catch(() => {});
@@ -214,6 +239,7 @@ export function ObsOverlayModal({
       .writeText(pasteCommandForBuild)
       .then(() => {
         setPasteCommandCopied(true);
+        setAnnouncement(t({ ru: "Команда скопирована", en: "Command copied" }));
         setTimeout(() => setPasteCommandCopied(false), 2000);
       })
       .catch(() => {});
@@ -258,6 +284,7 @@ export function ObsOverlayModal({
       .writeText(constructorCommand)
       .then(() => {
         setConstructorCopied(true);
+        setAnnouncement(t({ ru: "Команда скопирована", en: "Command copied" }));
         setTimeout(() => setConstructorCopied(false), 2000);
       })
       .catch(() => {});
@@ -303,18 +330,26 @@ export function ObsOverlayModal({
             exit={{ opacity: 0, scale: 0.96, y: 10 }}
             transition={{ type: "spring", stiffness: 400, damping: 34 }}
             onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={titleId}
+            aria-describedby={descId}
             className="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-2xl border border-border bg-surface p-5 shadow-2xl"
           >
+            <div aria-live="polite" className="sr-only">
+              {announcement}
+            </div>
+
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-center gap-2.5">
                 <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-accent/15 text-accent">
                   <MonitorPlay className="size-4.5" />
                 </span>
                 <div>
-                  <p className="font-semibold text-foreground">
+                  <p id={titleId} className="font-semibold text-foreground">
                     {t({ ru: "Оверлей для OBS", en: "OBS Overlay" })}
                   </p>
-                  <p className="text-xs text-muted">
+                  <p id={descId} className="text-xs text-muted">
                     {t({
                       ru: "Прозрачный фон, только карточки перков",
                       en: "Transparent background, perk cards only",
@@ -326,7 +361,7 @@ export function ObsOverlayModal({
                 type="button"
                 onClick={onClose}
                 aria-label={t({ ru: "Закрыть", en: "Close" })}
-                className="flex size-8 shrink-0 items-center justify-center rounded-full text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+                className="flex size-8 shrink-0 items-center justify-center rounded-full text-muted transition-colors hover:bg-surface-hover hover:text-foreground focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:outline-none"
               >
                 <X className="size-4" />
               </button>
@@ -361,13 +396,13 @@ export function ObsOverlayModal({
 
             <div className="mt-4">
               <div className="mb-1.5 flex items-center justify-between">
-                <span className="text-xs font-medium text-muted">
+                <h3 className="text-xs font-medium text-muted">
                   {t({ ru: "Превью — перетащи иконки", en: "Preview — drag the icons" })}
-                </span>
+                </h3>
                 <button
                   type="button"
                   onClick={() => setPositions(null)}
-                  className="flex items-center gap-1 text-[11px] font-medium text-muted transition-colors hover:text-foreground"
+                  className="flex items-center gap-1 text-[11px] font-medium text-muted transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:outline-none"
                 >
                   <RotateCcw className="size-3" />
                   {t({ ru: "Сбросить позиции", en: "Reset positions" })}
@@ -375,24 +410,27 @@ export function ObsOverlayModal({
               </div>
 
               <div className="mb-1.5 flex flex-wrap items-center gap-1.5">
-                <span className="text-[11px] text-muted">
+                <label htmlFor={canvasWidthId} className="text-[11px] text-muted">
                   {t({ ru: "Холст OBS:", en: "OBS canvas:" })}
-                </span>
+                </label>
                 <input
+                  id={canvasWidthId}
                   type="number"
                   min={MIN_CANVAS_WIDTH}
                   max={MAX_CANVAS_WIDTH}
                   value={canvasWidth}
                   onChange={(e) => updateCanvasWidth(Number(e.target.value))}
+                  aria-label={t({ ru: "Ширина холста, пикселей", en: "Canvas width, pixels" })}
                   className="w-16 rounded-full border border-border bg-background px-2 py-0.5 text-[11px] text-foreground focus:ring-2 focus:ring-accent/40 focus:outline-none"
                 />
-                <span className="text-muted">×</span>
+                <span className="text-muted" aria-hidden>×</span>
                 <input
                   type="number"
                   min={MIN_CANVAS_HEIGHT}
                   max={MAX_CANVAS_HEIGHT}
                   value={canvasHeight}
                   onChange={(e) => updateCanvasHeight(Number(e.target.value))}
+                  aria-label={t({ ru: "Высота холста, пикселей", en: "Canvas height, pixels" })}
                   className="w-16 rounded-full border border-border bg-background px-2 py-0.5 text-[11px] text-foreground focus:ring-2 focus:ring-accent/40 focus:outline-none"
                 />
                 <span className="mx-0.5 h-3.5 w-px bg-border" aria-hidden />
@@ -439,7 +477,7 @@ export function ObsOverlayModal({
                       style={{ left: `${pos.x}%`, top: `${pos.y}%` }}
                     >
                       <span
-                        className="flex items-center justify-center rounded-lg border-2 border-accent bg-black/70 p-0.5 shadow-lg"
+                        className="flex items-center justify-center rounded-lg border-2 border-white/25 bg-black/70 p-0.5 shadow-lg"
                         style={{ width: previewIconPx + 4, height: previewIconPx + 4 }}
                       >
                         {perk ? (
@@ -480,74 +518,125 @@ export function ObsOverlayModal({
               </p>
             </div>
 
-            <div className="mt-4 flex flex-col gap-3">
-              <div className="flex items-center justify-between gap-3">
-                <span className="text-xs font-medium text-muted">
-                  {t({ ru: "Размер карточек", en: "Card size" })}
-                </span>
-                <span className="text-[11px] text-muted">{scale}%</span>
-              </div>
-              <input
-                type="range"
-                min={MIN_OBS_SCALE}
-                max={MAX_OBS_SCALE}
-                step={5}
-                value={scale}
-                onChange={(e) => setScale(Number(e.target.value))}
-                className="w-full accent-accent"
-              />
+            <div className="mt-5 flex flex-col gap-4">
+              <h3 className="text-xs font-semibold tracking-wide text-muted uppercase">
+                {t({ ru: "Оформление", en: "Appearance" })}
+              </h3>
 
-              <div className="flex items-center justify-between gap-3">
-                <span className="text-xs font-medium text-muted">
-                  {t({ ru: "Ширина имени", en: "Name width" })}
-                </span>
-                <span className="text-[11px] text-muted">{nameScale}%</span>
-              </div>
-              <input
-                type="range"
-                min={MIN_OBS_NAME_SCALE}
-                max={MAX_OBS_NAME_SCALE}
-                step={10}
-                value={nameScale}
-                onChange={(e) => setNameScale(Number(e.target.value))}
-                className="w-full accent-accent"
-                disabled={!showNames}
-              />
-              <p className="-mt-2 text-[11px] text-muted/70">
-                {t({
-                  ru: "Если длинное имя перка обрезается многоточием — увеличь этот ползунок.",
-                  en: "If a long perk name gets cut off with an ellipsis, raise this slider.",
-                })}
-              </p>
-
-              <label className="flex items-center justify-between gap-3 text-xs font-medium text-muted">
-                {t({ ru: "Показывать названия перков", en: "Show perk names" })}
+              <div className="flex flex-col gap-1.5">
+                <div className="flex items-center justify-between gap-3">
+                  <label htmlFor={cardSizeSliderId} className="text-xs font-medium text-muted">
+                    {t({ ru: "Размер карточек", en: "Card size" })}
+                  </label>
+                  <span className="text-[11px] tabular-nums text-muted">{scale}%</span>
+                </div>
+                <div className="flex items-center gap-1.5" role="group" aria-label={t({ ru: "Быстрый выбор размера", en: "Quick size presets" })}>
+                  {CARD_SIZE_PRESETS.map((preset) => (
+                    <button
+                      key={preset.value}
+                      type="button"
+                      onClick={() => setScale(preset.value)}
+                      aria-pressed={scale === preset.value}
+                      className={cn(
+                        "flex-1 rounded-full border px-2 py-1 text-[11px] font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:outline-none",
+                        scale === preset.value
+                          ? "border-accent/50 bg-accent/15 text-accent"
+                          : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
+                      )}
+                    >
+                      {preset.label}
+                    </button>
+                  ))}
+                </div>
                 <input
-                  type="checkbox"
+                  id={cardSizeSliderId}
+                  type="range"
+                  min={MIN_OBS_SCALE}
+                  max={MAX_OBS_SCALE}
+                  step={5}
+                  value={scale}
+                  onChange={(e) => setScale(Number(e.target.value))}
+                  aria-label={t({ ru: "Размер карточек, точная настройка", en: "Card size, fine adjustment" })}
+                  className="w-full accent-accent"
+                />
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <div className="flex items-center justify-between gap-3">
+                  <label
+                    htmlFor={nameWidthSliderId}
+                    className={cn("text-xs font-medium text-muted", !showNames && "opacity-40")}
+                  >
+                    {t({ ru: "Ширина имени", en: "Name width" })}
+                  </label>
+                  <span className={cn("text-[11px] tabular-nums text-muted", !showNames && "opacity-40")}>
+                    {nameScale}%
+                  </span>
+                </div>
+                <div
+                  className="flex items-center gap-1.5"
+                  role="group"
+                  aria-label={t({ ru: "Быстрый выбор ширины имени", en: "Quick name-width presets" })}
+                >
+                  {NAME_WIDTH_PRESETS.map((preset) => (
+                    <button
+                      key={preset.value}
+                      type="button"
+                      onClick={() => setNameScale(preset.value)}
+                      disabled={!showNames}
+                      aria-pressed={nameScale === preset.value}
+                      className={cn(
+                        "flex-1 rounded-full border px-2 py-1 text-[11px] font-medium transition-colors disabled:pointer-events-none disabled:opacity-40",
+                        nameScale === preset.value
+                          ? "border-accent/50 bg-accent/15 text-accent"
+                          : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
+                      )}
+                    >
+                      {t(preset.label)}
+                    </button>
+                  ))}
+                </div>
+                <input
+                  id={nameWidthSliderId}
+                  type="range"
+                  min={MIN_OBS_NAME_SCALE}
+                  max={MAX_OBS_NAME_SCALE}
+                  step={10}
+                  value={nameScale}
+                  onChange={(e) => setNameScale(Number(e.target.value))}
+                  disabled={!showNames}
+                  aria-label={t({ ru: "Ширина имени, точная настройка", en: "Name width, fine adjustment" })}
+                  className="w-full accent-accent"
+                />
+                <p className="text-[11px] text-muted/70">
+                  {t({
+                    ru: "Имена переносятся на 2 строки — раздвинь, если и так не помещаются.",
+                    en: "Names wrap onto 2 lines — widen this if they still don't fit.",
+                  })}
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-3">
+                <ToggleSwitch
                   checked={showNames}
-                  onChange={(e) => setShowNames(e.target.checked)}
-                  className="size-4 accent-accent"
+                  onChange={() => setShowNames((v) => !v)}
+                  label={t({ ru: "Показывать названия перков", en: "Show perk names" })}
                 />
-              </label>
-
-              <label className="flex items-center justify-between gap-3 text-xs font-medium text-muted">
-                {t({
-                  ru: "Тёмный фон вместо прозрачного",
-                  en: "Dark background instead of transparent",
-                })}
-                <input
-                  type="checkbox"
+                <ToggleSwitch
                   checked={darkBg}
-                  onChange={(e) => setDarkBg(e.target.checked)}
-                  className="size-4 accent-accent"
+                  onChange={() => setDarkBg((v) => !v)}
+                  label={t({
+                    ru: "Тёмный фон вместо прозрачного",
+                    en: "Dark background instead of transparent",
+                  })}
                 />
-              </label>
+              </div>
             </div>
 
             <div className="mt-4 rounded-xl border border-border bg-background/60 p-3.5">
-              <p className="mb-2 text-xs font-semibold tracking-wide text-muted uppercase">
+              <h3 className="mb-2 text-xs font-semibold tracking-wide text-muted uppercase">
                 {t({ ru: "Настройка в OBS", en: "OBS setup" })}
-              </p>
+              </h3>
               <ol className="list-inside list-decimal space-y-1 text-sm text-muted">
                 <li>
                   {t({
@@ -581,9 +670,9 @@ export function ObsOverlayModal({
             <div className="mt-4 rounded-xl border border-border bg-background/60 p-3.5">
               <div className="mb-2 flex items-center gap-2">
                 <MessageCircle className="size-3.5 text-muted" />
-                <p className="text-xs font-semibold tracking-wide text-muted uppercase">
+                <h3 className="text-xs font-semibold tracking-wide text-muted uppercase">
                   {t({ ru: "Управление из чата Twitch", en: "Control from Twitch chat" })}
-                </p>
+                </h3>
               </div>
               <p className="mb-3 text-xs text-muted/80">
                 {t({
@@ -592,12 +681,13 @@ export function ObsOverlayModal({
                 })}
               </p>
               <div className="flex items-center gap-2">
-                <span className="text-muted">#</span>
+                <span className="text-muted" aria-hidden>#</span>
                 <input
                   type="text"
                   value={twitchChannel}
                   onChange={(e) => onTwitchChannelChange(e.target.value)}
                   placeholder={t({ ru: "имя_канала", en: "channel_name" })}
+                  aria-label={t({ ru: "Имя канала Twitch", en: "Twitch channel name" })}
                   className="min-w-0 flex-1 rounded-full border border-border bg-background px-3 py-1.5 text-xs text-foreground placeholder:text-muted/60 focus:ring-2 focus:ring-accent/40 focus:outline-none"
                 />
                 <label className="flex shrink-0 items-center gap-1.5 text-xs font-medium text-muted">
@@ -641,6 +731,7 @@ export function ObsOverlayModal({
                         value={twitchRerollCommand}
                         onChange={(e) => onTwitchRerollCommandChange(e.target.value)}
                         placeholder="!reroll"
+                        aria-label={t({ ru: "Команда реролла", en: "Reroll command" })}
                         className="w-24 rounded-full border border-border bg-background px-2.5 py-1 text-[11px] text-foreground placeholder:text-muted/60 focus:ring-2 focus:ring-accent/40 focus:outline-none"
                       />
                       <PermissionSelect
@@ -654,6 +745,7 @@ export function ObsOverlayModal({
                           max={300}
                           value={twitchCooldownSec}
                           onChange={(e) => onTwitchCooldownSecChange(Number(e.target.value))}
+                          aria-label={t({ ru: "Кулдаун реролла, секунд", en: "Reroll cooldown, seconds" })}
                           className="w-14 rounded-full border border-border bg-background px-2 py-1 text-[11px] text-foreground focus:ring-2 focus:ring-accent/40 focus:outline-none"
                         />
                         <span className="text-[11px] text-muted">
@@ -684,6 +776,7 @@ export function ObsOverlayModal({
                             value={twitchPasteCommand}
                             onChange={(e) => onTwitchPasteCommandChange(e.target.value)}
                             placeholder="!paste"
+                            aria-label={t({ ru: "Команда вставки билда", en: "Paste-build command" })}
                             className="w-24 rounded-full border border-border bg-background px-2.5 py-1 text-[11px] text-foreground placeholder:text-muted/60 focus:ring-2 focus:ring-accent/40 focus:outline-none"
                           />
                           <PermissionSelect
@@ -810,6 +903,7 @@ export function ObsOverlayModal({
                                   value={constructorSearch}
                                   onChange={(e) => setConstructorSearch(e.target.value)}
                                   placeholder={t({ ru: "Поиск перка…", en: "Search perks…" })}
+                                  aria-label={t({ ru: "Поиск перка", en: "Search perks" })}
                                   className="w-full rounded-full border border-border bg-background py-1.5 pr-3 pl-7 text-[11px] text-foreground placeholder:text-muted/60 focus:ring-2 focus:ring-accent/40 focus:outline-none"
                                 />
                               </div>
