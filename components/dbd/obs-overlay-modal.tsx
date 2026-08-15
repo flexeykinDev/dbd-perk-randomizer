@@ -1,10 +1,11 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Check, Copy, ExternalLink, MonitorPlay, X } from "lucide-react";
+import { Check, Copy, ExternalLink, MessageCircle, MonitorPlay, X } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/cn";
 import { useT } from "@/lib/i18n";
+import type { TwitchConnectionState } from "@/lib/twitch-chat";
 import { DEFAULT_OBS_OPTIONS, obsOverlayUrl, type ObsCardSize } from "@/lib/use-obs-mode";
 
 const SIZE_LABEL: Record<ObsCardSize, { ru: string; en: string }> = {
@@ -13,7 +14,37 @@ const SIZE_LABEL: Record<ObsCardSize, { ru: string; en: string }> = {
   lg: { ru: "Крупный", en: "Large" },
 };
 
-export function ObsOverlayModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+const TWITCH_STATE_LABEL: Record<TwitchConnectionState, { ru: string; en: string }> = {
+  disconnected: { ru: "Отключено", en: "Disconnected" },
+  connecting: { ru: "Подключение…", en: "Connecting…" },
+  connected: { ru: "Подключено", en: "Connected" },
+  error: { ru: "Ошибка подключения", en: "Connection error" },
+};
+
+const TWITCH_STATE_DOT: Record<TwitchConnectionState, string> = {
+  disconnected: "bg-muted",
+  connecting: "bg-amber-400 animate-pulse",
+  connected: "bg-emerald-400",
+  error: "bg-red-500",
+};
+
+export function ObsOverlayModal({
+  open,
+  onClose,
+  twitchChannel,
+  twitchEnabled,
+  twitchState,
+  onTwitchChannelChange,
+  onTwitchToggle,
+}: {
+  open: boolean;
+  onClose: () => void;
+  twitchChannel: string;
+  twitchEnabled: boolean;
+  twitchState: TwitchConnectionState;
+  onTwitchChannelChange: (channel: string) => void;
+  onTwitchToggle: (enabled: boolean) => void;
+}) {
   const t = useT();
   const [copied, setCopied] = useState(false);
   const [size, setSize] = useState<ObsCardSize>(DEFAULT_OBS_OPTIONS.size);
@@ -184,6 +215,47 @@ export function ObsOverlayModal({ open, onClose }: { open: boolean; onClose: () 
                 en: "Keep the main site tab open — the overlay just mirrors whatever build is showing there.",
               })}
             </p>
+
+            <div className="mt-4 rounded-xl border border-border bg-background/60 p-3.5">
+              <div className="mb-2 flex items-center gap-2">
+                <MessageCircle className="size-3.5 text-muted" />
+                <p className="text-xs font-semibold tracking-wide text-muted uppercase">
+                  {t({ ru: "Реролл из чата Twitch", en: "Reroll from Twitch chat" })}
+                </p>
+              </div>
+              <p className="mb-3 text-xs text-muted/80">
+                {t({
+                  ru: "Читает публичный чат канала анонимно (без входа в Twitch) и жмёт «Сгенерировать», когда кто-то пишет !reroll — не чаще раза в 4 секунды.",
+                  en: "Reads the channel's public chat anonymously (no Twitch login) and hits Generate whenever someone types !reroll — at most once every 4 seconds.",
+                })}
+              </p>
+              <div className="flex items-center gap-2">
+                <span className="text-muted">#</span>
+                <input
+                  type="text"
+                  value={twitchChannel}
+                  onChange={(e) => onTwitchChannelChange(e.target.value)}
+                  placeholder={t({ ru: "имя_канала", en: "channel_name" })}
+                  className="min-w-0 flex-1 rounded-full border border-border bg-background px-3 py-1.5 text-xs text-foreground placeholder:text-muted/60 focus:ring-2 focus:ring-accent/40 focus:outline-none"
+                />
+                <label className="flex shrink-0 items-center gap-1.5 text-xs font-medium text-muted">
+                  <input
+                    type="checkbox"
+                    checked={twitchEnabled}
+                    disabled={!twitchChannel.trim()}
+                    onChange={(e) => onTwitchToggle(e.target.checked)}
+                    className="size-4 accent-accent disabled:opacity-40"
+                  />
+                  {t({ ru: "Вкл", en: "On" })}
+                </label>
+              </div>
+              {twitchEnabled && (
+                <p className="mt-2 flex items-center gap-1.5 text-[11px] text-muted">
+                  <span className={cn("size-1.5 rounded-full", TWITCH_STATE_DOT[twitchState])} />
+                  {t(TWITCH_STATE_LABEL[twitchState])}
+                </p>
+              )}
+            </div>
           </motion.div>
         </motion.div>
       )}

@@ -31,6 +31,7 @@ import { recordRoll } from "@/lib/stats";
 import { getIdForSlug, getSlugForId } from "@/lib/perk-ids";
 import { safeGet, safeGetJSON, safeSet, safeSetJSON } from "@/lib/safe-storage";
 import { publishObsState } from "@/lib/obs-sync";
+import { connectTwitchChat, type TwitchConnectionState } from "@/lib/twitch-chat";
 import { PerkGrid } from "./perk-grid";
 import { CopyToast } from "./copy-toast";
 import { ExcludePanel } from "./exclude-panel";
@@ -45,6 +46,8 @@ const EXCLUDED_STORAGE_KEY = "dbd-randomizer:excluded-perks";
 const FAVORITE_STORAGE_KEY = "dbd-randomizer:favorite-perks";
 const PERK_COUNT_STORAGE_KEY = "dbd-randomizer:perk-count";
 const BR_STORAGE_KEY = "dbd-randomizer:battle-royale";
+const TWITCH_CHANNEL_STORAGE_KEY = "dbd-randomizer:twitch-channel";
+const TWITCH_ENABLED_STORAGE_KEY = "dbd-randomizer:twitch-enabled";
 const ROLE_LABEL: Record<PerkRole, { ru: string; en: string }> = {
   survivor: { ru: "выжившего", en: "survivor" },
   killer: { ru: "убийцы", en: "killer" },
@@ -181,6 +184,9 @@ export function RandomizerBoard() {
   // distinct from the pool manager's exclusions, which are a deliberate,
   // saved choice. "themeTag: null" means no filter, i.e. the full role pool.
   const [themeTag, setThemeTag] = useState<string | null>(null);
+  const [twitchChannel, setTwitchChannel] = useState("");
+  const [twitchEnabled, setTwitchEnabled] = useState(false);
+  const [twitchState, setTwitchState] = useState<TwitchConnectionState>("disconnected");
 
   const activeSeed =
     seedMode === "daily" ? dailyChallengeSeed(role) : seedMode === "custom" ? activeCustomSeed : null;
@@ -211,6 +217,12 @@ export function RandomizerBoard() {
       if (br.active) {
         setBattleRoyale(true);
         setBattleRoyaleUsed(new Set(br.used));
+      }
+
+      const savedChannel = safeGet("local", TWITCH_CHANNEL_STORAGE_KEY) ?? "";
+      setTwitchChannel(savedChannel);
+      if (safeGet("local", TWITCH_ENABLED_STORAGE_KEY) === "1" && savedChannel) {
+        setTwitchEnabled(true);
       }
     }
     applyInitialClientState();
@@ -337,6 +349,33 @@ export function RandomizerBoard() {
     setNonce((n) => n + 1);
   }, [battleRoyale, eliminateCurrentBuild]);
 
+  // `regenerate`'s identity changes on every roll (it depends on
+  // eliminateCurrentBuild, which depends on `perks`) — if the Twitch effect
+  // below depended on it directly, the chat connection would disconnect and
+  // reconnect on every single generate. A ref sidesteps that: the effect
+  // only depends on twitchEnabled/twitchChannel, and always calls whatever
+  // regenerate currently is via the ref.
+  const regenerateRef = useRef(regenerate);
+  useEffect(() => {
+    regenerateRef.current = regenerate;
+  }, [regenerate]);
+
+  useEffect(() => {
+    function markDisconnected() {
+      setTwitchState("disconnected");
+    }
+    if (!mounted || !twitchEnabled || !twitchChannel.trim()) {
+      markDisconnected();
+      return;
+    }
+    const disconnect = connectTwitchChat({
+      channel: twitchChannel,
+      onCommand: () => regenerateRef.current(),
+      onStateChange: setTwitchState,
+    });
+    return disconnect;
+  }, [mounted, twitchEnabled, twitchChannel]);
+
   // Spacebar/Enter triggers Generate from anywhere on the page — except
   // while the user is typing (the seed input) or a modal is open, where
   // those keys already mean something else (confirm a dialog, type a
@@ -419,6 +458,16 @@ export function RandomizerBoard() {
       safeSetJSON("local", FAVORITE_STORAGE_KEY, [...next]);
       return next;
     });
+  }
+
+  function updateTwitchChannel(channel: string) {
+    setTwitchChannel(channel);
+    safeSet("local", TWITCH_CHANNEL_STORAGE_KEY, channel);
+  }
+
+  function toggleTwitch(enabled: boolean) {
+    setTwitchEnabled(enabled);
+    safeSet("local", TWITCH_ENABLED_STORAGE_KEY, enabled ? "1" : "0");
   }
 
   function showToast(message: string) {
@@ -901,7 +950,15 @@ export function RandomizerBoard() {
         version={statsVersion}
       />
 
-      <ObsOverlayModal open={obsModalOpen} onClose={() => setObsModalOpen(false)} />
+      <ObsOverlayModal
+        open={obsModalOpen}
+        onClose={() => setObsModalOpen(false)}
+        twitchChannel={twitchChannel}
+        twitchEnabled={twitchEnabled}
+        twitchState={twitchState}
+        onTwitchChannelChange={updateTwitchChannel}
+        onTwitchToggle={toggleTwitch}
+      />
 
       <CopyToast message={toast} />
     </div>
