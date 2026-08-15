@@ -9,6 +9,8 @@ import {
   MessageCircle,
   MonitorPlay,
   RotateCcw,
+  Search,
+  Wrench,
   X,
 } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
@@ -16,8 +18,9 @@ import { withBasePath } from "@/lib/asset-path";
 import { cn } from "@/lib/cn";
 import { useT, type Lang } from "@/lib/i18n";
 import { getIdForSlug } from "@/lib/perk-ids";
+import { getPerksByRole } from "@/lib/perks";
 import type { TwitchConnectionState, TwitchPermission } from "@/lib/twitch-chat";
-import type { Perk } from "@/lib/types";
+import type { Perk, PerkRole } from "@/lib/types";
 import {
   DEFAULT_OBS_OPTIONS,
   MAX_OBS_NAME_SCALE,
@@ -94,6 +97,7 @@ export function ObsOverlayModal({
   onClose,
   perks,
   language,
+  role,
   twitchChannel,
   twitchEnabled,
   twitchState,
@@ -116,6 +120,7 @@ export function ObsOverlayModal({
   onClose: () => void;
   perks: Perk[];
   language: Lang;
+  role: PerkRole;
   twitchChannel: string;
   twitchEnabled: boolean;
   twitchState: TwitchConnectionState;
@@ -145,6 +150,11 @@ export function ObsOverlayModal({
   // row. Set the first time the user drags any icon in the preview below.
   const [positions, setPositions] = useState<ObsIconPosition[] | null>(null);
   const [twitchAdvancedOpen, setTwitchAdvancedOpen] = useState(false);
+  const [constructorOpen, setConstructorOpen] = useState(false);
+  const [constructorRole, setConstructorRole] = useState<PerkRole>(role);
+  const [constructorSearch, setConstructorSearch] = useState("");
+  const [constructorSelected, setConstructorSelected] = useState<Perk[]>([]);
+  const [constructorCopied, setConstructorCopied] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
 
   // Only computed while actually open — obsOverlayUrl() creates a room code
@@ -190,6 +200,50 @@ export function ObsOverlayModal({
       .then(() => {
         setPasteCommandCopied(true);
         setTimeout(() => setPasteCommandCopied(false), 2000);
+      })
+      .catch(() => {});
+  }
+
+  // A sandbox for building a !paste command from scratch — independent of
+  // whatever build happens to be showing on the main site right now, e.g.
+  // to prepare an announcement build ahead of time. Perks toggle in/out of
+  // a 4-slot selection; switching role clears it since a build can't mix
+  // survivor and killer perks.
+  const constructorPerks = useMemo(() => getPerksByRole(constructorRole), [constructorRole]);
+  const constructorFiltered = useMemo(() => {
+    const query = constructorSearch.trim().toLowerCase();
+    if (!query) return constructorPerks;
+    return constructorPerks.filter((perk) =>
+      `${perk.name.en} ${perk.name.ru}`.toLowerCase().includes(query),
+    );
+  }, [constructorPerks, constructorSearch]);
+
+  function toggleConstructorPerk(perk: Perk) {
+    setConstructorSelected((prev) => {
+      if (prev.some((p) => p.slug === perk.slug)) return prev.filter((p) => p.slug !== perk.slug);
+      if (prev.length >= 4) return prev;
+      return [...prev, perk];
+    });
+  }
+
+  function setConstructorRoleAndClear(nextRole: PerkRole) {
+    setConstructorRole(nextRole);
+    setConstructorSelected([]);
+  }
+
+  const constructorCommand = useMemo(() => {
+    const ids = constructorSelected.map((p) => getIdForSlug(p.slug)).filter((id): id is number => id !== undefined);
+    if (ids.length === 0) return null;
+    return `${twitchPasteCommand.trim() || "!paste"} ${ids.join(",")}`;
+  }, [constructorSelected, twitchPasteCommand]);
+
+  function handleCopyConstructorCommand() {
+    if (!constructorCommand) return;
+    navigator.clipboard
+      .writeText(constructorCommand)
+      .then(() => {
+        setConstructorCopied(true);
+        setTimeout(() => setConstructorCopied(false), 2000);
       })
       .catch(() => {});
   }
@@ -603,6 +657,146 @@ export function ObsOverlayModal({
                             </div>
                           </div>
                         )}
+
+                        <div className="pl-5">
+                          <button
+                            type="button"
+                            onClick={() => setConstructorOpen((v) => !v)}
+                            className="flex items-center gap-1.5 text-[11px] font-medium text-accent transition-colors hover:text-accent/80"
+                          >
+                            <Wrench className="size-3" />
+                            {t({ ru: "Собрать билд вручную", en: "Build one from scratch" })}
+                            <ChevronDown
+                              className={cn("size-3 transition-transform", constructorOpen && "rotate-180")}
+                            />
+                          </button>
+
+                          {constructorOpen && (
+                            <div className="mt-2 flex flex-col gap-2 rounded-lg border border-border bg-background/60 p-2.5">
+                              <div className="flex items-center gap-1.5">
+                                {(["survivor", "killer"] as const).map((option) => (
+                                  <button
+                                    key={option}
+                                    type="button"
+                                    onClick={() => setConstructorRoleAndClear(option)}
+                                    className={cn(
+                                      "rounded-full border px-2.5 py-1 text-[11px] font-medium transition-colors",
+                                      constructorRole === option
+                                        ? "border-accent/50 bg-accent/15 text-accent"
+                                        : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
+                                    )}
+                                  >
+                                    {option === "survivor"
+                                      ? t({ ru: "Выживший", en: "Survivor" })
+                                      : t({ ru: "Убийца", en: "Killer" })}
+                                  </button>
+                                ))}
+                                <span className="ml-auto text-[11px] text-muted">
+                                  {constructorSelected.length}/4
+                                </span>
+                                {constructorSelected.length > 0 && (
+                                  <button
+                                    type="button"
+                                    onClick={() => setConstructorSelected([])}
+                                    className="text-[11px] font-medium text-muted transition-colors hover:text-foreground"
+                                  >
+                                    {t({ ru: "Очистить", en: "Clear" })}
+                                  </button>
+                                )}
+                              </div>
+
+                              <div className="flex min-h-9 flex-wrap gap-1.5">
+                                {Array.from({ length: 4 }, (_, i) => constructorSelected[i]).map((perk, i) =>
+                                  perk ? (
+                                    <button
+                                      key={perk.slug}
+                                      type="button"
+                                      onClick={() => toggleConstructorPerk(perk)}
+                                      title={perk.name[language]}
+                                      className="relative flex size-9 items-center justify-center rounded-lg border-2 border-accent bg-black/70"
+                                    >
+                                      {/* eslint-disable-next-line @next/next/no-img-element -- tiny selection-slot thumbnail, next/image is overkill here */}
+                                      <img
+                                        src={withBasePath(perk.icon)}
+                                        alt={perk.name[language]}
+                                        width={32}
+                                        height={32}
+                                        className="size-8 rounded object-cover"
+                                      />
+                                      <span className="absolute -top-1.5 -right-1.5 flex size-3.5 items-center justify-center rounded-full bg-red-500 text-white">
+                                        <X className="size-2.5" />
+                                      </span>
+                                    </button>
+                                  ) : (
+                                    <span
+                                      key={`empty-${i}`}
+                                      className="size-9 rounded-lg border-2 border-dashed border-border"
+                                    />
+                                  ),
+                                )}
+                              </div>
+
+                              <div className="relative">
+                                <Search className="pointer-events-none absolute top-1/2 left-2 size-3 -translate-y-1/2 text-muted" />
+                                <input
+                                  type="text"
+                                  value={constructorSearch}
+                                  onChange={(e) => setConstructorSearch(e.target.value)}
+                                  placeholder={t({ ru: "Поиск перка…", en: "Search perks…" })}
+                                  className="w-full rounded-full border border-border bg-background py-1.5 pr-3 pl-7 text-[11px] text-foreground placeholder:text-muted/60 focus:ring-2 focus:ring-accent/40 focus:outline-none"
+                                />
+                              </div>
+
+                              <div className="grid max-h-40 grid-cols-6 gap-1 overflow-y-auto">
+                                {constructorFiltered.map((perk) => {
+                                  const selected = constructorSelected.some((p) => p.slug === perk.slug);
+                                  return (
+                                    <button
+                                      key={perk.slug}
+                                      type="button"
+                                      onClick={() => toggleConstructorPerk(perk)}
+                                      title={perk.name[language]}
+                                      disabled={!selected && constructorSelected.length >= 4}
+                                      className={cn(
+                                        "flex items-center justify-center rounded-lg border-2 p-0.5 transition-colors disabled:cursor-not-allowed disabled:opacity-30",
+                                        selected ? "border-accent" : "border-transparent hover:border-border",
+                                      )}
+                                    >
+                                      {/* eslint-disable-next-line @next/next/no-img-element -- tiny picker thumbnail, next/image is overkill here */}
+                                      <img
+                                        src={withBasePath(perk.icon)}
+                                        alt={perk.name[language]}
+                                        width={30}
+                                        height={30}
+                                        className="size-[30px] rounded object-cover"
+                                      />
+                                    </button>
+                                  );
+                                })}
+                              </div>
+
+                              {constructorCommand && (
+                                <div className="flex items-center gap-1.5 border-t border-border pt-2">
+                                  <code className="min-w-0 flex-1 truncate rounded-full border border-border bg-background px-2.5 py-1 text-[11px] text-foreground">
+                                    {constructorCommand}
+                                  </code>
+                                  <button
+                                    type="button"
+                                    onClick={handleCopyConstructorCommand}
+                                    aria-label={t({ ru: "Скопировать команду", en: "Copy command" })}
+                                    className="flex size-6 shrink-0 items-center justify-center rounded-full border border-border text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+                                  >
+                                    {constructorCopied ? (
+                                      <Check className="size-3 text-accent" />
+                                    ) : (
+                                      <Copy className="size-3" />
+                                    )}
+                                  </button>
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
                       </>
                     )}
                   </div>
