@@ -9,6 +9,7 @@ import { perksMeta } from "@/lib/perks";
 import { useLanguage, useT } from "@/lib/i18n";
 import { useIsObsMode } from "@/lib/use-obs-mode";
 import { registerServiceWorker } from "@/lib/register-sw";
+import { printConsoleBranding } from "@/lib/console-branding";
 import trailer from "@/data/trailer.json";
 
 export function RandomizerContent() {
@@ -18,6 +19,7 @@ export function RandomizerContent() {
 
   useEffect(() => {
     registerServiceWorker();
+    printConsoleBranding();
   }, []);
   const updatedAt = new Date(perksMeta.scrapedAt).toLocaleDateString(
     lang === "ru" ? "ru-RU" : "en-US",

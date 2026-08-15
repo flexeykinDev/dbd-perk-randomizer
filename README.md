@@ -150,6 +150,24 @@ npm run build      # статический экспорт в out/
 npm run test:e2e   # Playwright smoke tests
 ```
 
+## Контрибьютинг
+
+PR'ы и issues приветствуются.
+
+- Перед PR: `npm run lint`, `npm run build` (включает проверку типов) и
+  `npm run test:e2e` должны проходить локально — тот же набор гоняет CI.
+- `data/perks.json`, `data/meta.json`, `data/characters.json`,
+  `data/perk-ids.json` — **генерируются** скрапером (`npm run
+  scrape:perks`), руками их не редактируем — правки затрутся при
+  следующем прогоне.
+- `data/translations.ru.json`, `data/character-translations.ru.json`,
+  `data/description-translations.ru.json` — источник истины для ручных
+  переводов, править можно (и нужно) напрямую. `data/description-ru-raw.json`
+  — тоже генерируется (`npm run sync:descriptions`), но как fallback
+  более низкого приоритета, чем `description-translations.ru.json`.
+- Один PR — одна тема: проще смотреть диф скриншотов/переводов, когда
+  он не перемешан с несвязанным рефакторингом.
+
 ## Деплой
 
 Сайт собирается как статический экспорт (`output: 'export'`) и
@@ -163,3 +181,11 @@ npm run test:e2e   # Playwright smoke tests
 
 Next.js · TypeScript · React · Tailwind CSS · Framer Motion ·
 lucide-react · cheerio + sharp (скрапер)
+
+## Лицензия
+
+[MIT](LICENSE) — код свободен для использования, изменения и
+распространения. Названия, описания, иконки перков и портреты
+персонажей — данные Dead by Daylight, © Behaviour Interactive; сайт
+никак не аффилирован с Behaviour Interactive и существует как фанатский
+инструмент.
