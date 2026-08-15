@@ -319,6 +319,12 @@ export function RandomizerBoard() {
   // Mirrors whatever's currently on screen to the OBS overlay tab, if one's
   // open — see lib/obs-sync.ts. Fires on every display change (regenerate,
   // role switch, seed, shared-build view), same trigger set as stats above.
+  // Also fires when obsModalOpen flips true: opening the modal is what
+  // lazily creates this session's Firebase room code (see
+  // getOrCreateRoomCode), so without this, a build generated *before* the
+  // modal's first-ever open would never get published to that room at
+  // all — the overlay would sit on "waiting for a build" until the next
+  // regenerate, even though a build is already showing on the main page.
   useEffect(() => {
     if (!mounted) return;
     publishObsState({
@@ -326,7 +332,7 @@ export function RandomizerBoard() {
       language,
       perks: perks.map((p) => ({ slug: p.slug, icon: p.icon, name: p.name })),
     });
-  }, [mounted, role, language, perks]);
+  }, [mounted, role, language, perks, obsModalOpen]);
 
   const eliminateCurrentBuild = useCallback(() => {
     if (perks.length === 0) return;

@@ -6,7 +6,7 @@ import { withBasePath } from "@/lib/asset-path";
 import { cn } from "@/lib/cn";
 import { ROLE_COLOR } from "@/lib/role-color";
 import { loadLastObsState, subscribeObsState, type ObsSyncPayload } from "@/lib/obs-sync";
-import { useObsOverlayOptions, type ObsCardSize } from "@/lib/use-obs-mode";
+import { useObsOverlayOptions, useObsRoomCode, type ObsCardSize } from "@/lib/use-obs-mode";
 import { useT } from "@/lib/i18n";
 
 const ICON_SIZE_PX: Record<ObsCardSize, number> = { sm: 60, md: 84, lg: 112 };
@@ -25,6 +25,7 @@ const GAP_CLASS: Record<ObsCardSize, string> = { sm: "gap-2", md: "gap-4", lg: "
 export function ObsOverlay() {
   const t = useT();
   const options = useObsOverlayOptions();
+  const room = useObsRoomCode();
   const [state, setState] = useState<ObsSyncPayload | null>(null);
 
   useEffect(() => {
@@ -32,9 +33,9 @@ export function ObsOverlay() {
       setState(loadLastObsState());
     }
     applyLastKnownState();
-    const unsubscribe = subscribeObsState(setState);
+    const unsubscribe = subscribeObsState(setState, room);
     return unsubscribe;
-  }, []);
+  }, [room]);
 
   useEffect(() => {
     // The page's own background is opaque (see globals.css) — this is the

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { getOrCreateRoomCode } from "./obs-sync";
 
 const OBS_HASH = "#/obs";
 
@@ -25,9 +26,10 @@ const BACKGROUNDS: readonly ObsBackground[] = ["transparent", "dark"];
 /** Reads overlay customization from ordinary query params (e.g.
  *  `?size=lg&names=0#/obs`) rather than localStorage, so the URL alone
  *  fully describes how the overlay renders — it has to work when pasted
- *  into OBS on a machine that's never opened the main site, unlike the
- *  build-mirroring state in lib/obs-sync.ts which reasonably assumes the
- *  main tab and overlay share a browser profile. */
+ *  into OBS on a machine that's never opened the main site. The actual
+ *  build-mirroring state in lib/obs-sync.ts used to assume the main tab and
+ *  overlay share a browser profile too (they don't — see useObsRoomCode
+ *  below), but now bridges across profiles via Firebase. */
 export function useObsOverlayOptions(): ObsOverlayOptions {
   const [options, setOptions] = useState<ObsOverlayOptions>(DEFAULT_OBS_OPTIONS);
 
@@ -74,12 +76,34 @@ export function useIsObsMode(): boolean {
   return isObs;
 }
 
-/** Builds the copyable OBS Browser Source URL. Only non-default options are
- *  written out, so the plain URL (no customization) stays exactly as short
- *  as it was before this existed. */
+/** The OBS overlay's own room code, read from its URL (`?room=...#/obs`) —
+ *  how it finds the right Firebase Realtime Database path to subscribe to
+ *  (see lib/obs-sync.ts) without sharing cookies or localStorage with
+ *  whatever browser generated the link — OBS's Browser Source never does. */
+export function useObsRoomCode(): string | null {
+  const [room, setRoom] = useState<string | null>(null);
+
+  useEffect(() => {
+    function applyFromUrl() {
+      setRoom(new URLSearchParams(window.location.search).get("room"));
+    }
+    applyFromUrl();
+    window.addEventListener("hashchange", applyFromUrl);
+    return () => window.removeEventListener("hashchange", applyFromUrl);
+  }, []);
+
+  return room;
+}
+
+/** Builds the copyable OBS Browser Source URL. Always carries a `room` code
+ *  (creating one on first call, see getOrCreateRoomCode) since that's what
+ *  lets the overlay receive updates when it's running in OBS's own
+ *  isolated browser profile — everything else is only written out when
+ *  non-default, so a plain link with no customization stays short. */
 export function obsOverlayUrl(options: Partial<ObsOverlayOptions> = {}): string {
   if (typeof window === "undefined") return OBS_HASH;
   const params = new URLSearchParams();
+  params.set("room", getOrCreateRoomCode());
   if (options.size && options.size !== DEFAULT_OBS_OPTIONS.size) params.set("size", options.size);
   if (options.showNames === false) params.set("names", "0");
   if (options.background && options.background !== DEFAULT_OBS_OPTIONS.background) {

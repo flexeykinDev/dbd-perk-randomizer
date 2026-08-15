@@ -50,7 +50,13 @@ export function ObsOverlayModal({
   const [size, setSize] = useState<ObsCardSize>(DEFAULT_OBS_OPTIONS.size);
   const [showNames, setShowNames] = useState(DEFAULT_OBS_OPTIONS.showNames);
   const [darkBg, setDarkBg] = useState(DEFAULT_OBS_OPTIONS.background === "dark");
-  const url = obsOverlayUrl({ size, showNames, background: darkBg ? "dark" : "transparent" });
+  // Only computed while actually open — obsOverlayUrl() creates a room code
+  // as a side effect (see getOrCreateRoomCode), and this component stays
+  // mounted (just hidden) while closed, including briefly on every normal
+  // page load before useIsObsMode() corrects itself. Computing it
+  // unconditionally would silently mint/overwrite a room code on every
+  // visit to the site, not just when someone actually opens this modal.
+  const url = open ? obsOverlayUrl({ size, showNames, background: darkBg ? "dark" : "transparent" }) : "";
 
   function handleCopy() {
     navigator.clipboard
