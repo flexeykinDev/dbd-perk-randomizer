@@ -1,11 +1,19 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Check, Copy, ExternalLink, MessageCircle, MonitorPlay, X } from "lucide-react";
+import {
+  Check,
+  ChevronDown,
+  Copy,
+  ExternalLink,
+  MessageCircle,
+  MonitorPlay,
+  X,
+} from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/cn";
 import { useT } from "@/lib/i18n";
-import type { TwitchConnectionState } from "@/lib/twitch-chat";
+import type { TwitchConnectionState, TwitchPermission } from "@/lib/twitch-chat";
 import { DEFAULT_OBS_OPTIONS, obsOverlayUrl, type ObsCardSize } from "@/lib/use-obs-mode";
 
 const SIZE_LABEL: Record<ObsCardSize, { ru: string; en: string }> = {
@@ -28,6 +36,35 @@ const TWITCH_STATE_DOT: Record<TwitchConnectionState, string> = {
   error: "bg-red-500",
 };
 
+const PERMISSION_LABEL: Record<TwitchPermission, { ru: string; en: string }> = {
+  everyone: { ru: "Все в чате", en: "Everyone in chat" },
+  subs_vips: { ru: "Только подписчики/VIP", en: "Subs/VIPs only" },
+  mods: { ru: "Только модераторы", en: "Moderators only" },
+};
+
+function PermissionSelect({
+  value,
+  onChange,
+}: {
+  value: TwitchPermission;
+  onChange: (value: TwitchPermission) => void;
+}) {
+  const t = useT();
+  return (
+    <select
+      value={value}
+      onChange={(e) => onChange(e.target.value as TwitchPermission)}
+      className="rounded-full border border-border bg-background px-2.5 py-1 text-[11px] text-foreground focus:ring-2 focus:ring-accent/40 focus:outline-none"
+    >
+      {(["everyone", "subs_vips", "mods"] as const).map((option) => (
+        <option key={option} value={option}>
+          {t(PERMISSION_LABEL[option])}
+        </option>
+      ))}
+    </select>
+  );
+}
+
 export function ObsOverlayModal({
   open,
   onClose,
@@ -36,6 +73,18 @@ export function ObsOverlayModal({
   twitchState,
   onTwitchChannelChange,
   onTwitchToggle,
+  twitchRerollCommand,
+  twitchRerollPermission,
+  twitchCooldownSec,
+  twitchPasteEnabled,
+  twitchPasteCommand,
+  twitchPastePermission,
+  onTwitchRerollCommandChange,
+  onTwitchRerollPermissionChange,
+  onTwitchCooldownSecChange,
+  onTwitchPasteToggle,
+  onTwitchPasteCommandChange,
+  onTwitchPastePermissionChange,
 }: {
   open: boolean;
   onClose: () => void;
@@ -44,12 +93,25 @@ export function ObsOverlayModal({
   twitchState: TwitchConnectionState;
   onTwitchChannelChange: (channel: string) => void;
   onTwitchToggle: (enabled: boolean) => void;
+  twitchRerollCommand: string;
+  twitchRerollPermission: TwitchPermission;
+  twitchCooldownSec: number;
+  twitchPasteEnabled: boolean;
+  twitchPasteCommand: string;
+  twitchPastePermission: TwitchPermission;
+  onTwitchRerollCommandChange: (command: string) => void;
+  onTwitchRerollPermissionChange: (permission: TwitchPermission) => void;
+  onTwitchCooldownSecChange: (seconds: number) => void;
+  onTwitchPasteToggle: (enabled: boolean) => void;
+  onTwitchPasteCommandChange: (command: string) => void;
+  onTwitchPastePermissionChange: (permission: TwitchPermission) => void;
 }) {
   const t = useT();
   const [copied, setCopied] = useState(false);
   const [size, setSize] = useState<ObsCardSize>(DEFAULT_OBS_OPTIONS.size);
   const [showNames, setShowNames] = useState(DEFAULT_OBS_OPTIONS.showNames);
   const [darkBg, setDarkBg] = useState(DEFAULT_OBS_OPTIONS.background === "dark");
+  const [twitchAdvancedOpen, setTwitchAdvancedOpen] = useState(false);
   // Only computed while actually open — obsOverlayUrl() creates a room code
   // as a side effect (see getOrCreateRoomCode), and this component stays
   // mounted (just hidden) while closed, including briefly on every normal
@@ -84,7 +146,7 @@ export function ObsOverlayModal({
             exit={{ opacity: 0, scale: 0.96, y: 10 }}
             transition={{ type: "spring", stiffness: 400, damping: 34 }}
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-md rounded-2xl border border-border bg-surface p-5 shadow-2xl"
+            className="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-2xl border border-border bg-surface p-5 shadow-2xl"
           >
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-center gap-2.5">
@@ -226,13 +288,13 @@ export function ObsOverlayModal({
               <div className="mb-2 flex items-center gap-2">
                 <MessageCircle className="size-3.5 text-muted" />
                 <p className="text-xs font-semibold tracking-wide text-muted uppercase">
-                  {t({ ru: "Реролл из чата Twitch", en: "Reroll from Twitch chat" })}
+                  {t({ ru: "Управление из чата Twitch", en: "Control from Twitch chat" })}
                 </p>
               </div>
               <p className="mb-3 text-xs text-muted/80">
                 {t({
-                  ru: "Читает публичный чат канала анонимно (без входа в Twitch) и жмёт «Сгенерировать», когда кто-то пишет !reroll — не чаще раза в 4 секунды.",
-                  en: "Reads the channel's public chat anonymously (no Twitch login) and hits Generate whenever someone types !reroll — at most once every 4 seconds.",
+                  ru: "Читает публичный чат канала анонимно (без входа в Twitch).",
+                  en: "Reads the channel's public chat anonymously (no Twitch login).",
                 })}
               </p>
               <div className="flex items-center gap-2">
@@ -260,6 +322,98 @@ export function ObsOverlayModal({
                   <span className={cn("size-1.5 rounded-full", TWITCH_STATE_DOT[twitchState])} />
                   {t(TWITCH_STATE_LABEL[twitchState])}
                 </p>
+              )}
+
+              <button
+                type="button"
+                onClick={() => setTwitchAdvancedOpen((v) => !v)}
+                className="mt-3 flex w-full items-center justify-between text-[11px] font-medium text-muted transition-colors hover:text-foreground"
+              >
+                {t({ ru: "Команды и права доступа", en: "Commands & permissions" })}
+                <ChevronDown
+                  className={cn("size-3.5 transition-transform", twitchAdvancedOpen && "rotate-180")}
+                />
+              </button>
+
+              {twitchAdvancedOpen && (
+                <div className="mt-3 flex flex-col gap-3 border-t border-border pt-3">
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-[11px] font-medium text-muted">
+                      {t({ ru: "Реролл — команда", en: "Reroll — command" })}
+                    </span>
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <input
+                        type="text"
+                        value={twitchRerollCommand}
+                        onChange={(e) => onTwitchRerollCommandChange(e.target.value)}
+                        placeholder="!reroll"
+                        className="w-24 rounded-full border border-border bg-background px-2.5 py-1 text-[11px] text-foreground placeholder:text-muted/60 focus:ring-2 focus:ring-accent/40 focus:outline-none"
+                      />
+                      <PermissionSelect
+                        value={twitchRerollPermission}
+                        onChange={onTwitchRerollPermissionChange}
+                      />
+                      <div className="flex items-center gap-1">
+                        <input
+                          type="number"
+                          min={1}
+                          max={300}
+                          value={twitchCooldownSec}
+                          onChange={(e) => onTwitchCooldownSecChange(Number(e.target.value))}
+                          className="w-14 rounded-full border border-border bg-background px-2 py-1 text-[11px] text-foreground focus:ring-2 focus:ring-accent/40 focus:outline-none"
+                        />
+                        <span className="text-[11px] text-muted">
+                          {t({ ru: "сек. кулдаун", en: "sec cooldown" })}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label className="flex items-center gap-1.5 text-[11px] font-medium text-muted">
+                      <input
+                        type="checkbox"
+                        checked={twitchPasteEnabled}
+                        onChange={(e) => onTwitchPasteToggle(e.target.checked)}
+                        className="size-3.5 accent-accent"
+                      />
+                      {t({
+                        ru: "Команда «вставить билд по коду» (для саб/VIP)",
+                        en: "\"Paste a build by code\" command (for subs/VIPs)",
+                      })}
+                    </label>
+                    {twitchPasteEnabled && (
+                      <>
+                        <div className="flex flex-wrap items-center gap-1.5 pl-5">
+                          <input
+                            type="text"
+                            value={twitchPasteCommand}
+                            onChange={(e) => onTwitchPasteCommandChange(e.target.value)}
+                            placeholder="!paste"
+                            className="w-24 rounded-full border border-border bg-background px-2.5 py-1 text-[11px] text-foreground placeholder:text-muted/60 focus:ring-2 focus:ring-accent/40 focus:outline-none"
+                          />
+                          <PermissionSelect
+                            value={twitchPastePermission}
+                            onChange={onTwitchPastePermissionChange}
+                          />
+                        </div>
+                        <p className="pl-5 text-[11px] text-muted/70">
+                          {t({
+                            ru: 'Пример: "!paste 42,105,12,8" — числа берутся из ссылки Поделиться на сайте.',
+                            en: 'Example: "!paste 42,105,12,8" — the numbers come from the site\'s Share link.',
+                          })}
+                        </p>
+                      </>
+                    )}
+                  </div>
+
+                  <p className="text-[11px] text-muted/60">
+                    {t({
+                      ru: "Twitch не даёт напрямую узнать «донатер» из чата — саб/VIP статус ближе всего к этому и виден в самом чате.",
+                      en: "Twitch's chat itself has no notion of \"donator\" — sub/VIP status is the closest thing visible directly in chat.",
+                    })}
+                  </p>
+                </div>
               )}
             </div>
           </motion.div>

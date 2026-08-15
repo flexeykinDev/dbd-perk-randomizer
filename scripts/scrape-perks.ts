@@ -26,6 +26,7 @@ const META_JSON = join(DATA_DIR, "meta.json");
 const TRANSLATIONS_JSON = join(DATA_DIR, "translations.ru.json");
 const DESCRIPTION_TRANSLATIONS_JSON = join(DATA_DIR, "description-translations.ru.json");
 const DESCRIPTION_RU_RAW_JSON = join(DATA_DIR, "description-ru-raw.json");
+const DESCRIPTION_OVERRIDES_EN_JSON = join(DATA_DIR, "description-overrides.en.json");
 const CHARACTERS_JSON = join(DATA_DIR, "characters.json");
 const PERK_IDS_JSON = join(DATA_DIR, "perk-ids.json");
 
@@ -68,6 +69,13 @@ function loadDescriptionTranslations(): Record<string, LocalizedDescription> {
 function loadDescriptionRuRaw(): Record<string, string> {
   if (!existsSync(DESCRIPTION_RU_RAW_JSON)) return {};
   const raw = JSON.parse(readFileSync(DESCRIPTION_RU_RAW_JSON, "utf8"));
+  delete raw._comment;
+  return raw;
+}
+
+function loadDescriptionOverridesEn(): Record<string, string> {
+  if (!existsSync(DESCRIPTION_OVERRIDES_EN_JSON)) return {};
+  const raw = JSON.parse(readFileSync(DESCRIPTION_OVERRIDES_EN_JSON, "utf8"));
   delete raw._comment;
   return raw;
 }
@@ -232,6 +240,7 @@ async function main() {
   const translations = loadTranslations();
   const descriptionTranslations = loadDescriptionTranslations();
   const descriptionRuRaw = loadDescriptionRuRaw();
+  const descriptionOverridesEn = loadDescriptionOverridesEn();
   const previous = new Map(
     loadPreviousPerks().map((p) => [`${p.role}/${p.slug}`, p]),
   );
@@ -251,7 +260,7 @@ async function main() {
         slug: row.slug,
         role,
         name: { en: row.name, ru: translations[row.slug] ?? row.name },
-        description: row.description,
+        description: descriptionOverridesEn[row.slug] ?? row.description,
         descriptionRu: descriptionTranslations[row.slug],
         descriptionRuRaw: descriptionRuRaw[row.slug],
         character: row.character,

@@ -1,0 +1,5 @@
+{
+  "_comment": "Raw EN description overrides, keyed by perk slug — used only when the official EN wiki's own data is broken/missing for that perk (not a general translation mechanism; RU has its own separate, much larger override file for that). Each entry replaces scrape-perks.ts's scraped `row.description` before it goes through the same auto-highlight/sentence-split pipeline as every other perk's EN text — this is a raw description string, not a curated LocalizedDescription object.",
+
+  "hex-fortune-s-fool": "The first time you hook each Survivor, they become Cursed and a Dull Totem ignites. For 90 seconds, the Cursed Totem is blocked for other Survivors. Cursed Survivors: are afflicted with the Oblivious Status Effect. See the Cursed Totem's Aura within a 24/20/16 metre radius. Oblivious Survivors do not hear the Killer's Terror Radius."
+}

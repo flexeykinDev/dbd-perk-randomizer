@@ -2590,7 +2590,7 @@
       "en": "Hex: Fortune's Fool",
       "ru": "Порча: шут судьбы"
     },
-    "description": "Unable to retrieve the Perk description or unable to display it. It can be added to the Datatable/Loadout. Otherwise Please contact Jouki",
+    "description": "The first time you hook each Survivor, they become Cursed and a Dull Totem ignites. For 90 seconds, the Cursed Totem is blocked for other Survivors. Cursed Survivors: are afflicted with the Oblivious Status Effect. See the Cursed Totem's Aura within a 24/20/16 metre radius. Oblivious Survivors do not hear the Killer's Terror Radius.",
     "descriptionRuRaw": "Когда вы впервые вешаете каждого выжившего на крюк, на него ложится порча, а тусклый тотем загорается. В течение 90 сек. проклятый тотем блокируется для других выживших. Проклятые выжившие: получают эффект \"Забывчивость\"; в радиусе 24/20/16 м. от проклятого тотема видят его ауру. Забывчивые выжившие не слышат радиус террора убийцы.",
     "character": "Cenobite",
     "icon": "/perks/killer/hex-fortune-s-fool.webp",

@@ -31,7 +31,12 @@ import { recordRoll } from "@/lib/stats";
 import { getIdForSlug, getSlugForId } from "@/lib/perk-ids";
 import { safeGet, safeGetJSON, safeSet, safeSetJSON } from "@/lib/safe-storage";
 import { publishObsState } from "@/lib/obs-sync";
-import { connectTwitchChat, type TwitchConnectionState } from "@/lib/twitch-chat";
+import {
+  connectTwitchChat,
+  type TwitchCommand,
+  type TwitchConnectionState,
+  type TwitchPermission,
+} from "@/lib/twitch-chat";
 import { PerkGrid } from "./perk-grid";
 import { CopyToast } from "./copy-toast";
 import { ExcludePanel } from "./exclude-panel";
@@ -48,6 +53,17 @@ const PERK_COUNT_STORAGE_KEY = "dbd-randomizer:perk-count";
 const BR_STORAGE_KEY = "dbd-randomizer:battle-royale";
 const TWITCH_CHANNEL_STORAGE_KEY = "dbd-randomizer:twitch-channel";
 const TWITCH_ENABLED_STORAGE_KEY = "dbd-randomizer:twitch-enabled";
+const TWITCH_REROLL_COMMAND_STORAGE_KEY = "dbd-randomizer:twitch-reroll-command";
+const TWITCH_REROLL_PERMISSION_STORAGE_KEY = "dbd-randomizer:twitch-reroll-permission";
+const TWITCH_COOLDOWN_STORAGE_KEY = "dbd-randomizer:twitch-cooldown-sec";
+const TWITCH_PASTE_ENABLED_STORAGE_KEY = "dbd-randomizer:twitch-paste-enabled";
+const TWITCH_PASTE_COMMAND_STORAGE_KEY = "dbd-randomizer:twitch-paste-command";
+const TWITCH_PASTE_PERMISSION_STORAGE_KEY = "dbd-randomizer:twitch-paste-permission";
+const DEFAULT_TWITCH_REROLL_COMMAND = "!reroll";
+const DEFAULT_TWITCH_PASTE_COMMAND = "!paste";
+const DEFAULT_TWITCH_COOLDOWN_SEC = 4;
+const MIN_TWITCH_COOLDOWN_SEC = 1;
+const MAX_TWITCH_COOLDOWN_SEC = 300;
 const ROLE_LABEL: Record<PerkRole, { ru: string; en: string }> = {
   survivor: { ru: "выжившего", en: "survivor" },
   killer: { ru: "убийцы", en: "killer" },
@@ -74,6 +90,22 @@ function loadSlugSet(key: string): Set<string> {
 function loadPerkCount(): number {
   const n = parseInt(safeGet("local", PERK_COUNT_STORAGE_KEY) ?? "", 10);
   return Number.isInteger(n) && n >= 0 && n <= MAX_PERK_COUNT ? n : DEFAULT_PERK_COUNT;
+}
+
+const VALID_TWITCH_PERMISSIONS: readonly TwitchPermission[] = ["everyone", "subs_vips", "mods"];
+
+function loadTwitchPermission(key: string, fallback: TwitchPermission): TwitchPermission {
+  const stored = safeGet("local", key);
+  return VALID_TWITCH_PERMISSIONS.includes(stored as TwitchPermission)
+    ? (stored as TwitchPermission)
+    : fallback;
+}
+
+function loadTwitchCooldownSec(): number {
+  const n = parseInt(safeGet("local", TWITCH_COOLDOWN_STORAGE_KEY) ?? "", 10);
+  return Number.isInteger(n) && n >= MIN_TWITCH_COOLDOWN_SEC && n <= MAX_TWITCH_COOLDOWN_SEC
+    ? n
+    : DEFAULT_TWITCH_COOLDOWN_SEC;
 }
 
 interface BattleRoyaleState {
@@ -187,6 +219,12 @@ export function RandomizerBoard() {
   const [twitchChannel, setTwitchChannel] = useState("");
   const [twitchEnabled, setTwitchEnabled] = useState(false);
   const [twitchState, setTwitchState] = useState<TwitchConnectionState>("disconnected");
+  const [twitchRerollCommand, setTwitchRerollCommand] = useState(DEFAULT_TWITCH_REROLL_COMMAND);
+  const [twitchRerollPermission, setTwitchRerollPermission] = useState<TwitchPermission>("everyone");
+  const [twitchCooldownSec, setTwitchCooldownSec] = useState(DEFAULT_TWITCH_COOLDOWN_SEC);
+  const [twitchPasteEnabled, setTwitchPasteEnabled] = useState(false);
+  const [twitchPasteCommand, setTwitchPasteCommand] = useState(DEFAULT_TWITCH_PASTE_COMMAND);
+  const [twitchPastePermission, setTwitchPastePermission] = useState<TwitchPermission>("subs_vips");
 
   const activeSeed =
     seedMode === "daily" ? dailyChallengeSeed(role) : seedMode === "custom" ? activeCustomSeed : null;
@@ -224,6 +262,20 @@ export function RandomizerBoard() {
       if (safeGet("local", TWITCH_ENABLED_STORAGE_KEY) === "1" && savedChannel) {
         setTwitchEnabled(true);
       }
+      setTwitchRerollCommand(
+        safeGet("local", TWITCH_REROLL_COMMAND_STORAGE_KEY) || DEFAULT_TWITCH_REROLL_COMMAND,
+      );
+      setTwitchRerollPermission(
+        loadTwitchPermission(TWITCH_REROLL_PERMISSION_STORAGE_KEY, "everyone"),
+      );
+      setTwitchCooldownSec(loadTwitchCooldownSec());
+      setTwitchPasteEnabled(safeGet("local", TWITCH_PASTE_ENABLED_STORAGE_KEY) === "1");
+      setTwitchPasteCommand(
+        safeGet("local", TWITCH_PASTE_COMMAND_STORAGE_KEY) || DEFAULT_TWITCH_PASTE_COMMAND,
+      );
+      setTwitchPastePermission(
+        loadTwitchPermission(TWITCH_PASTE_PERMISSION_STORAGE_KEY, "subs_vips"),
+      );
     }
     applyInitialClientState();
   }, []);
@@ -366,6 +418,31 @@ export function RandomizerBoard() {
     regenerateRef.current = regenerate;
   }, [regenerate]);
 
+  // `!paste <ids>` sets a specific build directly (same mechanism as
+  // opening a shared-build URL) rather than rolling a new one — doesn't
+  // need a ref like regenerate above since it only calls stable setState
+  // functions and pure lookups, nothing that changes identity per render.
+  const handleTwitchPaste = useCallback((argsText: string) => {
+    const ids = argsText
+      .split(/[,\s]+/)
+      .map((s) => Number(s.trim()))
+      .filter((n) => Number.isFinite(n));
+    if (ids.length === 0) return;
+    const matched = ids
+      .map((id) => {
+        const slug = getSlugForId(id);
+        return slug ? getPerkBySlug(slug) : undefined;
+      })
+      .filter((p): p is Perk => !!p);
+    if (matched.length === 0) return;
+    // Mirrors readInitialUrlState's own rule for a shared-build link: perks
+    // determine the role, and any ID that doesn't match the first one's
+    // role is dropped rather than shown mixed.
+    const targetRole = matched[0].role;
+    setRole(targetRole);
+    setSharedBuild(matched.filter((p) => p.role === targetRole));
+  }, []);
+
   useEffect(() => {
     function markDisconnected() {
       setTwitchState("disconnected");
@@ -374,13 +451,40 @@ export function RandomizerBoard() {
       markDisconnected();
       return;
     }
+    const commands: TwitchCommand[] = [
+      {
+        trigger: twitchRerollCommand.trim() || DEFAULT_TWITCH_REROLL_COMMAND,
+        permission: twitchRerollPermission,
+        cooldownMs: twitchCooldownSec * 1000,
+        onTrigger: () => regenerateRef.current(),
+      },
+    ];
+    if (twitchPasteEnabled) {
+      commands.push({
+        trigger: twitchPasteCommand.trim() || DEFAULT_TWITCH_PASTE_COMMAND,
+        permission: twitchPastePermission,
+        cooldownMs: twitchCooldownSec * 1000,
+        onTrigger: (args) => handleTwitchPaste(args),
+      });
+    }
     const disconnect = connectTwitchChat({
       channel: twitchChannel,
-      onCommand: () => regenerateRef.current(),
+      commands,
       onStateChange: setTwitchState,
     });
     return disconnect;
-  }, [mounted, twitchEnabled, twitchChannel]);
+  }, [
+    mounted,
+    twitchEnabled,
+    twitchChannel,
+    twitchRerollCommand,
+    twitchRerollPermission,
+    twitchCooldownSec,
+    twitchPasteEnabled,
+    twitchPasteCommand,
+    twitchPastePermission,
+    handleTwitchPaste,
+  ]);
 
   // Spacebar/Enter triggers Generate from anywhere on the page — except
   // while the user is typing (the seed input) or a modal is open, where
@@ -474,6 +578,37 @@ export function RandomizerBoard() {
   function toggleTwitch(enabled: boolean) {
     setTwitchEnabled(enabled);
     safeSet("local", TWITCH_ENABLED_STORAGE_KEY, enabled ? "1" : "0");
+  }
+
+  function updateTwitchRerollCommand(command: string) {
+    setTwitchRerollCommand(command);
+    safeSet("local", TWITCH_REROLL_COMMAND_STORAGE_KEY, command);
+  }
+
+  function updateTwitchRerollPermission(permission: TwitchPermission) {
+    setTwitchRerollPermission(permission);
+    safeSet("local", TWITCH_REROLL_PERMISSION_STORAGE_KEY, permission);
+  }
+
+  function updateTwitchCooldownSec(seconds: number) {
+    const clamped = Math.min(MAX_TWITCH_COOLDOWN_SEC, Math.max(MIN_TWITCH_COOLDOWN_SEC, seconds));
+    setTwitchCooldownSec(clamped);
+    safeSet("local", TWITCH_COOLDOWN_STORAGE_KEY, String(clamped));
+  }
+
+  function toggleTwitchPaste(enabled: boolean) {
+    setTwitchPasteEnabled(enabled);
+    safeSet("local", TWITCH_PASTE_ENABLED_STORAGE_KEY, enabled ? "1" : "0");
+  }
+
+  function updateTwitchPasteCommand(command: string) {
+    setTwitchPasteCommand(command);
+    safeSet("local", TWITCH_PASTE_COMMAND_STORAGE_KEY, command);
+  }
+
+  function updateTwitchPastePermission(permission: TwitchPermission) {
+    setTwitchPastePermission(permission);
+    safeSet("local", TWITCH_PASTE_PERMISSION_STORAGE_KEY, permission);
   }
 
   function showToast(message: string) {
@@ -964,6 +1099,18 @@ export function RandomizerBoard() {
         twitchState={twitchState}
         onTwitchChannelChange={updateTwitchChannel}
         onTwitchToggle={toggleTwitch}
+        twitchRerollCommand={twitchRerollCommand}
+        twitchRerollPermission={twitchRerollPermission}
+        twitchCooldownSec={twitchCooldownSec}
+        twitchPasteEnabled={twitchPasteEnabled}
+        twitchPasteCommand={twitchPasteCommand}
+        twitchPastePermission={twitchPastePermission}
+        onTwitchRerollCommandChange={updateTwitchRerollCommand}
+        onTwitchRerollPermissionChange={updateTwitchRerollPermission}
+        onTwitchCooldownSecChange={updateTwitchCooldownSec}
+        onTwitchPasteToggle={toggleTwitchPaste}
+        onTwitchPasteCommandChange={updateTwitchPasteCommand}
+        onTwitchPastePermissionChange={updateTwitchPastePermission}
       />
 
       <CopyToast message={toast} />
