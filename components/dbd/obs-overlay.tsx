@@ -88,6 +88,13 @@ export function ObsOverlay() {
                   alt={perk.name[state.language]}
                   width={iconSize}
                   height={iconSize}
+                  // Inline width/height (not just the size class below) so this
+                  // stays correct regardless of any container constraint or
+                  // Tailwind Preflight's `img { max-width: 100%; height: auto }`
+                  // — `size` is chosen at runtime via a URL param, so there's
+                  // no static Tailwind class to rely on as the sole source of
+                  // truth the way the rest of the app's fixed-size icons do.
+                  style={{ width: iconSize, height: iconSize, objectFit: "cover" }}
                   className="rounded-xl"
                 />
               </span>

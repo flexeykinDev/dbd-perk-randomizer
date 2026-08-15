@@ -311,7 +311,7 @@ export function ExcludePanel({
                           alt={perk.name[language]}
                           width={48}
                           height={48}
-                          className="rounded-lg"
+                          className="size-12 rounded-lg object-cover"
                         />
                         <span className="text-[10px] leading-tight text-foreground">
                           {perk.name[language]}

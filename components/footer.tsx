@@ -53,7 +53,7 @@ export function Footer() {
           alt={t({ ru: "Аватар автора", en: "Author avatar" })}
           width={36}
           height={36}
-          className="rounded-full"
+          className="size-9 rounded-full object-cover"
         />
         <a
           href={`https://github.com/${GITHUB_USERNAME}`}

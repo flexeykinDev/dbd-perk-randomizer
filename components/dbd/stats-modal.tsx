@@ -200,7 +200,7 @@ function StatList({
                 alt={perk.name[language]}
                 width={28}
                 height={28}
-                className="shrink-0 rounded-md"
+                className="size-7 shrink-0 rounded-md object-cover"
               />
               <span className="min-w-0 flex-1 truncate text-sm text-foreground">
                 {perk.name[language]}

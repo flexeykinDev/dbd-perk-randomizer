@@ -103,7 +103,7 @@ export function ShareCard({
               alt={perk.name[language]}
               width={112}
               height={112}
-              style={{ borderRadius: 14, display: "block" }}
+              style={{ width: 112, height: 112, borderRadius: 14, display: "block", objectFit: "cover" }}
             />
             <div style={{ fontSize: 15, fontWeight: 600, textAlign: "center", lineHeight: 1.3 }}>
               {perk.name[language]}
