@@ -31,9 +31,13 @@ export interface ObsOverlayOptions {
   positions: ObsIconPosition[] | null;
 }
 
+// Matches the "Roomy" style preset (see obs-overlay-modal.tsx) — testing
+// showed the old 100/100 default looked cramped in actual OBS scenes, so
+// the good-looking combo is now what a fresh link renders with no query
+// params at all, not something you have to discover by tuning sliders.
 export const DEFAULT_OBS_OPTIONS: ObsOverlayOptions = {
-  scale: 100,
-  nameScale: 100,
+  scale: 135,
+  nameScale: 170,
   showNames: true,
   background: "transparent",
   positions: null,
@@ -41,7 +45,10 @@ export const DEFAULT_OBS_OPTIONS: ObsOverlayOptions = {
 
 export const MIN_OBS_SCALE = 50;
 export const MAX_OBS_SCALE = 200;
-export const MIN_OBS_NAME_SCALE = 50;
+// Below ~100% the name box is too narrow to be worth it even with 2-line
+// wrapping — raised from 50 so the slider can't land in a range that's
+// known to look broken.
+export const MIN_OBS_NAME_SCALE = 100;
 export const MAX_OBS_NAME_SCALE = 300;
 
 const BACKGROUNDS: readonly ObsBackground[] = ["transparent", "dark"];

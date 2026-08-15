@@ -63,36 +63,63 @@ const DEFAULT_SLOT_POSITIONS: readonly ObsIconPosition[] = [
   { x: 87.5, y: 50 },
 ];
 
-// Starting point for the OBS Browser Source's own width/height — matches
-// what the setup steps used to hardcode. Now editable (see canvasWidth /
-// canvasHeight below): the overlay itself just fills whatever pixel size
-// OBS actually gives the source (`fixed inset-0`), so a taller canvas is
-// all it takes to give 2-line names — see obs-overlay.tsx — real room to
-// breathe instead of the cramped default 220px strip.
-const DEFAULT_CANVAS_WIDTH = 800;
-const DEFAULT_CANVAS_HEIGHT = 220;
 const MIN_CANVAS_WIDTH = 320;
 const MAX_CANVAS_WIDTH = 1920;
 const MIN_CANVAS_HEIGHT = 120;
 const MAX_CANVAS_HEIGHT = 800;
-const CANVAS_PRESETS: readonly { width: number; height: number; label: { ru: string; en: string } }[] = [
-  { width: 800, height: 220, label: { ru: "Компакт", en: "Compact" } },
-  { width: 800, height: 340, label: { ru: "С именами", en: "With names" } },
-  { width: 1100, height: 420, label: { ru: "Просторно", en: "Roomy" } },
+
+type StyleId = "compact" | "standard" | "roomy" | "custom";
+
+interface StylePreset {
+  id: Exclude<StyleId, "custom">;
+  label: { ru: string; en: string };
+  description: { ru: string; en: string };
+  canvasWidth: number;
+  canvasHeight: number;
+  scale: number;
+  nameScale: number;
+}
+
+// Canvas size, icon scale, and name width used to be 3 independent dials —
+// easy to land on a combination that looks bad (e.g. a small canvas with a
+// wide name box, or a big canvas with tiny icons floating in empty space).
+// These 3 presets are each a tested, coherent look; "Roomy" is what testing
+// showed actually looks good in a real OBS scene, so it's also this
+// component's default (see DEFAULT_CANVAS_WIDTH/HEIGHT below and
+// DEFAULT_OBS_OPTIONS in lib/use-obs-mode.ts).
+const STYLE_PRESETS: readonly StylePreset[] = [
+  {
+    id: "compact",
+    label: { ru: "Компакт", en: "Compact" },
+    description: { ru: "Минимум места — для тесных сцен", en: "Minimal footprint — for tight scenes" },
+    canvasWidth: 800,
+    canvasHeight: 220,
+    scale: 90,
+    nameScale: 110,
+  },
+  {
+    id: "standard",
+    label: { ru: "Стандарт", en: "Standard" },
+    description: { ru: "Сбалансированный размер для большинства сцен", en: "Balanced size for most scenes" },
+    canvasWidth: 900,
+    canvasHeight: 300,
+    scale: 115,
+    nameScale: 145,
+  },
+  {
+    id: "roomy",
+    label: { ru: "Просторно", en: "Roomy" },
+    description: { ru: "Крупные карточки, имена никогда не жмутся", en: "Large cards, names never cramped" },
+    canvasWidth: 1100,
+    canvasHeight: 420,
+    scale: 135,
+    nameScale: 170,
+  },
 ];
-// Quick presets for the two fine-grained sliders below — most people just
-// want "a bit bigger," not to reason about a raw percentage. The sliders
-// stay for the rare case that needs in-between control.
-const CARD_SIZE_PRESETS: readonly { value: number; label: string }[] = [
-  { value: 75, label: "S" },
-  { value: 100, label: "M" },
-  { value: 150, label: "L" },
-];
-const NAME_WIDTH_PRESETS: readonly { value: number; label: { ru: string; en: string } }[] = [
-  { value: 100, label: { ru: "Обычная", en: "Standard" } },
-  { value: 160, label: { ru: "Шире", en: "Wider" } },
-  { value: 250, label: { ru: "Макс.", en: "Max" } },
-];
+const DEFAULT_STYLE = STYLE_PRESETS.find((p) => p.id === "roomy")!;
+const DEFAULT_CANVAS_WIDTH = DEFAULT_STYLE.canvasWidth;
+const DEFAULT_CANVAS_HEIGHT = DEFAULT_STYLE.canvasHeight;
+
 const PREVIEW_BASE_ICON_PX = 34;
 const PREVIEW_BASE_NAME_MAX_WIDTH_PX = 56;
 
@@ -179,6 +206,11 @@ export function ObsOverlayModal({
   const [announcement, setAnnouncement] = useState("");
   const [copied, setCopied] = useState(false);
   const [pasteCommandCopied, setPasteCommandCopied] = useState(false);
+  // "roomy" by default — matches DEFAULT_OBS_OPTIONS, so a link nobody has
+  // customized yet still renders the good-looking combo. Switches to
+  // "custom" only when the Custom tab is explicitly chosen; the 3 named
+  // presets stay mutually exclusive with it.
+  const [styleMode, setStyleMode] = useState<StyleId>("roomy");
   const [scale, setScale] = useState(DEFAULT_OBS_OPTIONS.scale);
   const [nameScale, setNameScale] = useState(DEFAULT_OBS_OPTIONS.nameScale);
   const [canvasWidth, setCanvasWidth] = useState(DEFAULT_CANVAS_WIDTH);
@@ -314,6 +346,19 @@ export function ObsOverlayModal({
     setCanvasHeight(Math.min(MAX_CANVAS_HEIGHT, Math.max(MIN_CANVAS_HEIGHT, Math.round(height))));
   }
 
+  function applyStylePreset(preset: StylePreset) {
+    setStyleMode(preset.id);
+    setCanvasWidth(preset.canvasWidth);
+    setCanvasHeight(preset.canvasHeight);
+    setScale(preset.scale);
+    setNameScale(preset.nameScale);
+  }
+
+  const activePresetDescription =
+    styleMode === "custom"
+      ? { ru: "Точная настройка холста, размера и ширины имени.", en: "Fine control over canvas, size, and name width." }
+      : STYLE_PRESETS.find((p) => p.id === styleMode)?.description;
+
   return (
     <AnimatePresence>
       {open && (
@@ -409,51 +454,6 @@ export function ObsOverlayModal({
                 </button>
               </div>
 
-              <div className="mb-1.5 flex flex-wrap items-center gap-1.5">
-                <label htmlFor={canvasWidthId} className="text-[11px] text-muted">
-                  {t({ ru: "Холст OBS:", en: "OBS canvas:" })}
-                </label>
-                <input
-                  id={canvasWidthId}
-                  type="number"
-                  min={MIN_CANVAS_WIDTH}
-                  max={MAX_CANVAS_WIDTH}
-                  value={canvasWidth}
-                  onChange={(e) => updateCanvasWidth(Number(e.target.value))}
-                  aria-label={t({ ru: "Ширина холста, пикселей", en: "Canvas width, pixels" })}
-                  className="w-16 rounded-full border border-border bg-background px-2 py-0.5 text-[11px] text-foreground focus:ring-2 focus:ring-accent/40 focus:outline-none"
-                />
-                <span className="text-muted" aria-hidden>×</span>
-                <input
-                  type="number"
-                  min={MIN_CANVAS_HEIGHT}
-                  max={MAX_CANVAS_HEIGHT}
-                  value={canvasHeight}
-                  onChange={(e) => updateCanvasHeight(Number(e.target.value))}
-                  aria-label={t({ ru: "Высота холста, пикселей", en: "Canvas height, pixels" })}
-                  className="w-16 rounded-full border border-border bg-background px-2 py-0.5 text-[11px] text-foreground focus:ring-2 focus:ring-accent/40 focus:outline-none"
-                />
-                <span className="mx-0.5 h-3.5 w-px bg-border" aria-hidden />
-                {CANVAS_PRESETS.map((preset) => (
-                  <button
-                    key={`${preset.width}x${preset.height}`}
-                    type="button"
-                    onClick={() => {
-                      setCanvasWidth(preset.width);
-                      setCanvasHeight(preset.height);
-                    }}
-                    className={cn(
-                      "rounded-full border px-2 py-0.5 text-[11px] font-medium transition-colors",
-                      canvasWidth === preset.width && canvasHeight === preset.height
-                        ? "border-accent/50 bg-accent/15 text-accent"
-                        : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
-                    )}
-                  >
-                    {t(preset.label)}
-                  </button>
-                ))}
-              </div>
-
               <div
                 ref={previewRef}
                 className={cn(
@@ -518,105 +518,135 @@ export function ObsOverlayModal({
               </p>
             </div>
 
-            <div className="mt-5 flex flex-col gap-4">
+            <div className="mt-5 flex flex-col gap-3">
               <h3 className="text-xs font-semibold tracking-wide text-muted uppercase">
                 {t({ ru: "Оформление", en: "Appearance" })}
               </h3>
 
-              <div className="flex flex-col gap-1.5">
-                <div className="flex items-center justify-between gap-3">
-                  <label htmlFor={cardSizeSliderId} className="text-xs font-medium text-muted">
-                    {t({ ru: "Размер карточек", en: "Card size" })}
-                  </label>
-                  <span className="text-[11px] tabular-nums text-muted">{scale}%</span>
-                </div>
-                <div className="flex items-center gap-1.5" role="group" aria-label={t({ ru: "Быстрый выбор размера", en: "Quick size presets" })}>
-                  {CARD_SIZE_PRESETS.map((preset) => (
-                    <button
-                      key={preset.value}
-                      type="button"
-                      onClick={() => setScale(preset.value)}
-                      aria-pressed={scale === preset.value}
-                      className={cn(
-                        "flex-1 rounded-full border px-2 py-1 text-[11px] font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:outline-none",
-                        scale === preset.value
-                          ? "border-accent/50 bg-accent/15 text-accent"
-                          : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
-                      )}
-                    >
-                      {preset.label}
-                    </button>
-                  ))}
-                </div>
-                <input
-                  id={cardSizeSliderId}
-                  type="range"
-                  min={MIN_OBS_SCALE}
-                  max={MAX_OBS_SCALE}
-                  step={5}
-                  value={scale}
-                  onChange={(e) => setScale(Number(e.target.value))}
-                  aria-label={t({ ru: "Размер карточек, точная настройка", en: "Card size, fine adjustment" })}
-                  className="w-full accent-accent"
-                />
-              </div>
-
-              <div className="flex flex-col gap-1.5">
-                <div className="flex items-center justify-between gap-3">
-                  <label
-                    htmlFor={nameWidthSliderId}
-                    className={cn("text-xs font-medium text-muted", !showNames && "opacity-40")}
+              <div
+                className="grid grid-cols-4 gap-1.5"
+                role="group"
+                aria-label={t({ ru: "Стиль оверлея", en: "Overlay style" })}
+              >
+                {STYLE_PRESETS.map((preset) => (
+                  <button
+                    key={preset.id}
+                    type="button"
+                    onClick={() => applyStylePreset(preset)}
+                    aria-pressed={styleMode === preset.id}
+                    className={cn(
+                      "rounded-full border px-2 py-1.5 text-[11px] font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:outline-none",
+                      styleMode === preset.id
+                        ? "border-accent/50 bg-accent/15 text-accent"
+                        : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
+                    )}
                   >
-                    {t({ ru: "Ширина имени", en: "Name width" })}
-                  </label>
-                  <span className={cn("text-[11px] tabular-nums text-muted", !showNames && "opacity-40")}>
-                    {nameScale}%
-                  </span>
-                </div>
-                <div
-                  className="flex items-center gap-1.5"
-                  role="group"
-                  aria-label={t({ ru: "Быстрый выбор ширины имени", en: "Quick name-width presets" })}
+                    {t(preset.label)}
+                  </button>
+                ))}
+                <button
+                  type="button"
+                  onClick={() => setStyleMode("custom")}
+                  aria-pressed={styleMode === "custom"}
+                  className={cn(
+                    "rounded-full border px-2 py-1.5 text-[11px] font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:outline-none",
+                    styleMode === "custom"
+                      ? "border-accent/50 bg-accent/15 text-accent"
+                      : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
+                  )}
                 >
-                  {NAME_WIDTH_PRESETS.map((preset) => (
-                    <button
-                      key={preset.value}
-                      type="button"
-                      onClick={() => setNameScale(preset.value)}
-                      disabled={!showNames}
-                      aria-pressed={nameScale === preset.value}
-                      className={cn(
-                        "flex-1 rounded-full border px-2 py-1 text-[11px] font-medium transition-colors disabled:pointer-events-none disabled:opacity-40",
-                        nameScale === preset.value
-                          ? "border-accent/50 bg-accent/15 text-accent"
-                          : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
-                      )}
-                    >
-                      {t(preset.label)}
-                    </button>
-                  ))}
-                </div>
-                <input
-                  id={nameWidthSliderId}
-                  type="range"
-                  min={MIN_OBS_NAME_SCALE}
-                  max={MAX_OBS_NAME_SCALE}
-                  step={10}
-                  value={nameScale}
-                  onChange={(e) => setNameScale(Number(e.target.value))}
-                  disabled={!showNames}
-                  aria-label={t({ ru: "Ширина имени, точная настройка", en: "Name width, fine adjustment" })}
-                  className="w-full accent-accent"
-                />
-                <p className="text-[11px] text-muted/70">
-                  {t({
-                    ru: "Имена переносятся на 2 строки — раздвинь, если и так не помещаются.",
-                    en: "Names wrap onto 2 lines — widen this if they still don't fit.",
-                  })}
-                </p>
+                  {t({ ru: "Свой", en: "Custom" })}
+                </button>
               </div>
+              {activePresetDescription && (
+                <p className="-mt-1 text-[11px] text-muted/70">{t(activePresetDescription)}</p>
+              )}
 
-              <div className="flex flex-col gap-3">
+              {styleMode === "custom" && (
+                <div className="flex flex-col gap-4 rounded-lg border border-border bg-background/40 p-3">
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <label htmlFor={canvasWidthId} className="text-[11px] text-muted">
+                      {t({ ru: "Холст OBS:", en: "OBS canvas:" })}
+                    </label>
+                    <input
+                      id={canvasWidthId}
+                      type="number"
+                      min={MIN_CANVAS_WIDTH}
+                      max={MAX_CANVAS_WIDTH}
+                      value={canvasWidth}
+                      onChange={(e) => updateCanvasWidth(Number(e.target.value))}
+                      aria-label={t({ ru: "Ширина холста, пикселей", en: "Canvas width, pixels" })}
+                      className="w-16 rounded-full border border-border bg-background px-2 py-0.5 text-[11px] text-foreground focus:ring-2 focus:ring-accent/40 focus:outline-none"
+                    />
+                    <span className="text-muted" aria-hidden>
+                      ×
+                    </span>
+                    <input
+                      type="number"
+                      min={MIN_CANVAS_HEIGHT}
+                      max={MAX_CANVAS_HEIGHT}
+                      value={canvasHeight}
+                      onChange={(e) => updateCanvasHeight(Number(e.target.value))}
+                      aria-label={t({ ru: "Высота холста, пикселей", en: "Canvas height, pixels" })}
+                      className="w-16 rounded-full border border-border bg-background px-2 py-0.5 text-[11px] text-foreground focus:ring-2 focus:ring-accent/40 focus:outline-none"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <div className="flex items-center justify-between gap-3">
+                      <label htmlFor={cardSizeSliderId} className="text-xs font-medium text-muted">
+                        {t({ ru: "Размер карточек", en: "Card size" })}
+                      </label>
+                      <span className="text-[11px] tabular-nums text-muted">{scale}%</span>
+                    </div>
+                    <input
+                      id={cardSizeSliderId}
+                      type="range"
+                      min={MIN_OBS_SCALE}
+                      max={MAX_OBS_SCALE}
+                      step={5}
+                      value={scale}
+                      onChange={(e) => setScale(Number(e.target.value))}
+                      aria-label={t({ ru: "Размер карточек", en: "Card size" })}
+                      className="w-full accent-accent"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <div className="flex items-center justify-between gap-3">
+                      <label
+                        htmlFor={nameWidthSliderId}
+                        className={cn("text-xs font-medium text-muted", !showNames && "opacity-40")}
+                      >
+                        {t({ ru: "Ширина имени", en: "Name width" })}
+                      </label>
+                      <span className={cn("text-[11px] tabular-nums text-muted", !showNames && "opacity-40")}>
+                        {nameScale}%
+                      </span>
+                    </div>
+                    <input
+                      id={nameWidthSliderId}
+                      type="range"
+                      min={MIN_OBS_NAME_SCALE}
+                      max={MAX_OBS_NAME_SCALE}
+                      step={10}
+                      value={nameScale}
+                      onChange={(e) => setNameScale(Number(e.target.value))}
+                      disabled={!showNames}
+                      aria-label={t({ ru: "Ширина имени", en: "Name width" })}
+                      className="w-full accent-accent"
+                    />
+                    <p className="text-[11px] text-muted/70">
+                      {t({
+                        ru: "Ниже ~130% имена почти всегда обрезаются даже с переносом на 2 строки.",
+                        en: "Below ~130%, names get cut off almost every time even with 2-line wrapping.",
+                      })}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              <div className="mt-1 flex flex-col gap-3">
                 <ToggleSwitch
                   checked={showNames}
                   onChange={() => setShowNames((v) => !v)}
