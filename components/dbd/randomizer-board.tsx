@@ -20,6 +20,7 @@ import {
   getRandomPerks,
   getSeededPerks,
 } from "@/lib/perks";
+import { getTagsForPerk, getTagsForRole } from "@/lib/perk-tags";
 import type { Perk, PerkRole } from "@/lib/types";
 import { cn } from "@/lib/cn";
 import { useMounted } from "@/lib/use-mounted";
@@ -35,12 +36,13 @@ import { CopyToast } from "./copy-toast";
 import { ExcludePanel } from "./exclude-panel";
 import { StatsModal } from "./stats-modal";
 import { ToggleSwitch } from "./toggle-switch";
-import { ShareCard } from "./share-card";
+import { ShareCard, type ShareCardLayout } from "./share-card";
 import { ObsOverlayModal } from "./obs-overlay-modal";
 
 const MAX_PERK_COUNT = 4;
 const DEFAULT_PERK_COUNT = 4;
 const EXCLUDED_STORAGE_KEY = "dbd-randomizer:excluded-perks";
+const FAVORITE_STORAGE_KEY = "dbd-randomizer:favorite-perks";
 const PERK_COUNT_STORAGE_KEY = "dbd-randomizer:perk-count";
 const BR_STORAGE_KEY = "dbd-randomizer:battle-royale";
 const ROLE_LABEL: Record<PerkRole, { ru: string; en: string }> = {
@@ -56,12 +58,12 @@ const ROLE_FROM_SHORT: Record<string, PerkRole> = { s: "survivor", k: "killer" }
 
 type SeedMode = "none" | "daily" | "custom";
 
-function loadExcludedSlugs(): Set<string> {
+function loadSlugSet(key: string): Set<string> {
   // Validate the parsed shape, not just that it parsed — a value written by
   // some future/incompatible version of the app could be valid JSON that's
   // still the wrong shape (e.g. an object instead of an array), and
   // `new Set()` on a non-iterable throws rather than returning [].
-  const stored = safeGetJSON<unknown>("local", EXCLUDED_STORAGE_KEY, []);
+  const stored = safeGetJSON<unknown>("local", key, []);
   const slugs = Array.isArray(stored) ? stored.filter((s) => typeof s === "string") : [];
   return new Set(slugs);
 }
@@ -145,8 +147,9 @@ export function RandomizerBoard() {
   const { lang: language } = useLanguage();
   const [role, setRole] = useState<PerkRole>("survivor");
   const [toast, setToast] = useState<string | null>(null);
-  const [generatingImage, setGeneratingImage] = useState(false);
+  const [generatingImage, setGeneratingImage] = useState<ShareCardLayout | null>(null);
   const shareCardRef = useRef<HTMLDivElement>(null);
+  const storyShareCardRef = useRef<HTMLDivElement>(null);
   const [excludePanelOpen, setExcludePanelOpen] = useState(false);
   // Both start at SSR-safe defaults and are corrected from localStorage in
   // the mount effect below — a lazy useState(loadX) initializer would read
@@ -154,6 +157,7 @@ export function RandomizerBoard() {
   // hydration reconciles against the server's (window-less) HTML and would
   // throw a hydration mismatch for any returning visitor with saved state.
   const [excludedSlugs, setExcludedSlugs] = useState<Set<string>>(new Set());
+  const [favoriteSlugs, setFavoriteSlugs] = useState<Set<string>>(new Set());
   const [perkCount, setPerkCount] = useState<number>(DEFAULT_PERK_COUNT);
   const [showStats, setShowStats] = useState(false);
   const [statsModalOpen, setStatsModalOpen] = useState(false);
@@ -173,13 +177,18 @@ export function RandomizerBoard() {
   const mounted = useMounted();
   const [nonce, setNonce] = useState(0);
   const [sharedBuild, setSharedBuild] = useState<Perk[] | null>(null);
+  // A quick, session-only filter (not persisted, resets on role change) —
+  // distinct from the pool manager's exclusions, which are a deliberate,
+  // saved choice. "themeTag: null" means no filter, i.e. the full role pool.
+  const [themeTag, setThemeTag] = useState<string | null>(null);
 
   const activeSeed =
     seedMode === "daily" ? dailyChallengeSeed(role) : seedMode === "custom" ? activeCustomSeed : null;
 
   useEffect(() => {
     function applyInitialClientState() {
-      setExcludedSlugs(loadExcludedSlugs());
+      setExcludedSlugs(loadSlugSet(EXCLUDED_STORAGE_KEY));
+      setFavoriteSlugs(loadSlugSet(FAVORITE_STORAGE_KEY));
       setPerkCount(loadPerkCount());
 
       const urlState = readInitialUrlState();
@@ -207,12 +216,27 @@ export function RandomizerBoard() {
     applyInitialClientState();
   }, []);
 
+  // Perks the current theme filter rules out, expressed as an exclusion set
+  // so it can merge into the same combinedExcluded pipeline that already
+  // handles Battle Royale attrition and manual exclusions — getRandomPerks
+  // and the pool-exhausted check don't need to know a theme exists at all.
+  const themeExcluded = useMemo(() => {
+    if (!mounted || !themeTag) return null;
+    const nonMatching = getPerksByRole(role)
+      .filter((p) => !getTagsForPerk(p).includes(themeTag))
+      .map((p) => p.slug);
+    return new Set(nonMatching);
+  }, [mounted, role, themeTag]);
+
   const combinedExcluded = useMemo(() => {
-    if (!battleRoyale || battleRoyaleUsed.size === 0) return excludedSlugs;
+    const extra: ReadonlySet<string>[] = [];
+    if (battleRoyale && battleRoyaleUsed.size > 0) extra.push(battleRoyaleUsed);
+    if (themeExcluded && themeExcluded.size > 0) extra.push(themeExcluded);
+    if (extra.length === 0) return excludedSlugs;
     const merged = new Set(excludedSlugs);
-    for (const slug of battleRoyaleUsed) merged.add(slug);
+    for (const set of extra) for (const slug of set) merged.add(slug);
     return merged;
-  }, [excludedSlugs, battleRoyale, battleRoyaleUsed]);
+  }, [excludedSlugs, battleRoyale, battleRoyaleUsed, themeExcluded]);
 
   const availableCount = mounted ? getAvailablePool(role, combinedExcluded).length : 0;
   // Applies to both causes of a too-small pool: Battle Royale attrition and
@@ -230,8 +254,18 @@ export function RandomizerBoard() {
     if (perkCount === 0) return [];
     if (activeSeed) return getSeededPerks(role, perkCount, activeSeed);
     if (poolExhausted) return [];
-    return getRandomPerks(role, perkCount, combinedExcluded);
-  }, [mounted, role, nonce, sharedBuild, combinedExcluded, perkCount, poolExhausted, activeSeed]);
+    return getRandomPerks(role, perkCount, combinedExcluded, Math.random, favoriteSlugs);
+  }, [
+    mounted,
+    role,
+    nonce,
+    sharedBuild,
+    combinedExcluded,
+    perkCount,
+    poolExhausted,
+    activeSeed,
+    favoriteSlugs,
+  ]);
 
   useEffect(() => {
     function syncUrl() {
@@ -330,6 +364,13 @@ export function RandomizerBoard() {
   function selectRole(next: PerkRole) {
     setSharedBuild(null);
     setRole(next);
+    setThemeTag(null); // survivor/killer tags don't overlap — stale otherwise
+  }
+
+  function selectTheme(tag: string | null) {
+    setSharedBuild(null);
+    setThemeTag(tag);
+    setNonce((n) => n + 1);
   }
 
   function selectPerkCount(next: number) {
@@ -366,6 +407,16 @@ export function RandomizerBoard() {
     setExcludedSlugs((prev) => {
       const next = new Set([...prev].filter((slug) => !roleSlugs.has(slug)));
       safeSetJSON("local", EXCLUDED_STORAGE_KEY, [...next]);
+      return next;
+    });
+  }
+
+  function toggleFavorite(slug: string) {
+    setFavoriteSlugs((prev) => {
+      const next = new Set(prev);
+      if (next.has(slug)) next.delete(slug);
+      else next.add(slug);
+      safeSetJSON("local", FAVORITE_STORAGE_KEY, [...next]);
       return next;
     });
   }
@@ -412,25 +463,27 @@ export function RandomizerBoard() {
       );
   }
 
-  async function handleDownloadImage() {
-    if (!shareCardRef.current || perks.length === 0 || generatingImage) return;
-    setGeneratingImage(true);
+  async function handleDownloadImage(layout: ShareCardLayout) {
+    const target = layout === "story" ? storyShareCardRef.current : shareCardRef.current;
+    if (!target || perks.length === 0 || generatingImage) return;
+    setGeneratingImage(layout);
     try {
       const { default: html2canvas } = await import("html2canvas");
-      const canvas = await html2canvas(shareCardRef.current, {
+      const canvas = await html2canvas(target, {
         backgroundColor: "#121212",
         scale: 2,
         useCORS: true,
       });
       const link = document.createElement("a");
-      link.download = `dbd-${role}-build-${perks.map((p) => p.slug).join("-")}.png`;
+      const suffix = layout === "story" ? "-story" : "";
+      link.download = `dbd-${role}-build-${perks.map((p) => p.slug).join("-")}${suffix}.png`;
       link.href = canvas.toDataURL("image/png");
       link.click();
       showToast(t({ ru: "Картинка билда скачана!", en: "Build image downloaded!" }));
     } catch {
       showToast(t({ ru: "Не удалось создать картинку", en: "Couldn't generate the image" }));
     } finally {
-      setGeneratingImage(false);
+      setGeneratingImage(null);
     }
   }
 
@@ -543,6 +596,24 @@ export function RandomizerBoard() {
             </button>
           ))}
         </div>
+
+        {mounted && getTagsForRole(role).length > 0 && (
+          <div className="flex items-center gap-2 text-sm">
+            <span className="text-muted">{t({ ru: "Тема:", en: "Theme:" })}</span>
+            <select
+              value={themeTag ?? ""}
+              onChange={(e) => selectTheme(e.target.value || null)}
+              className="rounded-full border border-border bg-background px-3 py-1 text-xs text-foreground focus:ring-2 focus:ring-accent/40 focus:outline-none"
+            >
+              <option value="">{t({ ru: "Любая", en: "Any" })}</option>
+              {getTagsForRole(role).map((tag) => (
+                <option key={tag.id} value={tag.id}>
+                  {t({ ru: tag.ru, en: tag.en })}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
       </div>
 
       {/* Utility bar — Daily Challenge/seed and the pool/stats dialogs live
@@ -715,21 +786,37 @@ export function RandomizerBoard() {
         </button>
         <button
           type="button"
-          onClick={handleDownloadImage}
-          disabled={perks.length === 0 || generatingImage}
+          onClick={() => handleDownloadImage("landscape")}
+          disabled={perks.length === 0 || !!generatingImage}
           className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
         >
           <ImageDown className="size-3.5" />
-          {generatingImage
+          {generatingImage === "landscape"
             ? t({ ru: "Готовим картинку…", en: "Generating…" })
             : t({ ru: "Скачать картинку", en: "Download image" })}
+        </button>
+        <button
+          type="button"
+          onClick={() => handleDownloadImage("story")}
+          disabled={perks.length === 0 || !!generatingImage}
+          title={t({
+            ru: "Вертикальная картинка 1080×1920 для историй",
+            en: "Vertical 1080×1920 image for Stories",
+          })}
+          className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
+        >
+          <ImageDown className="size-3.5" />
+          {generatingImage === "story"
+            ? t({ ru: "Готовим картинку…", en: "Generating…" })
+            : t({ ru: "Скачать историю", en: "Download story" })}
         </button>
       </div>
 
       {/* Off-screen — exists only so html2canvas has real, laid-out DOM to
-          rasterize when Download image is clicked; never visible itself. */}
+          rasterize when a download button is clicked; never visible itself. */}
       <div aria-hidden style={{ position: "fixed", top: 0, left: -9999, pointerEvents: "none" }}>
         <ShareCard ref={shareCardRef} perks={perks} role={role} language={language} />
+        <ShareCard ref={storyShareCardRef} perks={perks} role={role} language={language} layout="story" />
       </div>
 
       {/* Primary CTA — the one action on this page that should visually
@@ -799,8 +886,10 @@ export function RandomizerBoard() {
         language={language}
         excludedSlugs={excludedSlugs}
         alsoGrayedOut={battleRoyale ? battleRoyaleUsed : undefined}
+        favoriteSlugs={favoriteSlugs}
         onToggle={toggleExcluded}
         onBulkSet={bulkSetExcluded}
+        onToggleFavorite={toggleFavorite}
         onResetRole={resetExcludedForRole}
         onClose={() => setExcludePanelOpen(false)}
       />

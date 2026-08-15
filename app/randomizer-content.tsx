@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { VideoEmbed } from "@/components/video-embed";
 import { RandomizerBoard } from "@/components/dbd/randomizer-board";
 import { EasterEgg } from "@/components/dbd/easter-egg";
@@ -7,12 +8,17 @@ import { ObsOverlay } from "@/components/dbd/obs-overlay";
 import { perksMeta } from "@/lib/perks";
 import { useLanguage, useT } from "@/lib/i18n";
 import { useIsObsMode } from "@/lib/use-obs-mode";
+import { registerServiceWorker } from "@/lib/register-sw";
 import trailer from "@/data/trailer.json";
 
 export function RandomizerContent() {
   const t = useT();
   const { lang } = useLanguage();
   const isObsMode = useIsObsMode();
+
+  useEffect(() => {
+    registerServiceWorker();
+  }, []);
   const updatedAt = new Date(perksMeta.scrapedAt).toLocaleDateString(
     lang === "ru" ? "ru-RU" : "en-US",
     { year: "numeric", month: "long", day: "numeric" },

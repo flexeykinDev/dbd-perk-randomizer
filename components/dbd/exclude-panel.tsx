@@ -2,7 +2,17 @@
 
 import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, RotateCcw, Search, Lock, CheckCheck, Ban, ArrowUpNarrowWide, ArrowDownWideNarrow } from "lucide-react";
+import {
+  X,
+  RotateCcw,
+  Search,
+  Lock,
+  CheckCheck,
+  Ban,
+  ArrowUpNarrowWide,
+  ArrowDownWideNarrow,
+  Star,
+} from "lucide-react";
 import type { PerkRole } from "@/lib/types";
 import { getPerksByRole } from "@/lib/perks";
 import { withBasePath } from "@/lib/asset-path";
@@ -12,7 +22,7 @@ import { useT } from "@/lib/i18n";
 import { getCharacterName } from "@/lib/character-name";
 import { getTagsForPerk, getTagsForRole } from "@/lib/perk-tags";
 
-type StatusFilter = "all" | "active" | "disabled";
+type StatusFilter = "all" | "active" | "disabled" | "favorite";
 type SortField = "name" | "character" | "date";
 type SortDir = "asc" | "desc";
 
@@ -22,8 +32,10 @@ export function ExcludePanel({
   language,
   excludedSlugs,
   alsoGrayedOut,
+  favoriteSlugs,
   onToggle,
   onBulkSet,
+  onToggleFavorite,
   onResetRole,
   onClose,
 }: {
@@ -35,8 +47,14 @@ export function ExcludePanel({
    *  Battle Royale) — shown with the same grayed-out treatment, just not
    *  counted in the "N excluded" badge or cleared by "Сбросить". */
   alsoGrayedOut?: ReadonlySet<string>;
+  /** Favorited perks get boosted odds in getRandomPerks (see lib/perks.ts)
+   *  instead of being force-included — a perk can be both favorited and
+   *  excluded at once (exclusion always wins, it's just never drawn), so
+   *  the two sets are intentionally independent. */
+  favoriteSlugs: Set<string>;
   onToggle: (slug: string) => void;
   onBulkSet: (slugs: string[], excluded: boolean) => void;
+  onToggleFavorite: (slug: string) => void;
   onResetRole: (role: PerkRole) => void;
   onClose: () => void;
 }) {
@@ -58,6 +76,7 @@ export function ExcludePanel({
     let list = perksForRole.filter((perk) => {
       if (status === "active" && excludedSlugs.has(perk.slug)) return false;
       if (status === "disabled" && !excludedSlugs.has(perk.slug)) return false;
+      if (status === "favorite" && !favoriteSlugs.has(perk.slug)) return false;
       if (selectedTags.size > 0) {
         const perkTags = getTagsForPerk(perk);
         if (!perkTags.some((tag) => selectedTags.has(tag))) return false;
@@ -89,7 +108,17 @@ export function ExcludePanel({
     }
     if (sortDir === "desc") list.reverse();
     return list;
-  }, [perksForRole, status, selectedTags, search, sortField, sortDir, excludedSlugs, language]);
+  }, [
+    perksForRole,
+    status,
+    selectedTags,
+    search,
+    sortField,
+    sortDir,
+    excludedSlugs,
+    favoriteSlugs,
+    language,
+  ]);
 
   // addedAt is "date the scraper first saw this slug", not the perk's real
   // DBD release date — carried forward on every rescrape (see
@@ -218,23 +247,26 @@ export function ExcludePanel({
                 )}
 
                 <div className="flex flex-wrap items-center gap-1.5">
-                  {(["all", "active", "disabled"] as const).map((option) => (
+                  {(["all", "active", "disabled", "favorite"] as const).map((option) => (
                     <button
                       key={option}
                       type="button"
                       onClick={() => setStatus(option)}
                       className={cn(
-                        "rounded-full border px-3 py-1 text-[11px] font-medium transition-colors",
+                        "flex items-center gap-1 rounded-full border px-3 py-1 text-[11px] font-medium transition-colors",
                         status === option
                           ? cn(roleColor.border, roleColor.bg, roleColor.text)
                           : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
                       )}
                     >
+                      {option === "favorite" && <Star className="size-2.5" />}
                       {option === "all"
                         ? t({ ru: "Все", en: "All" })
                         : option === "active"
                           ? t({ ru: "Активные", en: "Active" })
-                          : t({ ru: "Отключённые", en: "Disabled" })}
+                          : option === "disabled"
+                            ? t({ ru: "Отключённые", en: "Disabled" })
+                            : t({ ru: "Избранные", en: "Favorites" })}
                     </button>
                   ))}
                   <span className="mx-1 h-4 w-px bg-border" aria-hidden />
@@ -289,12 +321,23 @@ export function ExcludePanel({
                   {filtered.map((perk) => {
                     const excluded = excludedSlugs.has(perk.slug) || alsoGrayedOut?.has(perk.slug);
                     return (
-                      <button
+                      // A real <button> can't contain another interactive
+                      // descendant (invalid content model) — this card needs
+                      // one for the star toggle below, so it's a div with an
+                      // ARIA button role instead, same pattern as the perk
+                      // detail card in perk-grid.tsx.
+                      <div
                         key={perk.slug}
-                        type="button"
+                        role="button"
+                        tabIndex={0}
                         onClick={() => onToggle(perk.slug)}
+                        onKeyDown={(e) => {
+                          if (e.key !== "Enter" && e.key !== " ") return;
+                          e.preventDefault();
+                          onToggle(perk.slug);
+                        }}
                         className={cn(
-                          "relative flex flex-col items-center gap-1 rounded-xl border p-2 text-center transition-all",
+                          "relative flex cursor-pointer flex-col items-center gap-1 rounded-xl border p-2 text-center transition-all",
                           excluded
                             ? "border-border/40 opacity-35 grayscale"
                             : cn("border-border", roleColor.hoverBorder),
@@ -305,6 +348,29 @@ export function ExcludePanel({
                             <Lock className="size-2.5" />
                           </span>
                         )}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onToggleFavorite(perk.slug);
+                          }}
+                          aria-label={
+                            favoriteSlugs.has(perk.slug)
+                              ? t({ ru: "Убрать из избранного", en: "Remove from favorites" })
+                              : t({ ru: "Добавить в избранное", en: "Add to favorites" })
+                          }
+                          className={cn(
+                            "absolute top-1 left-1 flex size-4 items-center justify-center rounded-full bg-black/60 transition-colors",
+                            favoriteSlugs.has(perk.slug)
+                              ? "text-amber-400"
+                              : "text-white/50 hover:text-white",
+                          )}
+                        >
+                          <Star
+                            className="size-2.5"
+                            fill={favoriteSlugs.has(perk.slug) ? "currentColor" : "none"}
+                          />
+                        </button>
                         {/* eslint-disable-next-line @next/next/no-img-element -- next/image ignores basePath for unoptimized runtime src, see lib/asset-path.ts */}
                         <img
                           src={withBasePath(perk.icon)}
@@ -316,7 +382,7 @@ export function ExcludePanel({
                         <span className="text-[10px] leading-tight text-foreground">
                           {perk.name[language]}
                         </span>
-                      </button>
+                      </div>
                     );
                   })}
                 </div>

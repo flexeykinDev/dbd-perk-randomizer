@@ -48,11 +48,20 @@ export function getAvailablePool(
   return fullPool.filter((perk) => !excludedSlugs.has(perk.slug));
 }
 
+// How many extra "tickets" a favorited perk gets in the weighted draw below
+// — e.g. 4x means a favorited perk is roughly 4x as likely to be picked as
+// a non-favorited one on any given slot, without ever *guaranteeing* it
+// appears (it's still possible to roll a build with none of your favorites,
+// same as a real loot table — a hard guarantee would make "favorite everything"
+// behave identically to "favorite nothing", which defeats the point).
+const FAVORITE_WEIGHT = 4;
+
 export function getRandomPerks(
   role: PerkRole,
   count: number,
   excludedSlugs?: ReadonlySet<string>,
   random: () => number = Math.random,
+  favoriteSlugs?: ReadonlySet<string>,
 ): Perk[] {
   // Never pull from outside the caller's excluded-respecting pool, even when
   // it's smaller than `count` — silently topping up from excluded perks
@@ -61,7 +70,31 @@ export function getRandomPerks(
   // `poolExhausted`) and show an explicit "not enough perks" state instead of
   // calling this with a pool too small to fill the request.
   const pool = getAvailablePool(role, excludedSlugs);
-  return shuffle(pool, random).slice(0, count);
+
+  if (!favoriteSlugs || favoriteSlugs.size === 0) {
+    return shuffle(pool, random).slice(0, count);
+  }
+
+  // Weighted-without-replacement via ticket duplication: give each favorited
+  // perk multiple entries in the array before shuffling, then walk the
+  // shuffle taking the first *unique* slug seen until `count` is reached —
+  // a favorited perk's extra tickets just raise the odds one of its copies
+  // lands early, they can't make it appear twice in the result.
+  const weighted: Perk[] = [];
+  for (const perk of pool) {
+    const copies = favoriteSlugs.has(perk.slug) ? FAVORITE_WEIGHT : 1;
+    for (let i = 0; i < copies; i++) weighted.push(perk);
+  }
+
+  const picked: Perk[] = [];
+  const seen = new Set<string>();
+  for (const perk of shuffle(weighted, random)) {
+    if (seen.has(perk.slug)) continue;
+    seen.add(perk.slug);
+    picked.push(perk);
+    if (picked.length === count) break;
+  }
+  return picked;
 }
 
 /** Deterministic build for Daily Challenge / shared custom seeds. Always

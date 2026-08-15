@@ -31,10 +31,13 @@ test.describe("DBD randomizer", () => {
     const panel = page.getByText("Настроить пул перков");
     await expect(panel).toBeVisible();
 
-    // Perk toggle buttons (unlike "Сбросить"/"Закрыть") contain a perk icon.
+    // Perk cards are a div[role="button"] (not a real <button> — they
+    // contain their own nested <button> favorite-star toggle, and a real
+    // button can't contain another interactive descendant) that wraps a
+    // perk icon; unlike "Сбросить"/"Закрыть" or the star toggle itself.
     const firstPerkButton = page
       .locator("div.fixed.inset-0")
-      .locator("button:has(img)")
+      .locator('[role="button"]:has(img)')
       .first();
     await firstPerkButton.click();
 
