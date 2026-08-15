@@ -33,6 +33,16 @@
       "ru": "Уход за больным"
     },
     "description": "Unlocks potential in your Aura-reading ability. The Auras of the last 1/2/3 Survivor(s) are permanently revealed to you, once any of the following conditions have been met: You have unhooked them. They have unhooked you. You have completed a Healing action on them. They have completed a Healing action on you. Those Survivors also have your Aura revealed to them. Aftercare resets its effect once you are hooked. \"A Mercy that Rips the Storm.Oil work to honour my best buddies who happen to be the best musicians I know. Their first album is still my favourite. It got me through a dark time in my life.\" — Jeff, oil on canvas, 16x16",
+    "descriptionRu": {
+      "full": "Раскрывает потенциал вашей способности видеть ауры. Ауры последних 1/2/3 выживших, с которыми вы взаимодействовали — сняли с крюка друг друга или вылечили друг друга — открываются вам навсегда, а эти выжившие тоже видят вашу ауру. Эффект «Ухода за больным» сбрасывается, как только вас вешают на крюк.",
+      "core": [
+        "Ауры последних **1/2/3** выживших, с которыми вы взаимодействовали, открываются вам **навсегда**.",
+        "Взаимодействия: вы сняли их с крюка, они сняли с крюка вас, вы вылечили их, они вылечили вас.",
+        "Эти выжившие тоже видят **вашу ауру**.",
+        "Эффект сбрасывается, когда вас **вешают на крюк**."
+      ],
+      "quote": "«Милосердие, что разрывает бурю» — Джефф"
+    },
     "character": "Jeff",
     "icon": "/perks/survivor/aftercare.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
@@ -704,6 +714,13 @@
       "ru": "Сострадание"
     },
     "description": "Unlocks potential in your Aura-reading ability: The Auras of injured or dying Survivors are revealed to you within 64/96/128 metres.",
+    "descriptionRu": {
+      "full": "Раскрывает потенциал вашей способности видеть ауры. Ауры раненых или умирающих выживших открываются вам в радиусе 64/96/128 метров.",
+      "core": [
+        "Видите **ауры** раненых и умирающих выживших.",
+        "Радиус действия: **64/96/128 метров**."
+      ]
+    },
     "character": "Claudette",
     "icon": "/perks/survivor/empathy.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
@@ -859,6 +876,15 @@
       "ru": "Напролом"
     },
     "description": "When your mind is set, there better be no one standing in your way. After hiding in a Locker for 3 seconds, Head On activates: Performing a Rush Exit out of the Locker stuns a nearby Killer for 3 seconds. Head On causes the Exhausted Status Effect for 60/50/40 seconds.Head On cannot be used while Exhausted or when having accrued Idle Crows. \"People are remembered for the challenges they overcome. You can run away and forget what you're capable of or you can face your fears and remind the world of who you are.\" — Jane Romero",
+    "descriptionRu": {
+      "full": "После 3 секунд в шкафчике «Напролом» активируется: резкий выход из шкафчика оглушает находящегося рядом убийцу на 3 секунды. После срабатывания вы получаете эффект «Изнурение» на 60/50/40 секунд. Перк не работает, если вы уже изнурены или если на вас слетелись вороны от долгого бездействия.",
+      "core": [
+        "После **3 секунд** в шкафчике готов резкий выход, оглушающий убийцу рядом на **3 секунды**.",
+        "После срабатывания — эффект **«Изнурение»** на **60/50/40 сек**.",
+        "Не работает при изнурении или после долгого бездействия (слетелись вороны)."
+      ],
+      "quote": "«Людей помнят по трудностям, которые они преодолели. Можно убежать и забыть, на что ты способна, а можно посмотреть в лицо своим страхам и напомнить миру, кто ты» — Джейн Ромеро"
+    },
     "character": "Jane",
     "icon": "/perks/survivor/head-on.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
@@ -936,6 +962,16 @@
       "ru": "Чары: пауки-прядильщики"
     },
     "description": "The place where fear festers and terror treads is also where those with the gift can reach across the veil. When in the Basement near the circle, press the Active Ability button to begin the Invocation, which takes 60 seconds to complete.During an Invocation, your Aura is revealed to all other Survivors and they can join in, accelerating the process by +100 %, if they too have an Invocation Perk equipped, or by +50 %, if they have not. Once the Invocation is completed, the following effects apply: Permanently reduces the Repair Charges requirement of all Generators in the Trial by 8/9/10 Charges. You automatically enter the Injured State from any previous Health State, and suffer from the Broken Status Effect for the remainder of the Trial. Completing an Invocation disables all Invocation Perks for the remainder of the Trial for all Survivors. \"I call upon the spirits of the night, to aid us in our desperate flight!\" — Sable",
+    "descriptionRu": {
+      "full": "Находясь в подвале рядом с кругом, нажмите кнопку активной способности, чтобы начать ритуал — он длится 60 секунд. Во время ритуала ваша аура открыта всем выжившим, и они могут присоединиться: ритуал ускоряется на 100%, если у выжившего тоже есть перк-чары, или на 50%, если нет. По завершении: требование по зарядам ремонта для всех генераторов навсегда снижается на 8/9/10 зарядов, вы автоматически переходите в состояние ранения и получаете эффект «Слом» до конца матча. Завершённый ритуал отключает все перки-чары до конца матча для всех выживших.",
+      "core": [
+        "В подвале рядом с кругом активируйте ритуал — длится **60 секунд**.",
+        "Другие выжившие видят вашу ауру и могут ускорить ритуал: **+100%**, если у них тоже есть чары, или **+50%**, если нет.",
+        "После завершения: генераторам нужно на **8/9/10** зарядов меньше, но вы получаете ранение и эффект **«Слом»** до конца матча.",
+        "Завершённый ритуал отключает **все чары** у всех выживших до конца матча."
+      ],
+      "quote": "«Я взываю к духам ночи — помогите нам в отчаянном бегстве!» — Сейбл"
+    },
     "character": "Sable",
     "icon": "/perks/survivor/invocation-weaving-spiders.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
@@ -987,6 +1023,14 @@
       "ru": "Оставленный Позади"
     },
     "description": "You will get the job done... no matter the cost. Once you are the Last Survivor Standing, Left Behind activates: The Aura of the Hatch is revealed to you within 24/28/32 metres. \"I'm not horse-shittin' around. I'm doing this alone!\" — Bill Overbeck",
+    "descriptionRu": {
+      "full": "Как только вы остаётесь последним живым выжившим, «Оставленный Позади» активируется: аура люка открывается вам в радиусе 24/28/32 метров.",
+      "core": [
+        "Работает, только когда вы — **последний живой выживший**.",
+        "Открывает ауру **люка** в радиусе **24/28/32 метров**."
+      ],
+      "quote": "«Я не шучу. Я справлюсь один!» — Билл Овербек"
+    },
     "character": "Bill",
     "icon": "/perks/survivor/left-behind.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
@@ -1077,6 +1121,15 @@
       "ru": "Призвание"
     },
     "description": "You were born to survive, and raised to adapt. Whenever you are in the Injured State, Made for This activates and you benefit from the following effects: Grants the Endurance Status Effect for 6/8/10 seconds, after completing a Healing action on another Survivor. Endurance is cancelled prematurely when performing a Conspicuous Action. Grants a 1/2/3 % Haste Status Effect while running and also suffering from the Deep Wound Status Effect. \"I didn't come here to be robot food!\" — Gabriel Soma",
+    "descriptionRu": {
+      "full": "Пока вы ранены, «Призвание» активно: после лечения другого выжившего вы получаете эффект «Стойкость» на 6/8/10 секунд (он отменяется раньше срока, если вы совершите заметное действие). Также вы получаете 1/2/3% эффекта «Прыть», пока бежите и одновременно страдаете от глубокой раны.",
+      "core": [
+        "Активно, пока вы **ранены**.",
+        "После лечения другого выжившего: эффект **«Стойкость»** на **6/8/10 сек** (отменяется заметным действием).",
+        "При беге с **глубокой раной**: **+1/2/3%** эффекта **«Прыть»**."
+      ],
+      "quote": "«Я пришёл сюда не для того, чтобы стать кормом для роботов!» — Габриэль Сома"
+    },
     "character": "Gabriel",
     "icon": "/perks/survivor/made-for-this.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
@@ -1180,6 +1233,14 @@
       "ru": "Игра в открытую"
     },
     "description": "Strengthens the potential in your and your team's Aura-reading abilities. Increases the radius of all Aura-reading abilities emanating from yourself or other Survivors by 8/12/16 metres. Survivors can only be affected by one instance of Open-Handed at a time. \"Paying attention is what kept me alive through the years. That, and my good looks of course.\" — Ace Visconti",
+    "descriptionRu": {
+      "full": "Усиливает способности чтения ауры — как ваши, так и всей команды. Увеличивает радиус действия всех способностей чтения ауры, исходящих от вас или других выживших, на 8/12/16 метров. На выжившего одновременно может действовать только один «Игра в открытую».",
+      "core": [
+        "Увеличивает радиус **всех** способностей чтения ауры на **8/12/16 метров** — своих и чужих.",
+        "На одного выжившего действует только **один** экземпляр перка одновременно."
+      ],
+      "quote": "«Внимательность годами спасала мне жизнь. Ну и моя привлекательная внешность, конечно» — Эйс Висконти"
+    },
     "character": "Ace",
     "icon": "/perks/survivor/open-handed.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
@@ -1569,6 +1630,15 @@
       "ru": "Мелкая дичь"
     },
     "description": "You have the undeniable capability to sense danger. Receive an auditory warning upon looking in the direction of Totems in a 45 ° cone within 8/10/12 metres. Small Game has a cool-down of 14/12/10 seconds each time it activates. For each Dull or Hex Totem cleansed by any Player, Small Game is automatically granted 1 Token: Each Token reduces the Detection cone's angle by 5 °, down to a minimum of 20 °. \"Nope.\" — Andy, The Lost Tapes",
+    "descriptionRu": {
+      "full": "Вы получаете звуковое предупреждение, если смотрите в сторону тотема в конусе 45° на расстоянии до 8/10/12 метров. Время восстановления перка — 14/12/10 секунд после каждого срабатывания. За каждый очищенный любым игроком тусклый или хекс-тотем вы получаете жетон: каждый жетон сужает конус обнаружения на 5°, вплоть до минимума в 20°.",
+      "core": [
+        "Звуковое предупреждение при взгляде на тотем в конусе **45°** на расстоянии **8/10/12 м**.",
+        "Перезарядка после срабатывания: **14/12/10 сек**.",
+        "За каждый очищенный тотем — **жетон**, сужающий конус обнаружения на **5°** (минимум **20°**)."
+      ],
+      "quote": "«Не-а» — Энди, «Утерянные записи»"
+    },
     "character": ".All",
     "icon": "/perks/survivor/small-game.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
@@ -1594,6 +1664,15 @@
       "ru": "До последнего"
     },
     "description": "As more of your friends fall to the Killer, you become shrouded in isolation and the Killer's Aura-reading abilities towards you are disrupted. Each time a Survivor other than yourself is killed or sacrificed, Sole Survivor gains 1 Token, up to a maximum of 3 Tokens: Grants a stack-able radius of 20/22/24 metres per Token around you, up to a maximum of 60/66/72 metres, within which you are immune to the Killer's Aura-reading abilities. When you are the Last Survivor Standing, you benefit from the following effects: Increases your Repair speed by +75 %. Increases your Gate and Hatch Opening speeds by +50 %. Increases your chance of becoming the initial Obsession by increasing the default value by +100 %. The Killer can only be obsessed with one Survivor at a time. \"It was the boogeyman.\" — Laurie Strode",
+    "descriptionRu": {
+      "full": "Чем больше ваших друзей гибнет от рук убийцы, тем сильнее вы окутаны изоляцией, мешающей убийце читать вашу ауру. За каждого погибшего или принесённого в жертву выжившего (кроме вас) вы получаете жетон, максимум 3: каждый жетон даёт суммируемый радиус в 20/22/24 метра, вплоть до 60/66/72 метров, в котором убийца не может видеть вашу ауру. Когда вы остаётесь последним живым выжившим: скорость ремонта увеличивается на 75%, скорость открытия ворот и люка — на 50%, а шанс изначально стать объектом одержимости увеличивается на 100%. Убийца может быть одержим только одним выжившим одновременно.",
+      "core": [
+        "За каждого погибшего товарища — **жетон** (максимум **3**): **20/22/24 м** радиуса защиты от чтения ауры за жетон, максимум **60/66/72 м**.",
+        "Когда вы остаётесь **последним живым**: ремонт **+75%**, открытие ворот и люка **+50%**.",
+        "Шанс стать **объектом одержимости** увеличен на **100%**."
+      ],
+      "quote": "«Это был бугимен» — Лори Строуд"
+    },
     "character": "Laurie",
     "icon": "/perks/survivor/sole-survivor.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
@@ -1788,6 +1867,15 @@
       "ru": "Ремонтник"
     },
     "description": "No amount of distraction will shake you from your primary task. When you are chased by the Killer, Troubleshooter activates: The Aura of the Generator with the most progress is revealed to you. The Aura of the Killer is revealed to you for 4/5/6 seconds after dropping a Pallet. These effects linger for 6/8/10 seconds after ending the Chase, after which Troubleshooter deactivates. \"Nothing gets done around here if I don't do it.\" — Gabriel Soma",
+    "descriptionRu": {
+      "full": "Во время погони с убийцей «Ремонтник» активируется: вам открывается аура генератора с наибольшим прогрессом, а после сброса доски вы на 4/5/6 секунд видите ауру убийцы. Эффекты сохраняются ещё 6/8/10 секунд после окончания погони, после чего перк отключается.",
+      "core": [
+        "Во время **погони**: видите ауру генератора с **наибольшим прогрессом**.",
+        "После сброса доски: аура убийцы на **4/5/6 сек**.",
+        "Эффекты держатся ещё **6/8/10 сек** после конца погони."
+      ],
+      "quote": "«Здесь ничего не будет сделано, если не сделаю я» — Габриэль Сома"
+    },
     "character": "Gabriel",
     "icon": "/perks/survivor/troubleshooter.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
@@ -2008,6 +2096,14 @@
       "ru": "Розыгрыш"
     },
     "description": "After vaulting a Window, Bamboozle calls upon The Entity to block that Window for the next 8/12/16 seconds. Blocked Windows cannot be vaulted by Survivors. Increases your general Vaulting speed by 5/10/15 %. Bamboozle only blocks one Window at a time and does not apply either of its effects to vaulting Pallets.",
+    "descriptionRu": {
+      "full": "После прыжка в окно «Розыгрыш» призывает Сущность заблокировать это окно на следующие 8/12/16 секунд — выжившие не смогут через него прыгать. Также увеличивает вашу общую скорость прыжков в окна на 5/10/15%. Одновременно блокируется только одно окно, и эффекты не применяются к прыжкам через доски.",
+      "core": [
+        "После прыжка в окно оно **блокируется** на **8/12/16 сек** — выжившие не могут через него прыгнуть.",
+        "Скорость **всех** ваших прыжков в окна: **+5/10/15%**.",
+        "Блокируется только **одно** окно одновременно; на доски не действует."
+      ]
+    },
     "character": "Clown",
     "icon": "/perks/killer/bamboozle.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
@@ -3017,6 +3113,14 @@
       "ru": "Слежка и наказание"
     },
     "description": "Meticulous in your approach, terrifying in your application. Increases the base value of your Terror Radius by 6/7/8 metres for the entire Trial. Whenever you are not in a Chase with a Survivor, the following effect applies: Reduces your Terror Radius by 12/14/16 metres. \"It's time for your treatment!\" — Herman Carter, The Doctor",
+    "descriptionRu": {
+      "full": "Базовый радиус террора увеличен на 6/7/8 метров на весь матч. Пока вы не преследуете выжившего, радиус террора дополнительно уменьшается на 12/14/16 метров.",
+      "core": [
+        "Базовый радиус террора: **+6/7/8 метров** на весь матч.",
+        "Вне погони радиус террора дополнительно **−12/14/16 метров**."
+      ],
+      "quote": "«Пора начинать лечение!» — Херман Картер, Доктор"
+    },
     "character": "Doctor",
     "icon": "/perks/killer/monitor-and-abuse.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
@@ -3419,6 +3523,14 @@
       "ru": "Стридор"
     },
     "description": "You are acutely sensitive to the breathing of your prey. Increases the volume of Grunts of Pain of injured Survivors by 30/40/50 %. Increases the volume of regular breathing of Survivors by 15/20/25 %. \"If you do not stop and catch your breath... she will.\"",
+    "descriptionRu": {
+      "full": "Громкость стонов от боли раненых выживших увеличена на 30/40/50%. Громкость обычного дыхания выживших увеличена на 15/20/25%.",
+      "core": [
+        "Стоны от боли раненых выживших: **громче на 30/40/50%**.",
+        "Обычное дыхание выживших: **громче на 15/20/25%**."
+      ],
+      "quote": "«Если ты не остановишься и не переведёшь дыхание... она сделает это за тебя»"
+    },
     "character": "Nurse",
     "icon": "/perks/killer/stridor.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
