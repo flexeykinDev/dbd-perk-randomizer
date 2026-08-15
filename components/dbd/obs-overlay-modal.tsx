@@ -62,10 +62,23 @@ const DEFAULT_SLOT_POSITIONS: readonly ObsIconPosition[] = [
   { x: 87.5, y: 50 },
 ];
 
-// OBS's recommended Browser Source dimensions (see the setup steps below) —
-// the live preview keeps the same aspect ratio so a dragged position lines
-// up with where it'll actually land in OBS.
-const PREVIEW_ASPECT = 800 / 220;
+// Starting point for the OBS Browser Source's own width/height — matches
+// what the setup steps used to hardcode. Now editable (see canvasWidth /
+// canvasHeight below): the overlay itself just fills whatever pixel size
+// OBS actually gives the source (`fixed inset-0`), so a taller canvas is
+// all it takes to give 2-line names — see obs-overlay.tsx — real room to
+// breathe instead of the cramped default 220px strip.
+const DEFAULT_CANVAS_WIDTH = 800;
+const DEFAULT_CANVAS_HEIGHT = 220;
+const MIN_CANVAS_WIDTH = 320;
+const MAX_CANVAS_WIDTH = 1920;
+const MIN_CANVAS_HEIGHT = 120;
+const MAX_CANVAS_HEIGHT = 800;
+const CANVAS_PRESETS: readonly { width: number; height: number; label: { ru: string; en: string } }[] = [
+  { width: 800, height: 220, label: { ru: "Компакт", en: "Compact" } },
+  { width: 800, height: 340, label: { ru: "С именами", en: "With names" } },
+  { width: 1100, height: 420, label: { ru: "Просторно", en: "Roomy" } },
+];
 const PREVIEW_BASE_ICON_PX = 34;
 const PREVIEW_BASE_NAME_MAX_WIDTH_PX = 56;
 
@@ -144,6 +157,8 @@ export function ObsOverlayModal({
   const [pasteCommandCopied, setPasteCommandCopied] = useState(false);
   const [scale, setScale] = useState(DEFAULT_OBS_OPTIONS.scale);
   const [nameScale, setNameScale] = useState(DEFAULT_OBS_OPTIONS.nameScale);
+  const [canvasWidth, setCanvasWidth] = useState(DEFAULT_CANVAS_WIDTH);
+  const [canvasHeight, setCanvasHeight] = useState(DEFAULT_CANVAS_HEIGHT);
   const [showNames, setShowNames] = useState(DEFAULT_OBS_OPTIONS.showNames);
   const [darkBg, setDarkBg] = useState(DEFAULT_OBS_OPTIONS.background === "dark");
   // null = no custom layout yet, overlay falls back to its default centered
@@ -263,6 +278,15 @@ export function ObsOverlayModal({
   const previewSlotCount = perks.length > 0 ? Math.min(perks.length, 4) : 4;
   const previewIconPx = Math.round(PREVIEW_BASE_ICON_PX * (scale / 100));
 
+  function updateCanvasWidth(width: number) {
+    if (!Number.isFinite(width)) return;
+    setCanvasWidth(Math.min(MAX_CANVAS_WIDTH, Math.max(MIN_CANVAS_WIDTH, Math.round(width))));
+  }
+  function updateCanvasHeight(height: number) {
+    if (!Number.isFinite(height)) return;
+    setCanvasHeight(Math.min(MAX_CANVAS_HEIGHT, Math.max(MIN_CANVAS_HEIGHT, Math.round(height))));
+  }
+
   return (
     <AnimatePresence>
       {open && (
@@ -349,13 +373,56 @@ export function ObsOverlayModal({
                   {t({ ru: "Сбросить позиции", en: "Reset positions" })}
                 </button>
               </div>
+
+              <div className="mb-1.5 flex flex-wrap items-center gap-1.5">
+                <span className="text-[11px] text-muted">
+                  {t({ ru: "Холст OBS:", en: "OBS canvas:" })}
+                </span>
+                <input
+                  type="number"
+                  min={MIN_CANVAS_WIDTH}
+                  max={MAX_CANVAS_WIDTH}
+                  value={canvasWidth}
+                  onChange={(e) => updateCanvasWidth(Number(e.target.value))}
+                  className="w-16 rounded-full border border-border bg-background px-2 py-0.5 text-[11px] text-foreground focus:ring-2 focus:ring-accent/40 focus:outline-none"
+                />
+                <span className="text-muted">×</span>
+                <input
+                  type="number"
+                  min={MIN_CANVAS_HEIGHT}
+                  max={MAX_CANVAS_HEIGHT}
+                  value={canvasHeight}
+                  onChange={(e) => updateCanvasHeight(Number(e.target.value))}
+                  className="w-16 rounded-full border border-border bg-background px-2 py-0.5 text-[11px] text-foreground focus:ring-2 focus:ring-accent/40 focus:outline-none"
+                />
+                <span className="mx-0.5 h-3.5 w-px bg-border" aria-hidden />
+                {CANVAS_PRESETS.map((preset) => (
+                  <button
+                    key={`${preset.width}x${preset.height}`}
+                    type="button"
+                    onClick={() => {
+                      setCanvasWidth(preset.width);
+                      setCanvasHeight(preset.height);
+                    }}
+                    className={cn(
+                      "rounded-full border px-2 py-0.5 text-[11px] font-medium transition-colors",
+                      canvasWidth === preset.width && canvasHeight === preset.height
+                        ? "border-accent/50 bg-accent/15 text-accent"
+                        : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
+                    )}
+                  >
+                    {t(preset.label)}
+                  </button>
+                ))}
+              </div>
+
               <div
                 ref={previewRef}
                 className={cn(
                   "relative w-full touch-none overflow-hidden rounded-xl border border-border bg-[repeating-conic-gradient(#8884_0%_25%,transparent_0%_50%)] bg-[length:16px_16px]",
                   darkBg && "bg-none bg-[#0b0c0f]",
                 )}
-                style={{ aspectRatio: PREVIEW_ASPECT }}
+                style={{ aspectRatio: canvasWidth / canvasHeight }}
               >
                 {Array.from({ length: previewSlotCount }, (_, index) => {
                   const perk: Perk | undefined = perks[index];
@@ -395,7 +462,7 @@ export function ObsOverlayModal({
                       </span>
                       {showNames && perk && (
                         <span
-                          className="pointer-events-none inline-block truncate rounded-full bg-black/70 px-1.5 py-0.5 text-[9px] font-bold text-white"
+                          className="line-clamp-2 pointer-events-none inline-block rounded-md bg-black/70 px-1.5 py-0.5 text-center text-[9px] leading-tight font-bold break-words text-white"
                           style={{ maxWidth: Math.round(PREVIEW_BASE_NAME_MAX_WIDTH_PX * (nameScale / 100)) }}
                         >
                           {perk.name[language]}
@@ -492,8 +559,8 @@ export function ObsOverlayModal({
                   {t({ ru: "Вставь ссылку выше в поле URL", en: "Paste the link above into URL" })}
                 </li>
                 <li>
-                  {t({ ru: "Ширина", en: "Width" })}: <b className="text-foreground">800</b> ·{" "}
-                  {t({ ru: "Высота", en: "Height" })}: <b className="text-foreground">220</b>
+                  {t({ ru: "Ширина", en: "Width" })}: <b className="text-foreground">{canvasWidth}</b> ·{" "}
+                  {t({ ru: "Высота", en: "Height" })}: <b className="text-foreground">{canvasHeight}</b>
                 </li>
                 <li>
                   {t({

@@ -117,7 +117,13 @@ export function ObsOverlay() {
                 </span>
                 {options.showNames && (
                   <span
-                    className="inline-block truncate rounded-full bg-black/70 font-bold text-white shadow-lg backdrop-blur-sm"
+                    // Wraps onto up to 2 lines instead of cutting off on one —
+                    // long names (RU especially) rarely fit a single-line pill
+                    // at any reasonable width, so wrapping is the "just fits"
+                    // default; line-clamp-2 still ellipsizes the rare name
+                    // that overflows even two lines. A rectangle (not a full
+                    // pill) reads better once the box has real height.
+                    className="line-clamp-2 inline-block rounded-lg bg-black/70 text-center leading-tight font-bold break-words text-white shadow-lg backdrop-blur-sm"
                     style={{
                       fontSize: Math.round(BASE_NAME_FONT_PX * scaleRatio),
                       paddingLeft: Math.round(BASE_NAME_PAD_X_PX * scaleRatio),
