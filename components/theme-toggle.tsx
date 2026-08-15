@@ -5,6 +5,7 @@ import { Moon, Sun } from "lucide-react";
 import { useMounted } from "@/lib/use-mounted";
 import { THEME_STORAGE_KEY, type Theme } from "@/lib/theme";
 import { useT } from "@/lib/i18n";
+import { safeSet } from "@/lib/safe-storage";
 
 function readTheme(): Theme {
   if (typeof document === "undefined") return "dark";
@@ -13,7 +14,7 @@ function readTheme(): Theme {
 
 function applyTheme(theme: Theme) {
   document.documentElement.dataset.theme = theme;
-  window.localStorage.setItem(THEME_STORAGE_KEY, theme);
+  safeSet("local", THEME_STORAGE_KEY, theme);
 }
 
 export function ThemeToggle() {

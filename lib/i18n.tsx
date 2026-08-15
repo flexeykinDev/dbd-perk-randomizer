@@ -2,20 +2,27 @@
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { useMounted } from "./use-mounted";
+import { safeGet, safeSet } from "./safe-storage";
 
 export type Lang = "ru" | "en";
 
-const LANG_COOKIE = "dbd-randomizer-lang";
-const COOKIE_MAX_AGE = 60 * 60 * 24 * 365; // 1 year
+const LANG_STORAGE_KEY = "dbd-randomizer:language";
 
-function readLangCookie(): Lang | null {
-  if (typeof document === "undefined") return null;
-  const match = document.cookie.match(/(?:^|; )dbd-randomizer-lang=(ru|en)/);
-  return match ? (match[1] as Lang) : null;
-}
+// CIS/Slavic-adjacent locales that should default to Russian rather than
+// English — Belarusian and Ukrainian browsers commonly ship without a
+// dedicated translation and Russian reads better for that audience than
+// English does; Kazakh is included for the same reason.
+const RUSSIAN_LOCALE_PREFIXES = ["ru", "be", "uk", "kk"];
 
-function writeLangCookie(lang: Lang) {
-  document.cookie = `${LANG_COOKIE}=${lang}; max-age=${COOKIE_MAX_AGE}; path=/; samesite=lax`;
+function detectSystemLanguage(): Lang {
+  if (typeof navigator === "undefined") return "en";
+  try {
+    const primary = navigator.languages?.[0] ?? navigator.language ?? "";
+    const lower = primary.toLowerCase();
+    return RUSSIAN_LOCALE_PREFIXES.some((prefix) => lower.startsWith(prefix)) ? "ru" : "en";
+  } catch {
+    return "en";
+  }
 }
 
 interface LanguageContextValue {
@@ -27,19 +34,21 @@ const LanguageContext = createContext<LanguageContextValue | null>(null);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   // Static export means the server always renders the Russian default —
-  // there's no per-request cookie to read at build time. We accept a brief
-  // flash for returning English-preferring visitors rather than a hydration
-  // mismatch: first client render matches the server (ru), then the cookie
-  // is applied right after mount.
+  // there's neither a per-request cookie nor the visitor's navigator object
+  // to consult at build time. We accept a brief flash for returning
+  // English-preferring visitors rather than a hydration mismatch: the first
+  // client render matches the server (ru), then the real preference —
+  // saved choice, else system-language detection — is applied right after
+  // mount, same pattern as the board's other persisted state.
   const mounted = useMounted();
   const [lang, setLangState] = useState<Lang>("ru");
 
   useEffect(() => {
-    function applyCookieLang() {
-      const cookieLang = readLangCookie();
-      if (cookieLang) setLangState(cookieLang);
+    function applyInitialLanguage() {
+      const saved = safeGet("local", LANG_STORAGE_KEY);
+      setLangState(saved === "ru" || saved === "en" ? saved : detectSystemLanguage());
     }
-    applyCookieLang();
+    applyInitialLanguage();
   }, []);
 
   useEffect(() => {
@@ -48,7 +57,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   function setLang(next: Lang) {
     setLangState(next);
-    writeLangCookie(next);
+    safeSet("local", LANG_STORAGE_KEY, next);
   }
 
   return (
@@ -71,4 +80,15 @@ export function useT() {
   return function t(strings: { ru: string; en: string }): string {
     return strings[lang];
   };
+}
+
+/** Russian noun pluralization — picks the grammatically correct form for a
+ *  count, unlike English's flat singular/plural split. E.g. for "perk":
+ *  1 -> "перк" (one), 2-4 -> "перка" (few), 0/5-20/... -> "перков" (many). */
+export function ruPlural(count: number, one: string, few: string, many: string): string {
+  const mod10 = count % 10;
+  const mod100 = count % 100;
+  if (mod10 === 1 && mod100 !== 11) return one;
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return few;
+  return many;
 }

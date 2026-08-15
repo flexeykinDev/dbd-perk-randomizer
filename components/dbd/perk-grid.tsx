@@ -9,6 +9,9 @@ import { isNewPerk, getCharacterPortrait } from "@/lib/perks";
 import { ROLE_COLOR } from "@/lib/role-color";
 import { cn } from "@/lib/cn";
 import { useT } from "@/lib/i18n";
+import { getCharacterName } from "@/lib/character-name";
+import { getPerkDescription } from "@/lib/perk-description";
+import { Highlighted } from "./highlighted-text";
 
 export function PerkGrid({
   perks,
@@ -28,7 +31,7 @@ export function PerkGrid({
 
   if (loading) {
     return (
-      <div className="grid min-h-[220px] grid-cols-2 gap-4 sm:grid-cols-4">
+      <div className="grid min-h-[220px] w-full grid-cols-2 gap-3 sm:grid-cols-4">
         {Array.from({ length: 4 }).map((_, i) => (
           <div
             key={i}
@@ -60,8 +63,18 @@ export function PerkGrid({
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.85 }}
                 transition={{ duration: 0.25, delay: index * 0.05 }}
+                role="button"
+                tabIndex={0}
+                onClick={() => setDetailPerk(perk)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setDetailPerk(perk);
+                  }
+                }}
+                aria-label={t({ ru: "Описание:", en: "Description:" }) + " " + perk.name[language]}
                 className={cn(
-                  "group relative flex flex-col items-center gap-2 rounded-2xl border border-border bg-surface p-3 text-center transition-colors hover:bg-surface-hover",
+                  "group relative flex cursor-pointer flex-col items-center gap-2 rounded-2xl border border-border bg-surface p-3 text-center transition-colors hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:outline-none",
                   roleColor.hoverBorder,
                 )}
               >
@@ -72,40 +85,42 @@ export function PerkGrid({
                       perk.role === "survivor" ? "bg-sky-500" : "bg-rose-500",
                     )}
                   >
-                    NEW
+                    {t({ ru: "НОВОЕ", en: "NEW" })}
                   </span>
                 )}
+
                 <button
                   type="button"
-                  onClick={() => setDetailPerk(perk)}
-                  aria-label={
-                    t({ ru: "Описание:", en: "Description:" }) + " " + perk.name[language]
-                  }
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setDetailPerk(perk);
+                  }}
+                  aria-label={t({ ru: "Описание:", en: "Description:" }) + " " + perk.name[language]}
                   className="absolute top-1.5 right-1.5 z-10 flex size-6 items-center justify-center rounded-full bg-black/40 text-white/80 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100 hover:bg-black/60 hover:text-white"
                 >
                   <Info className="size-3.5" />
                 </button>
+
+                {/* eslint-disable-next-line @next/next/no-img-element -- next/image ignores basePath for unoptimized runtime src, see lib/asset-path.ts */}
+                <img
+                  src={withBasePath(perk.icon)}
+                  alt={perk.name[language]}
+                  width={112}
+                  height={112}
+                  className="rounded-xl transition-transform group-hover:scale-105"
+                />
+                <span className="text-xs font-medium text-foreground">{perk.name[language]}</span>
+
                 <button
                   type="button"
-                  onClick={() => onCopy(perk)}
-                  className="flex cursor-pointer flex-col items-center gap-2"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onCopy(perk);
+                  }}
+                  className="mt-auto flex w-full items-center justify-center gap-1.5 rounded-lg border border-border py-1.5 text-xs font-medium text-muted transition-colors hover:border-accent/50 hover:bg-accent/10 hover:text-accent"
                 >
-                  <span className="relative">
-                    {/* eslint-disable-next-line @next/next/no-img-element -- next/image ignores basePath for unoptimized runtime src, see lib/asset-path.ts */}
-                    <img
-                      src={withBasePath(perk.icon)}
-                      alt={perk.name[language]}
-                      width={96}
-                      height={96}
-                      className="rounded-xl transition-transform group-hover:scale-105"
-                    />
-                    <span className="absolute inset-0 flex items-center justify-center rounded-xl bg-black/0 opacity-0 transition-all group-hover:bg-black/40 group-hover:opacity-100">
-                      <Copy className="size-5 text-white" />
-                    </span>
-                  </span>
-                  <span className="text-xs font-medium text-foreground">
-                    {perk.name[language]}
-                  </span>
+                  <Copy className="size-3.5" />
+                  {t({ ru: "Копировать", en: "Copy" })}
                 </button>
               </motion.div>
             );
@@ -139,9 +154,9 @@ function PerkDetailModal({
     <AnimatePresence>
       {perk && roleColor && (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
+          initial={{ opacity: 0, pointerEvents: "none" }}
+          animate={{ opacity: 1, pointerEvents: "auto" }}
+          exit={{ opacity: 0, pointerEvents: "none" }}
           onClick={onClose}
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
         >
@@ -199,7 +214,9 @@ function PerkDetailModal({
                         ? t({ ru: "Выживший", en: "Survivor" })
                         : t({ ru: "Убийца", en: "Killer" })}
                     </span>
-                    <span className="text-muted">· {perk.character}</span>
+                    <span className="text-muted">
+                      · {getCharacterName(perk.character, language)}
+                    </span>
                   </p>
                 </div>
               </div>
@@ -215,7 +232,7 @@ function PerkDetailModal({
                     {/* eslint-disable-next-line @next/next/no-img-element -- next/image ignores basePath for unoptimized runtime src, see lib/asset-path.ts */}
                     <img
                       src={withBasePath(portrait)}
-                      alt={perk.character}
+                      alt={getCharacterName(perk.character, language)}
                       width={48}
                       height={48}
                       className="size-12 object-cover"
@@ -225,18 +242,82 @@ function PerkDetailModal({
                     <p className="text-[11px] text-muted">
                       {t({ ru: "Персонаж", en: "Character" })}
                     </p>
-                    <p className="text-sm font-medium text-foreground">{perk.character}</p>
+                    <p className="text-sm font-medium text-foreground">
+                      {getCharacterName(perk.character, language)}
+                    </p>
                   </div>
                 </div>
               )}
 
-              <p className="mt-4 text-sm leading-relaxed text-muted">
-                {perk.description}
-              </p>
+              <PerkDescriptionPanel key={perk.slug} perk={perk} language={language} />
             </div>
           </motion.div>
         </motion.div>
       )}
     </AnimatePresence>
+  );
+}
+
+type DescriptionTab = "core" | "full";
+
+/** Mirrors the game's own "core effect vs full text" description toggle.
+ *  Keyed by perk.slug from the caller so switching perks resets the tab. */
+function PerkDescriptionPanel({
+  perk,
+  language,
+}: {
+  perk: Perk;
+  language: "en" | "ru";
+}) {
+  const t = useT();
+  const [tab, setTab] = useState<DescriptionTab>("core");
+  const description = getPerkDescription(perk, language);
+
+  return (
+    <div className="mt-4">
+      <div className="inline-flex rounded-full border border-border bg-surface/60 p-0.5 text-xs font-medium">
+        {(["core", "full"] as const).map((option) => (
+          <button
+            key={option}
+            type="button"
+            onClick={() => setTab(option)}
+            className={cn(
+              "rounded-full px-3 py-1 transition-colors",
+              tab === option
+                ? "bg-accent text-accent-foreground"
+                : "text-muted hover:text-foreground",
+            )}
+          >
+            {option === "core"
+              ? t({ ru: "Кратко", en: "Core Effect" })
+              : t({ ru: "Подробно", en: "Full Text" })}
+          </button>
+        ))}
+      </div>
+
+      {tab === "core" ? (
+        <ul className="mt-3 space-y-1.5 text-sm leading-relaxed text-muted">
+          {description.core.map((bullet, i) => (
+            <li key={i} className="flex gap-2">
+              <span className="mt-1 size-1 shrink-0 rounded-full bg-muted" aria-hidden />
+              <span>
+                <Highlighted text={bullet} />
+              </span>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div className="mt-3 space-y-3">
+          <p className="text-sm leading-relaxed text-muted">
+            <Highlighted text={description.full} />
+          </p>
+          {description.quote && (
+            <p className="border-l-2 border-accent/40 pl-3 text-xs italic leading-relaxed text-muted/80">
+              {description.quote}
+            </p>
+          )}
+        </div>
+      )}
+    </div>
   );
 }

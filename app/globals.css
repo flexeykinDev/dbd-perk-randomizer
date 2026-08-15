@@ -2,14 +2,20 @@
 
 :root {
   color-scheme: dark;
-  --background: #0b0c0f;
-  --surface: #14161b;
-  --surface-hover: #1b1e25;
-  --border: #262a33;
+  /* Rich dark slate, not a flat near-black — Material 3 "surface" tone
+     progression (background darkest, surface a shade up) instead of one
+     background color reused everywhere. */
+  --background: #121212;
+  --surface: #1e2228;
+  --surface-hover: #262b33;
+  --border: #30353d;
   --foreground: #edeef0;
   --muted: #9096a3;
-  --accent: #f59e0b;
-  --accent-strong: #d97706;
+  /* Muted bronze-gold instead of a saturated safety-orange — reads as
+     "Dead by Daylight prestige gold" rather than a warning color, and
+     stays clear of the killer role's rose-red so the two never collide. */
+  --accent: #c87d2a;
+  --accent-strong: #d4a359;
   --accent-foreground: #1a1206;
 }
 
@@ -21,8 +27,10 @@
   --border: #e2e5e9;
   --foreground: #14161b;
   --muted: #62697a;
-  --accent: #b45309;
-  --accent-strong: #92400e;
+  /* Darker than the dark theme's accent — same hue, tuned down so white
+     button text keeps solid contrast against a light page. */
+  --accent: #a8651e;
+  --accent-strong: #8b5417;
   --accent-foreground: #ffffff;
 }
 
@@ -43,6 +51,15 @@
 body {
   background: var(--background);
   color: var(--foreground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Crisp lucide-react icons at any browser zoom level, instead of the blur
+   non-integer device-pixel scaling can cause. */
+svg {
+  shape-rendering: geometricPrecision;
 }
 
 ::selection {

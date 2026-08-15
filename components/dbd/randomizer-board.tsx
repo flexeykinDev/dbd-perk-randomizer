@@ -1,16 +1,42 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { Link2, ListFilter, RefreshCw, Skull, BarChart3 } from "lucide-react";
-import { getAvailablePool, getPerkBySlug, getRandomPerks } from "@/lib/perks";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  Link2,
+  ListFilter,
+  Dices,
+  Skull,
+  BarChart3,
+  CalendarClock,
+  Copy,
+  ImageDown,
+  MonitorPlay,
+  X,
+} from "lucide-react";
+import {
+  getAvailablePool,
+  getPerkBySlug,
+  getPerksByRole,
+  getRandomPerks,
+  getSeededPerks,
+} from "@/lib/perks";
 import type { Perk, PerkRole } from "@/lib/types";
 import { cn } from "@/lib/cn";
 import { useMounted } from "@/lib/use-mounted";
 import { ROLE_COLOR } from "@/lib/role-color";
 import { useLanguage, useT } from "@/lib/i18n";
+import { dailyChallengeSeed } from "@/lib/seeded-random";
+import { recordRoll } from "@/lib/stats";
+import { getIdForSlug, getSlugForId } from "@/lib/perk-ids";
+import { safeGet, safeGetJSON, safeSet, safeSetJSON } from "@/lib/safe-storage";
+import { publishObsState } from "@/lib/obs-sync";
 import { PerkGrid } from "./perk-grid";
 import { CopyToast } from "./copy-toast";
 import { ExcludePanel } from "./exclude-panel";
+import { StatsModal } from "./stats-modal";
+import { ToggleSwitch } from "./toggle-switch";
+import { ShareCard } from "./share-card";
+import { ObsOverlayModal } from "./obs-overlay-modal";
 
 const MAX_PERK_COUNT = 4;
 const DEFAULT_PERK_COUNT = 4;
@@ -25,20 +51,23 @@ const ROLE_NAME: Record<PerkRole, { ru: string; en: string }> = {
   survivor: { ru: "Выживший", en: "Survivor" },
   killer: { ru: "Убийца", en: "Killer" },
 };
+const ROLE_SHORT: Record<PerkRole, string> = { survivor: "s", killer: "k" };
+const ROLE_FROM_SHORT: Record<string, PerkRole> = { s: "survivor", k: "killer" };
+
+type SeedMode = "none" | "daily" | "custom";
 
 function loadExcludedSlugs(): Set<string> {
-  if (typeof window === "undefined") return new Set();
-  try {
-    const raw = window.localStorage.getItem(EXCLUDED_STORAGE_KEY);
-    return raw ? new Set(JSON.parse(raw)) : new Set();
-  } catch {
-    return new Set();
-  }
+  // Validate the parsed shape, not just that it parsed — a value written by
+  // some future/incompatible version of the app could be valid JSON that's
+  // still the wrong shape (e.g. an object instead of an array), and
+  // `new Set()` on a non-iterable throws rather than returning [].
+  const stored = safeGetJSON<unknown>("local", EXCLUDED_STORAGE_KEY, []);
+  const slugs = Array.isArray(stored) ? stored.filter((s) => typeof s === "string") : [];
+  return new Set(slugs);
 }
 
 function loadPerkCount(): number {
-  if (typeof window === "undefined") return DEFAULT_PERK_COUNT;
-  const n = parseInt(window.localStorage.getItem(PERK_COUNT_STORAGE_KEY) ?? "", 10);
+  const n = parseInt(safeGet("local", PERK_COUNT_STORAGE_KEY) ?? "", 10);
   return Number.isInteger(n) && n >= 0 && n <= MAX_PERK_COUNT ? n : DEFAULT_PERK_COUNT;
 }
 
@@ -48,40 +77,67 @@ interface BattleRoyaleState {
 }
 
 function loadBattleRoyale(): BattleRoyaleState {
-  if (typeof window === "undefined") return { active: false, used: [] };
-  try {
-    const raw = window.sessionStorage.getItem(BR_STORAGE_KEY);
-    return raw ? JSON.parse(raw) : { active: false, used: [] };
-  } catch {
-    return { active: false, used: [] };
-  }
+  const stored = safeGetJSON<Partial<BattleRoyaleState>>("session", BR_STORAGE_KEY, {});
+  return {
+    active: stored.active === true,
+    used: Array.isArray(stored.used) ? stored.used.filter((s) => typeof s === "string") : [],
+  };
 }
 
 function persistBattleRoyale(state: BattleRoyaleState) {
-  window.sessionStorage.setItem(BR_STORAGE_KEY, JSON.stringify(state));
+  safeSetJSON("session", BR_STORAGE_KEY, state);
 }
 
-function readBuildFromUrl(): { role: PerkRole; perks: Perk[] } | null {
+interface InitialUrlState {
+  role: PerkRole;
+  seed?: string;
+  perks?: Perk[];
+}
+
+/** Reads either the compact URL format (`?r=s&p=42,105,12,8`, current) or
+ *  the legacy one (`?role=survivor&perks=full-slug-names`, from links
+ *  shared before short IDs existed) — old links must keep working. `?seed=`
+ *  takes priority over an explicit perk list either way, since a seed is
+ *  enough to re-derive the build client-side. */
+function readInitialUrlState(): InitialUrlState | null {
   if (typeof window === "undefined") return null;
   const params = new URLSearchParams(window.location.search);
-  const role = params.get("role");
+
+  const shortRole = params.get("r");
+  const legacyRole = params.get("role");
+  const role = shortRole
+    ? ROLE_FROM_SHORT[shortRole]
+    : legacyRole === "survivor" || legacyRole === "killer"
+      ? legacyRole
+      : undefined;
+  if (!role) return null;
+
+  const seed = params.get("seed");
+  if (seed) return { role, seed };
+
+  const idsParam = params.get("p");
+  if (idsParam) {
+    const matched = idsParam
+      .split(",")
+      .map((idStr) => {
+        const id = Number(idStr);
+        const slug = Number.isFinite(id) ? getSlugForId(id) : undefined;
+        return slug ? getPerkBySlug(slug) : undefined;
+      })
+      .filter((perk): perk is Perk => !!perk && perk.role === role);
+    if (matched.length > 0) return { role, perks: matched };
+  }
+
   const slugsParam = params.get("perks");
-  if ((role !== "survivor" && role !== "killer") || !slugsParam) return null;
+  if (slugsParam) {
+    const matched = slugsParam
+      .split(",")
+      .map((slug) => getPerkBySlug(slug))
+      .filter((perk): perk is Perk => !!perk && perk.role === role);
+    if (matched.length > 0) return { role, perks: matched };
+  }
 
-  const matched = slugsParam
-    .split(",")
-    .map((slug) => getPerkBySlug(slug))
-    .filter((perk): perk is Perk => !!perk && perk.role === role);
-
-  return matched.length > 0 ? { role, perks: matched } : null;
-}
-
-function writeBuildToUrl(role: PerkRole, perks: Perk[]) {
-  if (typeof window === "undefined") return;
-  const params = new URLSearchParams();
-  params.set("role", role);
-  if (perks.length > 0) params.set("perks", perks.map((p) => p.slug).join(","));
-  window.history.replaceState(null, "", `${window.location.pathname}?${params}`);
+  return null;
 }
 
 export function RandomizerBoard() {
@@ -89,12 +145,28 @@ export function RandomizerBoard() {
   const { lang: language } = useLanguage();
   const [role, setRole] = useState<PerkRole>("survivor");
   const [toast, setToast] = useState<string | null>(null);
+  const [generatingImage, setGeneratingImage] = useState(false);
+  const shareCardRef = useRef<HTMLDivElement>(null);
   const [excludePanelOpen, setExcludePanelOpen] = useState(false);
-  const [excludedSlugs, setExcludedSlugs] = useState<Set<string>>(loadExcludedSlugs);
-  const [perkCount, setPerkCount] = useState<number>(loadPerkCount);
+  // Both start at SSR-safe defaults and are corrected from localStorage in
+  // the mount effect below — a lazy useState(loadX) initializer would read
+  // localStorage during the client's first render, which happens *before*
+  // hydration reconciles against the server's (window-less) HTML and would
+  // throw a hydration mismatch for any returning visitor with saved state.
+  const [excludedSlugs, setExcludedSlugs] = useState<Set<string>>(new Set());
+  const [perkCount, setPerkCount] = useState<number>(DEFAULT_PERK_COUNT);
   const [showStats, setShowStats] = useState(false);
+  const [statsModalOpen, setStatsModalOpen] = useState(false);
+  const [obsModalOpen, setObsModalOpen] = useState(false);
+  const [statsVersion, setStatsVersion] = useState(0);
   const [battleRoyale, setBattleRoyale] = useState(false);
   const [battleRoyaleUsed, setBattleRoyaleUsed] = useState<Set<string>>(new Set());
+  const [seedMode, setSeedMode] = useState<SeedMode>("none");
+  const [customSeedInput, setCustomSeedInput] = useState("");
+  // Only holds the custom-seed value — Daily Challenge's seed is derived
+  // below from `role`, so switching role while it's on can't drift out of
+  // sync with a stale copy stored in state.
+  const [activeCustomSeed, setActiveCustomSeed] = useState<string | null>(null);
   // Perks are randomized, so they can only be computed after hydration —
   // otherwise the server-rendered HTML and the client's first render would
   // pick different perks and React would flag a hydration mismatch.
@@ -102,13 +174,29 @@ export function RandomizerBoard() {
   const [nonce, setNonce] = useState(0);
   const [sharedBuild, setSharedBuild] = useState<Perk[] | null>(null);
 
+  const activeSeed =
+    seedMode === "daily" ? dailyChallengeSeed(role) : seedMode === "custom" ? activeCustomSeed : null;
+
   useEffect(() => {
     function applyInitialClientState() {
-      const shared = readBuildFromUrl();
-      if (shared) {
-        setRole(shared.role);
-        setSharedBuild(shared.perks);
-        setPerkCount(shared.perks.length);
+      setExcludedSlugs(loadExcludedSlugs());
+      setPerkCount(loadPerkCount());
+
+      const urlState = readInitialUrlState();
+      if (urlState) {
+        setRole(urlState.role);
+        if (urlState.seed) {
+          setCustomSeedInput(urlState.seed);
+          if (urlState.seed === dailyChallengeSeed(urlState.role)) {
+            setSeedMode("daily");
+          } else {
+            setSeedMode("custom");
+            setActiveCustomSeed(urlState.seed);
+          }
+        } else if (urlState.perks) {
+          setSharedBuild(urlState.perks);
+          setPerkCount(urlState.perks.length);
+        }
       }
       const br = loadBattleRoyale();
       if (br.active) {
@@ -127,27 +215,117 @@ export function RandomizerBoard() {
   }, [excludedSlugs, battleRoyale, battleRoyaleUsed]);
 
   const availableCount = mounted ? getAvailablePool(role, combinedExcluded).length : 0;
-  const poolExhausted = battleRoyale && mounted && perkCount > 0 && availableCount < perkCount;
+  // Applies to both causes of a too-small pool: Battle Royale attrition and
+  // the player just manually excluding too many perks in Manage Pool. Either
+  // way, getRandomPerks() refuses to top up from excluded perks (see
+  // lib/perks.ts), so this must be checked up front rather than discovered
+  // after the fact from a short/empty result.
+  const poolExhausted =
+    !activeSeed && mounted && perkCount > 0 && availableCount < perkCount;
 
   const perks = useMemo(() => {
     void nonce; // intentional cache-buster: forces a reshuffle on "regenerate"
     if (!mounted) return [];
     if (sharedBuild) return sharedBuild;
-    if (perkCount === 0 || poolExhausted) return [];
+    if (perkCount === 0) return [];
+    if (activeSeed) return getSeededPerks(role, perkCount, activeSeed);
+    if (poolExhausted) return [];
     return getRandomPerks(role, perkCount, combinedExcluded);
-  }, [mounted, role, nonce, sharedBuild, combinedExcluded, perkCount, poolExhausted]);
+  }, [mounted, role, nonce, sharedBuild, combinedExcluded, perkCount, poolExhausted, activeSeed]);
 
   useEffect(() => {
     function syncUrl() {
-      writeBuildToUrl(role, perks);
+      const params = new URLSearchParams();
+      params.set("r", ROLE_SHORT[role]);
+      if (activeSeed) {
+        params.set("seed", activeSeed);
+      } else if (perks.length > 0) {
+        const ids = perks.map((p) => getIdForSlug(p.slug));
+        if (ids.every((id): id is number => id !== undefined)) {
+          params.set("p", ids.join(","));
+        } else {
+          // Safety net for a perk with no assigned short ID (shouldn't
+          // happen — every slug in data/perks.json gets one at scrape
+          // time) — fall back to the legacy full-slug format rather than
+          // producing a share link that silently drops perks.
+          params.set("perks", perks.map((p) => p.slug).join(","));
+        }
+      }
+      window.history.replaceState(null, "", `${window.location.pathname}?${params}`);
     }
     if (mounted) syncUrl();
-  }, [role, perks, mounted]);
+  }, [role, perks, mounted, activeSeed]);
 
-  function regenerate() {
+  // Records exactly one roll event per genuine generation (initial pick,
+  // regenerate, role/count switch) — deduped by content key so React 19
+  // Strict Mode's dev-only double-invoke of this effect can't double-count.
+  const lastRecordedKey = useRef<string>("");
+  useEffect(() => {
+    if (!mounted || perks.length === 0) return;
+    const key = `${role}:${nonce}:${activeSeed ?? ""}:${sharedBuild ? "shared" : "rolled"}`;
+    if (sharedBuild) return; // viewing someone else's shared build isn't "your" roll
+    if (lastRecordedKey.current === key) return;
+    lastRecordedKey.current = key;
+    recordRoll(role, perks);
+    setStatsVersion((v) => v + 1);
+  }, [perks, role, nonce, mounted, activeSeed, sharedBuild]);
+
+  // Mirrors whatever's currently on screen to the OBS overlay tab, if one's
+  // open — see lib/obs-sync.ts. Fires on every display change (regenerate,
+  // role switch, seed, shared-build view), same trigger set as stats above.
+  useEffect(() => {
+    if (!mounted) return;
+    publishObsState({
+      role,
+      language,
+      perks: perks.map((p) => ({ slug: p.slug, icon: p.icon, name: p.name })),
+    });
+  }, [mounted, role, language, perks]);
+
+  const eliminateCurrentBuild = useCallback(() => {
+    if (perks.length === 0) return;
+    setBattleRoyaleUsed((prev) => {
+      const next = new Set(prev);
+      perks.forEach((p) => next.add(p.slug));
+      persistBattleRoyale({ active: true, used: [...next] });
+      return next;
+    });
+  }, [perks]);
+
+  const regenerate = useCallback(() => {
+    // Battle Royale's whole premise is elimination — the pool should shrink
+    // every round regardless of *how* you moved on, not only when you
+    // happened to copy a perk first. Without this, spamming Generate (or
+    // its Space/Enter shortcut) never drains the pool, so "play until every
+    // perk is gone" never actually triggers.
+    if (battleRoyale) eliminateCurrentBuild();
     setSharedBuild(null);
     setNonce((n) => n + 1);
-  }
+  }, [battleRoyale, eliminateCurrentBuild]);
+
+  // Spacebar/Enter triggers Generate from anywhere on the page — except
+  // while the user is typing (the seed input) or a modal is open, where
+  // those keys already mean something else (confirm a dialog, type a
+  // space, activate whatever's focused).
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key !== " " && e.key !== "Enter") return;
+      if (perkCount === 0 || !!activeSeed || poolExhausted) return;
+      if (excludePanelOpen || statsModalOpen || obsModalOpen) return;
+
+      const target = e.target as HTMLElement | null;
+      const tag = target?.tagName;
+      const isTypingTarget =
+        tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || target?.isContentEditable;
+      const isAlreadyInteractive = tag === "BUTTON" || tag === "A";
+      if (isTypingTarget || isAlreadyInteractive) return;
+
+      e.preventDefault();
+      regenerate();
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [perkCount, activeSeed, poolExhausted, excludePanelOpen, statsModalOpen, obsModalOpen, regenerate]);
 
   function selectRole(next: PerkRole) {
     setSharedBuild(null);
@@ -157,7 +335,7 @@ export function RandomizerBoard() {
   function selectPerkCount(next: number) {
     setSharedBuild(null);
     setPerkCount(next);
-    window.localStorage.setItem(PERK_COUNT_STORAGE_KEY, String(next));
+    safeSet("local", PERK_COUNT_STORAGE_KEY, String(next));
     setNonce((n) => n + 1);
   }
 
@@ -166,29 +344,35 @@ export function RandomizerBoard() {
       const next = new Set(prev);
       if (next.has(slug)) next.delete(slug);
       else next.add(slug);
-      window.localStorage.setItem(EXCLUDED_STORAGE_KEY, JSON.stringify([...next]));
+      safeSetJSON("local", EXCLUDED_STORAGE_KEY, [...next]);
       return next;
     });
   }
 
-  function resetExcluded() {
-    setExcludedSlugs(new Set());
-    window.localStorage.removeItem(EXCLUDED_STORAGE_KEY);
+  function bulkSetExcluded(slugs: string[], excluded: boolean) {
+    setExcludedSlugs((prev) => {
+      const next = new Set(prev);
+      for (const slug of slugs) {
+        if (excluded) next.add(slug);
+        else next.delete(slug);
+      }
+      safeSetJSON("local", EXCLUDED_STORAGE_KEY, [...next]);
+      return next;
+    });
+  }
+
+  function resetExcludedForRole(targetRole: PerkRole) {
+    const roleSlugs = new Set(getPerksByRole(targetRole).map((p) => p.slug));
+    setExcludedSlugs((prev) => {
+      const next = new Set([...prev].filter((slug) => !roleSlugs.has(slug)));
+      safeSetJSON("local", EXCLUDED_STORAGE_KEY, [...next]);
+      return next;
+    });
   }
 
   function showToast(message: string) {
     setToast(message);
     setTimeout(() => setToast(null), 2500);
-  }
-
-  function eliminateCurrentBuild() {
-    if (perks.length === 0) return;
-    setBattleRoyaleUsed((prev) => {
-      const next = new Set(prev);
-      perks.forEach((p) => next.add(p.slug));
-      persistBattleRoyale({ active: true, used: [...next] });
-      return next;
-    });
   }
 
   function handleCopy(perk: Perk) {
@@ -220,7 +404,6 @@ export function RandomizerBoard() {
   }
 
   function handleShare() {
-    writeBuildToUrl(role, perks);
     navigator.clipboard
       .writeText(window.location.href)
       .then(() => showToast(t({ ru: "Ссылка на билд скопирована!", en: "Build link copied!" })))
@@ -229,16 +412,42 @@ export function RandomizerBoard() {
       );
   }
 
+  async function handleDownloadImage() {
+    if (!shareCardRef.current || perks.length === 0 || generatingImage) return;
+    setGeneratingImage(true);
+    try {
+      const { default: html2canvas } = await import("html2canvas");
+      const canvas = await html2canvas(shareCardRef.current, {
+        backgroundColor: "#121212",
+        scale: 2,
+        useCORS: true,
+      });
+      const link = document.createElement("a");
+      link.download = `dbd-${role}-build-${perks.map((p) => p.slug).join("-")}.png`;
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+      showToast(t({ ru: "Картинка билда скачана!", en: "Build image downloaded!" }));
+    } catch {
+      showToast(t({ ru: "Не удалось создать картинку", en: "Couldn't generate the image" }));
+    } finally {
+      setGeneratingImage(false);
+    }
+  }
+
   function toggleBattleRoyale() {
-    setBattleRoyale((prev) => {
-      const next = !prev;
-      const used = next ? new Set<string>() : battleRoyaleUsed;
-      setBattleRoyaleUsed(used);
-      persistBattleRoyale({ active: next, used: [...used] });
-      setSharedBuild(null);
-      setNonce((n) => n + 1);
-      return next;
-    });
+    // Strict Mode (dev, React 19) invokes a setState updater function twice
+    // to catch impurity — the side effects (localStorage write, other
+    // setters) used to live inside setBattleRoyale's updater and so fired
+    // twice per toggle. Computing `next` from the already-in-scope
+    // `battleRoyale` and calling the other setters as plain top-level
+    // statements keeps setBattleRoyale itself a pure value-set.
+    const next = !battleRoyale;
+    const used = next ? new Set<string>() : battleRoyaleUsed;
+    setBattleRoyale(next);
+    setBattleRoyaleUsed(used);
+    persistBattleRoyale({ active: next, used: [...used] });
+    setSharedBuild(null);
+    setNonce((n) => n + 1);
   }
 
   function restartBattleRoyale() {
@@ -248,49 +457,175 @@ export function RandomizerBoard() {
     setNonce((n) => n + 1);
   }
 
+  function toggleDailyChallenge() {
+    if (seedMode === "daily") {
+      clearSeed();
+      return;
+    }
+    setSeedMode("daily");
+    setCustomSeedInput("");
+    setSharedBuild(null);
+  }
+
+  function applyCustomSeed() {
+    const value = customSeedInput.trim();
+    if (!value) return;
+    setSeedMode("custom");
+    setActiveCustomSeed(value);
+    setSharedBuild(null);
+  }
+
+  function clearSeed() {
+    setSeedMode("none");
+    setActiveCustomSeed(null);
+    setCustomSeedInput("");
+    setSharedBuild(null);
+    setNonce((n) => n + 1);
+  }
+
   const roleColor = ROLE_COLOR[role];
   const totalInRole = mounted ? getAvailablePool(role).length : 0;
+  // battleRoyaleUsed accumulates eliminated slugs across BOTH roles (nothing
+  // resets it on a role switch — see selectRole), so it must be filtered to
+  // the current role here rather than shown raw, or it'd read inconsistently
+  // against `availableCount` below (which already is role-filtered).
+  const battleRoyaleUsedInRole = mounted
+    ? getPerksByRole(role).filter((p) => battleRoyaleUsed.has(p.slug)).length
+    : 0;
+
+  // Keeps the browser tab useful when juggling several — shows which role
+  // and build size this tab is on instead of a static app name everywhere.
+  // Rendered declaratively (not via a document.title effect) because React
+  // 19 owns and hoists <title> itself; an imperative mutation gets silently
+  // overwritten on the next unrelated re-render.
+  const pageTitle = `${t(ROLE_NAME[role])} · ${t({ ru: "Перков", en: "Perks" })}: ${perkCount} — ${t({ ru: "Рандомайзер перков DBD", en: "DBD Perk Randomizer" })}`;
 
   return (
-    <div className="flex flex-col items-center gap-6">
-      <div className="flex flex-wrap items-center justify-center gap-2">
-        {(Object.keys(ROLE_LABEL) as PerkRole[]).map((r) => {
-          const c = ROLE_COLOR[r];
-          return (
+    <div className="flex flex-col items-center gap-3">
+      <title>{pageTitle}</title>
+      <div className="flex flex-wrap items-center justify-center gap-4">
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          {(Object.keys(ROLE_LABEL) as PerkRole[]).map((r) => {
+            const c = ROLE_COLOR[r];
+            return (
+              <button
+                key={r}
+                type="button"
+                onClick={() => selectRole(r)}
+                className={cn(
+                  "rounded-full border px-5 py-1.5 text-sm font-medium capitalize transition-colors",
+                  role === r
+                    ? cn(c.border, c.bg, c.text)
+                    : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
+                )}
+              >
+                {t(ROLE_NAME[r])}
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="flex items-center gap-2 text-sm">
+          <span className="text-muted">{t({ ru: "Перков:", en: "Perks:" })}</span>
+          {Array.from({ length: MAX_PERK_COUNT + 1 }, (_, n) => n).map((n) => (
             <button
-              key={r}
+              key={n}
               type="button"
-              onClick={() => selectRole(r)}
+              onClick={() => selectPerkCount(n)}
               className={cn(
-                "rounded-full border px-5 py-2 text-sm font-medium capitalize transition-colors",
-                role === r
-                  ? cn(c.border, c.bg, c.text)
+                "flex size-7 items-center justify-center rounded-full border text-xs font-semibold transition-colors",
+                perkCount === n
+                  ? cn(roleColor.border, roleColor.bg, roleColor.text)
                   : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
               )}
             >
-              {t(ROLE_NAME[r])}
+              {n}
             </button>
-          );
-        })}
+          ))}
+        </div>
       </div>
 
-      <div className="flex items-center gap-2 text-sm">
-        <span className="text-muted">{t({ ru: "Перков в билде:", en: "Perks per build:" })}</span>
-        {Array.from({ length: MAX_PERK_COUNT + 1 }, (_, n) => n).map((n) => (
+      {/* Utility bar — Daily Challenge/seed and the pool/stats dialogs live
+          here, deliberately separated from the primary Generate action
+          below the perk grid so the two don't compete for attention. */}
+      <div className="flex flex-col items-center gap-1.5">
+        <div className="flex flex-wrap items-center justify-center gap-1.5 rounded-full border border-border bg-surface/60 px-2 py-1.5">
           <button
-            key={n}
             type="button"
-            onClick={() => selectPerkCount(n)}
+            onClick={toggleDailyChallenge}
             className={cn(
-              "flex size-7 items-center justify-center rounded-full border text-xs font-semibold transition-colors",
-              perkCount === n
-                ? cn(roleColor.border, roleColor.bg, roleColor.text)
-                : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
+              "flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-colors",
+              seedMode === "daily"
+                ? "bg-accent/15 text-accent"
+                : "text-muted hover:bg-surface-hover hover:text-foreground",
             )}
           >
-            {n}
+            <CalendarClock className="size-3.5" />
+            {t({ ru: "Задание дня", en: "Daily Challenge" })}
           </button>
-        ))}
+          <input
+            type="text"
+            value={customSeedInput}
+            onChange={(e) => setCustomSeedInput(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && applyCustomSeed()}
+            placeholder={t({ ru: "Свой сид…", en: "Custom seed…" })}
+            className="w-28 rounded-full border border-border bg-background px-3 py-1 text-xs text-foreground placeholder:text-muted/60 focus:ring-2 focus:ring-accent/40 focus:outline-none"
+          />
+          <button
+            type="button"
+            onClick={applyCustomSeed}
+            disabled={!customSeedInput.trim()}
+            className="rounded-full px-2.5 py-1 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
+          >
+            {t({ ru: "Задать", en: "Set" })}
+          </button>
+          {seedMode !== "none" && (
+            <button
+              type="button"
+              onClick={clearSeed}
+              aria-label={t({ ru: "Сбросить сид", en: "Clear seed" })}
+              className="flex size-6 items-center justify-center rounded-full text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+            >
+              <X className="size-3.5" />
+            </button>
+          )}
+          <span className="mx-0.5 h-4 w-px bg-border" aria-hidden />
+          <button
+            type="button"
+            onClick={() => setExcludePanelOpen(true)}
+            className="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+          >
+            <ListFilter className="size-3.5" />
+            {t({ ru: "Пул", en: "Pool" })}
+            {excludedSlugs.size > 0 && (
+              <span className="rounded-full bg-accent/15 px-1.5 text-accent">
+                {excludedSlugs.size}
+              </span>
+            )}
+          </button>
+          <button
+            type="button"
+            onClick={() => setStatsModalOpen(true)}
+            className="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+          >
+            <BarChart3 className="size-3.5" />
+            {t({ ru: "Статистика", en: "Stats" })}
+          </button>
+          <button
+            type="button"
+            onClick={() => setObsModalOpen(true)}
+            className="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+          >
+            <MonitorPlay className="size-3.5" />
+            {t({ ru: "Оверлей OBS", en: "OBS Overlay" })}
+          </button>
+        </div>
+        {activeSeed && (
+          <p className="text-xs text-muted">
+            {t({ ru: "Активный сид:", en: "Active seed:" })}{" "}
+            <code className="rounded bg-surface px-1.5 py-0.5 text-accent">{activeSeed}</code>
+          </p>
+        )}
       </div>
 
       {perkCount === 0 ? (
@@ -319,20 +654,29 @@ export function RandomizerBoard() {
         >
           <Skull className={cn("size-8", roleColor.text)} />
           <p className="font-semibold text-foreground">
-            {t({ ru: "Пул перков исчерпан!", en: "Perk pool exhausted!" })}
+            {battleRoyale
+              ? t({ ru: "Пул перков исчерпан!", en: "Perk pool exhausted!" })
+              : t({ ru: "В пуле недостаточно перков", en: "Not enough perks in the pool" })}
           </p>
           <p className="text-sm text-muted">
-            {t({
-              ru: `Вы скопировали билды из всех доступных перков ${ROLE_LABEL[role].ru}.`,
-              en: `You've copied builds from every available ${ROLE_LABEL[role].en} perk.`,
-            })}
+            {battleRoyale
+              ? t({
+                  ru: `Вы скопировали билды из всех доступных перков ${ROLE_LABEL[role].ru}.`,
+                  en: `You've copied builds from every available ${ROLE_LABEL[role].en} perk.`,
+                })
+              : t({
+                  ru: `Включено только ${availableCount} из ${perkCount} нужных — включите больше перков в пуле или уменьшите их количество.`,
+                  en: `Only ${availableCount} of the ${perkCount} needed are enabled — enable more perks in the pool or lower the count.`,
+                })}
           </p>
           <button
             type="button"
-            onClick={restartBattleRoyale}
+            onClick={battleRoyale ? restartBattleRoyale : () => setExcludePanelOpen(true)}
             className="mt-1 rounded-full bg-accent px-5 py-2 text-sm font-semibold text-accent-foreground transition-transform hover:scale-105 active:scale-95"
           >
-            {t({ ru: "Начать заново", en: "Start over" })}
+            {battleRoyale
+              ? t({ ru: "Начать заново", en: "Start over" })
+              : t({ ru: "Открыть пул перков", en: "Open perk pool" })}
           </button>
         </div>
       ) : (
@@ -349,71 +693,75 @@ export function RandomizerBoard() {
         />
       )}
 
-      <div className="flex flex-wrap items-center justify-center gap-3">
-        <button
-          type="button"
-          onClick={regenerate}
-          disabled={perkCount === 0}
-          className="flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-accent-foreground transition-transform hover:scale-105 active:scale-95 disabled:pointer-events-none disabled:opacity-40"
-        >
-          <RefreshCw className="size-4" />
-          {t({ ru: "Сгенерировать новый билд", en: "Generate a new build" })}
-        </button>
+      {/* Secondary toolbar — sleek, compact, sits right under the cards it
+          acts on rather than competing with Generate for weight. */}
+      <div className="flex items-center justify-center gap-2">
         <button
           type="button"
           onClick={handleCopyAll}
           disabled={perks.length === 0}
-          className="rounded-full border border-border px-5 py-2.5 text-sm font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
+          className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
         >
-          {t({ ru: "Скопировать весь билд", en: "Copy full build" })}
+          <Copy className="size-3.5" />
+          {t({ ru: "Скопировать всё", en: "Copy full build" })}
         </button>
         <button
           type="button"
           onClick={handleShare}
-          className="flex items-center gap-2 rounded-full border border-border px-5 py-2.5 text-sm font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+          className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
         >
-          <Link2 className="size-4" />
+          <Link2 className="size-3.5" />
           {t({ ru: "Поделиться", en: "Share" })}
         </button>
         <button
           type="button"
-          onClick={() => setExcludePanelOpen(true)}
-          className="flex items-center gap-2 rounded-full border border-border px-5 py-2.5 text-sm font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+          onClick={handleDownloadImage}
+          disabled={perks.length === 0 || generatingImage}
+          className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
         >
-          <ListFilter className="size-4" />
-          {t({ ru: "Настроить пул", en: "Manage pool" })}
-          {excludedSlugs.size > 0 && (
-            <span className="rounded-full bg-accent/15 px-1.5 text-xs text-accent">
-              {excludedSlugs.size}
-            </span>
-          )}
+          <ImageDown className="size-3.5" />
+          {generatingImage
+            ? t({ ru: "Готовим картинку…", en: "Generating…" })
+            : t({ ru: "Скачать картинку", en: "Download image" })}
         </button>
       </div>
 
+      {/* Off-screen — exists only so html2canvas has real, laid-out DOM to
+          rasterize when Download image is clicked; never visible itself. */}
+      <div aria-hidden style={{ position: "fixed", top: 0, left: -9999, pointerEvents: "none" }}>
+        <ShareCard ref={shareCardRef} perks={perks} role={role} language={language} />
+      </div>
+
+      {/* Primary CTA — the one action on this page that should visually
+          win: standalone, largest, most saturated element on the board. */}
       <button
         type="button"
-        onClick={toggleBattleRoyale}
-        className={cn(
-          "flex items-center gap-2 rounded-full border px-5 py-2 text-sm font-semibold transition-colors",
-          battleRoyale
-            ? "border-amber-400/50 bg-amber-400/10 text-amber-400"
-            : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
-        )}
+        onClick={regenerate}
+        disabled={perkCount === 0 || !!activeSeed || poolExhausted}
+        title={
+          activeSeed
+            ? t({
+                ru: "Билд зафиксирован этим сидом — сбросьте сид, чтобы рандомизировать",
+                en: "This build is locked to the active seed — clear the seed to randomize",
+              })
+            : undefined
+        }
+        className="flex items-center gap-2.5 rounded-full bg-accent px-8 py-3.5 text-base font-bold text-accent-foreground shadow-lg shadow-accent/30 transition-transform hover:scale-105 active:scale-95 disabled:pointer-events-none disabled:opacity-40"
       >
-        <Skull className="size-4" />
-        {t({
-          ru: `Battle Royale ${battleRoyale ? "включён" : "выключен"}`,
-          en: `Battle Royale ${battleRoyale ? "on" : "off"}`,
-        })}
+        <Dices className="size-5" />
+        {t({ ru: "Сгенерировать новый билд", en: "Generate a new build" })}
       </button>
-      {battleRoyale && (
-        <p className="max-w-md text-center text-xs text-muted">
-          {t({
-            ru: `Копирование билда навсегда убирает эти перки из пула — играйте, пока не закончатся все ${ROLE_LABEL[role].ru}.`,
-            en: `Copying a build permanently removes those perks from the pool — play until every ${ROLE_LABEL[role].en} perk is gone.`,
-          })}
-        </p>
-      )}
+
+      <ToggleSwitch
+        checked={battleRoyale}
+        onChange={toggleBattleRoyale}
+        label={t({ ru: "Battle Royale", en: "Battle Royale" })}
+        activeClassName="bg-accent"
+        tooltip={t({
+          ru: "Копирование билда навсегда убирает эти перки из пула — играйте, пока не закончатся все перки роли.",
+          en: "Copying a build permanently removes those perks from the pool — play until every perk for this role is gone.",
+        })}
+      />
 
       <button
         type="button"
@@ -436,7 +784,7 @@ export function RandomizerBoard() {
           {battleRoyale && (
             <p>
               {t({ ru: "Использовано в Battle Royale:", en: "Used in Battle Royale:" })}{" "}
-              <b className="text-foreground">{battleRoyaleUsed.size}</b> ·{" "}
+              <b className="text-foreground">{battleRoyaleUsedInRole}</b> ·{" "}
               {t({ ru: "Осталось:", en: "Remaining:" })}{" "}
               <b className="text-foreground">{availableCount}</b>
             </p>
@@ -445,15 +793,26 @@ export function RandomizerBoard() {
       )}
 
       <ExcludePanel
+        key={role}
         open={excludePanelOpen}
         role={role}
         language={language}
         excludedSlugs={excludedSlugs}
         alsoGrayedOut={battleRoyale ? battleRoyaleUsed : undefined}
         onToggle={toggleExcluded}
-        onReset={resetExcluded}
+        onBulkSet={bulkSetExcluded}
+        onResetRole={resetExcludedForRole}
         onClose={() => setExcludePanelOpen(false)}
       />
+
+      <StatsModal
+        open={statsModalOpen}
+        language={language}
+        onClose={() => setStatsModalOpen(false)}
+        version={statsVersion}
+      />
+
+      <ObsOverlayModal open={obsModalOpen} onClose={() => setObsModalOpen(false)} />
 
       <CopyToast message={toast} />
     </div>

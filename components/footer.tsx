@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useT } from "@/lib/i18n";
+import { useIsObsMode } from "@/lib/use-obs-mode";
 
 const GITHUB_USERNAME = "flexeykinDev";
 const FALLBACK_NAME = "yiksnele";
@@ -13,12 +14,14 @@ interface GitHubAuthor {
 
 export function Footer() {
   const t = useT();
+  const isObsMode = useIsObsMode();
   const [author, setAuthor] = useState<GitHubAuthor>({
     name: FALLBACK_NAME,
     avatarUrl: `https://github.com/${GITHUB_USERNAME}.png`,
   });
 
   useEffect(() => {
+    if (isObsMode) return;
     let cancelled = false;
 
     fetch(`https://api.github.com/users/${GITHUB_USERNAME}`)
@@ -37,11 +40,13 @@ export function Footer() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [isObsMode]);
+
+  if (isObsMode) return null;
 
   return (
     <footer className="mt-auto border-t border-border/60">
-      <div className="mx-auto flex max-w-5xl flex-col items-center gap-3 px-4 py-8 text-sm text-muted sm:flex-row sm:justify-center">
+      <div className="mx-auto flex max-w-6xl flex-col items-center gap-2 px-4 py-3 text-sm text-muted sm:flex-row sm:justify-center">
         {/* eslint-disable-next-line @next/next/no-img-element -- external GitHub avatar, unoptimized static export */}
         <img
           src={author.avatarUrl}

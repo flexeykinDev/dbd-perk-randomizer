@@ -16,19 +16,19 @@ export default function OpengraphImage() {
           alignItems: "center",
           justifyContent: "center",
           gap: 36,
-          background: "#0b0c0f",
+          background: "#121212",
           color: "#edeef0",
           fontFamily: "sans-serif",
         }}
       >
         <svg width="140" height="140" viewBox="0 0 64 64">
-          <rect width="64" height="64" rx="14" fill="#14161b" />
-          <rect x="14" y="14" width="36" height="36" rx="8" fill="none" stroke="#f59e0b" strokeWidth="4" />
-          <circle cx="24" cy="24" r="3.4" fill="#f59e0b" />
-          <circle cx="40" cy="24" r="3.4" fill="#f59e0b" />
-          <circle cx="32" cy="32" r="3.4" fill="#f59e0b" />
-          <circle cx="24" cy="40" r="3.4" fill="#f59e0b" />
-          <circle cx="40" cy="40" r="3.4" fill="#f59e0b" />
+          <rect width="64" height="64" rx="14" fill="#1e2228" />
+          <rect x="14" y="14" width="36" height="36" rx="8" fill="none" stroke="#c87d2a" strokeWidth="4" />
+          <circle cx="24" cy="24" r="3.4" fill="#c87d2a" />
+          <circle cx="40" cy="24" r="3.4" fill="#c87d2a" />
+          <circle cx="32" cy="32" r="3.4" fill="#c87d2a" />
+          <circle cx="24" cy="40" r="3.4" fill="#c87d2a" />
+          <circle cx="40" cy="40" r="3.4" fill="#c87d2a" />
         </svg>
         <div style={{ fontSize: 68, fontWeight: 700 }}>DBD Perk Randomizer</div>
         <div style={{ fontSize: 32, color: "#9096a3" }}>

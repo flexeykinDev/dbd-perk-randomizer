@@ -35,5 +35,6 @@ jobs:
             data/perks.json
             data/meta.json
             data/characters.json
+            data/perk-ids.json
             public/perks/**
             public/characters/**

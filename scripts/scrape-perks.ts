@@ -9,7 +9,7 @@ import { fileURLToPath } from "node:url";
 import * as cheerio from "cheerio";
 import sharp from "sharp";
 import { slugify } from "../lib/slugify";
-import type { Perk, PerkRole, PerksMeta } from "../lib/types";
+import type { LocalizedDescription, Perk, PerkRole, PerksMeta } from "../lib/types";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WIKI_PAGE_URL = "https://deadbydaylight.fandom.com/wiki/Perks";
@@ -24,7 +24,10 @@ const PUBLIC_CHARACTERS_DIR = join(__dirname, "../public/characters");
 const PERKS_JSON = join(DATA_DIR, "perks.json");
 const META_JSON = join(DATA_DIR, "meta.json");
 const TRANSLATIONS_JSON = join(DATA_DIR, "translations.ru.json");
+const DESCRIPTION_TRANSLATIONS_JSON = join(DATA_DIR, "description-translations.ru.json");
+const DESCRIPTION_RU_RAW_JSON = join(DATA_DIR, "description-ru-raw.json");
 const CHARACTERS_JSON = join(DATA_DIR, "characters.json");
+const PERK_IDS_JSON = join(DATA_DIR, "perk-ids.json");
 
 const ICON_SIZE = 128;
 const TABLE_INDEX_BY_ROLE: Record<PerkRole, number> = {
@@ -53,6 +56,29 @@ function loadPreviousCharacters(): Record<string, string> {
 function loadTranslations(): Record<string, string> {
   if (!existsSync(TRANSLATIONS_JSON)) return {};
   return JSON.parse(readFileSync(TRANSLATIONS_JSON, "utf8"));
+}
+
+function loadDescriptionTranslations(): Record<string, LocalizedDescription> {
+  if (!existsSync(DESCRIPTION_TRANSLATIONS_JSON)) return {};
+  const raw = JSON.parse(readFileSync(DESCRIPTION_TRANSLATIONS_JSON, "utf8"));
+  delete raw._comment;
+  return raw;
+}
+
+function loadDescriptionRuRaw(): Record<string, string> {
+  if (!existsSync(DESCRIPTION_RU_RAW_JSON)) return {};
+  const raw = JSON.parse(readFileSync(DESCRIPTION_RU_RAW_JSON, "utf8"));
+  delete raw._comment;
+  return raw;
+}
+
+function loadPerkIds(): Record<string, number> {
+  if (!existsSync(PERK_IDS_JSON)) return {};
+  try {
+    return JSON.parse(readFileSync(PERK_IDS_JSON, "utf8"));
+  } catch {
+    return {};
+  }
 }
 
 function loadPreviousPerks(): Perk[] {
@@ -204,6 +230,8 @@ async function main() {
   const $ = cheerio.load(html);
 
   const translations = loadTranslations();
+  const descriptionTranslations = loadDescriptionTranslations();
+  const descriptionRuRaw = loadDescriptionRuRaw();
   const previous = new Map(
     loadPreviousPerks().map((p) => [`${p.role}/${p.slug}`, p]),
   );
@@ -224,6 +252,8 @@ async function main() {
         role,
         name: { en: row.name, ru: translations[row.slug] ?? row.name },
         description: row.description,
+        descriptionRu: descriptionTranslations[row.slug],
+        descriptionRuRaw: descriptionRuRaw[row.slug],
         character: row.character,
         icon,
         addedAt: prev?.addedAt ?? scrapedAt,
@@ -244,6 +274,15 @@ async function main() {
     throw new Error("Scraped 0 perks — the wiki's table structure may have changed.");
   }
 
+  // Short numeric IDs for compact share URLs (?p=42,105,12,8). Existing
+  // slugs keep their assigned ID forever — only genuinely new slugs get the
+  // next free number — so an old shared link stays valid across rescrapes.
+  const perkIds = loadPerkIds();
+  let nextId = Object.values(perkIds).reduce((max, id) => Math.max(max, id), 0) + 1;
+  for (const perk of perks) {
+    if (!(perk.slug in perkIds)) perkIds[perk.slug] = nextId++;
+  }
+
   const meta: PerksMeta = {
     scrapedAt,
     sourceUrl: WIKI_PAGE_URL,
@@ -255,6 +294,7 @@ async function main() {
   writeFileSync(PERKS_JSON, JSON.stringify(perks, null, 2) + "\n");
   writeFileSync(META_JSON, JSON.stringify(meta, null, 2) + "\n");
   writeFileSync(CHARACTERS_JSON, JSON.stringify(characters, null, 2) + "\n");
+  writeFileSync(PERK_IDS_JSON, JSON.stringify(perkIds, null, 2) + "\n");
 
   console.log(
     `Wrote ${perks.length} perks (${meta.survivorCount} survivor / ${meta.killerCount} killer) -> ${PERKS_JSON}`,

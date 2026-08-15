@@ -1,0 +1,13 @@
+{
+  "_comment": "Hand-authored RU descriptions, keyed by perk slug. 'full' is the traditional flavor-text description (no trailing quote — put that in 'quote'), 'core' is the game's brief bulleted 'core effect' summary. Wrap any span the UI should highlight in **double asterisks** — see lib/perk-description.ts / components/dbd/highlighted-text.tsx. Slugs without an entry here fall back to an auto-derived view of the scraped English description.",
+
+  "darkness-revealed": {
+    "full": "В вашем присутствии места, которые когда-то считались безопасными, зачастую оказываются самыми опасными. Обыск шкафчика активирует следующий эффект: ауры всех выживших в радиусе 8 метров от любого шкафчика открываются вам на 6/7/8 секунд. Время восстановления «Явления мрака» — 30 секунд.",
+    "core": [
+      "При обыске **шкафчика** открываются **ауры** всех выживших в радиусе **8 метров** от любого шкафчика.",
+      "Ауры видны **6/7/8 секунд** (в зависимости от уровня перка).",
+      "Время восстановления: **30 секунд**."
+    ],
+    "quote": "«Оставайтесь в свете, дети мои. Во тьме страх выдаст вас» — Отто Стампер"
+  }
+}

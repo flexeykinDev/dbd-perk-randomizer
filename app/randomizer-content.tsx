@@ -3,29 +3,34 @@
 import { VideoEmbed } from "@/components/video-embed";
 import { RandomizerBoard } from "@/components/dbd/randomizer-board";
 import { EasterEgg } from "@/components/dbd/easter-egg";
+import { ObsOverlay } from "@/components/dbd/obs-overlay";
 import { perksMeta } from "@/lib/perks";
 import { useLanguage, useT } from "@/lib/i18n";
+import { useIsObsMode } from "@/lib/use-obs-mode";
 import trailer from "@/data/trailer.json";
 
 export function RandomizerContent() {
   const t = useT();
   const { lang } = useLanguage();
+  const isObsMode = useIsObsMode();
   const updatedAt = new Date(perksMeta.scrapedAt).toLocaleDateString(
     lang === "ru" ? "ru-RU" : "en-US",
     { year: "numeric", month: "long", day: "numeric" },
   );
 
+  if (isObsMode) return <ObsOverlay />;
+
   return (
-    <div className="flex flex-col items-center gap-10 text-center">
+    <div className="flex flex-col items-center gap-3 text-center">
       <EasterEgg />
       <div>
-        <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
+        <h1 className="text-[clamp(1.5rem,3vw+1rem,2.25rem)] font-semibold tracking-tight">
           {t({
             ru: "Dead by Daylight — Рандомайзер Перков",
             en: "Dead by Daylight — Perk Randomizer",
           })}
         </h1>
-        <p className="mt-3 text-sm text-muted">
+        <p className="mt-1.5 text-sm text-muted">
           {t({
             ru: `${perksMeta.survivorCount} перков выживших · ${perksMeta.killerCount} перков убийц · обновлено ${updatedAt} с`,
             en: `${perksMeta.survivorCount} survivor perks · ${perksMeta.killerCount} killer perks · updated ${updatedAt} from the`,
