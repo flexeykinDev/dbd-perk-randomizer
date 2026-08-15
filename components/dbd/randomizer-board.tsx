@@ -1094,6 +1094,8 @@ export function RandomizerBoard() {
       <ObsOverlayModal
         open={obsModalOpen}
         onClose={() => setObsModalOpen(false)}
+        perks={perks}
+        language={language}
         twitchChannel={twitchChannel}
         twitchEnabled={twitchEnabled}
         twitchState={twitchState}

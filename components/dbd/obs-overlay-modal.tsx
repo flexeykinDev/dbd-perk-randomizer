@@ -8,19 +8,22 @@ import {
   ExternalLink,
   MessageCircle,
   MonitorPlay,
+  RotateCcw,
   X,
 } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { withBasePath } from "@/lib/asset-path";
 import { cn } from "@/lib/cn";
-import { useT } from "@/lib/i18n";
+import { useT, type Lang } from "@/lib/i18n";
 import type { TwitchConnectionState, TwitchPermission } from "@/lib/twitch-chat";
-import { DEFAULT_OBS_OPTIONS, obsOverlayUrl, type ObsCardSize } from "@/lib/use-obs-mode";
-
-const SIZE_LABEL: Record<ObsCardSize, { ru: string; en: string }> = {
-  sm: { ru: "Компакт", en: "Compact" },
-  md: { ru: "Обычный", en: "Normal" },
-  lg: { ru: "Крупный", en: "Large" },
-};
+import type { Perk } from "@/lib/types";
+import {
+  DEFAULT_OBS_OPTIONS,
+  MAX_OBS_SCALE,
+  MIN_OBS_SCALE,
+  obsOverlayUrl,
+  type ObsIconPosition,
+} from "@/lib/use-obs-mode";
 
 const TWITCH_STATE_LABEL: Record<TwitchConnectionState, { ru: string; en: string }> = {
   disconnected: { ru: "Отключено", en: "Disconnected" },
@@ -41,6 +44,23 @@ const PERMISSION_LABEL: Record<TwitchPermission, { ru: string; en: string }> = {
   subs_vips: { ru: "Только подписчики/VIP", en: "Subs/VIPs only" },
   mods: { ru: "Только модераторы", en: "Moderators only" },
 };
+
+// The 4-slot grid a fresh (never-dragged) icon lands on inside the preview —
+// also what a partially-customized `positions` array falls back to for any
+// slot that hasn't been dragged yet, so the preview and the real overlay
+// always agree on where an untouched icon sits.
+const DEFAULT_SLOT_POSITIONS: readonly ObsIconPosition[] = [
+  { x: 12.5, y: 50 },
+  { x: 37.5, y: 50 },
+  { x: 62.5, y: 50 },
+  { x: 87.5, y: 50 },
+];
+
+// OBS's recommended Browser Source dimensions (see the setup steps below) —
+// the live preview keeps the same aspect ratio so a dragged position lines
+// up with where it'll actually land in OBS.
+const PREVIEW_ASPECT = 800 / 220;
+const PREVIEW_BASE_ICON_PX = 34;
 
 function PermissionSelect({
   value,
@@ -68,6 +88,8 @@ function PermissionSelect({
 export function ObsOverlayModal({
   open,
   onClose,
+  perks,
+  language,
   twitchChannel,
   twitchEnabled,
   twitchState,
@@ -88,6 +110,8 @@ export function ObsOverlayModal({
 }: {
   open: boolean;
   onClose: () => void;
+  perks: Perk[];
+  language: Lang;
   twitchChannel: string;
   twitchEnabled: boolean;
   twitchState: TwitchConnectionState;
@@ -108,17 +132,29 @@ export function ObsOverlayModal({
 }) {
   const t = useT();
   const [copied, setCopied] = useState(false);
-  const [size, setSize] = useState<ObsCardSize>(DEFAULT_OBS_OPTIONS.size);
+  const [scale, setScale] = useState(DEFAULT_OBS_OPTIONS.scale);
   const [showNames, setShowNames] = useState(DEFAULT_OBS_OPTIONS.showNames);
   const [darkBg, setDarkBg] = useState(DEFAULT_OBS_OPTIONS.background === "dark");
+  // null = no custom layout yet, overlay falls back to its default centered
+  // row. Set the first time the user drags any icon in the preview below.
+  const [positions, setPositions] = useState<ObsIconPosition[] | null>(null);
   const [twitchAdvancedOpen, setTwitchAdvancedOpen] = useState(false);
+  const previewRef = useRef<HTMLDivElement>(null);
+
   // Only computed while actually open — obsOverlayUrl() creates a room code
   // as a side effect (see getOrCreateRoomCode), and this component stays
   // mounted (just hidden) while closed, including briefly on every normal
   // page load before useIsObsMode() corrects itself. Computing it
   // unconditionally would silently mint/overwrite a room code on every
   // visit to the site, not just when someone actually opens this modal.
-  const url = open ? obsOverlayUrl({ size, showNames, background: darkBg ? "dark" : "transparent" }) : "";
+  const url = open
+    ? obsOverlayUrl({
+        scale,
+        showNames,
+        background: darkBg ? "dark" : "transparent",
+        positions: positions ?? undefined,
+      })
+    : "";
 
   function handleCopy() {
     navigator.clipboard
@@ -129,6 +165,21 @@ export function ObsOverlayModal({
       })
       .catch(() => {});
   }
+
+  function handleDrag(index: number, clientX: number, clientY: number) {
+    const rect = previewRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const x = Math.min(100, Math.max(0, ((clientX - rect.left) / rect.width) * 100));
+    const y = Math.min(100, Math.max(0, ((clientY - rect.top) / rect.height) * 100));
+    setPositions((prev) => {
+      const base = prev ? [...prev] : [...DEFAULT_SLOT_POSITIONS];
+      base[index] = { x, y };
+      return base;
+    });
+  }
+
+  const previewSlotCount = perks.length > 0 ? Math.min(perks.length, 4) : 4;
+  const previewIconPx = Math.round(PREVIEW_BASE_ICON_PX * (scale / 100));
 
   return (
     <AnimatePresence>
@@ -202,29 +253,97 @@ export function ObsOverlayModal({
               </a>
             </div>
 
+            <div className="mt-4">
+              <div className="mb-1.5 flex items-center justify-between">
+                <span className="text-xs font-medium text-muted">
+                  {t({ ru: "Превью — перетащи иконки", en: "Preview — drag the icons" })}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setPositions(null)}
+                  className="flex items-center gap-1 text-[11px] font-medium text-muted transition-colors hover:text-foreground"
+                >
+                  <RotateCcw className="size-3" />
+                  {t({ ru: "Сбросить позиции", en: "Reset positions" })}
+                </button>
+              </div>
+              <div
+                ref={previewRef}
+                className={cn(
+                  "relative w-full touch-none overflow-hidden rounded-xl border border-border bg-[repeating-conic-gradient(#8884_0%_25%,transparent_0%_50%)] bg-[length:16px_16px]",
+                  darkBg && "bg-none bg-[#0b0c0f]",
+                )}
+                style={{ aspectRatio: PREVIEW_ASPECT }}
+              >
+                {Array.from({ length: previewSlotCount }, (_, index) => {
+                  const perk: Perk | undefined = perks[index];
+                  const pos = (positions ?? DEFAULT_SLOT_POSITIONS)[index] ?? DEFAULT_SLOT_POSITIONS[index];
+                  return (
+                    <div
+                      key={perk?.slug ?? `placeholder-${index}`}
+                      onPointerDown={(e) => e.currentTarget.setPointerCapture(e.pointerId)}
+                      onPointerMove={(e) => {
+                        if (e.buttons !== 1) return;
+                        handleDrag(index, e.clientX, e.clientY);
+                      }}
+                      className="absolute flex -translate-x-1/2 -translate-y-1/2 cursor-grab flex-col items-center gap-1 active:cursor-grabbing"
+                      style={{ left: `${pos.x}%`, top: `${pos.y}%` }}
+                    >
+                      <span
+                        className="flex items-center justify-center rounded-lg border-2 border-accent bg-black/70 p-0.5 shadow-lg"
+                        style={{ width: previewIconPx + 4, height: previewIconPx + 4 }}
+                      >
+                        {perk ? (
+                          // eslint-disable-next-line @next/next/no-img-element -- tiny drag-preview thumbnail, next/image is overkill here
+                          <img
+                            src={withBasePath(perk.icon)}
+                            alt={perk.name[language]}
+                            width={previewIconPx}
+                            height={previewIconPx}
+                            style={{ width: previewIconPx, height: previewIconPx, objectFit: "cover" }}
+                            className="rounded pointer-events-none select-none"
+                            draggable={false}
+                          />
+                        ) : (
+                          <span
+                            className="pointer-events-none block rounded bg-white/10"
+                            style={{ width: previewIconPx, height: previewIconPx }}
+                          />
+                        )}
+                      </span>
+                      {showNames && perk && (
+                        <span className="pointer-events-none inline-block max-w-16 truncate rounded-full bg-black/70 px-1.5 py-0.5 text-[9px] font-bold text-white">
+                          {perk.name[language]}
+                        </span>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+              <p className="mt-1.5 text-[11px] text-muted/70">
+                {t({
+                  ru: "Позиции сохраняются в самой ссылке — «Сбросить» вернёт стандартный ряд по центру.",
+                  en: "Positions are saved right in the link — “Reset” restores the default centered row.",
+                })}
+              </p>
+            </div>
+
             <div className="mt-4 flex flex-col gap-3">
               <div className="flex items-center justify-between gap-3">
                 <span className="text-xs font-medium text-muted">
                   {t({ ru: "Размер карточек", en: "Card size" })}
                 </span>
-                <div className="flex gap-1 rounded-full border border-border p-0.5">
-                  {(["sm", "md", "lg"] as const).map((option) => (
-                    <button
-                      key={option}
-                      type="button"
-                      onClick={() => setSize(option)}
-                      className={cn(
-                        "rounded-full px-2.5 py-1 text-[11px] font-medium transition-colors",
-                        size === option
-                          ? "bg-accent text-accent-foreground"
-                          : "text-muted hover:text-foreground",
-                      )}
-                    >
-                      {t(SIZE_LABEL[option])}
-                    </button>
-                  ))}
-                </div>
+                <span className="text-[11px] text-muted">{scale}%</span>
               </div>
+              <input
+                type="range"
+                min={MIN_OBS_SCALE}
+                max={MAX_OBS_SCALE}
+                step={5}
+                value={scale}
+                onChange={(e) => setScale(Number(e.target.value))}
+                className="w-full accent-accent"
+              />
 
               <label className="flex items-center justify-between gap-3 text-xs font-medium text-muted">
                 {t({ ru: "Показывать названия перков", en: "Show perk names" })}
