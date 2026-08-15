@@ -474,6 +474,16 @@
       "ru": "Корректировка"
     },
     "description": "You quickly analyse problems and correct others' work when they make a mistake. You start the Trial with 1/2/3 Token(s).Whenever you succeed a Great Skill Check, Corrective Action gains +1 Token, up to a maximum of 5 Tokens: Converts any Failed Skill Check of another Survivor into a Good Skill Check instead and consumes -1 Token. The Aura of that Survivor is revealed to you for 6 seconds. Corrective Action does not apply to any special Skill Checks. \"Cannot hurt to have another set of eyes on the problem.\" — Jonah Vasquez",
+    "descriptionRu": {
+      "full": "Вы быстро анализируете ситуацию и исправляете чужие ошибки. Вы начинаете матч с 1/2/3 жетоном(ами). Когда вы отлично проходите проверку реакции, «Корректировка» получает +1 жетон, вплоть до максимума в 5 жетонов: тратя жетон, вы превращаете провальную проверку реакции другого выжившего в хорошую, а его аура открывается вам на 6 секунд. «Корректировка» не действует на особые проверки реакции.",
+      "core": [
+        "Вы начинаете матч с **1/2/3** жетоном(ами).",
+        "За каждую **отличную** проверку реакции получаете **+1 жетон** (максимум **5**).",
+        "Тратя жетон, превращаете **провальную** проверку реакции другого выжившего в **хорошую** — его аура открывается вам на **6 секунд**.",
+        "Не действует на **особые** проверки реакции."
+      ],
+      "quote": "«Лишняя пара глаз никогда не помешает» — Хонас Васкес"
+    },
     "character": "Jonah",
     "icon": "/perks/survivor/corrective-action.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"

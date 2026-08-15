@@ -31,6 +31,13 @@ export function ToggleSwitch({
         aria-checked={checked}
         aria-label={label}
         onClick={onChange}
+        // Stops a mouse click from leaving this focused (click still fires
+        // normally on mouseup either way). Without this, the button keeps
+        // focus after a click, so any later stray Space press — e.g. meant
+        // for the page's own Space-to-reroll shortcut — silently activates
+        // this button again via the browser's native space-activates-button
+        // behavior, flipping the toggle a second time.
+        onMouseDown={(e) => e.preventDefault()}
         className={cn(
           "relative h-6 w-11 shrink-0 rounded-full border transition-colors",
           checked
