@@ -9,7 +9,6 @@ import {
   BarChart3,
   CalendarClock,
   Copy,
-  ImageDown,
   MonitorPlay,
   X,
 } from "lucide-react";
@@ -43,6 +42,7 @@ import { ExcludePanel } from "./exclude-panel";
 import { StatsModal } from "./stats-modal";
 import { ToggleSwitch } from "./toggle-switch";
 import { ShareCard, type ShareCardLayout } from "./share-card";
+import { DownloadImageButton } from "./download-image-button";
 import { ObsOverlayModal } from "./obs-overlay-modal";
 
 const MAX_PERK_COUNT = 4;
@@ -660,8 +660,16 @@ export function RandomizerBoard() {
     try {
       const { default: html2canvas } = await import("html2canvas");
       const canvas = await html2canvas(target, {
-        backgroundColor: "#121212",
-        scale: 2,
+        // Background is baked into ShareCard's own gradient now (see
+        // share-card.tsx), not a flat fill — this backgroundColor is just
+        // the fallback if that CSS somehow fails to paint.
+        backgroundColor: "#0d0e12",
+        // 3x renders crisp text/vector edges (borders, icon rounding) at
+        // typical viewing sizes. It can't fix the perk icons themselves —
+        // those are capped by their 128x128 source resolution, which is
+        // why ShareCard keeps icon display size close to that instead of
+        // relying on this to compensate.
+        scale: 3,
         useCORS: true,
       });
       const link = document.createElement("a");
@@ -974,32 +982,11 @@ export function RandomizerBoard() {
           <Link2 className="size-3.5" />
           {t({ ru: "Поделиться", en: "Share" })}
         </button>
-        <button
-          type="button"
-          onClick={() => handleDownloadImage("landscape")}
-          disabled={perks.length === 0 || !!generatingImage}
-          className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
-        >
-          <ImageDown className="size-3.5" />
-          {generatingImage === "landscape"
-            ? t({ ru: "Готовим картинку…", en: "Generating…" })
-            : t({ ru: "Скачать картинку", en: "Download image" })}
-        </button>
-        <button
-          type="button"
-          onClick={() => handleDownloadImage("story")}
-          disabled={perks.length === 0 || !!generatingImage}
-          title={t({
-            ru: "Вертикальная картинка 1080×1920 для историй",
-            en: "Vertical 1080×1920 image for Stories",
-          })}
-          className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
-        >
-          <ImageDown className="size-3.5" />
-          {generatingImage === "story"
-            ? t({ ru: "Готовим картинку…", en: "Generating…" })
-            : t({ ru: "Скачать историю", en: "Download story" })}
-        </button>
+        <DownloadImageButton
+          onSelect={handleDownloadImage}
+          generating={generatingImage}
+          disabled={perks.length === 0}
+        />
       </div>
 
       {/* Off-screen — exists only so html2canvas has real, laid-out DOM to
