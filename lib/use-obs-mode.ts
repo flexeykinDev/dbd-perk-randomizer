@@ -19,6 +19,10 @@ export interface ObsIconPosition {
 export interface ObsOverlayOptions {
   /** Icon size as a percentage of the default (100 = normal). */
   scale: number;
+  /** Extra multiplier (percent) on top of `scale` for just the name-label
+   *  box's max width — independent of icon size because a name can need
+   *  more room to avoid getting cut off than the icon itself does. */
+  nameScale: number;
   showNames: boolean;
   background: ObsBackground;
   /** Per-slot custom positions, indexed the same as the current build's
@@ -29,6 +33,7 @@ export interface ObsOverlayOptions {
 
 export const DEFAULT_OBS_OPTIONS: ObsOverlayOptions = {
   scale: 100,
+  nameScale: 100,
   showNames: true,
   background: "transparent",
   positions: null,
@@ -36,6 +41,8 @@ export const DEFAULT_OBS_OPTIONS: ObsOverlayOptions = {
 
 export const MIN_OBS_SCALE = 50;
 export const MAX_OBS_SCALE = 200;
+export const MIN_OBS_NAME_SCALE = 50;
+export const MAX_OBS_NAME_SCALE = 300;
 
 const BACKGROUNDS: readonly ObsBackground[] = ["transparent", "dark"];
 
@@ -58,6 +65,13 @@ function parseScale(params: URLSearchParams): number {
   const legacySize = params.get("size");
   if (legacySize && legacySize in LEGACY_SIZE_SCALE) return LEGACY_SIZE_SCALE[legacySize];
   return DEFAULT_OBS_OPTIONS.scale;
+}
+
+function parseNameScale(params: URLSearchParams): number {
+  const raw = params.get("nameScale");
+  if (raw === null) return DEFAULT_OBS_OPTIONS.nameScale;
+  const n = Number(raw);
+  return Number.isFinite(n) ? Math.min(MAX_OBS_NAME_SCALE, Math.max(MIN_OBS_NAME_SCALE, n)) : DEFAULT_OBS_OPTIONS.nameScale;
 }
 
 function parsePositions(params: URLSearchParams): ObsIconPosition[] | null {
@@ -95,6 +109,7 @@ export function useObsOverlayOptions(): ObsOverlayOptions {
       const background = params.get("bg");
       setOptions({
         scale: parseScale(params),
+        nameScale: parseNameScale(params),
         showNames: params.get("names") !== "0",
         background: BACKGROUNDS.includes(background as ObsBackground)
           ? (background as ObsBackground)
@@ -162,6 +177,9 @@ export function obsOverlayUrl(options: Partial<ObsOverlayOptions> = {}): string 
   params.set("room", getOrCreateRoomCode());
   if (options.scale && options.scale !== DEFAULT_OBS_OPTIONS.scale) {
     params.set("scale", String(Math.round(options.scale)));
+  }
+  if (options.nameScale && options.nameScale !== DEFAULT_OBS_OPTIONS.nameScale) {
+    params.set("nameScale", String(Math.round(options.nameScale)));
   }
   if (options.showNames === false) params.set("names", "0");
   if (options.background && options.background !== DEFAULT_OBS_OPTIONS.background) {

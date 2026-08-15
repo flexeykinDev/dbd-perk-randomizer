@@ -11,15 +11,18 @@ import {
   RotateCcw,
   X,
 } from "lucide-react";
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { withBasePath } from "@/lib/asset-path";
 import { cn } from "@/lib/cn";
 import { useT, type Lang } from "@/lib/i18n";
+import { getIdForSlug } from "@/lib/perk-ids";
 import type { TwitchConnectionState, TwitchPermission } from "@/lib/twitch-chat";
 import type { Perk } from "@/lib/types";
 import {
   DEFAULT_OBS_OPTIONS,
+  MAX_OBS_NAME_SCALE,
   MAX_OBS_SCALE,
+  MIN_OBS_NAME_SCALE,
   MIN_OBS_SCALE,
   obsOverlayUrl,
   type ObsIconPosition,
@@ -61,6 +64,7 @@ const DEFAULT_SLOT_POSITIONS: readonly ObsIconPosition[] = [
 // up with where it'll actually land in OBS.
 const PREVIEW_ASPECT = 800 / 220;
 const PREVIEW_BASE_ICON_PX = 34;
+const PREVIEW_BASE_NAME_MAX_WIDTH_PX = 56;
 
 function PermissionSelect({
   value,
@@ -132,7 +136,9 @@ export function ObsOverlayModal({
 }) {
   const t = useT();
   const [copied, setCopied] = useState(false);
+  const [pasteCommandCopied, setPasteCommandCopied] = useState(false);
   const [scale, setScale] = useState(DEFAULT_OBS_OPTIONS.scale);
+  const [nameScale, setNameScale] = useState(DEFAULT_OBS_OPTIONS.nameScale);
   const [showNames, setShowNames] = useState(DEFAULT_OBS_OPTIONS.showNames);
   const [darkBg, setDarkBg] = useState(DEFAULT_OBS_OPTIONS.background === "dark");
   // null = no custom layout yet, overlay falls back to its default centered
@@ -150,6 +156,7 @@ export function ObsOverlayModal({
   const url = open
     ? obsOverlayUrl({
         scale,
+        nameScale,
         showNames,
         background: darkBg ? "dark" : "transparent",
         positions: positions ?? undefined,
@@ -162,6 +169,27 @@ export function ObsOverlayModal({
       .then(() => {
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
+      })
+      .catch(() => {});
+  }
+
+  // The exact !paste command that hands out whatever build is currently on
+  // screen — built from perk IDs (same short numeric IDs the site's own
+  // Share links use), so a streamer/mod can read it out or pin it verbatim
+  // instead of having to go grab a Share link and copy numbers out of it.
+  const pasteCommandForBuild = useMemo(() => {
+    const ids = perks.map((p) => getIdForSlug(p.slug)).filter((id): id is number => id !== undefined);
+    if (ids.length === 0) return null;
+    return `${twitchPasteCommand.trim() || "!paste"} ${ids.join(",")}`;
+  }, [perks, twitchPasteCommand]);
+
+  function handleCopyPasteCommand() {
+    if (!pasteCommandForBuild) return;
+    navigator.clipboard
+      .writeText(pasteCommandForBuild)
+      .then(() => {
+        setPasteCommandCopied(true);
+        setTimeout(() => setPasteCommandCopied(false), 2000);
       })
       .catch(() => {});
   }
@@ -312,7 +340,10 @@ export function ObsOverlayModal({
                         )}
                       </span>
                       {showNames && perk && (
-                        <span className="pointer-events-none inline-block max-w-16 truncate rounded-full bg-black/70 px-1.5 py-0.5 text-[9px] font-bold text-white">
+                        <span
+                          className="pointer-events-none inline-block truncate rounded-full bg-black/70 px-1.5 py-0.5 text-[9px] font-bold text-white"
+                          style={{ maxWidth: Math.round(PREVIEW_BASE_NAME_MAX_WIDTH_PX * (nameScale / 100)) }}
+                        >
                           {perk.name[language]}
                         </span>
                       )}
@@ -344,6 +375,29 @@ export function ObsOverlayModal({
                 onChange={(e) => setScale(Number(e.target.value))}
                 className="w-full accent-accent"
               />
+
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-xs font-medium text-muted">
+                  {t({ ru: "Ширина имени", en: "Name width" })}
+                </span>
+                <span className="text-[11px] text-muted">{nameScale}%</span>
+              </div>
+              <input
+                type="range"
+                min={MIN_OBS_NAME_SCALE}
+                max={MAX_OBS_NAME_SCALE}
+                step={10}
+                value={nameScale}
+                onChange={(e) => setNameScale(Number(e.target.value))}
+                className="w-full accent-accent"
+                disabled={!showNames}
+              />
+              <p className="-mt-2 text-[11px] text-muted/70">
+                {t({
+                  ru: "Если длинное имя перка обрезается многоточием — увеличь этот ползунок.",
+                  en: "If a long perk name gets cut off with an ellipsis, raise this slider.",
+                })}
+              </p>
 
               <label className="flex items-center justify-between gap-3 text-xs font-medium text-muted">
                 {t({ ru: "Показывать названия перков", en: "Show perk names" })}
@@ -522,6 +576,33 @@ export function ObsOverlayModal({
                             en: 'Example: "!paste 42,105,12,8" — the numbers come from the site\'s Share link.',
                           })}
                         </p>
+                        {pasteCommandForBuild && (
+                          <div className="pl-5">
+                            <p className="mb-1 text-[11px] font-medium text-muted">
+                              {t({
+                                ru: "Готовая команда для билда на экране сейчас:",
+                                en: "Ready command for the build on screen right now:",
+                              })}
+                            </p>
+                            <div className="flex items-center gap-1.5">
+                              <code className="min-w-0 flex-1 truncate rounded-full border border-border bg-background px-2.5 py-1 text-[11px] text-foreground">
+                                {pasteCommandForBuild}
+                              </code>
+                              <button
+                                type="button"
+                                onClick={handleCopyPasteCommand}
+                                aria-label={t({ ru: "Скопировать команду", en: "Copy command" })}
+                                className="flex size-6 shrink-0 items-center justify-center rounded-full border border-border text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+                              >
+                                {pasteCommandCopied ? (
+                                  <Check className="size-3 text-accent" />
+                                ) : (
+                                  <Copy className="size-3" />
+                                )}
+                              </button>
+                            </div>
+                          </div>
+                        )}
                       </>
                     )}
                   </div>

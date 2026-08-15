@@ -17,7 +17,12 @@ const BASE_GAP_PX = 16;
 const BASE_NAME_FONT_PX = 12;
 const BASE_NAME_PAD_X_PX = 12;
 const BASE_NAME_PAD_Y_PX = 4;
-const BASE_NAME_MAX_WIDTH_PX = 128;
+// Generous enough that most perk names fit without an ellipsis at the
+// default scale — long RU names (e.g. "Стиснув зубы", "Порча: шут судьбы")
+// were getting cut off after just a few letters at the old 128px cap. The
+// `nameScale` URL param (see the modal's "Ширина имени" slider) multiplies
+// this further for names that still don't fit.
+const BASE_NAME_MAX_WIDTH_PX = 200;
 
 /** The stream overlay view (`#/obs`) — a fully transparent background (by
  *  default) showing only the current perk cards, animated in/out as the
@@ -56,6 +61,7 @@ export function ObsOverlay() {
 
   const roleColor = state ? ROLE_COLOR[state.role] : null;
   const scaleRatio = options.scale / 100;
+  const nameScaleRatio = options.nameScale / 100;
   const iconSize = Math.round(BASE_ICON_PX * scaleRatio);
   const gapPx = Math.round(BASE_GAP_PX * scaleRatio);
   const usePositions = !!options.positions && !!state && options.positions.length >= state.perks.length;
@@ -118,7 +124,7 @@ export function ObsOverlay() {
                       paddingRight: Math.round(BASE_NAME_PAD_X_PX * scaleRatio),
                       paddingTop: Math.round(BASE_NAME_PAD_Y_PX * scaleRatio),
                       paddingBottom: Math.round(BASE_NAME_PAD_Y_PX * scaleRatio),
-                      maxWidth: Math.round(BASE_NAME_MAX_WIDTH_PX * scaleRatio),
+                      maxWidth: Math.round(BASE_NAME_MAX_WIDTH_PX * scaleRatio * nameScaleRatio),
                     }}
                   >
                     {perk.name[state.language]}
