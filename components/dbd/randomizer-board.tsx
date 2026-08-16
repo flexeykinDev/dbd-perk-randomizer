@@ -1518,7 +1518,7 @@ export function RandomizerBoard() {
 
       {mode === "perks" ? (
         <ExcludePanel
-          key={role}
+          key={`perk-pool-${role}`}
           open={excludePanelOpen}
           role={role}
           language={language}
@@ -1533,7 +1533,7 @@ export function RandomizerBoard() {
         />
       ) : (
         <LoadoutExcludePanel
-          key={role}
+          key={`loadout-pool-${role}`}
           open={excludePanelOpen}
           role={role}
           language={language}
@@ -1557,6 +1557,8 @@ export function RandomizerBoard() {
         open={obsModalOpen}
         onClose={() => setObsModalOpen(false)}
         perks={perks}
+        mode={mode}
+        loadoutPieces={loadoutPieces}
         language={language}
         role={role}
         twitchChannel={twitchChannel}
@@ -1579,7 +1581,7 @@ export function RandomizerBoard() {
       />
 
       <CharacterPickerModal
-        key={mode === "loadout" && role === "killer" ? "killer-loadout" : role}
+        key={`char-picker-${mode === "loadout" && role === "killer" ? "killer-loadout" : role}`}
         open={characterPickerOpen}
         role={role}
         language={language}

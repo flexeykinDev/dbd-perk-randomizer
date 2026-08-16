@@ -20,7 +20,7 @@ import { useT, type Lang } from "@/lib/i18n";
 import { getIdForSlug } from "@/lib/perk-ids";
 import { getPerksByRole } from "@/lib/perks";
 import type { TwitchConnectionState, TwitchPermission } from "@/lib/twitch-chat";
-import type { Perk, PerkRole } from "@/lib/types";
+import type { LoadoutPiece, Perk, PerkRole } from "@/lib/types";
 import { ToggleSwitch } from "./toggle-switch";
 import {
   DEFAULT_OBS_OPTIONS,
@@ -150,6 +150,8 @@ export function ObsOverlayModal({
   open,
   onClose,
   perks,
+  mode,
+  loadoutPieces,
   language,
   role,
   twitchChannel,
@@ -173,6 +175,12 @@ export function ObsOverlayModal({
   open: boolean;
   onClose: () => void;
   perks: Perk[];
+  /** Which build the live preview below should mirror — matches whatever's
+   *  actually being published to the overlay (see randomizer-board.tsx's
+   *  publish effect), so the preview never shows something the real
+   *  overlay wouldn't. */
+  mode: "perks" | "loadout";
+  loadoutPieces: LoadoutPiece[];
   language: Lang;
   role: PerkRole;
   twitchChannel: string;
@@ -334,7 +342,14 @@ export function ObsOverlayModal({
     });
   }
 
-  const previewSlotCount = perks.length > 0 ? Math.min(perks.length, 4) : 4;
+  // The overlay itself renders whatever publishObsState() last sent it,
+  // which mirrors the current mode (see randomizer-board.tsx) — the
+  // preview needs to mirror the *same* pieces, or it'd show 4 empty
+  // placeholder slots the entire time someone's in Loadout mode while the
+  // real overlay is showing something else entirely.
+  const previewPieces: { slug: string; icon: string; name: { en: string; ru: string } }[] =
+    mode === "loadout" ? loadoutPieces : perks;
+  const previewSlotCount = previewPieces.length > 0 ? Math.min(previewPieces.length, 4) : 4;
   const previewIconPx = Math.round(PREVIEW_BASE_ICON_PX * (scale / 100));
 
   function updateCanvasWidth(width: number) {
@@ -395,10 +410,15 @@ export function ObsOverlayModal({
                     {t({ ru: "Оверлей для OBS", en: "OBS Overlay" })}
                   </p>
                   <p id={descId} className="text-xs text-muted">
-                    {t({
-                      ru: "Прозрачный фон, только карточки перков",
-                      en: "Transparent background, perk cards only",
-                    })}
+                    {mode === "loadout"
+                      ? t({
+                          ru: "Прозрачный фон, только карточки экипировки",
+                          en: "Transparent background, loadout cards only",
+                        })
+                      : t({
+                          ru: "Прозрачный фон, только карточки перков",
+                          en: "Transparent background, perk cards only",
+                        })}
                   </p>
                 </div>
               </div>
@@ -463,7 +483,7 @@ export function ObsOverlayModal({
                 style={{ aspectRatio: canvasWidth / canvasHeight }}
               >
                 {Array.from({ length: previewSlotCount }, (_, index) => {
-                  const perk: Perk | undefined = perks[index];
+                  const perk = previewPieces[index];
                   const pos = (positions ?? DEFAULT_SLOT_POSITIONS)[index] ?? DEFAULT_SLOT_POSITIONS[index];
                   return (
                     <div
@@ -650,7 +670,7 @@ export function ObsOverlayModal({
                 <ToggleSwitch
                   checked={showNames}
                   onChange={() => setShowNames((v) => !v)}
-                  label={t({ ru: "Показывать названия перков", en: "Show perk names" })}
+                  label={t({ ru: "Показывать названия карточек", en: "Show card names" })}
                 />
                 <ToggleSwitch
                   checked={darkBg}

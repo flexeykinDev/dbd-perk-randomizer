@@ -3185,15 +3185,15 @@
     "kind": "addon",
     "role": "killer",
     "character": "Hillbilly",
-    "icon": "/loadout/addon/begrimed-chains.webp",
-    "slug": "begrimed-chains",
+    "icon": "/loadout/addon/begrimed-chains-hillbilly.webp",
+    "slug": "begrimed-chains-hillbilly",
     "name": {
       "en": "Begrimed Chains",
       "ru": "Грязные цепи"
     },
     "description": "A foul yet oddly familiar chain, coated with something unpleasant. Survivors hit with the Chainsaw suffer from the Haemorrhage and Mangled Status Effects for 70 seconds.",
     "descriptionRuRaw": "Эта цепь измазана мерзким веществом, изнуряющим любого, кто к нему прикоснется. Удары бензопилой заставляют выживших ронять предметы.",
-    "addedAt": "2026-08-16T07:16:30.038Z"
+    "addedAt": "2026-08-16T12:13:10.293Z"
   },
   {
     "kind": "addon",
@@ -6497,15 +6497,15 @@
     "kind": "addon",
     "role": "killer",
     "character": "Good Guy",
-    "icon": "/loadout/addon/jump-rope.webp",
-    "slug": "jump-rope",
+    "icon": "/loadout/addon/jump-rope-good-guy.webp",
+    "slug": "jump-rope-good-guy",
     "name": {
       "en": "Jump Rope",
       "ru": "Скакалка"
     },
     "description": "Good for a bit of exercise, or for tying up your target. Extends the duration of Slice & Dice to 108 % of its default duration.",
     "descriptionRuRaw": "Сгодится и для того, чтобы поупражняться, и чтобы связать жертву. Увеличивает продолжительность \"Режь-Руби\" на 8%",
-    "addedAt": "2026-08-16T07:16:30.038Z"
+    "addedAt": "2026-08-16T12:13:10.293Z"
   },
   {
     "kind": "addon",
@@ -9339,15 +9339,15 @@
     "kind": "addon",
     "role": "killer",
     "character": "Dark Lord",
-    "icon": "/loadout/addon/pocket-watch.webp",
-    "slug": "pocket-watch",
+    "icon": "/loadout/addon/pocket-watch-dark-lord.webp",
+    "slug": "pocket-watch-dark-lord",
     "name": {
       "en": "Pocket Watch",
       "ru": "Карманные часы"
     },
     "description": "A tool that bends the rules of time itself. Breaking Pallets instantly recharges the Teleport ability.",
     "descriptionRuRaw": "Обгоревшие и разбитые карманные часы с бренчащими внутри деталями. Забраны с тела медсестры Морис. Увеличивают время до наступления истощения после скачка у Медсестры на 20%.",
-    "addedAt": "2026-08-16T07:16:30.038Z"
+    "addedAt": "2026-08-16T12:13:10.293Z"
   },
   {
     "kind": "addon",

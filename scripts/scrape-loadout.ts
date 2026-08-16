@@ -496,7 +496,14 @@ async function main() {
   console.log(`Fetching ${ADDONS_PAGE} via MediaWiki API ...`);
   const addonsHtml = await fetchWikiPageHtml(ADDONS_PAGE);
   const $addons = cheerio.load(addonsHtml);
-  const addons: Addon[] = [];
+
+  interface AddonRow {
+    role: "survivor" | "killer";
+    character: string;
+    itemType?: ItemType;
+    piece: ScrapedPiece;
+  }
+  const addonRows: AddonRow[] = [];
 
   const survivorAddonSections = findHeadingTables($addons, "Survivor Item Add-ons");
   for (const { heading, table } of survivorAddonSections) {
@@ -505,9 +512,8 @@ async function main() {
       console.warn(`  Unknown survivor add-on heading "${heading}" — skipping`);
       continue;
     }
-    const pieces = parsePieceTable($addons, table);
-    for (const piece of pieces) {
-      addons.push({ kind: "addon", role: "survivor", itemType, character: ".All", icon: "", ...toLocalized("addon", piece) });
+    for (const piece of parsePieceTable($addons, table)) {
+      addonRows.push({ role: "survivor", character: ".All", itemType, piece });
     }
   }
 
@@ -515,11 +521,39 @@ async function main() {
   const powerToCharacter = await resolvePowerToCharacter(killerAddonSections.map((s) => s.heading));
   for (const { heading, table } of killerAddonSections) {
     const character = powerToCharacter[heading];
-    const pieces = parsePieceTable($addons, table);
-    for (const piece of pieces) {
-      addons.push({ kind: "addon", role: "killer", character, icon: "", ...toLocalized("addon", piece) });
+    for (const piece of parsePieceTable($addons, table)) {
+      addonRows.push({ role: "killer", character, piece });
     }
   }
+
+  // A handful of add-ons across different killers/items happen to share
+  // an exact English name (confirmed by hand — e.g. "Jump Rope" exists
+  // for both The Nightmare and The Good Guy, "Begrimed Chains" for The
+  // Cannibal and The Hillbilly; genuinely different add-ons, not a
+  // scraper duplicate). Left alone they'd all slugify identically and
+  // silently collide into one stable ID, one icon file, and one React
+  // key wherever the UI lists add-ons — so any slug seen before gets the
+  // owning character appended to disambiguate it.
+  const usedAddonSlugs = new Set<string>();
+  for (const row of addonRows) {
+    if (usedAddonSlugs.has(row.piece.slug)) {
+      row.piece = { ...row.piece, slug: `${row.piece.slug}-${slugify(row.character)}` };
+    }
+    usedAddonSlugs.add(row.piece.slug);
+  }
+
+  const addons: Addon[] = addonRows.map((row) =>
+    row.role === "survivor"
+      ? {
+          kind: "addon",
+          role: "survivor",
+          itemType: row.itemType!,
+          character: ".All",
+          icon: "",
+          ...toLocalized("addon", row.piece),
+        }
+      : { kind: "addon", role: "killer", character: row.character, icon: "", ...toLocalized("addon", row.piece) },
+  );
   console.log(
     `Found ${addons.length} add-ons (${addons.filter((a) => a.role === "survivor").length} survivor / ${addons.filter((a) => a.role === "killer").length} killer)`,
   );
@@ -575,10 +609,14 @@ async function main() {
     await attachIcons(items, allItemRows);
   }
   {
-    const allAddonRows: ScrapedPiece[] = [];
-    for (const { table } of survivorAddonSections) allAddonRows.push(...parsePieceTable($addons, table));
-    for (const { table } of killerAddonSections) allAddonRows.push(...parsePieceTable($addons, table));
-    await attachIcons(addons, allAddonRows);
+    // Reuses addonRows directly (already deduped above) rather than
+    // re-parsing the tables again — re-parsing would reproduce the
+    // original colliding slugs and hand the wrong icon to one of each
+    // colliding pair, right back where the dedup pass started.
+    await attachIcons(
+      addons,
+      addonRows.map((r) => r.piece),
+    );
   }
   {
     const allOfferingRows: ScrapedPiece[] = [];

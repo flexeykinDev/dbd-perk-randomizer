@@ -48,6 +48,22 @@ test.describe("DBD randomizer", () => {
     expect(JSON.parse(excludedSlugs ?? "[]").length).toBeGreaterThan(0);
   });
 
+  test("exclude panel's Close button actually closes it", async ({ page }) => {
+    // Regression test: ExcludePanel and CharacterPickerModal both used a
+    // bare `key={role}` ("survivor"/"killer") on themselves as siblings in
+    // the same parent — React warned about the duplicate key and, in
+    // practice, the reconciliation confusion made the Close button stop
+    // responding entirely (see randomizer-board.tsx's namespaced
+    // `perk-pool-${role}` / `char-picker-${...}` keys).
+    await page.goto("/");
+    await page.getByRole("button", { name: "Пул", exact: true }).click();
+    const panel = page.getByText("Настроить пул перков");
+    await expect(panel).toBeVisible();
+
+    await page.getByRole("button", { name: "Закрыть" }).click();
+    await expect(panel).not.toBeVisible();
+  });
+
   test("opening a shared build URL loads that exact build", async ({ page }) => {
     await page.goto(
       "/?role=killer&perks=agitation,bamboozle,brutal-strength,corrupt-intervention",

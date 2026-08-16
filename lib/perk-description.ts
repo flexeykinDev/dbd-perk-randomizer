@@ -32,6 +32,34 @@ function splitSentences(text: string): string[] {
     .filter(Boolean);
 }
 
+// A sentence that mentions a number, a percentage, or a quoted term (a
+// named Status Effect, e.g. "Undetectable"/"Незаметность") reads as the
+// actual game-mechanic text; one that doesn't is very likely flavor —
+// several item/add-on wiki cells open with a flavor sentence glued
+// directly onto the mechanical text with no separator other than the
+// period (confirmed by hand, e.g. Filthy Slippers: "Max sometimes
+// struggled to hear his mother's footfalls. Gain the Undetectable Status
+// Effect..."). Works the same for RU raw text, which uses the same «/„
+// quoting conventions for named effects.
+const MECHANICAL_HINT_RE = /\d|%|["«»„“]/;
+
+/** Drops a leading run of non-mechanical (flavor) sentences from the Core
+ *  Effect bullets — the Full Text tab still shows everything verbatim, so
+ *  nothing is actually lost, just kept out of the short summary. Only
+ *  commits to dropping when something *after* the dropped prefix still
+ *  looks mechanical; a description that never mentions a number/quoted
+ *  term at all is left untouched rather than guessed at. */
+function stripLoreIntro(sentences: string[]): string[] {
+  if (sentences.length < 2) return sentences;
+  let dropCount = 0;
+  while (dropCount < sentences.length - 1 && !MECHANICAL_HINT_RE.test(sentences[dropCount])) {
+    dropCount++;
+  }
+  if (dropCount === 0) return sentences;
+  const remainder = sentences.slice(dropCount);
+  return remainder.some((s) => MECHANICAL_HINT_RE.test(s)) ? remainder : sentences;
+}
+
 // Tiered values (6/7/8) before bare numbers so "6/7/8 seconds" highlights as
 // one span instead of three separate digits.
 const VALUE_RE =
@@ -69,7 +97,7 @@ function describe(entity: DescribableEntity, lang: Lang): PerkDescriptionView {
   const { body, quote } = splitQuote(source, lang);
   return {
     full: autoHighlight(body),
-    core: splitSentences(body).map(autoHighlight),
+    core: stripLoreIntro(splitSentences(body)).map(autoHighlight),
     quote,
     curated: false,
   };

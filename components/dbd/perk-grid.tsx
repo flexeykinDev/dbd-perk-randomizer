@@ -131,6 +131,7 @@ export function PerkGrid({
       <PerkDetailModal
         perk={detailPerk}
         language={language}
+        onCopy={onCopy}
         onClose={() => setDetailPerk(null)}
       />
     </>
@@ -140,10 +141,12 @@ export function PerkGrid({
 function PerkDetailModal({
   perk,
   language,
+  onCopy,
   onClose,
 }: {
   perk: Perk | null;
   language: "en" | "ru";
+  onCopy: (perk: Perk) => void;
   onClose: () => void;
 }) {
   const t = useT();
@@ -250,6 +253,15 @@ function PerkDetailModal({
               )}
 
               <PerkDescriptionPanel key={perk.slug} perk={perk} language={language} />
+
+              <button
+                type="button"
+                onClick={() => onCopy(perk)}
+                className="mt-4 flex w-full items-center justify-center gap-1.5 rounded-lg border border-border py-2 text-sm font-medium text-muted transition-colors hover:border-accent/50 hover:bg-accent/10 hover:text-accent"
+              >
+                <Copy className="size-3.5" />
+                {t({ ru: "Копировать", en: "Copy" })}
+              </button>
             </div>
           </motion.div>
         </motion.div>
@@ -299,7 +311,7 @@ function PerkDescriptionPanel({
         <ul className="mt-3 space-y-1.5 text-sm leading-relaxed text-muted">
           {description.core.map((bullet, i) => (
             <li key={i} className="flex gap-2">
-              <span className="mt-1 size-1 shrink-0 rounded-full bg-muted" aria-hidden />
+              <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-accent" aria-hidden />
               <span>
                 <Highlighted text={bullet} />
               </span>
