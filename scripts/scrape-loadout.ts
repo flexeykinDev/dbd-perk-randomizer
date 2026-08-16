@@ -27,6 +27,7 @@ const OFFERINGS_JSON = join(DATA_DIR, "offerings.json");
 const LOADOUT_META_JSON = join(DATA_DIR, "loadout-meta.json");
 const LOADOUT_IDS_JSON = join(DATA_DIR, "loadout-ids.json");
 const LOADOUT_TRANSLATIONS_JSON = join(DATA_DIR, "loadout-translations.ru.json");
+const LOADOUT_DESCRIPTION_RU_RAW_JSON = join(DATA_DIR, "loadout-description-ru-raw.json");
 const KILLER_POWER_ICONS_JSON = join(DATA_DIR, "killer-power-icons.json");
 
 const ICON_SIZE = 128;
@@ -62,6 +63,18 @@ function cleanText(text: string): string {
   return text.replace(/\s+/g, " ").trim();
 }
 
+// The wiki prepends this notice, with no separating whitespace, to any
+// piece whose numbers are previewed for an upcoming patch — e.g. "...Patch
+// 7.4.0The annoying buzzing sound means...". Same notice scrape-perks.ts
+// already strips for perks; loadout pieces get it too and need the same
+// treatment, or it ends up glued onto the actual description text.
+const UPCOMING_PATCH_NOTICE =
+  /^This description is based on the changes announced for or featured in the upcoming Patch [\d.]+\s*/;
+
+function cleanDescription(text: string): string {
+  return cleanText(text).replace(UPCOMING_PATCH_NOTICE, "");
+}
+
 // Any of these markers anywhere in a row's description means the piece
 // can't actually be equipped in a normal Trial today — retired, pulled
 // from the Bloodweb, event-exclusive-and-over, or code-only/unused. Same
@@ -94,7 +107,7 @@ function parsePieceTable($: cheerio.CheerioAPI, table: Cheerio<AnyNode>): Scrape
     const descriptionCell = cells.eq(2);
 
     const name = cleanText(nameCell.text());
-    const description = cleanText(descriptionCell.text());
+    const description = cleanDescription(descriptionCell.text());
     const iconSourceUrl = iconCell.find("img").attr("data-src") ?? "";
     if (!name || !iconSourceUrl || !description) return;
     if (UNAVAILABLE_MARKERS.test(description)) return;
@@ -413,8 +426,15 @@ function loadTranslations(): Record<string, string> {
   return raw;
 }
 
+function loadDescriptionRuRaw(): Record<string, string> {
+  const raw = loadJson<Record<string, string>>(LOADOUT_DESCRIPTION_RU_RAW_JSON, {});
+  delete raw._comment;
+  return raw;
+}
+
 async function main() {
   const translations = loadTranslations();
+  const descriptionRuRaw = loadDescriptionRuRaw();
   const previousItems = loadJson<Item[]>(ITEMS_JSON, []);
   const previousAddons = loadJson<Addon[]>(ADDONS_JSON, []);
   const previousOfferings = loadJson<Offering[]>(OFFERINGS_JSON, []);
@@ -432,12 +452,20 @@ async function main() {
   function toLocalized<K extends "item" | "addon" | "offering">(
     kind: K,
     piece: ScrapedPiece,
-  ): { slug: string; name: { en: string; ru: string }; description: string; addedAt: string } {
-    const prev = previousBySlug.get(`${kind}:${piece.slug}`);
+  ): {
+    slug: string;
+    name: { en: string; ru: string };
+    description: string;
+    descriptionRuRaw?: string;
+    addedAt: string;
+  } {
+    const key = `${kind}:${piece.slug}`;
+    const prev = previousBySlug.get(key);
     return {
       slug: piece.slug,
-      name: { en: piece.name, ru: translations[`${kind}:${piece.slug}`] ?? piece.name },
+      name: { en: piece.name, ru: translations[key] ?? piece.name },
       description: piece.description,
+      descriptionRuRaw: descriptionRuRaw[key],
       addedAt: prev?.addedAt ?? scrapedAt,
     };
   }

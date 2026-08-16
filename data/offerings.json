@@ -7,9 +7,10 @@
     "slug": "hollow-shell",
     "name": {
       "en": "Hollow Shell",
-      "ru": "Hollow Shell"
+      "ru": "Пустая оболочка"
     },
     "description": "Grants +25 % bonus Bloodpoints in all Scoring Categories. The bonus Bloodpoints are applied after exiting the Trial. \"An unidentifiable cocoon which was breached by whatever was inside.\"",
+    "descriptionRuRaw": "Даёт 25% бонусных очков крови во всех категориях.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -20,9 +21,10 @@
     "slug": "sealed-envelope",
     "name": {
       "en": "Sealed Envelope",
-      "ru": "Sealed Envelope"
+      "ru": "Запечатанный конверт"
     },
     "description": "Grants +25 % bonus Bloodpoints in all Scoring Categories. The bonus Bloodpoints are applied after exiting the Trial. \"An unaddressed and unopened envelope yellowed by its time.Its message will never be known.\"",
+    "descriptionRuRaw": "Даёт 25% бонусных очков крови во всех категориях. Личное подношение.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -33,9 +35,10 @@
     "slug": "survivor-pudding",
     "name": {
       "en": "Survivor Pudding",
-      "ru": "Survivor Pudding"
+      "ru": "Пудинг из выживших"
     },
     "description": "Grants +100 % bonus Bloodpoints in all Scoring Categories. The bonus Bloodpoints are applied after exiting the Trial. \"A heavily salted pudding...\"",
+    "descriptionRuRaw": "Дарует 100% бонусных очков крови во всех категориях. Личное подношение.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -46,9 +49,10 @@
     "slug": "bloody-party-streamers",
     "name": {
       "en": "Bloody Party Streamers",
-      "ru": "Bloody Party Streamers"
+      "ru": "Окровавленные праздничные гирлянды"
     },
     "description": "Grants +100 % bonus Bloodpoints in all Scoring Categories to all Players. The bonus Bloodpoints are applied after exiting the Trial. \"A reminder of a bloody good time when people came together, but left screaming.\"",
+    "descriptionRuRaw": "Дарует 100% бонусных очков крови во всех категориях для всех участников текущего испытания.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -59,9 +63,10 @@
     "slug": "bound-envelope",
     "name": {
       "en": "Bound Envelope",
-      "ru": "Bound Envelope"
+      "ru": "Перевязанный конверт"
     },
     "description": "Grants +25 % bonus Bloodpoints in all Scoring Categories to all Survivors. The bonus Bloodpoints are applied after exiting the Trial. \"An opened envelope re-sealed and bound with four coloured ribbons.\"",
+    "descriptionRuRaw": "Дарует 25% дополнительных очков крови во всех категориях всем выжившим.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -72,9 +77,10 @@
     "slug": "cream-chalk-pouch",
     "name": {
       "en": "Cream Chalk Pouch",
-      "ru": "Cream Chalk Pouch"
+      "ru": "Мешок с мелом кремового цвета"
     },
     "description": "Increases your personal chance of succeeding a Self-Unhook by +2 %. \"A small cotton pouch half-filled with a cream coloured chalky powder of unknown origin.Releases a faint herbal aroma. Some believe it brings good fortune.\"",
+    "descriptionRuRaw": "Дает возможность попытаться слезть с крюка. Повышает вашу удачу на 2%. Тайна.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -85,9 +91,10 @@
     "slug": "ivory-chalk-pouch",
     "name": {
       "en": "Ivory Chalk Pouch",
-      "ru": "Ivory Chalk Pouch"
+      "ru": "Мешок с мелом из слоновой кости"
     },
     "description": "Increases your personal chance of succeeding a Self-Unhook by +3 %. \"A small leather pouch displaying a straight white line hand-sewn on one of its sides.The bag is filled with an ivory chalky powder that shines under the moonlight.Some believe it brings good fortune.\"",
+    "descriptionRuRaw": "Дает возможность попытаться слезть с крюка. Повышает вашу удачу на 3%. Тайна.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -98,9 +105,10 @@
     "slug": "torn-blueprint",
     "name": {
       "en": "Torn Blueprint",
-      "ru": "Torn Blueprint"
+      "ru": "Порванный чертеж"
     },
     "description": "Grants the following effects at the start of the Trial: Increases the likelihood of the Basement spawning in the Landmark Building by +100 %, if it is available. The Auras of the Basement Hooks are revealed to you for 20 seconds. \"Though brittle and torn, the design is mostly legible.\"",
+    "descriptionRuRaw": "Показывает вам ауру крюков в подвале на 20 сек. в начале матча. Чрезвычайно повышает шанс появления подвала в основном здании, если оно есть на карте. Тайна.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -111,9 +119,10 @@
     "slug": "ivory-memento-mori",
     "name": {
       "en": "Ivory Memento Mori",
-      "ru": "Ivory Memento Mori"
+      "ru": "Костяное Memento Mori"
     },
-    "description": "This description is based on the changes announced for or featured in the upcoming Patch 4.4.1THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Grants the ability to kill one Survivor with 2 Hook Stages once they are in the Dying State. \"Grant me the favour of killing one.\"",
+    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Grants the ability to kill one Survivor with 2 Hook Stages once they are in the Dying State. \"Grant me the favour of killing one.\"",
+    "descriptionRuRaw": "Дарует возможность убить одного из выживших, которого вы перед этим повесили на крюк, и который достиг на нем второй стадии, в следующем матче. Секретное.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -124,9 +133,10 @@
     "slug": "ebony-memento-mori",
     "name": {
       "en": "Ebony Memento Mori",
-      "ru": "Ebony Memento Mori"
+      "ru": "Эбеновое Memento Mori"
     },
-    "description": "This description is based on the changes announced for or featured in the upcoming Patch 4.4.1THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Grants the ability to kill all Survivors with 2 Hook Stages once they are in the Dying State. \"I could swear It spoke to the beast.It came to a halt, as if calmly listening to the leaves rustling, and then... grinned.\"",
+    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Grants the ability to kill all Survivors with 2 Hook Stages once they are in the Dying State. \"I could swear It spoke to the beast.It came to a halt, as if calmly listening to the leaves rustling, and then... grinned.\"",
+    "descriptionRuRaw": "Дарует возможность убить всех выживших, которых вы перед этим повесили на крюк, и которые достигли на нем второй стадии, в следующем матче. Секретное.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -137,9 +147,10 @@
     "slug": "azarov-s-key",
     "name": {
       "en": "Azarov's Key",
-      "ru": "Azarov's Key"
+      "ru": "Ключ Азарова"
     },
     "description": "Increases the likelihood of being sent to a Map in the Autohaven Wreckers Realm. Modifies the Realm Selector Logic by a value of 9999. \"A broken key pertaining to a vehicle of unknown brand.A key-chain attached to it identifies the owner as a certain 'A. Azarov'\"",
+    "descriptionRuRaw": "Чрезвычайно увеличивает шансы отправиться на карту \"Свалка Автохевен\" после сожжения. Тайна. Эффект не суммируется.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -150,9 +161,10 @@
     "slug": "shroud-of-union",
     "name": {
       "en": "Shroud of Union",
-      "ru": "Shroud of Union"
+      "ru": "Пелена союза"
     },
     "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Causes all Survivors to spawn together in pairs in two different locations. \"A knotted piece of fabric.\"",
+    "descriptionRuRaw": "Матч начинается рядом с союзником. Секретное подношение.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -163,9 +175,10 @@
     "slug": "vigo-s-shroud",
     "name": {
       "en": "Vigo's Shroud",
-      "ru": "Vigo's Shroud"
+      "ru": "Платок Виго"
     },
     "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Causes you to spawn as far away from the Killer as possible. \"I found marvels through the years in The Fog, but only now do I understand how to bend The Fog's irrefragable rules.\" — Vigo's Journal",
+    "descriptionRuRaw": "Вы начинаете матч как можно дальше от убийцы. Секретное подношение.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -176,9 +189,10 @@
     "slug": "shroud-of-binding",
     "name": {
       "en": "Shroud of Binding",
-      "ru": "Shroud of Binding"
+      "ru": "Пелена единства"
     },
     "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Causes all Survivors to spawn together in the same location. \"A square and washed out piece of fabric with small knots on each end.\"",
+    "descriptionRuRaw": "Все выжившие начинают матч вместе. Секретное подношение.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -189,9 +203,10 @@
     "slug": "black-ward",
     "name": {
       "en": "Black Ward",
-      "ru": "Black Ward"
+      "ru": "Черный защитник"
     },
     "description": "Calls upon The Entity for the following effect: Causes your Add-ons to not be consumed after ending the Trial. \"Hear my voice, spare my ways, protect me from the void.\"",
+    "descriptionRuRaw": "Сжигание данного подношения дает Вам защиту от потери улучшений по окончании матча.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -202,9 +217,10 @@
     "slug": "white-ward",
     "name": {
       "en": "White Ward",
-      "ru": "White Ward"
+      "ru": "Белый защитник"
     },
     "description": "Calls upon The Entity for the following effect: Causes your held Item to be protected from loss upon death. Causes any attached Add-ons to not be consumed upon death or escaping the Trial. \"Keep me from evil, defend me, and pass away.\"",
+    "descriptionRuRaw": "Сжигание этого подношения дает вам защиту от потери your item and[1] улучшений.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   }
 ]

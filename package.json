@@ -12,6 +12,9 @@
     "sync:localization": "tsx scripts/sync-localization.ts",
     "sync:characters": "tsx scripts/sync-characters.ts",
     "sync:descriptions": "tsx scripts/sync-descriptions.ts",
+    "sync:loadout-localization": "tsx scripts/sync-loadout-localization.ts",
+    "sync:loadout-descriptions": "tsx scripts/sync-loadout-descriptions.ts",
+    "sync:loadout-addons": "tsx scripts/sync-loadout-addons.ts",
     "test:e2e": "playwright test"
   },
   "dependencies": {

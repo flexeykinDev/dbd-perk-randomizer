@@ -8,9 +8,11 @@ import { withBasePath } from "@/lib/asset-path";
 import { getKillerPowerIcon, isNewLoadoutPiece } from "@/lib/loadout";
 import { getCharacterPortrait } from "@/lib/perks";
 import { getCharacterName } from "@/lib/character-name";
+import { getLoadoutPieceDescription } from "@/lib/perk-description";
 import { ROLE_COLOR } from "@/lib/role-color";
 import { cn } from "@/lib/cn";
 import { useT } from "@/lib/i18n";
+import { Highlighted } from "./highlighted-text";
 
 const KIND_LABEL: Record<LoadoutPiece["kind"], { ru: string; en: string }> = {
   item: { ru: "Предмет", en: "Item" },
@@ -389,12 +391,12 @@ function LoadoutDetailModal({
                 </div>
               )}
 
-              <p className="mt-4 text-sm leading-relaxed text-muted">{piece.description}</p>
-              {language === "ru" && piece.name.ru === piece.name.en && (
+              <LoadoutDescriptionPanel key={`${piece.kind}:${piece.slug}`} piece={piece} language={language} />
+              {language === "ru" && (piece.name.ru === piece.name.en || !piece.descriptionRuRaw) && (
                 <p className="mt-2 text-[11px] text-muted/60">
                   {t({
-                    ru: "Перевод для этого предмета пока не добавлен — название и описание показаны на английском.",
-                    en: "No RU translation yet for this piece — name and description are shown in English.",
+                    ru: "Перевод для этого предмета пока не добавлен — название и/или описание показаны на английском.",
+                    en: "No RU translation yet for this piece — the name and/or description are shown in English.",
                   })}
                 </p>
               )}
@@ -403,5 +405,63 @@ function LoadoutDetailModal({
         </motion.div>
       )}
     </AnimatePresence>
+  );
+}
+
+type DescriptionTab = "core" | "full";
+
+/** Same "core effect vs full text" toggle as PerkDescriptionPanel
+ *  (components/dbd/perk-grid.tsx) — kept as its own component (not a
+ *  shared import) since the two pull from different data shapes (Perk vs
+ *  LoadoutPiece) even though getLoadoutPieceDescription/getPerkDescription
+ *  share their derivation logic. Keyed by the caller so switching pieces
+ *  resets the tab. */
+function LoadoutDescriptionPanel({ piece, language }: { piece: LoadoutPiece; language: "en" | "ru" }) {
+  const t = useT();
+  const [tab, setTab] = useState<DescriptionTab>("core");
+  const description = getLoadoutPieceDescription(piece, language);
+
+  return (
+    <div className="mt-4">
+      <div className="inline-flex rounded-full border border-border bg-surface/60 p-0.5 text-xs font-medium">
+        {(["core", "full"] as const).map((option) => (
+          <button
+            key={option}
+            type="button"
+            onClick={() => setTab(option)}
+            className={cn(
+              "rounded-full px-3 py-1 transition-colors",
+              tab === option ? "bg-accent text-accent-foreground" : "text-muted hover:text-foreground",
+            )}
+          >
+            {option === "core" ? t({ ru: "Кратко", en: "Core Effect" }) : t({ ru: "Подробно", en: "Full Text" })}
+          </button>
+        ))}
+      </div>
+
+      {tab === "core" ? (
+        <ul className="mt-3 space-y-1.5 text-sm leading-relaxed text-muted">
+          {description.core.map((bullet, i) => (
+            <li key={i} className="flex gap-2">
+              <span className="mt-1 size-1 shrink-0 rounded-full bg-muted" aria-hidden />
+              <span>
+                <Highlighted text={bullet} />
+              </span>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div className="mt-3 space-y-3">
+          <p className="text-sm leading-relaxed text-muted">
+            <Highlighted text={description.full} />
+          </p>
+          {description.quote && (
+            <p className="border-l-2 border-accent/40 pl-3 text-xs italic leading-relaxed text-muted/80">
+              {description.quote}
+            </p>
+          )}
+        </div>
+      )}
+    </div>
   );
 }

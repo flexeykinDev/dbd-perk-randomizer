@@ -1,4 +1,4 @@
-import type { Perk } from "./types";
+import type { LocalizedDescription } from "./types";
 import type { Lang } from "./i18n";
 
 export interface PerkDescriptionView {
@@ -41,22 +41,31 @@ function autoHighlight(text: string): string {
   return text.replace(VALUE_RE, (match) => `**${match}**`);
 }
 
-export function getPerkDescription(perk: Perk, lang: Lang): PerkDescriptionView {
-  if (lang === "ru" && perk.descriptionRu) {
+/** Shape both Perk and LoadoutPiece share (see LoadoutPieceBase in
+ *  lib/types.ts, deliberately mirroring Perk's description fields) — this
+ *  module works on either without needing to know which one it's given. */
+interface DescribableEntity {
+  description: string;
+  descriptionRu?: LocalizedDescription;
+  descriptionRuRaw?: string;
+}
+
+function describe(entity: DescribableEntity, lang: Lang): PerkDescriptionView {
+  if (lang === "ru" && entity.descriptionRu) {
     return {
-      full: perk.descriptionRu.full,
-      core: perk.descriptionRu.core,
-      quote: perk.descriptionRu.quote ?? null,
+      full: entity.descriptionRu.full,
+      core: entity.descriptionRu.core,
+      quote: entity.descriptionRu.quote ?? null,
       curated: true,
     };
   }
 
   // No hand-curated entry — auto-derive from raw text, same split/highlight
   // treatment either way. Prefer the RU wiki's own description text
-  // (scripts/sync-descriptions.ts) over the English one when available, so
-  // RU mode isn't silently reading English for slugs nobody's hand-curated
-  // yet.
-  const source = lang === "ru" && perk.descriptionRuRaw ? perk.descriptionRuRaw : perk.description;
+  // (scripts/sync-descriptions.ts / sync-loadout-descriptions.ts) over the
+  // English one when available, so RU mode isn't silently reading English
+  // for slugs nobody's hand-curated yet.
+  const source = lang === "ru" && entity.descriptionRuRaw ? entity.descriptionRuRaw : entity.description;
   const { body, quote } = splitQuote(source, lang);
   return {
     full: autoHighlight(body),
@@ -64,4 +73,15 @@ export function getPerkDescription(perk: Perk, lang: Lang): PerkDescriptionView 
     quote,
     curated: false,
   };
+}
+
+export function getPerkDescription(perk: DescribableEntity, lang: Lang): PerkDescriptionView {
+  return describe(perk, lang);
+}
+
+/** Same derivation as getPerkDescription, just named for its actual callers
+ *  (Item/Addon/Offering detail modals) — LoadoutPiece has the identical
+ *  description shape, so there's nothing to duplicate here. */
+export function getLoadoutPieceDescription(piece: DescribableEntity, lang: Lang): PerkDescriptionView {
+  return describe(piece, lang);
 }
