@@ -562,10 +562,10 @@
     "slug": "friendship-charm",
     "name": {
       "en": "Friendship Charm",
-      "ru": "Талисман дружбы"
+      "ru": "Амулет дружбы"
     },
     "description": "Someone's thumb has worn off the initials once carved into it. Modifies the Key with the following effect: Increases its Charges by +1.",
-    "descriptionRuRaw": "Чей-то палец стёр когда-то вырезанные на нём инициалы. Модифицирует ключ: увеличивает количество зарядов на +1.",
+    "descriptionRuRaw": "Чей-то большой палец с вырезанными инициалами, которые вытерлись от времени Увеличивает количество зарядов ключа на 1",
     "addedAt": "2026-08-16T18:12:43.244Z"
   },
   {
@@ -577,10 +577,10 @@
     "slug": "shrill-whistle",
     "name": {
       "en": "Shrill Whistle",
-      "ru": "Пронзительный свисток"
+      "ru": "Пронзительный свист"
     },
     "description": "The high-pitched scream gives a sense of urgency to everything. Modifies the Key with the following effect: Reduces the time it takes to channel the Key by -35 %.",
-    "descriptionRuRaw": "Пронзительный визг придаёт всему ощущение спешки. Модифицирует ключ: уменьшает время активации ключа на -35%.",
+    "descriptionRuRaw": "Пронзительный визг всегда свидетельствует, что надо поторопиться Ускоряет настройку на ключ на 35%",
     "addedAt": "2026-08-16T18:12:43.244Z"
   },
   {
@@ -592,10 +592,10 @@
     "slug": "braided-bauble",
     "name": {
       "en": "Braided Bauble",
-      "ru": "Плетёная бусина"
+      "ru": "Плетеная безделушка"
     },
     "description": "Four thin but sturdy cords, all masterfully wrapped around one another. Modifies the Key with the following effect: Increases its Aura-reading duration by +2 seconds.",
-    "descriptionRuRaw": "Четыре тонких, но прочных шнура, искусно сплетённых друг с другом. Модифицирует ключ: увеличивает длительность чтения ауры на +2 сек.",
+    "descriptionRuRaw": "Четыре тонких, но крепких шнура, искусно переплетенные между собой Продлевает видимость аур, проявленных ключами, на 2 сек.",
     "addedAt": "2026-08-16T18:12:43.244Z"
   },
   {
@@ -610,7 +610,7 @@
       "ru": "Уникальное обручальное кольцо"
     },
     "description": "An engraved wedding ring that emerged from the Fog and resonates with an indescribable and incomprehensible energy. Modifies the Key with the following effects: The Aura of the Obsession is permanently revealed to you. Your Aura is permanently revealed to the Obsession. Unique Wedding Ring applies its effects passively and does not require actively using the Key. Reduces your chance of becoming the initial Obsession by reducing the default value by -100 %.",
-    "descriptionRuRaw": "Гравированное обручальное кольцо, появившееся из тумана и резонирующее необъяснимой энергией. Модифицирует ключ: аура объекта одержимости всегда видна вам, а ваша аура — ему. Действует пассивно, использовать ключ не требуется. Снижает шанс стать первоначальным объектом одержимости на -100%.",
+    "descriptionRuRaw": "Обручальное кольцо с гравировкой, найденное в тумане. Источает неописуемую и необъяснимую энергию. Вы и объект одержимости постоянно видите ауры друг друга Снижает вероятность стать объектом одержимости убийцы",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -625,7 +625,7 @@
       "ru": "Кровавый янтарь"
     },
     "description": "A blood-red amber striped with black veins. The amber is warm to the touch. Modifies the Key with the following effects: Reduces its Aura-reveal time by -6 seconds. Reduces its Charges by -2. While using the Key, the following effects apply: The Aura of the Killer is revealed to you. Your Aura is revealed to the Killer.",
-    "descriptionRuRaw": "Кроваво-красный янтарь с чёрными прожилками, тёплый на ощупь. Модифицирует ключ: уменьшает время получения ауры на -6 сек., уменьшает количество зарядов на -2. При использовании ключа: аура убийцы видна вам, а ваша аура — ему.",
+    "descriptionRuRaw": "Кусок кроваво-красного, теплого на ощупь мрамора с черными прожилками. После использования этого ключа вы и убийца видите ауры друг друга Уменьшает время видимости ауры на 6 сек. Уменьшает количество зарядов на 2",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -640,7 +640,7 @@
       "ru": "Светящиеся чернила"
     },
     "description": "Some of the images seemed to jump right off the page. Modifies the Map with the following effect: Increases the duration it reveals Auras for by +2 seconds.",
-    "descriptionRuRaw": "Казалось, будто некоторые изображения вот-вот сойдут со страницы. Модифицирует карту: увеличивает длительность раскрытия аур на +2 сек.",
+    "descriptionRuRaw": "Некоторые изображения прямо-таки рвутся со страниц Продлевает видимость аур, проявленных картами, на 2 сек.",
     "addedAt": "2026-08-16T18:12:43.244Z"
   },
   {
@@ -652,10 +652,10 @@
     "slug": "gnarled-compass",
     "name": {
       "en": "Gnarled Compass",
-      "ru": "Кривой компас"
+      "ru": "Погрызенный компас"
     },
     "description": "It seems to set itself to the perfect distance every time. Modifies the Map with the following effect: Increases its Charges by +2.",
-    "descriptionRuRaw": "Похоже, он сам каждый раз настраивается на идеальное расстояние. Модифицирует карту: увеличивает количество зарядов на +2.",
+    "descriptionRuRaw": "Такое ощущение, что она сама отмеряет идеальное расстояние Увеличивает количество зарядов карты на 2",
     "addedAt": "2026-08-16T18:12:43.244Z"
   },
   {
@@ -667,10 +667,10 @@
     "slug": "battered-tape",
     "name": {
       "en": "Battered Tape",
-      "ru": "Потрёпанный скотч"
+      "ru": "Потрепанная лента"
     },
     "description": "Additional pieces of parchment hung loosely from the map, hastily affixed with tape. Modifies the Map with the following effect: Increases its maximum range by +8 metres.",
-    "descriptionRuRaw": "К карте вдобавок прикреплены обрывки пергамента, наспех примотанные скотчем. Модифицирует карту: увеличивает максимальную дальность действия на +8 м.",
+    "descriptionRuRaw": "С карты свисают кусочки пергамента, наспех приклеенные скотчем Увеличивает максимальный радиус действия карты на 8м",
     "addedAt": "2026-08-16T18:12:43.244Z"
   },
   {
@@ -682,10 +682,10 @@
     "slug": "sharpened-flint",
     "name": {
       "en": "Sharpened Flint",
-      "ru": "Заточенный кремень"
+      "ru": "Заостренная щепка"
     },
     "description": "When sparked near the map, new sigils appeared in unexpected locations. Modifies the Map with the following effect: Grants the ability to track the location of Totems and reveal their Auras, when using the Map.",
-    "descriptionRuRaw": "При высекании искры рядом с картой на ней проступают новые символы в неожиданных местах. Модифицирует карту: даёт возможность отслеживать местоположение тотемов и раскрывать их ауры при использовании карты.",
+    "descriptionRuRaw": "Если зажечь рядом с картой, в неожиданных местах появятся новые знаки При использовании карты становятся видимыми все тотемы в радиусе действия",
     "addedAt": "2026-08-16T18:12:43.244Z"
   },
   {
@@ -700,7 +700,7 @@
       "ru": "Багровая печать"
     },
     "description": "Only those with absolute confidence dared to place their seal upon the map. Modifies the Map with the following effects: The Aura of the Killer is revealed to all Survivors when within 8 metres of the Beam of Light. Reduces the Life time of the Beam of Light by -10 seconds. Reduces its Charges by -2.",
-    "descriptionRuRaw": "Только тот, кто абсолютно уверен в себе, осмеливался поставить свою печать на карту. Модифицирует карту: аура убийцы раскрывается всем выжившим в радиусе 8 м от луча света. Уменьшает время жизни луча света на -10 сек. Уменьшает количество зарядов на -2.",
+    "descriptionRuRaw": "Лишь те, чья уверенность непоколебима, отваживаются ставить свою печать на карту Аура убийцы становится видна в радиусе 8м от столпа света Уменьшает время существования столпа света на 10 сек. Уменьшает количество зарядов на 2",
     "addedAt": "2026-08-16T18:12:43.244Z"
   },
   {
