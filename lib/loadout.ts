@@ -88,11 +88,20 @@ export function getOfferingsByRole(role: PerkRole): Offering[] {
 /** Every loadout piece a player of `role` could ever roll — items only
  *  apply to survivors (killers don't carry one, see Loadout), add-ons are
  *  filtered by role, offerings include "both". Used by LoadoutExcludePanel
- *  to manage the pool the same way ExcludePanel manages the perk pool. */
-export function getLoadoutPoolForRole(role: PerkRole): LoadoutPiece[] {
+ *  to manage the pool the same way ExcludePanel manages the perk pool.
+ *
+ *  When a specific killer `character` is given (Feature #2's picker, forcing
+ *  who gets rolled — see getRandomLoadout's forcedCharacter), the add-on
+ *  list is narrowed to just that killer's own Power add-ons: every other
+ *  killer's add-ons are already unreachable once a character is locked in,
+ *  so showing/excluding them in the pool would just be noise. */
+export function getLoadoutPoolForRole(role: PerkRole, character?: string | null): LoadoutPiece[] {
   const pieces: LoadoutPiece[] = [];
   if (role === "survivor") pieces.push(...items);
-  pieces.push(...addons.filter((a) => a.role === role));
+  const roleAddons = addons.filter((a) => a.role === role);
+  pieces.push(
+    ...(role === "killer" && character ? roleAddons.filter((a) => a.character === character) : roleAddons),
+  );
   pieces.push(...getOfferingsByRole(role));
   return pieces;
 }

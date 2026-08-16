@@ -26,6 +26,7 @@ export function LoadoutExcludePanel({
   open,
   role,
   language,
+  character,
   excludedKeys,
   alsoGrayedOut,
   onToggle,
@@ -36,6 +37,9 @@ export function LoadoutExcludePanel({
   open: boolean;
   role: PerkRole;
   language: "en" | "ru";
+  /** Selected killer (Feature #2's picker), if any — narrows the add-on pool
+   *  to that killer's own Power add-ons, see getLoadoutPoolForRole. */
+  character?: string | null;
   excludedKeys: Set<string>;
   /** Pieces that read as unavailable for another reason (e.g. eliminated in
    *  Battle Royale) — grayed out the same way, not counted or cleared by Reset. */
@@ -49,7 +53,7 @@ export function LoadoutExcludePanel({
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<StatusFilter>("all");
 
-  const poolForRole = useMemo(() => getLoadoutPoolForRole(role), [role]);
+  const poolForRole = useMemo(() => getLoadoutPoolForRole(role, character), [role, character]);
   const roleColor = ROLE_COLOR[role];
 
   const keyOf = (piece: LoadoutPiece) => `${piece.kind}:${piece.slug}`;

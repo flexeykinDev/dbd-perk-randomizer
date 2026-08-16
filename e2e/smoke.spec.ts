@@ -203,6 +203,34 @@ test.describe("Character picker", () => {
     await expect(toggle).not.toBeVisible();
   });
 
+  test("picking a killer narrows the loadout pool to just their own add-ons", async ({ page }) => {
+    // Regression test: before this, the Manage Pool panel always listed
+    // every killer's add-ons together (~750+ entries) even after locking in
+    // a specific character via the picker — the vast majority of which
+    // could never actually be rolled once a character is forced (see
+    // getRandomLoadout's forcedCharacter / getLoadoutPoolForRole's new
+    // character param). Picking a killer should shrink the pool to just
+    // their own add-ons + offerings.
+    await page.goto("/?role=killer&mode=loadout");
+
+    await page.getByRole("button", { name: "Пул", exact: true }).click();
+    const poolHeader = page.getByText(/Активно:/);
+    const beforeText = await poolHeader.textContent();
+    const beforeTotal = Number(beforeText?.split("/")[1]?.trim());
+    await page.getByRole("button", { name: "Закрыть" }).click();
+
+    await page.getByRole("button", { name: "Выбрать персонажа" }).click();
+    await page.getByRole("button", { name: "Случайный", exact: true }).click();
+
+    await page.getByRole("button", { name: "Пул", exact: true }).click();
+    const afterText = await poolHeader.textContent();
+    const afterTotal = Number(afterText?.split("/")[1]?.trim());
+
+    expect(beforeTotal).toBeGreaterThan(100);
+    expect(afterTotal).toBeGreaterThan(0);
+    expect(afterTotal).toBeLessThan(beforeTotal);
+  });
+
   test("picking a character in killer loadout mode decides the rolled Power", async ({ page }) => {
     await page.goto("/?role=killer&mode=loadout");
     await page.getByRole("button", { name: "Выбрать персонажа" }).click();

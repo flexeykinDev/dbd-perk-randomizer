@@ -1026,7 +1026,9 @@ export function RandomizerBoard() {
   const battleRoyaleUsedInRole = mounted
     ? getPerksByRole(role).filter((p) => battleRoyaleUsed.has(p.slug)).length
     : 0;
-  const loadoutPoolForRole = mounted ? getLoadoutPoolForRole(role) : [];
+  const loadoutPoolForRole = mounted
+    ? getLoadoutPoolForRole(role, role === "killer" ? selectedCharacter : null)
+    : [];
   const totalLoadoutInRole = loadoutPoolForRole.length;
   const availableLoadoutCount = mounted
     ? loadoutPoolForRole.filter((p) => !combinedExcludedLoadout.has(`${p.kind}:${p.slug}`)).length
@@ -1537,6 +1539,7 @@ export function RandomizerBoard() {
           open={excludePanelOpen}
           role={role}
           language={language}
+          character={role === "killer" ? selectedCharacter : null}
           excludedKeys={excludedLoadoutSlugs}
           alsoGrayedOut={battleRoyale ? battleRoyaleUsed : undefined}
           onToggle={toggleExcludedLoadoutPiece}

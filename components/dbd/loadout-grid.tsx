@@ -78,14 +78,20 @@ export function LoadoutGrid({
   const offeringPiece = pieces.find((p) => p.kind === "offering") ?? null;
   // All of a roll's killer add-ons belong to the same killer (see
   // getRandomLoadout) — any one of them carries that killer's name.
-  const killerCharacter = role === "killer" ? (addonPieces[0]?.character ?? null) : null;
-  const killerPowerIcon = killerCharacter ? getKillerPowerIcon(killerCharacter) : undefined;
+  const killerCharacter =
+    role === "killer" ? (addonPieces[0]?.character ?? null) : null;
+  const killerPowerIcon = killerCharacter
+    ? getKillerPowerIcon(killerCharacter)
+    : undefined;
 
   return (
     <>
       <div className="flex flex-wrap items-start justify-center gap-5 rounded-2xl border border-border bg-surface/40 p-4 sm:gap-8 sm:p-5">
         {role === "survivor" ? (
-          <SlotGroup testId="loadout-slot-item" label={t({ ru: "Предмет", en: "Item" })}>
+          <SlotGroup
+            testId="loadout-slot-item"
+            label={t({ ru: "Предмет", en: "Item" })}
+          >
             <PieceSlot
               piece={itemPiece}
               size="lg"
@@ -97,12 +103,23 @@ export function LoadoutGrid({
             />
           </SlotGroup>
         ) : (
-          <SlotGroup testId="loadout-slot-power" label={t({ ru: "Сила", en: "Power" })}>
-            <PowerSlot icon={killerPowerIcon} character={killerCharacter} language={language} />
+          <SlotGroup
+            testId="loadout-slot-power"
+            label={t({ ru: "Сила", en: "Power" })}
+          >
+            <PowerSlot
+              icon={killerPowerIcon}
+              character={killerCharacter}
+              language={language}
+              roleColor={roleColor}
+            />
           </SlotGroup>
         )}
 
-        <SlotGroup testId="loadout-slot-addons" label={t({ ru: "Аддоны", en: "Add-ons" })}>
+        <SlotGroup
+          testId="loadout-slot-addons"
+          label={t({ ru: "Аддоны", en: "Add-ons" })}
+        >
           <div className="flex gap-2">
             <PieceSlot
               piece={addonPieces[0] ?? null}
@@ -125,7 +142,10 @@ export function LoadoutGrid({
           </div>
         </SlotGroup>
 
-        <SlotGroup testId="loadout-slot-offering" label={t({ ru: "Подношение", en: "Offering" })}>
+        <SlotGroup
+          testId="loadout-slot-offering"
+          label={t({ ru: "Подношение", en: "Offering" })}
+        >
           <PieceSlot
             piece={offeringPiece}
             size="lg"
@@ -149,10 +169,20 @@ export function LoadoutGrid({
   );
 }
 
-function SlotGroup({ label, testId, children }: { label: string; testId: string; children: ReactNode }) {
+function SlotGroup({
+  label,
+  testId,
+  children,
+}: {
+  label: string;
+  testId: string;
+  children: ReactNode;
+}) {
   return (
     <div data-testid={testId} className="flex flex-col items-center gap-1.5">
-      <span className="text-[10px] font-semibold tracking-wide text-muted uppercase">{label}</span>
+      <span className="text-[10px] font-semibold tracking-wide text-muted uppercase">
+        {label}
+      </span>
       <div className="flex items-start gap-2">{children}</div>
     </div>
   );
@@ -198,7 +228,11 @@ function PieceSlot({
                   onOpenDetail(piece);
                 }
               }}
-              aria-label={t({ ru: "Описание:", en: "Description:" }) + " " + piece.name[language]}
+              aria-label={
+                t({ ru: "Описание:", en: "Description:" }) +
+                " " +
+                piece.name[language]
+              }
               className={cn(
                 "group absolute inset-0 flex cursor-pointer items-center justify-center overflow-hidden rounded-xl border border-border bg-surface transition-colors hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:outline-none",
                 roleColor.hoverBorder,
@@ -215,7 +249,11 @@ function PieceSlot({
                   e.stopPropagation();
                   onCopy(piece);
                 }}
-                aria-label={t({ ru: "Копировать", en: "Copy" }) + " " + piece.name[language]}
+                aria-label={
+                  t({ ru: "Копировать", en: "Copy" }) +
+                  " " +
+                  piece.name[language]
+                }
                 className="absolute top-0.5 right-0.5 z-10 flex size-4 items-center justify-center rounded-full bg-black/50 text-white/80 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100 hover:bg-black/70 hover:text-white"
               >
                 <Copy className="size-2.5" />
@@ -256,31 +294,55 @@ function PieceSlot({
  *  rolled add-ons belong to (killers carry a Power instead of an Item),
  *  or an empty placeholder while no killer has been determined yet (the
  *  Add-ons slot is off, or the icon wasn't found — see
- *  scripts/scrape-loadout.ts's scrapeKillerPowerIcons). */
+ *  scripts/scrape-loadout.ts's scrapeKillerPowerIcons). The killer's own
+ *  portrait rides along as a small badge in the corner — the "who this
+ *  belongs to" signal the detail modal already gives, just visible at a
+ *  glance on the HUD instead of only after opening a card. */
 function PowerSlot({
   icon,
   character,
   language,
+  roleColor,
 }: {
   icon: string | undefined;
   character: string | null;
   language: "en" | "ru";
+  roleColor: (typeof ROLE_COLOR)[PerkRole];
 }) {
+  const portrait = character ? getCharacterPortrait(character) : undefined;
   return (
     <div className="flex flex-col items-center gap-1">
-      {icon && character ? (
-        // eslint-disable-next-line @next/next/no-img-element -- next/image ignores basePath for unoptimized runtime src, see lib/asset-path.ts
-        <img
-          src={withBasePath(icon)}
-          alt={getCharacterName(character, language)}
-          className="size-24 rounded-xl border border-border bg-surface object-cover"
-        />
-      ) : (
-        <div
-          aria-hidden
-          className="size-24 rounded-xl border-2 border-dashed border-border/50 bg-background/30"
-        />
-      )}
+      <div className="relative size-24">
+        {icon && character ? (
+          // eslint-disable-next-line @next/next/no-img-element -- next/image ignores basePath for unoptimized runtime src, see lib/asset-path.ts
+          <img
+            src={withBasePath(icon)}
+            alt={getCharacterName(character, language)}
+            className="size-24 rounded-xl border border-border bg-surface object-cover"
+          />
+        ) : (
+          <div
+            aria-hidden
+            className="size-24 rounded-xl border-2 border-dashed border-border/50 bg-background/30"
+          />
+        )}
+        {portrait && (
+          <span
+            className={cn(
+              "absolute -right-2 -bottom-2 flex size-9 items-center justify-center overflow-hidden rounded-full border-2 bg-surface shadow-md",
+              roleColor.border,
+            )}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element -- next/image ignores basePath for unoptimized runtime src, see lib/asset-path.ts */}
+            <img
+              src={withBasePath(portrait)}
+              alt=""
+              aria-hidden
+              className="size-full object-cover"
+            />
+          </span>
+        )}
+      </div>
       <span className="w-24 text-center text-[10px] leading-tight text-foreground">
         {character ? getCharacterName(character, language) : " "}
       </span>
@@ -303,7 +365,10 @@ function LoadoutDetailModal({
 }) {
   const t = useT();
   const roleColor = ROLE_COLOR[role];
-  const character = piece?.kind === "addon" && piece.character !== ".All" ? piece.character : null;
+  const character =
+    piece?.kind === "addon" && piece.character !== ".All"
+      ? piece.character
+      : null;
   const portrait = character ? getCharacterPortrait(character) : undefined;
   const itemType = piece && "itemType" in piece ? piece.itemType : undefined;
 
@@ -360,13 +425,27 @@ function LoadoutDetailModal({
                   />
                 </span>
                 <div>
-                  <p className="font-semibold text-foreground">{piece.name[language]}</p>
+                  <p className="font-semibold text-foreground">
+                    {piece.name[language]}
+                  </p>
                   <p className="flex flex-wrap items-center gap-1.5 text-xs">
-                    <span className={cn("font-medium", roleColor.text)}>{t(KIND_LABEL[piece.kind])}</span>
+                    <span className={cn("font-medium", roleColor.text)}>
+                      {t(KIND_LABEL[piece.kind])}
+                    </span>
                     {itemType && (
-                      <span className="text-muted">· {t(ITEM_TYPE_LABEL[itemType] ?? { ru: itemType, en: itemType })}</span>
+                      <span className="text-muted">
+                        ·{" "}
+                        {t(
+                          ITEM_TYPE_LABEL[itemType] ?? {
+                            ru: itemType,
+                            en: itemType,
+                          },
+                        )}
+                      </span>
                     )}
-                    {piece.kind === "offering" && <span className="text-muted">· {piece.category}</span>}
+                    {piece.kind === "offering" && (
+                      <span className="text-muted">· {piece.category}</span>
+                    )}
                   </p>
                 </div>
               </div>
@@ -389,25 +468,37 @@ function LoadoutDetailModal({
                         className="size-12 object-cover"
                       />
                     ) : (
-                      <span className="flex size-12 items-center justify-center bg-surface text-muted">?</span>
+                      <span className="flex size-12 items-center justify-center bg-surface text-muted">
+                        ?
+                      </span>
                     )}
                   </span>
                   <div>
-                    <p className="text-[11px] text-muted">{t({ ru: "Убийца", en: "Killer" })}</p>
-                    <p className="text-sm font-medium text-foreground">{getCharacterName(character, language)}</p>
+                    <p className="text-[11px] text-muted">
+                      {t({ ru: "Убийца", en: "Killer" })}
+                    </p>
+                    <p className="text-sm font-medium text-foreground">
+                      {getCharacterName(character, language)}
+                    </p>
                   </div>
                 </div>
               )}
 
-              <LoadoutDescriptionPanel key={`${piece.kind}:${piece.slug}`} piece={piece} language={language} />
-              {language === "ru" && (piece.name.ru === piece.name.en || !piece.descriptionRuRaw) && (
-                <p className="mt-2 text-[11px] text-muted/60">
-                  {t({
-                    ru: "Перевод для этого предмета пока не добавлен — название и/или описание показаны на английском.",
-                    en: "No RU translation yet for this piece — the name and/or description are shown in English.",
-                  })}
-                </p>
-              )}
+              <LoadoutDescriptionPanel
+                key={`${piece.kind}:${piece.slug}`}
+                piece={piece}
+                language={language}
+              />
+              {language === "ru" &&
+                (piece.name.ru === piece.name.en ||
+                  !piece.descriptionRuRaw) && (
+                  <p className="mt-2 text-[11px] text-muted/60">
+                    {t({
+                      ru: "Перевод для этого предмета пока не добавлен — название и/или описание показаны на английском.",
+                      en: "No RU translation yet for this piece — the name and/or description are shown in English.",
+                    })}
+                  </p>
+                )}
 
               <button
                 type="button"
@@ -433,7 +524,13 @@ type DescriptionTab = "core" | "full";
  *  LoadoutPiece) even though getLoadoutPieceDescription/getPerkDescription
  *  share their derivation logic. Keyed by the caller so switching pieces
  *  resets the tab. */
-function LoadoutDescriptionPanel({ piece, language }: { piece: LoadoutPiece; language: "en" | "ru" }) {
+function LoadoutDescriptionPanel({
+  piece,
+  language,
+}: {
+  piece: LoadoutPiece;
+  language: "en" | "ru";
+}) {
   const t = useT();
   const [tab, setTab] = useState<DescriptionTab>("core");
   const description = getLoadoutPieceDescription(piece, language);
@@ -448,10 +545,14 @@ function LoadoutDescriptionPanel({ piece, language }: { piece: LoadoutPiece; lan
             onClick={() => setTab(option)}
             className={cn(
               "rounded-full px-3 py-1 transition-colors",
-              tab === option ? "bg-accent text-accent-foreground" : "text-muted hover:text-foreground",
+              tab === option
+                ? "bg-accent text-accent-foreground"
+                : "text-muted hover:text-foreground",
             )}
           >
-            {option === "core" ? t({ ru: "Кратко", en: "Core Effect" }) : t({ ru: "Подробно", en: "Full Text" })}
+            {option === "core"
+              ? t({ ru: "Кратко", en: "Core Effect" })
+              : t({ ru: "Подробно", en: "Full Text" })}
           </button>
         ))}
       </div>
@@ -460,7 +561,10 @@ function LoadoutDescriptionPanel({ piece, language }: { piece: LoadoutPiece; lan
         <ul className="mt-3 space-y-1.5 text-sm leading-relaxed text-muted">
           {description.core.map((bullet, i) => (
             <li key={i} className="flex gap-2">
-              <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-accent" aria-hidden />
+              <span
+                className="mt-1.5 size-1.5 shrink-0 rounded-full bg-accent"
+                aria-hidden
+              />
               <span>
                 <Highlighted text={bullet} />
               </span>

@@ -83,6 +83,23 @@ function cleanDescription(text: string): string {
 const UNAVAILABLE_MARKERS =
   /THIS (?:ITEM|ADD-ON|OFFERING) (?:IS|WAS) (?:NO LONGER AVAILABLE|RETIRED|UNUSED|DECOMMISSIONED|ONLY AVAILABLE ON DBD MOBILE)|CAN NO LONGER BE (?:OBTAINED|USED)/i;
 
+// Fandom's own Loadout template occasionally errors out for a brand-new
+// piece before the wiki's data table catches up (seen on Misty Day, Remains
+// of Judgment right after Patch 9.1.0 shipped: "Unable to retrieve the
+// Add-On description... contact Jouki", plus a "?" placeholder icon in
+// place of real art). Rather than silently shipping broken/placeholder
+// content, or dropping the piece until the wiki fixes itself, patch known
+// cases from deadbydaylight.wiki.gg (a different, faster-updated fan wiki)
+// by slug — remove an entry here once Fandom's own page is fixed upstream.
+const BROKEN_DESCRIPTION_RE = /unable to retrieve the .*description/i;
+const DESCRIPTION_OVERRIDES: Record<string, string> = {
+  "misty-day-remains-of-judgment":
+    "A painting of an imposing figure wearing a steel pyramid atop his head. Victims are caged in the background. Successful Punishment of the Damned attacks trigger the following effect: Causes the Auras of hit Survivors to be revealed to you for 8 seconds.",
+};
+const ICON_SOURCE_OVERRIDES: Record<string, string> = {
+  "misty-day-remains-of-judgment": "https://deadbydaylight.wiki.gg/images/IconAddon_mistyDay.png",
+};
+
 interface ScrapedPiece {
   name: string;
   slug: string;
@@ -107,12 +124,17 @@ function parsePieceTable($: cheerio.CheerioAPI, table: Cheerio<AnyNode>): Scrape
     const descriptionCell = cells.eq(2);
 
     const name = cleanText(nameCell.text());
-    const description = cleanDescription(descriptionCell.text());
-    const iconSourceUrl = iconCell.find("img").attr("data-src") ?? "";
+    const slug = slugify(name);
+    let description = cleanDescription(descriptionCell.text());
+    if (BROKEN_DESCRIPTION_RE.test(description)) {
+      description = DESCRIPTION_OVERRIDES[slug] ?? description;
+    }
+    const rawIconSourceUrl = iconCell.find("img").attr("data-src") ?? "";
+    const iconSourceUrl = ICON_SOURCE_OVERRIDES[slug] ?? rawIconSourceUrl.split("/revision/")[0];
     if (!name || !iconSourceUrl || !description) return;
     if (UNAVAILABLE_MARKERS.test(description)) return;
 
-    rows.push({ name, slug: slugify(name), description, iconSourceUrl: iconSourceUrl.split("/revision/")[0] });
+    rows.push({ name, slug, description, iconSourceUrl });
   });
   return rows;
 }
