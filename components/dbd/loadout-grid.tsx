@@ -86,7 +86,7 @@ export function LoadoutGrid({
 
   return (
     <>
-      <div className="flex flex-wrap items-start justify-center gap-5 rounded-2xl border border-border bg-surface/40 p-4 sm:gap-8 sm:p-5">
+      <div className="flex w-full max-w-4xl flex-wrap items-start justify-center gap-5 rounded-2xl border border-border bg-surface/40 p-4 sm:gap-8 sm:p-5">
         {role === "survivor" ? (
           <SlotGroup
             testId="loadout-slot-item"
@@ -207,7 +207,12 @@ function PieceSlot({
   onOpenDetail: (piece: LoadoutPiece) => void;
   onCopy: (piece: LoadoutPiece) => void;
 }) {
-  const dim = size === "lg" ? "size-24" : "size-16";
+  // Scales up at wider breakpoints along with the grid's own w-full
+  // max-2xl below — fixed-size slots left the whole HUD shrink-wrapped to
+  // a few hundred px in the middle of a much wider page (same issue fixed
+  // on PerkGrid's cards, see its comment).
+  const dim = size === "lg" ? "size-24 sm:size-28 lg:size-32" : "size-16 sm:size-20 lg:size-24";
+  const labelWidth = size === "lg" ? "w-24 sm:w-28 lg:w-32" : "w-16 sm:w-20 lg:w-24";
   return (
     <div className="flex flex-col items-center gap-1">
       <div className={cn(dim, "relative shrink-0")}>
@@ -266,7 +271,7 @@ function PieceSlot({
       <span
         className={cn(
           "text-center text-[10px] leading-tight text-foreground",
-          size === "lg" ? "w-24" : "w-16",
+          labelWidth,
         )}
       >
         {piece ? piece.name[language] : " "}
@@ -295,7 +300,7 @@ function PieceCopyButton({
       onClick={onClick}
       className={cn(
         "flex items-center justify-center gap-1 rounded-md border border-border text-muted transition-colors hover:border-accent/50 hover:bg-accent/10 hover:text-accent",
-        size === "lg" ? "w-24 py-1 text-[10px]" : "w-16 py-0.5 text-[9px]",
+        size === "lg" ? "w-24 py-1 text-[10px] sm:w-28 lg:w-32" : "w-16 py-0.5 text-[9px] sm:w-20 lg:w-24",
       )}
     >
       <Copy className={size === "lg" ? "size-3" : "size-2.5"} />
@@ -326,18 +331,18 @@ function PowerSlot({
   const portrait = character ? getCharacterPortrait(character) : undefined;
   return (
     <div className="flex flex-col items-center gap-1">
-      <div className="relative size-24">
+      <div className="relative size-24 sm:size-28 lg:size-32">
         {icon && character ? (
           // eslint-disable-next-line @next/next/no-img-element -- next/image ignores basePath for unoptimized runtime src, see lib/asset-path.ts
           <img
             src={withBasePath(icon)}
             alt={getCharacterName(character, language)}
-            className="size-24 rounded-xl border border-border bg-surface object-cover"
+            className="size-24 rounded-xl border border-border bg-surface object-cover sm:size-28 lg:size-32"
           />
         ) : (
           <div
             aria-hidden
-            className="size-24 rounded-xl border-2 border-dashed border-border/50 bg-background/30"
+            className="size-24 rounded-xl border-2 border-dashed border-border/50 bg-background/30 sm:size-28 lg:size-32"
           />
         )}
         {portrait && (
@@ -357,7 +362,7 @@ function PowerSlot({
           </span>
         )}
       </div>
-      <span className="w-24 text-center text-[10px] leading-tight text-foreground">
+      <span className="w-24 text-center text-[10px] leading-tight text-foreground sm:w-28 lg:w-32">
         {character ? getCharacterName(character, language) : " "}
       </span>
     </div>

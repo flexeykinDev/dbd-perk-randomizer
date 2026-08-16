@@ -31,7 +31,7 @@ export function PerkGrid({
 
   if (loading) {
     return (
-      <div className="grid min-h-[220px] w-full grid-cols-2 gap-3 sm:grid-cols-4">
+      <div className="grid min-h-[220px] w-full max-w-4xl grid-cols-2 gap-3 sm:grid-cols-4">
         {Array.from({ length: 4 }).map((_, i) => (
           <div
             key={i}
@@ -52,7 +52,14 @@ export function PerkGrid({
 
   return (
     <>
-      <div className="grid min-h-[220px] grid-cols-2 gap-4 sm:grid-cols-4">
+      {/* w-full max-w-4xl (not just content-sized) — the parent's flex
+          `items-center` shrinks a bare grid down to exactly 4 cards' natural
+          width, leaving most of the page as empty margin on anything wider
+          than a phone (measured ~130px cards on a 1280px-wide viewport).
+          Letting the grid claim real width and scaling the card art with it
+          (see the icon's responsive size-* below) is what actually uses the
+          space instead of just centering a small island in it. */}
+      <div className="grid min-h-[220px] w-full max-w-4xl grid-cols-2 gap-4 sm:grid-cols-4">
         <AnimatePresence mode="popLayout">
           {perks.map((perk, index) => {
             const roleColor = ROLE_COLOR[perk.role];
@@ -107,7 +114,7 @@ export function PerkGrid({
                   alt={perk.name[language]}
                   width={112}
                   height={112}
-                  className="size-28 rounded-xl object-cover transition-transform group-hover:scale-105"
+                  className="size-24 rounded-xl object-cover transition-transform group-hover:scale-105 sm:size-28 lg:size-32"
                 />
                 <span className="text-xs font-medium text-foreground">{perk.name[language]}</span>
 

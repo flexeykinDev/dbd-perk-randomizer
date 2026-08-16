@@ -122,6 +122,8 @@ test.describe("Full Loadout", () => {
 
   test("turning off a slot rolls an empty HUD placeholder for it", async ({ page }) => {
     await page.goto("/?role=survivor&mode=loadout");
+    // See the hydration-wait comment on the loadout pool panel test below.
+    await expect(page.locator("main").locator("img[alt]").first()).toBeVisible();
     await page.getByRole("button", { name: "Подношение", exact: true }).click();
 
     // The Offering column heading stays (it's a static label), but its slot
@@ -137,6 +139,12 @@ test.describe("Full Loadout", () => {
 
   test("loadout pool panel excludes a piece and persists to localStorage", async ({ page }) => {
     await page.goto("/?role=survivor&mode=loadout");
+    // Loadout pieces only render post-hydration (seeded client-side — see
+    // `mounted` in randomizer-board.tsx); waiting for one here doubles as a
+    // wait for hydration to finish wiring up the Пул button's onClick
+    // before we click it. See the same comment in "Combined All mode"
+    // below for the failure this avoids.
+    await expect(page.locator("main").locator("img[alt]").first()).toBeVisible();
     await page.getByRole("button", { name: "Пул", exact: true }).click();
 
     const panel = page.getByText("Настроить пул экипировки");
