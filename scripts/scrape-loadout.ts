@@ -171,7 +171,13 @@ const ITEM_TABLE_TYPES: readonly (ItemType | null)[] = [
   "map",
   "medkit",
   "toolbox",
-  "special", // licensed/crossover items (Void Crystal, Eye of Vecna, ...) — no matching add-on category
+  // Deliberately skipped, not just untyped: every entry here (Eye of Vecna,
+  // Lament Configuration, Keycard, ...) is a "Limited Item" per its own
+  // wiki description — one that spawns in the trial environment for a
+  // specific chapter's mechanic, not something a player brings in via
+  // their own loadout. Scraping them as pickable items would let the
+  // randomizer roll something nobody can actually pre-select.
+  null,
   null, // single unused item ("Trapple")
   null, // "browse other unlockables" nav box
 ];
@@ -270,6 +276,18 @@ async function resolvePowerToCharacter(headings: string[]): Promise<Record<strin
       result[h] = ".All";
     }
   }
+
+  // The wiki's own redirects/prose resolve to the killer's full in-universe
+  // title ("The Trapper"), but every other character reference in this app
+  // — data/characters.json, data/perks.json's Perk.character,
+  // data/character-translations.ru.json — is keyed by the bare name
+  // ("Trapper") instead. Normalizing here (rather than adding a "The "
+  // adapter at every lookup site) keeps addons.json consistent with that
+  // established convention, so getCharacterPortrait/getCharacterName work
+  // on a killer's add-ons the same way they already do on a killer's perks.
+  for (const h of Object.keys(result)) {
+    result[h] = result[h].replace(/^The /, "");
+  }
   return result;
 }
 
@@ -345,6 +363,11 @@ function findFirstImageAfterHeading($: cheerio.CheerioAPI, pattern: RegExp): str
 // above. Cached by killer name + the icon file already existing on disk,
 // same pattern as downloadIcon's previousIconSlugs check, so a rescrape
 // only re-fetches a killer whose icon is missing or new.
+//
+// `killers` here are the bare, app-wide names ("Trapper") — see the
+// normalization note in resolvePowerToCharacter — but the wiki's actual
+// page title is the full in-universe one ("The Trapper"), so that prefix
+// is added back on just for the fetch.
 async function scrapeKillerPowerIcons(killers: string[]): Promise<Record<string, string>> {
   const existing = loadJson<Record<string, string>>(KILLER_POWER_ICONS_JSON, {});
   const result: Record<string, string> = {};
@@ -356,7 +379,7 @@ async function scrapeKillerPowerIcons(killers: string[]): Promise<Record<string,
       continue;
     }
     try {
-      const html = await fetchWikiPageHtmlFollowingRedirects(killer);
+      const html = await fetchWikiPageHtmlFollowingRedirects(`The ${killer}`);
       const iconUrl = findFirstImageAfterHeading(cheerio.load(html), POWER_HEADING_PATTERN);
       if (!iconUrl) {
         console.warn(`  No Power icon found on ${killer}'s wiki page — skipping`);

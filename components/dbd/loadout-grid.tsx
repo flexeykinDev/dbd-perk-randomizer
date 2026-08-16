@@ -25,7 +25,6 @@ const ITEM_TYPE_LABEL: Record<string, { ru: string; en: string }> = {
   map: { ru: "Карта", en: "Map" },
   medkit: { ru: "Аптечка", en: "Med-Kit" },
   toolbox: { ru: "Набор инструментов", en: "Toolbox" },
-  special: { ru: "Особый предмет", en: "Special" },
 };
 
 /** Lays pieces out like DBD's own loadout HUD — Item (or, for killer, the

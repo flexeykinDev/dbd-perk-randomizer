@@ -124,18 +124,20 @@ export function getAvailableOfferings(role: PerkRole, excludedSlugs?: ReadonlySe
 /** Survivor: an Item (from the pool) plus up to 2 Add-ons matching that
  *  item's type, plus an Offering. Killer: DBD killers don't carry an
  *  Item — their loadout is 2 Add-ons for their own unique Power plus an
- *  Offering — so a killer character has to be picked first (uniformly at
- *  random here; Feature #2's "Random Character" button will let this be
- *  chosen explicitly instead once it exists) before its add-on pool even
- *  exists. Each of `slots.item` / `.addons` / `.offering` independently
- *  skips that piece (left `null` / empty) when off; for survivor, addons
- *  also come back empty if `slots.item` is off, since an add-on without
- *  its item doesn't correspond to anything equippable. */
+ *  Offering — so a killer character has to be picked first before its
+ *  add-on pool even exists: `forcedCharacter` (Feature #2's "Random
+ *  Character" button) picks it explicitly when given and valid, otherwise
+ *  it's chosen uniformly at random same as before. Each of `slots.item` /
+ *  `.addons` / `.offering` independently skips that piece (left `null` /
+ *  empty) when off; for survivor, addons also come back empty if
+ *  `slots.item` is off, since an add-on without its item doesn't
+ *  correspond to anything equippable. */
 export function getRandomLoadout(
   role: PerkRole,
   slots: LoadoutSlots,
   excludedSlugs?: ReadonlySet<string>,
   random: () => number = Math.random,
+  forcedCharacter?: string | null,
 ): Loadout {
   if (role === "survivor") {
     const item = slots.item ? (shuffle(getAvailableItems(excludedSlugs), random)[0] ?? null) : null;
@@ -148,7 +150,11 @@ export function getRandomLoadout(
   }
 
   const killers = getKillerCharacters();
-  const character = slots.addons && killers.length > 0 ? shuffle(killers, random)[0] : null;
+  const character = !slots.addons
+    ? null
+    : forcedCharacter && killers.includes(forcedCharacter)
+      ? forcedCharacter
+      : (shuffle(killers, random)[0] ?? null);
   const addonPool = character ? getAddonsForKiller(character) : [];
   const rolledAddons = shuffle(getAvailableAddons(addonPool, excludedSlugs), random).slice(0, 2);
   const offering = slots.offering

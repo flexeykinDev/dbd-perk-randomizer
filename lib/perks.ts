@@ -24,6 +24,18 @@ export function getPerkBySlug(slug: string): Perk | undefined {
   return perksBySlug.get(slug);
 }
 
+/** Every character with at least one teachable perk for `role` — ".All"
+ *  (perks that shipped with the base game, not tied to any one character's
+ *  teachables, see Perk.character) is deliberately excluded since it isn't
+ *  a character a "Random Character" roll could ever land on. */
+export function getCharactersForRole(role: PerkRole): string[] {
+  return [...new Set(perks.filter((p) => p.role === role && p.character !== ".All").map((p) => p.character))].sort();
+}
+
+export function getTeachablePerks(role: PerkRole, character: string): Perk[] {
+  return perks.filter((p) => p.role === role && p.character === character);
+}
+
 export function isNewPerk(perk: Perk): boolean {
   return Date.now() - new Date(perk.addedAt).getTime() < NEW_WINDOW_MS;
 }
@@ -84,6 +96,36 @@ export function getRandomPerks(
     if (picked.length === count) break;
   }
   return picked;
+}
+
+/** Same draw as getRandomPerks, but first guarantees up to `count` of
+ *  `character`'s own teachable perks (still respecting exclusions — a
+ *  teachable the player has manually excluded is never force-included),
+ *  then fills any remaining slots the normal random way. `character: null`
+ *  falls straight through to getRandomPerks, so callers don't need a
+ *  separate branch for "no character selected." */
+export function getRandomPerksWithTeachables(
+  role: PerkRole,
+  count: number,
+  character: string | null,
+  excludedSlugs?: ReadonlySet<string>,
+  random: () => number = Math.random,
+  favoriteSlugs?: ReadonlySet<string>,
+): Perk[] {
+  if (!character) return getRandomPerks(role, count, excludedSlugs, random, favoriteSlugs);
+
+  const pool = getAvailablePool(role, excludedSlugs);
+  const guaranteed = shuffle(
+    pool.filter((p) => p.character === character),
+    random,
+  ).slice(0, count);
+  const remaining = count - guaranteed.length;
+  if (remaining <= 0) return guaranteed;
+
+  const extraExcluded = new Set(excludedSlugs ?? []);
+  for (const perk of guaranteed) extraExcluded.add(perk.slug);
+  const rest = getRandomPerks(role, remaining, extraExcluded, random, favoriteSlugs);
+  return shuffle([...guaranteed, ...rest], random);
 }
 
 /** Deterministic build for Daily Challenge / shared custom seeds. Always

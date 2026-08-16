@@ -5,6 +5,7 @@ import {
   Link2,
   ListFilter,
   Dices,
+  Shuffle,
   Skull,
   BarChart3,
   CalendarClock,
@@ -14,11 +15,14 @@ import {
 } from "lucide-react";
 import {
   getAvailablePool,
+  getCharacterPortrait,
+  getCharactersForRole,
   getPerkBySlug,
   getPerksByRole,
-  getRandomPerks,
+  getRandomPerksWithTeachables,
   getSeededPerks,
 } from "@/lib/perks";
+import { getCharacterName } from "@/lib/character-name";
 import { getTagsForPerk, getTagsForRole } from "@/lib/perk-tags";
 import type { Loadout, LoadoutPiece, LoadoutSlots, Perk, PerkRole } from "@/lib/types";
 import { cn } from "@/lib/cn";
@@ -28,8 +32,10 @@ import { useLanguage, useT } from "@/lib/i18n";
 import { dailyChallengeSeed } from "@/lib/seeded-random";
 import { recordRoll } from "@/lib/stats";
 import { getIdForSlug, getSlugForId } from "@/lib/perk-ids";
+import { withBasePath } from "@/lib/asset-path";
 import {
   flattenLoadout,
+  getKillerCharacters,
   getLoadoutPiece,
   getLoadoutPoolForRole,
   getRandomLoadout,
@@ -68,6 +74,7 @@ const LOADOUT_SLOT_ADDONS_STORAGE_KEY = "dbd-randomizer:loadout-slot-addons";
 const LOADOUT_SLOT_OFFERING_STORAGE_KEY = "dbd-randomizer:loadout-slot-offering";
 const DEFAULT_LOADOUT_SLOTS: LoadoutSlots = { item: true, addons: true, offering: true };
 type BuildMode = "perks" | "loadout";
+const GUARANTEE_TEACHABLES_STORAGE_KEY = "dbd-randomizer:guarantee-teachables";
 const TWITCH_CHANNEL_STORAGE_KEY = "dbd-randomizer:twitch-channel";
 const TWITCH_ENABLED_STORAGE_KEY = "dbd-randomizer:twitch-enabled";
 const TWITCH_REROLL_COMMAND_STORAGE_KEY = "dbd-randomizer:twitch-reroll-command";
@@ -263,6 +270,14 @@ export function RandomizerBoard() {
   const [loadoutSlots, setLoadoutSlots] = useState<LoadoutSlots>(DEFAULT_LOADOUT_SLOTS);
   const [excludedLoadoutSlugs, setExcludedLoadoutSlugs] = useState<Set<string>>(new Set());
   const [sharedLoadoutPieces, setSharedLoadoutPieces] = useState<LoadoutPiece[] | null>(null);
+  // Random Character (Feature #2) — deliberately session-only, not synced
+  // to the URL or localStorage: it's a flourish on top of a build, not
+  // part of what a share link or a returning visit needs to restore.
+  // guaranteeTeachables (the perks-mode "always include this character's
+  // own perks" toggle) IS persisted, same as the other pool/settings
+  // toggles — it only has an effect once a character is actually selected.
+  const [selectedCharacter, setSelectedCharacter] = useState<string | null>(null);
+  const [guaranteeTeachables, setGuaranteeTeachables] = useState(false);
   const [showStats, setShowStats] = useState(false);
   const [statsModalOpen, setStatsModalOpen] = useState(false);
   const [obsModalOpen, setObsModalOpen] = useState(false);
@@ -306,6 +321,7 @@ export function RandomizerBoard() {
       setMode(loadMode());
       setLoadoutSlots(loadLoadoutSlots());
       setExcludedLoadoutSlugs(loadSlugSet(EXCLUDED_LOADOUT_STORAGE_KEY));
+      setGuaranteeTeachables(safeGet("local", GUARANTEE_TEACHABLES_STORAGE_KEY) === "1");
 
       const urlState = readInitialUrlState();
       if (urlState) {
@@ -396,7 +412,8 @@ export function RandomizerBoard() {
     if (perkCount === 0) return [];
     if (activeSeed) return getSeededPerks(role, perkCount, activeSeed);
     if (poolExhausted) return [];
-    return getRandomPerks(role, perkCount, combinedExcluded, Math.random, favoriteSlugs);
+    const character = guaranteeTeachables ? selectedCharacter : null;
+    return getRandomPerksWithTeachables(role, perkCount, character, combinedExcluded, Math.random, favoriteSlugs);
   }, [
     mounted,
     mode,
@@ -408,6 +425,8 @@ export function RandomizerBoard() {
     poolExhausted,
     activeSeed,
     favoriteSlugs,
+    guaranteeTeachables,
+    selectedCharacter,
   ]);
 
   // Loadout counterpart of combinedExcluded above — same Battle Royale +
@@ -424,8 +443,18 @@ export function RandomizerBoard() {
     void nonce;
     if (!mounted || mode !== "loadout" || sharedLoadoutPieces) return null;
     if (activeSeed) return getSeededLoadout(role, loadoutSlots, activeSeed);
-    return getRandomLoadout(role, loadoutSlots, combinedExcludedLoadout, Math.random);
-  }, [mounted, mode, sharedLoadoutPieces, role, nonce, activeSeed, loadoutSlots, combinedExcludedLoadout]);
+    return getRandomLoadout(role, loadoutSlots, combinedExcludedLoadout, Math.random, selectedCharacter);
+  }, [
+    mounted,
+    mode,
+    sharedLoadoutPieces,
+    role,
+    nonce,
+    activeSeed,
+    loadoutSlots,
+    combinedExcludedLoadout,
+    selectedCharacter,
+  ]);
 
   // Flattened into the same "just some pieces" shape LoadoutGrid renders,
   // same reasoning as why flattenLoadout exists (see lib/loadout.ts).
@@ -645,8 +674,39 @@ export function RandomizerBoard() {
   function selectRole(next: PerkRole) {
     setSharedBuild(null);
     setSharedLoadoutPieces(null);
+    setSelectedCharacter(null); // survivor/killer character lists don't overlap
     setRole(next);
     setThemeTag(null); // survivor/killer tags don't overlap — stale otherwise
+  }
+
+  function rollRandomCharacter() {
+    // Loadout mode for killer needs a character with rolled add-ons to
+    // actually mean something (see getRandomLoadout's forcedCharacter) —
+    // a small handful of killers have perks scraped but no add-ons yet
+    // (very new releases), so picking from that narrower list keeps the
+    // portrait and the roll from disagreeing with each other.
+    const pool =
+      mode === "loadout" && role === "killer" ? getKillerCharacters() : getCharactersForRole(role);
+    if (pool.length === 0) return;
+    const next = pool[Math.floor(Math.random() * pool.length)];
+    setSelectedCharacter(next);
+    setSharedBuild(null);
+    setSharedLoadoutPieces(null);
+    setNonce((n) => n + 1);
+  }
+
+  function clearSelectedCharacter() {
+    setSelectedCharacter(null);
+    setSharedLoadoutPieces(null);
+    setNonce((n) => n + 1);
+  }
+
+  function toggleGuaranteeTeachables() {
+    const next = !guaranteeTeachables;
+    setGuaranteeTeachables(next);
+    safeSet("local", GUARANTEE_TEACHABLES_STORAGE_KEY, next ? "1" : "0");
+    setSharedBuild(null);
+    setNonce((n) => n + 1);
   }
 
   function selectMode(next: BuildMode) {
@@ -1093,6 +1153,67 @@ export function RandomizerBoard() {
                 </button>
               ))}
           </div>
+        )}
+      </div>
+
+      {/* Random Character (Feature #2) — flavor-picks a character for the
+          portrait chip below and, in Perks mode with the toggle on,
+          guarantees their own teachable perks in the roll; in Loadout mode
+          for killer, it's what actually decides whose Power/add-ons get
+          rolled (see getRandomLoadout's forcedCharacter). */}
+      <div className="flex flex-wrap items-center justify-center gap-2">
+        <button
+          type="button"
+          onClick={rollRandomCharacter}
+          className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+        >
+          <Shuffle className="size-3.5" />
+          {t({ ru: "Случайный персонаж", en: "Random Character" })}
+        </button>
+
+        {selectedCharacter && (
+          <div className="flex items-center gap-2 rounded-full border border-border bg-surface/60 py-1 pr-1 pl-1.5">
+            <span
+              className={cn(
+                "relative flex size-7 shrink-0 items-center justify-center overflow-hidden rounded-full ring-1 ring-offset-1 ring-offset-surface",
+                roleColor.ring,
+              )}
+            >
+              {getCharacterPortrait(selectedCharacter) ? (
+                // eslint-disable-next-line @next/next/no-img-element -- next/image ignores basePath for unoptimized runtime src, see lib/asset-path.ts
+                <img
+                  src={withBasePath(getCharacterPortrait(selectedCharacter) as string)}
+                  alt={getCharacterName(selectedCharacter, language)}
+                  className="size-7 object-cover"
+                />
+              ) : (
+                <span className="text-[10px] text-muted">?</span>
+              )}
+            </span>
+            <span className="text-xs font-medium text-foreground">
+              {getCharacterName(selectedCharacter, language)}
+            </span>
+            <button
+              type="button"
+              onClick={clearSelectedCharacter}
+              aria-label={t({ ru: "Убрать персонажа", en: "Clear character" })}
+              className="flex size-5 items-center justify-center rounded-full text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+            >
+              <X className="size-3" />
+            </button>
+          </div>
+        )}
+
+        {mode === "perks" && selectedCharacter && (
+          <ToggleSwitch
+            checked={guaranteeTeachables}
+            onChange={toggleGuaranteeTeachables}
+            label={t({ ru: "Гарантировать тичеблы", en: "Guarantee teachables" })}
+            tooltip={t({
+              ru: "В билд гарантированно попадут собственные перки этого персонажа (если они не исключены из пула).",
+              en: "The build is guaranteed to include this character's own perks (unless they're excluded from the pool).",
+            })}
+          />
         )}
       </div>
 

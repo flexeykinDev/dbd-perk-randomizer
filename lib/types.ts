@@ -41,10 +41,13 @@ export interface PerksMeta {
 }
 
 /** The 6 survivor item families — also the vocabulary used to pair an
- *  Item with its matching Addon pool (see lib/loadout.ts). "special" is
- *  the licensed/crossover items (Void Crystal, Eye of Vecna, etc.) that
- *  don't have a normal add-on category on the wiki. */
-export type ItemType = "firecracker" | "flashlight" | "key" | "map" | "medkit" | "toolbox" | "special";
+ *  Item with its matching Addon pool (see lib/loadout.ts). Deliberately
+ *  excludes chapter-specific "Limited Item"s (Eye of Vecna, Lament
+ *  Configuration, Keycard, ...) — those spawn in the trial environment for
+ *  one killer/chapter's mechanic rather than being a loadout selection, so
+ *  the scraper skips them entirely (see ITEM_TABLE_TYPES in
+ *  scripts/scrape-loadout.ts) instead of giving them a type here. */
+export type ItemType = "firecracker" | "flashlight" | "key" | "map" | "medkit" | "toolbox";
 
 export type LoadoutKind = "item" | "addon" | "offering";
 

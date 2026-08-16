@@ -66,7 +66,9 @@ test.describe("DBD randomizer", () => {
     // small info-icon <button> with the same aria-label — both open the
     // same modal, so either works; .first() is the outer card.
     await page.getByRole("button", { name: "Описание: Аптекарь" }).first().click();
-    await expect(page.getByText("Персонаж")).toBeVisible();
+    // exact: true — a fuzzy match also catches the "Случайный персонаж"
+    // (Random Character) button elsewhere on the page.
+    await expect(page.getByText("Персонаж", { exact: true })).toBeVisible();
     // RU locale (see playwright.config.ts) shows the translated character
     // name, not the English slug — "Квентин", not "Quentin".
     await expect(page.getByText("Квентин", { exact: true })).toBeVisible();
@@ -135,6 +137,54 @@ test.describe("Full Loadout", () => {
     );
     expect(excludedKeys).not.toBeNull();
     expect(JSON.parse(excludedKeys ?? "[]").length).toBeGreaterThan(0);
+  });
+});
+
+test.describe("Random Character", () => {
+  test("rolling a character shows a portrait chip that can be cleared", async ({ page }) => {
+    await page.goto("/?role=survivor");
+    const chip = page.getByRole("button", { name: "Убрать персонажа" }).locator("xpath=..");
+    await expect(chip).not.toBeVisible();
+
+    await page.getByRole("button", { name: "Случайный персонаж" }).click();
+    await expect(chip).toBeVisible();
+
+    await page.getByRole("button", { name: "Убрать персонажа" }).click();
+    await expect(chip).not.toBeVisible();
+  });
+
+  test("guarantee-teachables toggle only shows in Perks mode with a character selected", async ({
+    page,
+  }) => {
+    await page.goto("/?role=survivor");
+    const toggle = page.getByRole("switch", { name: "Гарантировать тичеблы" });
+    await expect(toggle).not.toBeVisible();
+
+    await page.getByRole("button", { name: "Случайный персонаж" }).click();
+    await expect(toggle).toBeVisible();
+
+    // Loadout mode has no "teachable perks" concept — forcing the killer
+    // character (see the next test) is what "Random Character" does there
+    // instead, so the toggle should disappear rather than sit around inert.
+    await page.getByRole("button", { name: "Экипировка" }).click();
+    await expect(toggle).not.toBeVisible();
+  });
+
+  test("random character in killer loadout mode decides the rolled Power", async ({ page }) => {
+    await page.goto("/?role=killer&mode=loadout");
+    await page.getByRole("button", { name: "Случайный персонаж" }).click();
+
+    // The chip is [portrait span, name span, clear button] — the name is
+    // always the last <span> regardless of whether the portrait rendered
+    // an <img> or its own fallback "?" <span>.
+    const chipName = await page
+      .getByRole("button", { name: "Убрать персонажа" })
+      .locator("xpath=..")
+      .locator("span")
+      .last()
+      .textContent();
+    const powerCaption = page.getByTestId("loadout-slot-power").locator("span").last();
+    await expect(powerCaption).toHaveText(chipName ?? "");
   });
 });
 

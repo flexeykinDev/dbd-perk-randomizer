@@ -772,7 +772,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Clown",
+    "character": "Clown",
     "icon": "/loadout/addon/fingerless-parade-gloves.webp",
     "slug": "fingerless-parade-gloves",
     "name": {
@@ -785,7 +785,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Clown",
+    "character": "Clown",
     "icon": "/loadout/addon/party-bottle.webp",
     "slug": "party-bottle",
     "name": {
@@ -798,7 +798,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Clown",
+    "character": "Clown",
     "icon": "/loadout/addon/robin-feather.webp",
     "slug": "robin-feather",
     "name": {
@@ -811,7 +811,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Clown",
+    "character": "Clown",
     "icon": "/loadout/addon/vhs-porn.webp",
     "slug": "vhs-porn",
     "name": {
@@ -824,7 +824,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Clown",
+    "character": "Clown",
     "icon": "/loadout/addon/kerosene-can.webp",
     "slug": "kerosene-can",
     "name": {
@@ -837,7 +837,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Clown",
+    "character": "Clown",
     "icon": "/loadout/addon/solvent-jug.webp",
     "slug": "solvent-jug",
     "name": {
@@ -850,7 +850,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Clown",
+    "character": "Clown",
     "icon": "/loadout/addon/starling-feather.webp",
     "slug": "starling-feather",
     "name": {
@@ -863,7 +863,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Clown",
+    "character": "Clown",
     "icon": "/loadout/addon/sticky-soda-bottle.webp",
     "slug": "sticky-soda-bottle",
     "name": {
@@ -876,7 +876,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Clown",
+    "character": "Clown",
     "icon": "/loadout/addon/thick-cork-stopper.webp",
     "slug": "thick-cork-stopper",
     "name": {
@@ -889,7 +889,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Clown",
+    "character": "Clown",
     "icon": "/loadout/addon/bottle-of-chloroform.webp",
     "slug": "bottle-of-chloroform",
     "name": {
@@ -902,7 +902,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Clown",
+    "character": "Clown",
     "icon": "/loadout/addon/flask-of-bleach.webp",
     "slug": "flask-of-bleach",
     "name": {
@@ -915,7 +915,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Clown",
+    "character": "Clown",
     "icon": "/loadout/addon/smelly-inner-soles.webp",
     "slug": "smelly-inner-soles",
     "name": {
@@ -928,7 +928,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Clown",
+    "character": "Clown",
     "icon": "/loadout/addon/spirit-of-hartshorn.webp",
     "slug": "spirit-of-hartshorn",
     "name": {
@@ -941,7 +941,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Clown",
+    "character": "Clown",
     "icon": "/loadout/addon/sulphuric-acid-vial.webp",
     "slug": "sulphuric-acid-vial",
     "name": {
@@ -954,7 +954,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Clown",
+    "character": "Clown",
     "icon": "/loadout/addon/cheap-gin-bottle.webp",
     "slug": "cheap-gin-bottle",
     "name": {
@@ -967,7 +967,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Clown",
+    "character": "Clown",
     "icon": "/loadout/addon/cigar-box.webp",
     "slug": "cigar-box",
     "name": {
@@ -980,7 +980,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Clown",
+    "character": "Clown",
     "icon": "/loadout/addon/ether-15-vol.webp",
     "slug": "ether-15-vol",
     "name": {
@@ -993,7 +993,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Clown",
+    "character": "Clown",
     "icon": "/loadout/addon/garish-make-up-kit.webp",
     "slug": "garish-make-up-kit",
     "name": {
@@ -1006,7 +1006,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Clown",
+    "character": "Clown",
     "icon": "/loadout/addon/redhead-s-pinkie-finger.webp",
     "slug": "redhead-s-pinkie-finger",
     "name": {
@@ -1019,7 +1019,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Clown",
+    "character": "Clown",
     "icon": "/loadout/addon/tattoo-s-middle-finger.webp",
     "slug": "tattoo-s-middle-finger",
     "name": {
@@ -1032,7 +1032,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Trapper",
+    "character": "Trapper",
     "icon": "/loadout/addon/bear-oil.webp",
     "slug": "bear-oil",
     "name": {
@@ -1045,7 +1045,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Trapper",
+    "character": "Trapper",
     "icon": "/loadout/addon/makeshift-wrap.webp",
     "slug": "makeshift-wrap",
     "name": {
@@ -1058,7 +1058,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Trapper",
+    "character": "Trapper",
     "icon": "/loadout/addon/padded-jaws.webp",
     "slug": "padded-jaws",
     "name": {
@@ -1071,7 +1071,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Trapper",
+    "character": "Trapper",
     "icon": "/loadout/addon/trapper-gloves.webp",
     "slug": "trapper-gloves",
     "name": {
@@ -1084,7 +1084,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Trapper",
+    "character": "Trapper",
     "icon": "/loadout/addon/4-coil-spring-kit.webp",
     "slug": "4-coil-spring-kit",
     "name": {
@@ -1097,7 +1097,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Trapper",
+    "character": "Trapper",
     "icon": "/loadout/addon/coffee-grounds.webp",
     "slug": "coffee-grounds",
     "name": {
@@ -1110,7 +1110,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Trapper",
+    "character": "Trapper",
     "icon": "/loadout/addon/lengthened-jaws.webp",
     "slug": "lengthened-jaws",
     "name": {
@@ -1123,7 +1123,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Trapper",
+    "character": "Trapper",
     "icon": "/loadout/addon/serrated-jaws.webp",
     "slug": "serrated-jaws",
     "name": {
@@ -1136,7 +1136,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Trapper",
+    "character": "Trapper",
     "icon": "/loadout/addon/wax-brick.webp",
     "slug": "wax-brick",
     "name": {
@@ -1149,7 +1149,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Trapper",
+    "character": "Trapper",
     "icon": "/loadout/addon/fastening-tools.webp",
     "slug": "fastening-tools",
     "name": {
@@ -1162,7 +1162,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Trapper",
+    "character": "Trapper",
     "icon": "/loadout/addon/rusted-jaws.webp",
     "slug": "rusted-jaws",
     "name": {
@@ -1175,7 +1175,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Trapper",
+    "character": "Trapper",
     "icon": "/loadout/addon/secondary-coil.webp",
     "slug": "secondary-coil",
     "name": {
@@ -1188,7 +1188,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Trapper",
+    "character": "Trapper",
     "icon": "/loadout/addon/tar-bottle.webp",
     "slug": "tar-bottle",
     "name": {
@@ -1201,7 +1201,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Trapper",
+    "character": "Trapper",
     "icon": "/loadout/addon/trapper-bag.webp",
     "slug": "trapper-bag",
     "name": {
@@ -1214,7 +1214,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Trapper",
+    "character": "Trapper",
     "icon": "/loadout/addon/honing-stone.webp",
     "slug": "honing-stone",
     "name": {
@@ -1227,7 +1227,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Trapper",
+    "character": "Trapper",
     "icon": "/loadout/addon/oily-coil.webp",
     "slug": "oily-coil",
     "name": {
@@ -1240,7 +1240,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Trapper",
+    "character": "Trapper",
     "icon": "/loadout/addon/tension-spring.webp",
     "slug": "tension-spring",
     "name": {
@@ -1253,7 +1253,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Trapper",
+    "character": "Trapper",
     "icon": "/loadout/addon/trapper-sack.webp",
     "slug": "trapper-sack",
     "name": {
@@ -1266,7 +1266,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Trapper",
+    "character": "Trapper",
     "icon": "/loadout/addon/bloody-coil.webp",
     "slug": "bloody-coil",
     "name": {
@@ -1279,7 +1279,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Trapper",
+    "character": "Trapper",
     "icon": "/loadout/addon/iridescent-stone.webp",
     "slug": "iridescent-stone",
     "name": {
@@ -1292,7 +1292,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Artist",
+    "character": "Artist",
     "icon": "/loadout/addon/choclo-corn.webp",
     "slug": "choclo-corn",
     "name": {
@@ -1305,7 +1305,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Artist",
+    "character": "Artist",
     "icon": "/loadout/addon/oil-paints.webp",
     "slug": "oil-paints",
     "name": {
@@ -1318,7 +1318,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Artist",
+    "character": "Artist",
     "icon": "/loadout/addon/thick-tar.webp",
     "slug": "thick-tar",
     "name": {
@@ -1331,7 +1331,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Artist",
+    "character": "Artist",
     "icon": "/loadout/addon/vibrant-obituary.webp",
     "slug": "vibrant-obituary",
     "name": {
@@ -1344,7 +1344,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Artist",
+    "character": "Artist",
     "icon": "/loadout/addon/automatic-drawing.webp",
     "slug": "automatic-drawing",
     "name": {
@@ -1357,7 +1357,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Artist",
+    "character": "Artist",
     "icon": "/loadout/addon/festering-carrion.webp",
     "slug": "festering-carrion",
     "name": {
@@ -1370,7 +1370,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Artist",
+    "character": "Artist",
     "icon": "/loadout/addon/still-life-crow.webp",
     "slug": "still-life-crow",
     "name": {
@@ -1383,7 +1383,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Artist",
+    "character": "Artist",
     "icon": "/loadout/addon/untitled-agony.webp",
     "slug": "untitled-agony",
     "name": {
@@ -1396,7 +1396,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Artist",
+    "character": "Artist",
     "icon": "/loadout/addon/velvet-fabric.webp",
     "slug": "velvet-fabric",
     "name": {
@@ -1409,7 +1409,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Artist",
+    "character": "Artist",
     "icon": "/loadout/addon/charcoal-stick.webp",
     "slug": "charcoal-stick",
     "name": {
@@ -1422,7 +1422,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Artist",
+    "character": "Artist",
     "icon": "/loadout/addon/darkest-ink.webp",
     "slug": "darkest-ink",
     "name": {
@@ -1435,7 +1435,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Artist",
+    "character": "Artist",
     "icon": "/loadout/addon/o-grief-o-lover.webp",
     "slug": "o-grief-o-lover",
     "name": {
@@ -1448,7 +1448,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Artist",
+    "character": "Artist",
     "icon": "/loadout/addon/silver-bell.webp",
     "slug": "silver-bell",
     "name": {
@@ -1461,7 +1461,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Artist",
+    "character": "Artist",
     "icon": "/loadout/addon/thorny-nest.webp",
     "slug": "thorny-nest",
     "name": {
@@ -1474,7 +1474,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Artist",
+    "character": "Artist",
     "icon": "/loadout/addon/ink-egg.webp",
     "slug": "ink-egg",
     "name": {
@@ -1487,7 +1487,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Artist",
+    "character": "Artist",
     "icon": "/loadout/addon/matias-baby-shoes.webp",
     "slug": "matias-baby-shoes",
     "name": {
@@ -1500,7 +1500,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Artist",
+    "character": "Artist",
     "icon": "/loadout/addon/severed-hands.webp",
     "slug": "severed-hands",
     "name": {
@@ -1513,7 +1513,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Artist",
+    "character": "Artist",
     "icon": "/loadout/addon/severed-tongue.webp",
     "slug": "severed-tongue",
     "name": {
@@ -1526,7 +1526,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Artist",
+    "character": "Artist",
     "icon": "/loadout/addon/garden-of-rot.webp",
     "slug": "garden-of-rot",
     "name": {
@@ -1539,7 +1539,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Artist",
+    "character": "Artist",
     "icon": "/loadout/addon/iridescent-feather.webp",
     "slug": "iridescent-feather",
     "name": {
@@ -1552,7 +1552,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Hag",
+    "character": "Hag",
     "icon": "/loadout/addon/bog-water.webp",
     "slug": "bog-water",
     "name": {
@@ -1565,7 +1565,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Hag",
+    "character": "Hag",
     "icon": "/loadout/addon/dead-fly-mud.webp",
     "slug": "dead-fly-mud",
     "name": {
@@ -1578,7 +1578,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Hag",
+    "character": "Hag",
     "icon": "/loadout/addon/powdered-eggshell.webp",
     "slug": "powdered-eggshell",
     "name": {
@@ -1591,7 +1591,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Hag",
+    "character": "Hag",
     "icon": "/loadout/addon/rope-necklet.webp",
     "slug": "rope-necklet",
     "name": {
@@ -1604,7 +1604,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Hag",
+    "character": "Hag",
     "icon": "/loadout/addon/bloodied-water.webp",
     "slug": "bloodied-water",
     "name": {
@@ -1617,7 +1617,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Hag",
+    "character": "Hag",
     "icon": "/loadout/addon/cypress-necklet.webp",
     "slug": "cypress-necklet",
     "name": {
@@ -1630,7 +1630,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Hag",
+    "character": "Hag",
     "icon": "/loadout/addon/dragonfly-wings.webp",
     "slug": "dragonfly-wings",
     "name": {
@@ -1643,7 +1643,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Hag",
+    "character": "Hag",
     "icon": "/loadout/addon/half-eggshell.webp",
     "slug": "half-eggshell",
     "name": {
@@ -1656,7 +1656,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Hag",
+    "character": "Hag",
     "icon": "/loadout/addon/pussy-willow-catkins.webp",
     "slug": "pussy-willow-catkins",
     "name": {
@@ -1669,7 +1669,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Hag",
+    "character": "Hag",
     "icon": "/loadout/addon/bloodied-mud.webp",
     "slug": "bloodied-mud",
     "name": {
@@ -1682,7 +1682,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Hag",
+    "character": "Hag",
     "icon": "/loadout/addon/cracked-turtle-egg.webp",
     "slug": "cracked-turtle-egg",
     "name": {
@@ -1695,7 +1695,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Hag",
+    "character": "Hag",
     "icon": "/loadout/addon/dried-cicada.webp",
     "slug": "dried-cicada",
     "name": {
@@ -1708,7 +1708,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Hag",
+    "character": "Hag",
     "icon": "/loadout/addon/swamp-orchid-necklet.webp",
     "slug": "swamp-orchid-necklet",
     "name": {
@@ -1721,7 +1721,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Hag",
+    "character": "Hag",
     "icon": "/loadout/addon/willow-wreath.webp",
     "slug": "willow-wreath",
     "name": {
@@ -1734,7 +1734,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Hag",
+    "character": "Hag",
     "icon": "/loadout/addon/disfigured-ear.webp",
     "slug": "disfigured-ear",
     "name": {
@@ -1747,7 +1747,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Hag",
+    "character": "Hag",
     "icon": "/loadout/addon/grandma-s-heart.webp",
     "slug": "grandma-s-heart",
     "name": {
@@ -1760,7 +1760,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Hag",
+    "character": "Hag",
     "icon": "/loadout/addon/rusty-shackles.webp",
     "slug": "rusty-shackles",
     "name": {
@@ -1773,7 +1773,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Hag",
+    "character": "Hag",
     "icon": "/loadout/addon/scarred-hand.webp",
     "slug": "scarred-hand",
     "name": {
@@ -1786,7 +1786,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Hag",
+    "character": "Hag",
     "icon": "/loadout/addon/mint-rag.webp",
     "slug": "mint-rag",
     "name": {
@@ -1799,7 +1799,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Hag",
+    "character": "Hag",
     "icon": "/loadout/addon/waterlogged-shoe.webp",
     "slug": "waterlogged-shoe",
     "name": {
@@ -1812,7 +1812,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Blight",
+    "character": "Blight",
     "icon": "/loadout/addon/chipped-monocle.webp",
     "slug": "chipped-monocle",
     "name": {
@@ -1825,7 +1825,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Blight",
+    "character": "Blight",
     "icon": "/loadout/addon/compound-seven.webp",
     "slug": "compound-seven",
     "name": {
@@ -1838,7 +1838,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Blight",
+    "character": "Blight",
     "icon": "/loadout/addon/foxglove.webp",
     "slug": "foxglove",
     "name": {
@@ -1851,7 +1851,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Blight",
+    "character": "Blight",
     "icon": "/loadout/addon/placebo-tablet.webp",
     "slug": "placebo-tablet",
     "name": {
@@ -1864,7 +1864,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Blight",
+    "character": "Blight",
     "icon": "/loadout/addon/blighted-rat.webp",
     "slug": "blighted-rat",
     "name": {
@@ -1877,7 +1877,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Blight",
+    "character": "Blight",
     "icon": "/loadout/addon/canker-thorn.webp",
     "slug": "canker-thorn",
     "name": {
@@ -1890,7 +1890,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Blight",
+    "character": "Blight",
     "icon": "/loadout/addon/plague-bile.webp",
     "slug": "plague-bile",
     "name": {
@@ -1903,7 +1903,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Blight",
+    "character": "Blight",
     "icon": "/loadout/addon/pustula-dust.webp",
     "slug": "pustula-dust",
     "name": {
@@ -1916,7 +1916,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Blight",
+    "character": "Blight",
     "icon": "/loadout/addon/shredded-notes.webp",
     "slug": "shredded-notes",
     "name": {
@@ -1929,7 +1929,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Blight",
+    "character": "Blight",
     "icon": "/loadout/addon/adrenaline-vial.webp",
     "slug": "adrenaline-vial",
     "name": {
@@ -1942,7 +1942,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Blight",
+    "character": "Blight",
     "icon": "/loadout/addon/blighted-crow.webp",
     "slug": "blighted-crow",
     "name": {
@@ -1955,7 +1955,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Blight",
+    "character": "Blight",
     "icon": "/loadout/addon/compound-twenty-one.webp",
     "slug": "compound-twenty-one",
     "name": {
@@ -1968,7 +1968,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Blight",
+    "character": "Blight",
     "icon": "/loadout/addon/rose-tonic.webp",
     "slug": "rose-tonic",
     "name": {
@@ -1981,7 +1981,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Blight",
+    "character": "Blight",
     "icon": "/loadout/addon/umbra-salts.webp",
     "slug": "umbra-salts",
     "name": {
@@ -1994,7 +1994,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Blight",
+    "character": "Blight",
     "icon": "/loadout/addon/alchemist-s-ring.webp",
     "slug": "alchemist-s-ring",
     "name": {
@@ -2007,7 +2007,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Blight",
+    "character": "Blight",
     "icon": "/loadout/addon/soul-chemical.webp",
     "slug": "soul-chemical",
     "name": {
@@ -2020,7 +2020,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Blight",
+    "character": "Blight",
     "icon": "/loadout/addon/summoning-stone.webp",
     "slug": "summoning-stone",
     "name": {
@@ -2033,7 +2033,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Blight",
+    "character": "Blight",
     "icon": "/loadout/addon/vigo-s-journal.webp",
     "slug": "vigo-s-journal",
     "name": {
@@ -2046,7 +2046,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Blight",
+    "character": "Blight",
     "icon": "/loadout/addon/compound-thirty-three.webp",
     "slug": "compound-thirty-three",
     "name": {
@@ -2059,7 +2059,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Blight",
+    "character": "Blight",
     "icon": "/loadout/addon/iridescent-blight-tag.webp",
     "slug": "iridescent-blight-tag",
     "name": {
@@ -2072,7 +2072,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Twins",
+    "character": "Twins",
     "icon": "/loadout/addon/cat-figurine.webp",
     "slug": "cat-figurine",
     "name": {
@@ -2085,7 +2085,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Twins",
+    "character": "Twins",
     "icon": "/loadout/addon/soured-milk.webp",
     "slug": "soured-milk",
     "name": {
@@ -2098,7 +2098,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Twins",
+    "character": "Twins",
     "icon": "/loadout/addon/tiny-fingernail.webp",
     "slug": "tiny-fingernail",
     "name": {
@@ -2111,7 +2111,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Twins",
+    "character": "Twins",
     "icon": "/loadout/addon/toy-sword.webp",
     "slug": "toy-sword",
     "name": {
@@ -2124,7 +2124,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Twins",
+    "character": "Twins",
     "icon": "/loadout/addon/baby-teeth.webp",
     "slug": "baby-teeth",
     "name": {
@@ -2137,7 +2137,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Twins",
+    "character": "Twins",
     "icon": "/loadout/addon/bloody-black-hood.webp",
     "slug": "bloody-black-hood",
     "name": {
@@ -2150,7 +2150,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Twins",
+    "character": "Twins",
     "icon": "/loadout/addon/cat-s-eye.webp",
     "slug": "cat-s-eye",
     "name": {
@@ -2163,7 +2163,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Twins",
+    "character": "Twins",
     "icon": "/loadout/addon/ceremonial-candelabrum.webp",
     "slug": "ceremonial-candelabrum",
     "name": {
@@ -2176,7 +2176,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Twins",
+    "character": "Twins",
     "icon": "/loadout/addon/madeleine-s-glove.webp",
     "slug": "madeleine-s-glove",
     "name": {
@@ -2189,7 +2189,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Twins",
+    "character": "Twins",
     "icon": "/loadout/addon/madeleine-s-scarf.webp",
     "slug": "madeleine-s-scarf",
     "name": {
@@ -2202,7 +2202,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Twins",
+    "character": "Twins",
     "icon": "/loadout/addon/rusted-needle.webp",
     "slug": "rusted-needle",
     "name": {
@@ -2215,7 +2215,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Twins",
+    "character": "Twins",
     "icon": "/loadout/addon/sewer-sludge.webp",
     "slug": "sewer-sludge",
     "name": {
@@ -2228,7 +2228,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Twins",
+    "character": "Twins",
     "icon": "/loadout/addon/stale-biscuit.webp",
     "slug": "stale-biscuit",
     "name": {
@@ -2241,7 +2241,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Twins",
+    "character": "Twins",
     "icon": "/loadout/addon/weighty-rattle.webp",
     "slug": "weighty-rattle",
     "name": {
@@ -2254,7 +2254,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Twins",
+    "character": "Twins",
     "icon": "/loadout/addon/drop-of-perfume.webp",
     "slug": "drop-of-perfume",
     "name": {
@@ -2267,7 +2267,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Twins",
+    "character": "Twins",
     "icon": "/loadout/addon/forest-stew.webp",
     "slug": "forest-stew",
     "name": {
@@ -2280,7 +2280,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Twins",
+    "character": "Twins",
     "icon": "/loadout/addon/spinning-top.webp",
     "slug": "spinning-top",
     "name": {
@@ -2293,7 +2293,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Twins",
+    "character": "Twins",
     "icon": "/loadout/addon/victor-s-soldier.webp",
     "slug": "victor-s-soldier",
     "name": {
@@ -2306,7 +2306,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Twins",
+    "character": "Twins",
     "icon": "/loadout/addon/iridescent-pendant.webp",
     "slug": "iridescent-pendant",
     "name": {
@@ -2319,7 +2319,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Twins",
+    "character": "Twins",
     "icon": "/loadout/addon/silencing-cloth.webp",
     "slug": "silencing-cloth",
     "name": {
@@ -2332,7 +2332,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Cannibal",
+    "character": "Cannibal",
     "icon": "/loadout/addon/chainsaw-file.webp",
     "slug": "chainsaw-file",
     "name": {
@@ -2345,7 +2345,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Cannibal",
+    "character": "Cannibal",
     "icon": "/loadout/addon/spark-plug.webp",
     "slug": "spark-plug",
     "name": {
@@ -2358,7 +2358,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Cannibal",
+    "character": "Cannibal",
     "icon": "/loadout/addon/speed-limiter.webp",
     "slug": "speed-limiter",
     "name": {
@@ -2371,7 +2371,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Cannibal",
+    "character": "Cannibal",
     "icon": "/loadout/addon/vegetable-oil.webp",
     "slug": "vegetable-oil",
     "name": {
@@ -2384,7 +2384,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Cannibal",
+    "character": "Cannibal",
     "icon": "/loadout/addon/chilli.webp",
     "slug": "chilli",
     "name": {
@@ -2397,7 +2397,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Cannibal",
+    "character": "Cannibal",
     "icon": "/loadout/addon/homemade-muffler.webp",
     "slug": "homemade-muffler",
     "name": {
@@ -2410,7 +2410,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Cannibal",
+    "character": "Cannibal",
     "icon": "/loadout/addon/knife-scratches.webp",
     "slug": "knife-scratches",
     "name": {
@@ -2423,7 +2423,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Cannibal",
+    "character": "Cannibal",
     "icon": "/loadout/addon/long-guide-bar.webp",
     "slug": "long-guide-bar",
     "name": {
@@ -2436,7 +2436,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Cannibal",
+    "character": "Cannibal",
     "icon": "/loadout/addon/primer-bulb.webp",
     "slug": "primer-bulb",
     "name": {
@@ -2449,7 +2449,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Cannibal",
+    "character": "Cannibal",
     "icon": "/loadout/addon/begrimed-chains.webp",
     "slug": "begrimed-chains",
     "name": {
@@ -2462,7 +2462,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Cannibal",
+    "character": "Cannibal",
     "icon": "/loadout/addon/grisly-chains.webp",
     "slug": "grisly-chains",
     "name": {
@@ -2475,7 +2475,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Cannibal",
+    "character": "Cannibal",
     "icon": "/loadout/addon/shop-lubricant.webp",
     "slug": "shop-lubricant",
     "name": {
@@ -2488,7 +2488,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Cannibal",
+    "character": "Cannibal",
     "icon": "/loadout/addon/the-beast-s-marks.webp",
     "slug": "the-beast-s-marks",
     "name": {
@@ -2501,7 +2501,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Cannibal",
+    "character": "Cannibal",
     "icon": "/loadout/addon/the-grease.webp",
     "slug": "the-grease",
     "name": {
@@ -2514,7 +2514,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Cannibal",
+    "character": "Cannibal",
     "icon": "/loadout/addon/award-winning-chilli.webp",
     "slug": "award-winning-chilli",
     "name": {
@@ -2527,7 +2527,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Cannibal",
+    "character": "Cannibal",
     "icon": "/loadout/addon/depth-gauge-rake.webp",
     "slug": "depth-gauge-rake",
     "name": {
@@ -2540,7 +2540,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Cannibal",
+    "character": "Cannibal",
     "icon": "/loadout/addon/light-chassis.webp",
     "slug": "light-chassis",
     "name": {
@@ -2553,7 +2553,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Cannibal",
+    "character": "Cannibal",
     "icon": "/loadout/addon/rusted-chains.webp",
     "slug": "rusted-chains",
     "name": {
@@ -2566,7 +2566,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Cannibal",
+    "character": "Cannibal",
     "icon": "/loadout/addon/carburettor-tuning-guide.webp",
     "slug": "carburettor-tuning-guide",
     "name": {
@@ -2579,7 +2579,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Cannibal",
+    "character": "Cannibal",
     "icon": "/loadout/addon/iridescent-flesh.webp",
     "slug": "iridescent-flesh",
     "name": {
@@ -2592,7 +2592,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Doctor",
+    "character": "Doctor",
     "icon": "/loadout/addon/calm-class-i.webp",
     "slug": "calm-class-i",
     "name": {
@@ -2605,7 +2605,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Doctor",
+    "character": "Doctor",
     "icon": "/loadout/addon/order-class-i.webp",
     "slug": "order-class-i",
     "name": {
@@ -2618,7 +2618,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Doctor",
+    "character": "Doctor",
     "icon": "/loadout/addon/maple-knight.webp",
     "slug": "maple-knight",
     "name": {
@@ -2631,7 +2631,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Doctor",
+    "character": "Doctor",
     "icon": "/loadout/addon/mouldy-electrode.webp",
     "slug": "mouldy-electrode",
     "name": {
@@ -2644,7 +2644,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Doctor",
+    "character": "Doctor",
     "icon": "/loadout/addon/calm-class-ii.webp",
     "slug": "calm-class-ii",
     "name": {
@@ -2657,7 +2657,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Doctor",
+    "character": "Doctor",
     "icon": "/loadout/addon/discipline-class-ii.webp",
     "slug": "discipline-class-ii",
     "name": {
@@ -2670,7 +2670,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Doctor",
+    "character": "Doctor",
     "icon": "/loadout/addon/order-class-ii.webp",
     "slug": "order-class-ii",
     "name": {
@@ -2683,7 +2683,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Doctor",
+    "character": "Doctor",
     "icon": "/loadout/addon/restraint-class-ii.webp",
     "slug": "restraint-class-ii",
     "name": {
@@ -2696,7 +2696,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Doctor",
+    "character": "Doctor",
     "icon": "/loadout/addon/polished-electrode.webp",
     "slug": "polished-electrode",
     "name": {
@@ -2709,7 +2709,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Doctor",
+    "character": "Doctor",
     "icon": "/loadout/addon/discipline-class-iii.webp",
     "slug": "discipline-class-iii",
     "name": {
@@ -2722,7 +2722,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Doctor",
+    "character": "Doctor",
     "icon": "/loadout/addon/restraint-class-iii.webp",
     "slug": "restraint-class-iii",
     "name": {
@@ -2735,7 +2735,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Doctor",
+    "character": "Doctor",
     "icon": "/loadout/addon/high-stimulus-electrode.webp",
     "slug": "high-stimulus-electrode",
     "name": {
@@ -2748,7 +2748,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Doctor",
+    "character": "Doctor",
     "icon": "/loadout/addon/interview-tape.webp",
     "slug": "interview-tape",
     "name": {
@@ -2761,7 +2761,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Doctor",
+    "character": "Doctor",
     "icon": "/loadout/addon/scrapped-tape.webp",
     "slug": "scrapped-tape",
     "name": {
@@ -2774,7 +2774,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Doctor",
+    "character": "Doctor",
     "icon": "/loadout/addon/calm-carter-s-notes.webp",
     "slug": "calm-carter-s-notes",
     "name": {
@@ -2787,7 +2787,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Doctor",
+    "character": "Doctor",
     "icon": "/loadout/addon/discipline-carter-s-notes.webp",
     "slug": "discipline-carter-s-notes",
     "name": {
@@ -2800,7 +2800,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Doctor",
+    "character": "Doctor",
     "icon": "/loadout/addon/order-carter-s-notes.webp",
     "slug": "order-carter-s-notes",
     "name": {
@@ -2813,7 +2813,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Doctor",
+    "character": "Doctor",
     "icon": "/loadout/addon/restraint-carter-s-notes.webp",
     "slug": "restraint-carter-s-notes",
     "name": {
@@ -2826,7 +2826,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Doctor",
+    "character": "Doctor",
     "icon": "/loadout/addon/iridescent-king.webp",
     "slug": "iridescent-king",
     "name": {
@@ -2839,7 +2839,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Doctor",
+    "character": "Doctor",
     "icon": "/loadout/addon/iridescent-queen.webp",
     "slug": "iridescent-queen",
     "name": {
@@ -2852,7 +2852,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Hillbilly",
+    "character": "Hillbilly",
     "icon": "/loadout/addon/counterweight.webp",
     "slug": "counterweight",
     "name": {
@@ -2865,7 +2865,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Hillbilly",
+    "character": "Hillbilly",
     "icon": "/loadout/addon/cracked-primer-bulb.webp",
     "slug": "cracked-primer-bulb",
     "name": {
@@ -2878,7 +2878,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Hillbilly",
+    "character": "Hillbilly",
     "icon": "/loadout/addon/discarded-air-filter.webp",
     "slug": "discarded-air-filter",
     "name": {
@@ -2891,7 +2891,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Hillbilly",
+    "character": "Hillbilly",
     "icon": "/loadout/addon/steel-toe-boots.webp",
     "slug": "steel-toe-boots",
     "name": {
@@ -2904,7 +2904,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Hillbilly",
+    "character": "Hillbilly",
     "icon": "/loadout/addon/clogged-intake.webp",
     "slug": "clogged-intake",
     "name": {
@@ -2917,7 +2917,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Hillbilly",
+    "character": "Hillbilly",
     "icon": "/loadout/addon/greased-throttle.webp",
     "slug": "greased-throttle",
     "name": {
@@ -2930,7 +2930,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Hillbilly",
+    "character": "Hillbilly",
     "icon": "/loadout/addon/high-speed-idler-screw.webp",
     "slug": "high-speed-idler-screw",
     "name": {
@@ -2943,7 +2943,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Hillbilly",
+    "character": "Hillbilly",
     "icon": "/loadout/addon/off-brand-motor-oil.webp",
     "slug": "off-brand-motor-oil",
     "name": {
@@ -2956,7 +2956,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Hillbilly",
+    "character": "Hillbilly",
     "icon": "/loadout/addon/thermal-casing.webp",
     "slug": "thermal-casing",
     "name": {
@@ -2969,7 +2969,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Hillbilly",
+    "character": "Hillbilly",
     "icon": "/loadout/addon/begrimed-chains.webp",
     "slug": "begrimed-chains",
     "name": {
@@ -2982,7 +2982,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Hillbilly",
+    "character": "Hillbilly",
     "icon": "/loadout/addon/dad-s-boots.webp",
     "slug": "dad-s-boots",
     "name": {
@@ -2995,7 +2995,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Hillbilly",
+    "character": "Hillbilly",
     "icon": "/loadout/addon/low-kickback-chains.webp",
     "slug": "low-kickback-chains",
     "name": {
@@ -3008,7 +3008,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Hillbilly",
+    "character": "Hillbilly",
     "icon": "/loadout/addon/ragged-engine.webp",
     "slug": "ragged-engine",
     "name": {
@@ -3021,7 +3021,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Hillbilly",
+    "character": "Hillbilly",
     "icon": "/loadout/addon/the-thompsons-mix.webp",
     "slug": "the-thompsons-mix",
     "name": {
@@ -3034,7 +3034,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Hillbilly",
+    "character": "Hillbilly",
     "icon": "/loadout/addon/apex-muffler.webp",
     "slug": "apex-muffler",
     "name": {
@@ -3047,7 +3047,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Hillbilly",
+    "character": "Hillbilly",
     "icon": "/loadout/addon/filthy-slippers.webp",
     "slug": "filthy-slippers",
     "name": {
@@ -3060,7 +3060,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Hillbilly",
+    "character": "Hillbilly",
     "icon": "/loadout/addon/lopro-chains.webp",
     "slug": "lopro-chains",
     "name": {
@@ -3073,7 +3073,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Hillbilly",
+    "character": "Hillbilly",
     "icon": "/loadout/addon/spiked-boots.webp",
     "slug": "spiked-boots",
     "name": {
@@ -3086,7 +3086,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Hillbilly",
+    "character": "Hillbilly",
     "icon": "/loadout/addon/iridescent-engravings.webp",
     "slug": "iridescent-engravings",
     "name": {
@@ -3099,7 +3099,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Hillbilly",
+    "character": "Hillbilly",
     "icon": "/loadout/addon/tuned-carburettor.webp",
     "slug": "tuned-carburettor",
     "name": {
@@ -3112,7 +3112,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Onryō",
+    "character": "Onryō",
     "icon": "/loadout/addon/cabin-sign.webp",
     "slug": "cabin-sign",
     "name": {
@@ -3125,7 +3125,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Onryō",
+    "character": "Onryō",
     "icon": "/loadout/addon/mother-s-mirror.webp",
     "slug": "mother-s-mirror",
     "name": {
@@ -3138,7 +3138,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Onryō",
+    "character": "Onryō",
     "icon": "/loadout/addon/old-newspaper.webp",
     "slug": "old-newspaper",
     "name": {
@@ -3151,7 +3151,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Onryō",
+    "character": "Onryō",
     "icon": "/loadout/addon/videotape-copy.webp",
     "slug": "videotape-copy",
     "name": {
@@ -3164,7 +3164,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Onryō",
+    "character": "Onryō",
     "icon": "/loadout/addon/clump-of-hair.webp",
     "slug": "clump-of-hair",
     "name": {
@@ -3177,7 +3177,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Onryō",
+    "character": "Onryō",
     "icon": "/loadout/addon/reiko-s-watch.webp",
     "slug": "reiko-s-watch",
     "name": {
@@ -3190,7 +3190,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Onryō",
+    "character": "Onryō",
     "icon": "/loadout/addon/sea-soaked-cloth.webp",
     "slug": "sea-soaked-cloth",
     "name": {
@@ -3203,7 +3203,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Onryō",
+    "character": "Onryō",
     "icon": "/loadout/addon/well-stone.webp",
     "slug": "well-stone",
     "name": {
@@ -3216,7 +3216,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Onryō",
+    "character": "Onryō",
     "icon": "/loadout/addon/yoichi-s-fishing-net.webp",
     "slug": "yoichi-s-fishing-net",
     "name": {
@@ -3229,7 +3229,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Onryō",
+    "character": "Onryō",
     "icon": "/loadout/addon/bloody-fingernails.webp",
     "slug": "bloody-fingernails",
     "name": {
@@ -3242,7 +3242,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Onryō",
+    "character": "Onryō",
     "icon": "/loadout/addon/mother-s-comb.webp",
     "slug": "mother-s-comb",
     "name": {
@@ -3255,7 +3255,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Onryō",
+    "character": "Onryō",
     "icon": "/loadout/addon/rickety-pinwheel.webp",
     "slug": "rickety-pinwheel",
     "name": {
@@ -3268,7 +3268,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Onryō",
+    "character": "Onryō",
     "icon": "/loadout/addon/ring-drawing.webp",
     "slug": "ring-drawing",
     "name": {
@@ -3281,7 +3281,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Onryō",
+    "character": "Onryō",
     "icon": "/loadout/addon/well-water.webp",
     "slug": "well-water",
     "name": {
@@ -3294,7 +3294,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Onryō",
+    "character": "Onryō",
     "icon": "/loadout/addon/distorted-photo.webp",
     "slug": "distorted-photo",
     "name": {
@@ -3307,7 +3307,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Onryō",
+    "character": "Onryō",
     "icon": "/loadout/addon/tape-editing-deck.webp",
     "slug": "tape-editing-deck",
     "name": {
@@ -3320,7 +3320,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Onryō",
+    "character": "Onryō",
     "icon": "/loadout/addon/telephone.webp",
     "slug": "telephone",
     "name": {
@@ -3333,7 +3333,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Onryō",
+    "character": "Onryō",
     "icon": "/loadout/addon/vcr.webp",
     "slug": "vcr",
     "name": {
@@ -3346,7 +3346,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Onryō",
+    "character": "Onryō",
     "icon": "/loadout/addon/iridescent-videotape.webp",
     "slug": "iridescent-videotape",
     "name": {
@@ -3359,7 +3359,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Onryō",
+    "character": "Onryō",
     "icon": "/loadout/addon/remote-control.webp",
     "slug": "remote-control",
     "name": {
@@ -3372,7 +3372,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nightmare",
+    "character": "Nightmare",
     "icon": "/loadout/addon/garden-rake.webp",
     "slug": "garden-rake",
     "name": {
@@ -3385,7 +3385,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nightmare",
+    "character": "Nightmare",
     "icon": "/loadout/addon/kid-s-drawing.webp",
     "slug": "kid-s-drawing",
     "name": {
@@ -3398,7 +3398,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nightmare",
+    "character": "Nightmare",
     "icon": "/loadout/addon/sheep-block.webp",
     "slug": "sheep-block",
     "name": {
@@ -3411,7 +3411,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nightmare",
+    "character": "Nightmare",
     "icon": "/loadout/addon/wool-shirt.webp",
     "slug": "wool-shirt",
     "name": {
@@ -3424,7 +3424,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nightmare",
+    "character": "Nightmare",
     "icon": "/loadout/addon/cat-block.webp",
     "slug": "cat-block",
     "name": {
@@ -3437,7 +3437,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nightmare",
+    "character": "Nightmare",
     "icon": "/loadout/addon/green-dress.webp",
     "slug": "green-dress",
     "name": {
@@ -3450,7 +3450,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nightmare",
+    "character": "Nightmare",
     "icon": "/loadout/addon/nancy-s-sketch.webp",
     "slug": "nancy-s-sketch",
     "name": {
@@ -3463,7 +3463,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nightmare",
+    "character": "Nightmare",
     "icon": "/loadout/addon/outdoor-rope.webp",
     "slug": "outdoor-rope",
     "name": {
@@ -3476,7 +3476,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nightmare",
+    "character": "Nightmare",
     "icon": "/loadout/addon/prototype-claws.webp",
     "slug": "prototype-claws",
     "name": {
@@ -3489,7 +3489,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nightmare",
+    "character": "Nightmare",
     "icon": "/loadout/addon/blue-dress.webp",
     "slug": "blue-dress",
     "name": {
@@ -3502,7 +3502,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nightmare",
+    "character": "Nightmare",
     "icon": "/loadout/addon/jump-rope.webp",
     "slug": "jump-rope",
     "name": {
@@ -3515,7 +3515,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nightmare",
+    "character": "Nightmare",
     "icon": "/loadout/addon/nancy-s-masterpiece.webp",
     "slug": "nancy-s-masterpiece",
     "name": {
@@ -3528,7 +3528,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nightmare",
+    "character": "Nightmare",
     "icon": "/loadout/addon/paint-thinner.webp",
     "slug": "paint-thinner",
     "name": {
@@ -3541,7 +3541,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nightmare",
+    "character": "Nightmare",
     "icon": "/loadout/addon/unicorn-block.webp",
     "slug": "unicorn-block",
     "name": {
@@ -3554,7 +3554,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nightmare",
+    "character": "Nightmare",
     "icon": "/loadout/addon/z-block.webp",
     "slug": "z-block",
     "name": {
@@ -3567,7 +3567,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nightmare",
+    "character": "Nightmare",
     "icon": "/loadout/addon/class-photo.webp",
     "slug": "class-photo",
     "name": {
@@ -3580,7 +3580,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nightmare",
+    "character": "Nightmare",
     "icon": "/loadout/addon/pill-bottle.webp",
     "slug": "pill-bottle",
     "name": {
@@ -3593,7 +3593,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nightmare",
+    "character": "Nightmare",
     "icon": "/loadout/addon/swing-chains.webp",
     "slug": "swing-chains",
     "name": {
@@ -3606,7 +3606,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nightmare",
+    "character": "Nightmare",
     "icon": "/loadout/addon/black-box.webp",
     "slug": "black-box",
     "name": {
@@ -3619,7 +3619,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nightmare",
+    "character": "Nightmare",
     "icon": "/loadout/addon/red-paint-brush.webp",
     "slug": "red-paint-brush",
     "name": {
@@ -3632,7 +3632,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Shape",
+    "character": "Shape",
     "icon": "/loadout/addon/blond-hair.webp",
     "slug": "blond-hair",
     "name": {
@@ -3645,7 +3645,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Shape",
+    "character": "Shape",
     "icon": "/loadout/addon/boyfriend-s-memo.webp",
     "slug": "boyfriend-s-memo",
     "name": {
@@ -3658,7 +3658,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Shape",
+    "character": "Shape",
     "icon": "/loadout/addon/memorial-flower.webp",
     "slug": "memorial-flower",
     "name": {
@@ -3671,7 +3671,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Shape",
+    "character": "Shape",
     "icon": "/loadout/addon/tacky-earrings.webp",
     "slug": "tacky-earrings",
     "name": {
@@ -3684,7 +3684,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Shape",
+    "character": "Shape",
     "icon": "/loadout/addon/dead-rabbit.webp",
     "slug": "dead-rabbit",
     "name": {
@@ -3697,7 +3697,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Shape",
+    "character": "Shape",
     "icon": "/loadout/addon/glass-fragment.webp",
     "slug": "glass-fragment",
     "name": {
@@ -3710,7 +3710,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Shape",
+    "character": "Shape",
     "icon": "/loadout/addon/hair-brush.webp",
     "slug": "hair-brush",
     "name": {
@@ -3723,7 +3723,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Shape",
+    "character": "Shape",
     "icon": "/loadout/addon/jewellery.webp",
     "slug": "jewellery",
     "name": {
@@ -3736,7 +3736,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Shape",
+    "character": "Shape",
     "icon": "/loadout/addon/reflective-fragment.webp",
     "slug": "reflective-fragment",
     "name": {
@@ -3749,7 +3749,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Shape",
+    "character": "Shape",
     "icon": "/loadout/addon/hair-bow.webp",
     "slug": "hair-bow",
     "name": {
@@ -3762,7 +3762,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Shape",
+    "character": "Shape",
     "icon": "/loadout/addon/j-myers-memorial.webp",
     "slug": "j-myers-memorial",
     "name": {
@@ -3775,7 +3775,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Shape",
+    "character": "Shape",
     "icon": "/loadout/addon/jewellery-box.webp",
     "slug": "jewellery-box",
     "name": {
@@ -3788,7 +3788,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Shape",
+    "character": "Shape",
     "icon": "/loadout/addon/judith-s-journal.webp",
     "slug": "judith-s-journal",
     "name": {
@@ -3801,7 +3801,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Shape",
+    "character": "Shape",
     "icon": "/loadout/addon/mirror-shard.webp",
     "slug": "mirror-shard",
     "name": {
@@ -3814,7 +3814,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Shape",
+    "character": "Shape",
     "icon": "/loadout/addon/lock-of-hair.webp",
     "slug": "lock-of-hair",
     "name": {
@@ -3827,7 +3827,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Shape",
+    "character": "Shape",
     "icon": "/loadout/addon/scratched-mirror.webp",
     "slug": "scratched-mirror",
     "name": {
@@ -3840,7 +3840,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Shape",
+    "character": "Shape",
     "icon": "/loadout/addon/tombstone-piece.webp",
     "slug": "tombstone-piece",
     "name": {
@@ -3853,7 +3853,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Shape",
+    "character": "Shape",
     "icon": "/loadout/addon/vanity-mirror.webp",
     "slug": "vanity-mirror",
     "name": {
@@ -3866,7 +3866,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Shape",
+    "character": "Shape",
     "icon": "/loadout/addon/fragrant-tuft-of-hair.webp",
     "slug": "fragrant-tuft-of-hair",
     "name": {
@@ -3879,7 +3879,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Shape",
+    "character": "Shape",
     "icon": "/loadout/addon/judith-s-tombstone.webp",
     "slug": "judith-s-tombstone",
     "name": {
@@ -3892,7 +3892,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Skull Merchant",
+    "character": "Skull Merchant",
     "icon": "/loadout/addon/adi-valente-issue-1.webp",
     "slug": "adi-valente-issue-1",
     "name": {
@@ -3905,7 +3905,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Skull Merchant",
+    "character": "Skull Merchant",
     "icon": "/loadout/addon/high-current-upgrade.webp",
     "slug": "high-current-upgrade",
     "name": {
@@ -3918,7 +3918,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Skull Merchant",
+    "character": "Skull Merchant",
     "icon": "/loadout/addon/high-power-floodlight.webp",
     "slug": "high-power-floodlight",
     "name": {
@@ -3931,7 +3931,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Skull Merchant",
+    "character": "Skull Merchant",
     "icon": "/loadout/addon/ultrasonic-speaker.webp",
     "slug": "ultrasonic-speaker",
     "name": {
@@ -3944,7 +3944,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Skull Merchant",
+    "character": "Skull Merchant",
     "icon": "/loadout/addon/adaptive-lighting.webp",
     "slug": "adaptive-lighting",
     "name": {
@@ -3957,7 +3957,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Skull Merchant",
+    "character": "Skull Merchant",
     "icon": "/loadout/addon/low-power-mode.webp",
     "slug": "low-power-mode",
     "name": {
@@ -3970,7 +3970,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Skull Merchant",
+    "character": "Skull Merchant",
     "icon": "/loadout/addon/shotgun-speakers.webp",
     "slug": "shotgun-speakers",
     "name": {
@@ -3983,7 +3983,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Skull Merchant",
+    "character": "Skull Merchant",
     "icon": "/loadout/addon/stereo-remote-mic.webp",
     "slug": "stereo-remote-mic",
     "name": {
@@ -3996,7 +3996,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Skull Merchant",
+    "character": "Skull Merchant",
     "icon": "/loadout/addon/supercharge.webp",
     "slug": "supercharge",
     "name": {
@@ -4009,7 +4009,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Skull Merchant",
+    "character": "Skull Merchant",
     "icon": "/loadout/addon/brown-noise-generator.webp",
     "slug": "brown-noise-generator",
     "name": {
@@ -4022,7 +4022,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Skull Merchant",
+    "character": "Skull Merchant",
     "icon": "/loadout/addon/infrared-upgrade.webp",
     "slug": "infrared-upgrade",
     "name": {
@@ -4035,7 +4035,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Skull Merchant",
+    "character": "Skull Merchant",
     "icon": "/loadout/addon/loose-screw.webp",
     "slug": "loose-screw",
     "name": {
@@ -4048,7 +4048,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Skull Merchant",
+    "character": "Skull Merchant",
     "icon": "/loadout/addon/powdered-glass.webp",
     "slug": "powdered-glass",
     "name": {
@@ -4061,7 +4061,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Skull Merchant",
+    "character": "Skull Merchant",
     "icon": "/loadout/addon/vital-targeting-processor.webp",
     "slug": "vital-targeting-processor",
     "name": {
@@ -4074,7 +4074,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Skull Merchant",
+    "character": "Skull Merchant",
     "icon": "/loadout/addon/advanced-movement-prediction.webp",
     "slug": "advanced-movement-prediction",
     "name": {
@@ -4087,7 +4087,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Skull Merchant",
+    "character": "Skull Merchant",
     "icon": "/loadout/addon/geographical-readout.webp",
     "slug": "geographical-readout",
     "name": {
@@ -4100,7 +4100,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Skull Merchant",
+    "character": "Skull Merchant",
     "icon": "/loadout/addon/prototype-rotor.webp",
     "slug": "prototype-rotor",
     "name": {
@@ -4113,7 +4113,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Skull Merchant",
+    "character": "Skull Merchant",
     "icon": "/loadout/addon/randomised-strobes.webp",
     "slug": "randomised-strobes",
     "name": {
@@ -4126,7 +4126,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Skull Merchant",
+    "character": "Skull Merchant",
     "icon": "/loadout/addon/expired-batteries.webp",
     "slug": "expired-batteries",
     "name": {
@@ -4139,7 +4139,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Skull Merchant",
+    "character": "Skull Merchant",
     "icon": "/loadout/addon/iridescent-unpublished-manuscript.webp",
     "slug": "iridescent-unpublished-manuscript",
     "name": {
@@ -4152,7 +4152,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Legion",
+    "character": "Legion",
     "icon": "/loadout/addon/friendship-bracelet.webp",
     "slug": "friendship-bracelet",
     "name": {
@@ -4165,7 +4165,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Legion",
+    "character": "Legion",
     "icon": "/loadout/addon/mischief-list.webp",
     "slug": "mischief-list",
     "name": {
@@ -4178,7 +4178,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Legion",
+    "character": "Legion",
     "icon": "/loadout/addon/scratched-ruler.webp",
     "slug": "scratched-ruler",
     "name": {
@@ -4191,7 +4191,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Legion",
+    "character": "Legion",
     "icon": "/loadout/addon/smiley-face-pin.webp",
     "slug": "smiley-face-pin",
     "name": {
@@ -4204,7 +4204,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Legion",
+    "character": "Legion",
     "icon": "/loadout/addon/defaced-smiley-pin.webp",
     "slug": "defaced-smiley-pin",
     "name": {
@@ -4217,7 +4217,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Legion",
+    "character": "Legion",
     "icon": "/loadout/addon/etched-ruler.webp",
     "slug": "etched-ruler",
     "name": {
@@ -4230,7 +4230,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Legion",
+    "character": "Legion",
     "icon": "/loadout/addon/julie-s-mix-tape.webp",
     "slug": "julie-s-mix-tape",
     "name": {
@@ -4243,7 +4243,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Legion",
+    "character": "Legion",
     "icon": "/loadout/addon/mural-sketch.webp",
     "slug": "mural-sketch",
     "name": {
@@ -4256,7 +4256,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Legion",
+    "character": "Legion",
     "icon": "/loadout/addon/never-sleep-pills.webp",
     "slug": "never-sleep-pills",
     "name": {
@@ -4269,7 +4269,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Legion",
+    "character": "Legion",
     "icon": "/loadout/addon/joey-s-mix-tape.webp",
     "slug": "joey-s-mix-tape",
     "name": {
@@ -4282,7 +4282,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Legion",
+    "character": "Legion",
     "icon": "/loadout/addon/stolen-sketch-book.webp",
     "slug": "stolen-sketch-book",
     "name": {
@@ -4295,7 +4295,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Legion",
+    "character": "Legion",
     "icon": "/loadout/addon/stylish-sunglasses.webp",
     "slug": "stylish-sunglasses",
     "name": {
@@ -4308,7 +4308,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Legion",
+    "character": "Legion",
     "icon": "/loadout/addon/susie-s-mix-tape.webp",
     "slug": "susie-s-mix-tape",
     "name": {
@@ -4321,7 +4321,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Legion",
+    "character": "Legion",
     "icon": "/loadout/addon/the-legion-pin.webp",
     "slug": "the-legion-pin",
     "name": {
@@ -4334,7 +4334,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Legion",
+    "character": "Legion",
     "icon": "/loadout/addon/bffs.webp",
     "slug": "bffs",
     "name": {
@@ -4347,7 +4347,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Legion",
+    "character": "Legion",
     "icon": "/loadout/addon/filthy-blade.webp",
     "slug": "filthy-blade",
     "name": {
@@ -4360,7 +4360,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Legion",
+    "character": "Legion",
     "icon": "/loadout/addon/frank-s-mix-tape.webp",
     "slug": "frank-s-mix-tape",
     "name": {
@@ -4373,7 +4373,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Legion",
+    "character": "Legion",
     "icon": "/loadout/addon/stab-wounds-study.webp",
     "slug": "stab-wounds-study",
     "name": {
@@ -4386,7 +4386,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Legion",
+    "character": "Legion",
     "icon": "/loadout/addon/fuming-mix-tape.webp",
     "slug": "fuming-mix-tape",
     "name": {
@@ -4399,7 +4399,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Legion",
+    "character": "Legion",
     "icon": "/loadout/addon/iridescent-button.webp",
     "slug": "iridescent-button",
     "name": {
@@ -4412,7 +4412,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Knight",
+    "character": "Knight",
     "icon": "/loadout/addon/gritty-lump.webp",
     "slug": "gritty-lump",
     "name": {
@@ -4425,7 +4425,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Knight",
+    "character": "Knight",
     "icon": "/loadout/addon/map-of-the-realm.webp",
     "slug": "map-of-the-realm",
     "name": {
@@ -4438,7 +4438,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Knight",
+    "character": "Knight",
     "icon": "/loadout/addon/pillaged-mead.webp",
     "slug": "pillaged-mead",
     "name": {
@@ -4451,7 +4451,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Knight",
+    "character": "Knight",
     "icon": "/loadout/addon/tattered-tabard.webp",
     "slug": "tattered-tabard",
     "name": {
@@ -4464,7 +4464,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Knight",
+    "character": "Knight",
     "icon": "/loadout/addon/battle-axe-head.webp",
     "slug": "battle-axe-head",
     "name": {
@@ -4477,7 +4477,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Knight",
+    "character": "Knight",
     "icon": "/loadout/addon/call-to-arms.webp",
     "slug": "call-to-arms",
     "name": {
@@ -4490,7 +4490,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Knight",
+    "character": "Knight",
     "icon": "/loadout/addon/cold-steel-manacles.webp",
     "slug": "cold-steel-manacles",
     "name": {
@@ -4503,7 +4503,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Knight",
+    "character": "Knight",
     "icon": "/loadout/addon/dried-horsemeat.webp",
     "slug": "dried-horsemeat",
     "name": {
@@ -4516,7 +4516,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Knight",
+    "character": "Knight",
     "icon": "/loadout/addon/treated-blade.webp",
     "slug": "treated-blade",
     "name": {
@@ -4529,7 +4529,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Knight",
+    "character": "Knight",
     "icon": "/loadout/addon/broken-hilt.webp",
     "slug": "broken-hilt",
     "name": {
@@ -4542,7 +4542,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Knight",
+    "character": "Knight",
     "icon": "/loadout/addon/grim-iron-mask.webp",
     "slug": "grim-iron-mask",
     "name": {
@@ -4555,7 +4555,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Knight",
+    "character": "Knight",
     "icon": "/loadout/addon/ironworker-s-tongs.webp",
     "slug": "ironworker-s-tongs",
     "name": {
@@ -4568,7 +4568,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Knight",
+    "character": "Knight",
     "icon": "/loadout/addon/sharpened-mount.webp",
     "slug": "sharpened-mount",
     "name": {
@@ -4581,7 +4581,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Knight",
+    "character": "Knight",
     "icon": "/loadout/addon/town-watch-s-torch.webp",
     "slug": "town-watch-s-torch",
     "name": {
@@ -4594,7 +4594,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Knight",
+    "character": "Knight",
     "icon": "/loadout/addon/blacksmith-s-hammer.webp",
     "slug": "blacksmith-s-hammer",
     "name": {
@@ -4607,7 +4607,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Knight",
+    "character": "Knight",
     "icon": "/loadout/addon/flint-and-steel.webp",
     "slug": "flint-and-steel",
     "name": {
@@ -4620,7 +4620,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Knight",
+    "character": "Knight",
     "icon": "/loadout/addon/healing-poultice.webp",
     "slug": "healing-poultice",
     "name": {
@@ -4633,7 +4633,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Knight",
+    "character": "Knight",
     "icon": "/loadout/addon/jailer-s-chimes.webp",
     "slug": "jailer-s-chimes",
     "name": {
@@ -4646,7 +4646,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Knight",
+    "character": "Knight",
     "icon": "/loadout/addon/iridescent-company-banner.webp",
     "slug": "iridescent-company-banner",
     "name": {
@@ -4659,7 +4659,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Knight",
+    "character": "Knight",
     "icon": "/loadout/addon/knight-s-contract.webp",
     "slug": "knight-s-contract",
     "name": {
@@ -4672,7 +4672,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Xenomorph",
+    "character": "Xenomorph",
     "icon": "/loadout/addon/cereal-rations.webp",
     "slug": "cereal-rations",
     "name": {
@@ -4685,7 +4685,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Xenomorph",
+    "character": "Xenomorph",
     "icon": "/loadout/addon/drinking-bird.webp",
     "slug": "drinking-bird",
     "name": {
@@ -4698,7 +4698,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Xenomorph",
+    "character": "Xenomorph",
     "icon": "/loadout/addon/ovomorph.webp",
     "slug": "ovomorph",
     "name": {
@@ -4711,7 +4711,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Xenomorph",
+    "character": "Xenomorph",
     "icon": "/loadout/addon/ripley-s-watch.webp",
     "slug": "ripley-s-watch",
     "name": {
@@ -4724,7 +4724,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Xenomorph",
+    "character": "Xenomorph",
     "icon": "/loadout/addon/ash-s-innards.webp",
     "slug": "ash-s-innards",
     "name": {
@@ -4737,7 +4737,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Xenomorph",
+    "character": "Xenomorph",
     "icon": "/loadout/addon/brett-s-cap.webp",
     "slug": "brett-s-cap",
     "name": {
@@ -4750,7 +4750,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Xenomorph",
+    "character": "Xenomorph",
     "icon": "/loadout/addon/crew-headset.webp",
     "slug": "crew-headset",
     "name": {
@@ -4763,7 +4763,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Xenomorph",
+    "character": "Xenomorph",
     "icon": "/loadout/addon/lambert-s-star-map.webp",
     "slug": "lambert-s-star-map",
     "name": {
@@ -4776,7 +4776,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Xenomorph",
+    "character": "Xenomorph",
     "icon": "/loadout/addon/light-wand.webp",
     "slug": "light-wand",
     "name": {
@@ -4789,7 +4789,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Xenomorph",
+    "character": "Xenomorph",
     "icon": "/loadout/addon/emergency-helmet.webp",
     "slug": "emergency-helmet",
     "name": {
@@ -4802,7 +4802,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Xenomorph",
+    "character": "Xenomorph",
     "icon": "/loadout/addon/kane-s-helmet.webp",
     "slug": "kane-s-helmet",
     "name": {
@@ -4815,7 +4815,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Xenomorph",
+    "character": "Xenomorph",
     "icon": "/loadout/addon/moulted-skin.webp",
     "slug": "moulted-skin",
     "name": {
@@ -4828,7 +4828,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Xenomorph",
+    "character": "Xenomorph",
     "icon": "/loadout/addon/multipurpose-hatchet.webp",
     "slug": "multipurpose-hatchet",
     "name": {
@@ -4841,7 +4841,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Xenomorph",
+    "character": "Xenomorph",
     "icon": "/loadout/addon/parker-s-headband.webp",
     "slug": "parker-s-headband",
     "name": {
@@ -4854,7 +4854,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Xenomorph",
+    "character": "Xenomorph",
     "icon": "/loadout/addon/cat-carrier.webp",
     "slug": "cat-carrier",
     "name": {
@@ -4867,7 +4867,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Xenomorph",
+    "character": "Xenomorph",
     "icon": "/loadout/addon/harpoon-gun.webp",
     "slug": "harpoon-gun",
     "name": {
@@ -4880,7 +4880,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Xenomorph",
+    "character": "Xenomorph",
     "icon": "/loadout/addon/self-destruct-bolt.webp",
     "slug": "self-destruct-bolt",
     "name": {
@@ -4893,7 +4893,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Xenomorph",
+    "character": "Xenomorph",
     "icon": "/loadout/addon/semiotic-keyboard.webp",
     "slug": "semiotic-keyboard",
     "name": {
@@ -4906,7 +4906,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Xenomorph",
+    "character": "Xenomorph",
     "icon": "/loadout/addon/acidic-blood.webp",
     "slug": "acidic-blood",
     "name": {
@@ -4919,7 +4919,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Xenomorph",
+    "character": "Xenomorph",
     "icon": "/loadout/addon/improvised-cattle-prod.webp",
     "slug": "improvised-cattle-prod",
     "name": {
@@ -4932,7 +4932,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Huntress",
+    "character": "Huntress",
     "icon": "/loadout/addon/amanita-toxin.webp",
     "slug": "amanita-toxin",
     "name": {
@@ -4945,7 +4945,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Huntress",
+    "character": "Huntress",
     "icon": "/loadout/addon/bandaged-haft.webp",
     "slug": "bandaged-haft",
     "name": {
@@ -4958,7 +4958,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Huntress",
+    "character": "Huntress",
     "icon": "/loadout/addon/coarse-stone.webp",
     "slug": "coarse-stone",
     "name": {
@@ -4971,7 +4971,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Huntress",
+    "character": "Huntress",
     "icon": "/loadout/addon/yellowed-cloth.webp",
     "slug": "yellowed-cloth",
     "name": {
@@ -4984,7 +4984,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Huntress",
+    "character": "Huntress",
     "icon": "/loadout/addon/leather-loop.webp",
     "slug": "leather-loop",
     "name": {
@@ -4997,7 +4997,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Huntress",
+    "character": "Huntress",
     "icon": "/loadout/addon/manna-grass-braid.webp",
     "slug": "manna-grass-braid",
     "name": {
@@ -5010,7 +5010,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Huntress",
+    "character": "Huntress",
     "icon": "/loadout/addon/oak-haft.webp",
     "slug": "oak-haft",
     "name": {
@@ -5023,7 +5023,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Huntress",
+    "character": "Huntress",
     "icon": "/loadout/addon/shiny-pin.webp",
     "slug": "shiny-pin",
     "name": {
@@ -5036,7 +5036,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Huntress",
+    "character": "Huntress",
     "icon": "/loadout/addon/weighted-head.webp",
     "slug": "weighted-head",
     "name": {
@@ -5049,7 +5049,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Huntress",
+    "character": "Huntress",
     "icon": "/loadout/addon/deerskin-gloves.webp",
     "slug": "deerskin-gloves",
     "name": {
@@ -5062,7 +5062,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Huntress",
+    "character": "Huntress",
     "icon": "/loadout/addon/flower-babushka.webp",
     "slug": "flower-babushka",
     "name": {
@@ -5075,7 +5075,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Huntress",
+    "character": "Huntress",
     "icon": "/loadout/addon/rose-root.webp",
     "slug": "rose-root",
     "name": {
@@ -5088,7 +5088,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Huntress",
+    "character": "Huntress",
     "icon": "/loadout/addon/rusty-head.webp",
     "slug": "rusty-head",
     "name": {
@@ -5101,7 +5101,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Huntress",
+    "character": "Huntress",
     "icon": "/loadout/addon/venomous-concoction.webp",
     "slug": "venomous-concoction",
     "name": {
@@ -5114,7 +5114,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Huntress",
+    "character": "Huntress",
     "icon": "/loadout/addon/begrimed-head.webp",
     "slug": "begrimed-head",
     "name": {
@@ -5127,7 +5127,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Huntress",
+    "character": "Huntress",
     "icon": "/loadout/addon/glowing-concoction.webp",
     "slug": "glowing-concoction",
     "name": {
@@ -5140,7 +5140,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Huntress",
+    "character": "Huntress",
     "icon": "/loadout/addon/infantry-belt.webp",
     "slug": "infantry-belt",
     "name": {
@@ -5153,7 +5153,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Huntress",
+    "character": "Huntress",
     "icon": "/loadout/addon/wooden-fox.webp",
     "slug": "wooden-fox",
     "name": {
@@ -5166,7 +5166,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Huntress",
+    "character": "Huntress",
     "icon": "/loadout/addon/iridescent-head.webp",
     "slug": "iridescent-head",
     "name": {
@@ -5179,7 +5179,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Huntress",
+    "character": "Huntress",
     "icon": "/loadout/addon/soldier-s-puttee.webp",
     "slug": "soldier-s-puttee",
     "name": {
@@ -5192,7 +5192,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Pig",
+    "character": "Pig",
     "icon": "/loadout/addon/combat-straps.webp",
     "slug": "combat-straps",
     "name": {
@@ -5205,7 +5205,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Pig",
+    "character": "Pig",
     "icon": "/loadout/addon/interlocking-razor.webp",
     "slug": "interlocking-razor",
     "name": {
@@ -5218,7 +5218,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Pig",
+    "character": "Pig",
     "icon": "/loadout/addon/john-s-medical-file.webp",
     "slug": "john-s-medical-file",
     "name": {
@@ -5231,7 +5231,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Pig",
+    "character": "Pig",
     "icon": "/loadout/addon/shattered-syringe.webp",
     "slug": "shattered-syringe",
     "name": {
@@ -5244,7 +5244,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Pig",
+    "character": "Pig",
     "icon": "/loadout/addon/face-mask.webp",
     "slug": "face-mask",
     "name": {
@@ -5257,7 +5257,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Pig",
+    "character": "Pig",
     "icon": "/loadout/addon/last-will.webp",
     "slug": "last-will",
     "name": {
@@ -5270,7 +5270,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Pig",
+    "character": "Pig",
     "icon": "/loadout/addon/razor-wires.webp",
     "slug": "razor-wires",
     "name": {
@@ -5283,7 +5283,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Pig",
+    "character": "Pig",
     "icon": "/loadout/addon/utility-blades.webp",
     "slug": "utility-blades",
     "name": {
@@ -5296,7 +5296,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Pig",
+    "character": "Pig",
     "icon": "/loadout/addon/workshop-grease.webp",
     "slug": "workshop-grease",
     "name": {
@@ -5309,7 +5309,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Pig",
+    "character": "Pig",
     "icon": "/loadout/addon/bag-of-gears.webp",
     "slug": "bag-of-gears",
     "name": {
@@ -5322,7 +5322,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Pig",
+    "character": "Pig",
     "icon": "/loadout/addon/jigsaw-s-annotated-plan.webp",
     "slug": "jigsaw-s-annotated-plan",
     "name": {
@@ -5335,7 +5335,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Pig",
+    "character": "Pig",
     "icon": "/loadout/addon/rules-set-no-2.webp",
     "slug": "rules-set-no-2",
     "name": {
@@ -5348,7 +5348,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Pig",
+    "character": "Pig",
     "icon": "/loadout/addon/rusty-attachments.webp",
     "slug": "rusty-attachments",
     "name": {
@@ -5361,7 +5361,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Pig",
+    "character": "Pig",
     "icon": "/loadout/addon/slow-release-toxin.webp",
     "slug": "slow-release-toxin",
     "name": {
@@ -5374,7 +5374,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Pig",
+    "character": "Pig",
     "icon": "/loadout/addon/amanda-s-secret.webp",
     "slug": "amanda-s-secret",
     "name": {
@@ -5387,7 +5387,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Pig",
+    "character": "Pig",
     "icon": "/loadout/addon/crate-of-gears.webp",
     "slug": "crate-of-gears",
     "name": {
@@ -5400,7 +5400,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Pig",
+    "character": "Pig",
     "icon": "/loadout/addon/jigsaw-s-sketch.webp",
     "slug": "jigsaw-s-sketch",
     "name": {
@@ -5413,7 +5413,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Pig",
+    "character": "Pig",
     "icon": "/loadout/addon/tampered-timer.webp",
     "slug": "tampered-timer",
     "name": {
@@ -5426,7 +5426,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Pig",
+    "character": "Pig",
     "icon": "/loadout/addon/amanda-s-letter.webp",
     "slug": "amanda-s-letter",
     "name": {
@@ -5439,7 +5439,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Pig",
+    "character": "Pig",
     "icon": "/loadout/addon/video-tape.webp",
     "slug": "video-tape",
     "name": {
@@ -5452,7 +5452,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Ghost Face",
+    "character": "Ghost Face",
     "icon": "/loadout/addon/philly.webp",
     "slug": "philly",
     "name": {
@@ -5465,7 +5465,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Ghost Face",
+    "character": "Ghost Face",
     "icon": "/loadout/addon/cheap-cologne.webp",
     "slug": "cheap-cologne",
     "name": {
@@ -5478,7 +5478,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Ghost Face",
+    "character": "Ghost Face",
     "icon": "/loadout/addon/headline-cut-outs.webp",
     "slug": "headline-cut-outs",
     "name": {
@@ -5491,7 +5491,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Ghost Face",
+    "character": "Ghost Face",
     "icon": "/loadout/addon/walleye-s-matchbook.webp",
     "slug": "walleye-s-matchbook",
     "name": {
@@ -5504,7 +5504,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Ghost Face",
+    "character": "Ghost Face",
     "icon": "/loadout/addon/cinch-straps.webp",
     "slug": "cinch-straps",
     "name": {
@@ -5517,7 +5517,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Ghost Face",
+    "character": "Ghost Face",
     "icon": "/loadout/addon/marked-map.webp",
     "slug": "marked-map",
     "name": {
@@ -5530,7 +5530,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Ghost Face",
+    "character": "Ghost Face",
     "icon": "/loadout/addon/olsen-s-address-book.webp",
     "slug": "olsen-s-address-book",
     "name": {
@@ -5543,7 +5543,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Ghost Face",
+    "character": "Ghost Face",
     "icon": "/loadout/addon/olsen-s-journal.webp",
     "slug": "olsen-s-journal",
     "name": {
@@ -5556,7 +5556,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Ghost Face",
+    "character": "Ghost Face",
     "icon": "/loadout/addon/telephoto-lens.webp",
     "slug": "telephoto-lens",
     "name": {
@@ -5569,7 +5569,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Ghost Face",
+    "character": "Ghost Face",
     "icon": "/loadout/addon/chewed-pen.webp",
     "slug": "chewed-pen",
     "name": {
@@ -5582,7 +5582,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Ghost Face",
+    "character": "Ghost Face",
     "icon": "/loadout/addon/knife-belt-clip.webp",
     "slug": "knife-belt-clip",
     "name": {
@@ -5595,7 +5595,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Ghost Face",
+    "character": "Ghost Face",
     "icon": "/loadout/addon/lasting-perfume.webp",
     "slug": "lasting-perfume",
     "name": {
@@ -5608,7 +5608,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Ghost Face",
+    "character": "Ghost Face",
     "icon": "/loadout/addon/leather-knife-sheath.webp",
     "slug": "leather-knife-sheath",
     "name": {
@@ -5621,7 +5621,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Ghost Face",
+    "character": "Ghost Face",
     "icon": "/loadout/addon/olsen-s-wallet.webp",
     "slug": "olsen-s-wallet",
     "name": {
@@ -5634,7 +5634,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Ghost Face",
+    "character": "Ghost Face",
     "icon": "/loadout/addon/driver-s-license.webp",
     "slug": "driver-s-license",
     "name": {
@@ -5647,7 +5647,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Ghost Face",
+    "character": "Ghost Face",
     "icon": "/loadout/addon/drop-leg-knife-sheath.webp",
     "slug": "drop-leg-knife-sheath",
     "name": {
@@ -5660,7 +5660,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Ghost Face",
+    "character": "Ghost Face",
     "icon": "/loadout/addon/night-vision-monocular.webp",
     "slug": "night-vision-monocular",
     "name": {
@@ -5673,7 +5673,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Ghost Face",
+    "character": "Ghost Face",
     "icon": "/loadout/addon/victim-s-detailed-routine.webp",
     "slug": "victim-s-detailed-routine",
     "name": {
@@ -5686,7 +5686,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Ghost Face",
+    "character": "Ghost Face",
     "icon": "/loadout/addon/ghost-face-caught-on-tape.webp",
     "slug": "ghost-face-caught-on-tape",
     "name": {
@@ -5699,7 +5699,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Ghost Face",
+    "character": "Ghost Face",
     "icon": "/loadout/addon/outdoor-security-camera.webp",
     "slug": "outdoor-security-camera",
     "name": {
@@ -5712,7 +5712,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Demogorgon",
+    "character": "Demogorgon",
     "icon": "/loadout/addon/black-heart.webp",
     "slug": "black-heart",
     "name": {
@@ -5725,7 +5725,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Demogorgon",
+    "character": "Demogorgon",
     "icon": "/loadout/addon/rat-liver.webp",
     "slug": "rat-liver",
     "name": {
@@ -5738,7 +5738,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Demogorgon",
+    "character": "Demogorgon",
     "icon": "/loadout/addon/rat-tail.webp",
     "slug": "rat-tail",
     "name": {
@@ -5751,7 +5751,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Demogorgon",
+    "character": "Demogorgon",
     "icon": "/loadout/addon/rotten-pumpkin.webp",
     "slug": "rotten-pumpkin",
     "name": {
@@ -5764,7 +5764,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Demogorgon",
+    "character": "Demogorgon",
     "icon": "/loadout/addon/barb-s-glasses.webp",
     "slug": "barb-s-glasses",
     "name": {
@@ -5777,7 +5777,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Demogorgon",
+    "character": "Demogorgon",
     "icon": "/loadout/addon/mews-guts.webp",
     "slug": "mews-guts",
     "name": {
@@ -5790,7 +5790,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Demogorgon",
+    "character": "Demogorgon",
     "icon": "/loadout/addon/rotten-green-tripe.webp",
     "slug": "rotten-green-tripe",
     "name": {
@@ -5803,7 +5803,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Demogorgon",
+    "character": "Demogorgon",
     "icon": "/loadout/addon/sticky-lining.webp",
     "slug": "sticky-lining",
     "name": {
@@ -5816,7 +5816,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Demogorgon",
+    "character": "Demogorgon",
     "icon": "/loadout/addon/viscous-webbing.webp",
     "slug": "viscous-webbing",
     "name": {
@@ -5829,7 +5829,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Demogorgon",
+    "character": "Demogorgon",
     "icon": "/loadout/addon/brass-case-lighter.webp",
     "slug": "brass-case-lighter",
     "name": {
@@ -5842,7 +5842,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Demogorgon",
+    "character": "Demogorgon",
     "icon": "/loadout/addon/deer-lung.webp",
     "slug": "deer-lung",
     "name": {
@@ -5855,7 +5855,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Demogorgon",
+    "character": "Demogorgon",
     "icon": "/loadout/addon/eleven-s-soda.webp",
     "slug": "eleven-s-soda",
     "name": {
@@ -5868,7 +5868,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Demogorgon",
+    "character": "Demogorgon",
     "icon": "/loadout/addon/thorny-vines.webp",
     "slug": "thorny-vines",
     "name": {
@@ -5881,7 +5881,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Demogorgon",
+    "character": "Demogorgon",
     "icon": "/loadout/addon/violet-waxcap.webp",
     "slug": "violet-waxcap",
     "name": {
@@ -5894,7 +5894,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Demogorgon",
+    "character": "Demogorgon",
     "icon": "/loadout/addon/lifeguard-whistle.webp",
     "slug": "lifeguard-whistle",
     "name": {
@@ -5907,7 +5907,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Demogorgon",
+    "character": "Demogorgon",
     "icon": "/loadout/addon/unknown-egg.webp",
     "slug": "unknown-egg",
     "name": {
@@ -5920,7 +5920,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Demogorgon",
+    "character": "Demogorgon",
     "icon": "/loadout/addon/upside-down-resin.webp",
     "slug": "upside-down-resin",
     "name": {
@@ -5933,7 +5933,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Demogorgon",
+    "character": "Demogorgon",
     "icon": "/loadout/addon/vermilion-webcap.webp",
     "slug": "vermilion-webcap",
     "name": {
@@ -5946,7 +5946,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Demogorgon",
+    "character": "Demogorgon",
     "icon": "/loadout/addon/leprose-lichen.webp",
     "slug": "leprose-lichen",
     "name": {
@@ -5959,7 +5959,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Demogorgon",
+    "character": "Demogorgon",
     "icon": "/loadout/addon/red-moss.webp",
     "slug": "red-moss",
     "name": {
@@ -5972,7 +5972,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Good Guy",
+    "character": "Good Guy",
     "icon": "/loadout/addon/doll-eyes.webp",
     "slug": "doll-eyes",
     "name": {
@@ -5985,7 +5985,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Good Guy",
+    "character": "Good Guy",
     "icon": "/loadout/addon/good-guy-box.webp",
     "slug": "good-guy-box",
     "name": {
@@ -5998,7 +5998,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Good Guy",
+    "character": "Good Guy",
     "icon": "/loadout/addon/strobing-light.webp",
     "slug": "strobing-light",
     "name": {
@@ -6011,7 +6011,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Good Guy",
+    "character": "Good Guy",
     "icon": "/loadout/addon/tiny-scalpel.webp",
     "slug": "tiny-scalpel",
     "name": {
@@ -6024,7 +6024,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Good Guy",
+    "character": "Good Guy",
     "icon": "/loadout/addon/automatic-screwdriver.webp",
     "slug": "automatic-screwdriver",
     "name": {
@@ -6037,7 +6037,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Good Guy",
+    "character": "Good Guy",
     "icon": "/loadout/addon/electric-carving-knife.webp",
     "slug": "electric-carving-knife",
     "name": {
@@ -6050,7 +6050,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Good Guy",
+    "character": "Good Guy",
     "icon": "/loadout/addon/hair-spray-and-candle.webp",
     "slug": "hair-spray-and-candle",
     "name": {
@@ -6063,7 +6063,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Good Guy",
+    "character": "Good Guy",
     "icon": "/loadout/addon/jump-rope.webp",
     "slug": "jump-rope",
     "name": {
@@ -6076,7 +6076,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Good Guy",
+    "character": "Good Guy",
     "icon": "/loadout/addon/power-drill.webp",
     "slug": "power-drill",
     "name": {
@@ -6089,7 +6089,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Good Guy",
+    "character": "Good Guy",
     "icon": "/loadout/addon/portable-tv.webp",
     "slug": "portable-tv",
     "name": {
@@ -6102,7 +6102,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Good Guy",
+    "character": "Good Guy",
     "icon": "/loadout/addon/rat-poison.webp",
     "slug": "rat-poison",
     "name": {
@@ -6115,7 +6115,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Good Guy",
+    "character": "Good Guy",
     "icon": "/loadout/addon/running-shoes.webp",
     "slug": "running-shoes",
     "name": {
@@ -6128,7 +6128,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Good Guy",
+    "character": "Good Guy",
     "icon": "/loadout/addon/silk-pillow.webp",
     "slug": "silk-pillow",
     "name": {
@@ -6141,7 +6141,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Good Guy",
+    "character": "Good Guy",
     "icon": "/loadout/addon/yardstick.webp",
     "slug": "yardstick",
     "name": {
@@ -6154,7 +6154,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Good Guy",
+    "character": "Good Guy",
     "icon": "/loadout/addon/mirror-shards.webp",
     "slug": "mirror-shards",
     "name": {
@@ -6167,7 +6167,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Good Guy",
+    "character": "Good Guy",
     "icon": "/loadout/addon/pile-of-nails.webp",
     "slug": "pile-of-nails",
     "name": {
@@ -6180,7 +6180,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Good Guy",
+    "character": "Good Guy",
     "icon": "/loadout/addon/plastic-bag.webp",
     "slug": "plastic-bag",
     "name": {
@@ -6193,7 +6193,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Good Guy",
+    "character": "Good Guy",
     "icon": "/loadout/addon/straight-razor.webp",
     "slug": "straight-razor",
     "name": {
@@ -6206,7 +6206,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Good Guy",
+    "character": "Good Guy",
     "icon": "/loadout/addon/hard-hat.webp",
     "slug": "hard-hat",
     "name": {
@@ -6219,7 +6219,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Good Guy",
+    "character": "Good Guy",
     "icon": "/loadout/addon/iridescent-amulet.webp",
     "slug": "iridescent-amulet",
     "name": {
@@ -6232,7 +6232,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Singularity",
+    "character": "Singularity",
     "icon": "/loadout/addon/broken-security-key.webp",
     "slug": "broken-security-key",
     "name": {
@@ -6245,7 +6245,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Singularity",
+    "character": "Singularity",
     "icon": "/loadout/addon/diagnostic-tool-repair.webp",
     "slug": "diagnostic-tool-repair",
     "name": {
@@ -6258,7 +6258,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Singularity",
+    "character": "Singularity",
     "icon": "/loadout/addon/heavy-water.webp",
     "slug": "heavy-water",
     "name": {
@@ -6271,7 +6271,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Singularity",
+    "character": "Singularity",
     "icon": "/loadout/addon/nutritional-slurry.webp",
     "slug": "nutritional-slurry",
     "name": {
@@ -6284,7 +6284,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Singularity",
+    "character": "Singularity",
     "icon": "/loadout/addon/android-arm.webp",
     "slug": "android-arm",
     "name": {
@@ -6297,7 +6297,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Singularity",
+    "character": "Singularity",
     "icon": "/loadout/addon/cremated-remains.webp",
     "slug": "cremated-remains",
     "name": {
@@ -6310,7 +6310,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Singularity",
+    "character": "Singularity",
     "icon": "/loadout/addon/cryo-gel.webp",
     "slug": "cryo-gel",
     "name": {
@@ -6323,7 +6323,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Singularity",
+    "character": "Singularity",
     "icon": "/loadout/addon/kid-s-ball-glove.webp",
     "slug": "kid-s-ball-glove",
     "name": {
@@ -6336,7 +6336,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Singularity",
+    "character": "Singularity",
     "icon": "/loadout/addon/ultrasonic-sensor.webp",
     "slug": "ultrasonic-sensor",
     "name": {
@@ -6349,7 +6349,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Singularity",
+    "character": "Singularity",
     "icon": "/loadout/addon/hologram-generator.webp",
     "slug": "hologram-generator",
     "name": {
@@ -6362,7 +6362,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Singularity",
+    "character": "Singularity",
     "icon": "/loadout/addon/hyperawareness-spray.webp",
     "slug": "hyperawareness-spray",
     "name": {
@@ -6375,7 +6375,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Singularity",
+    "character": "Singularity",
     "icon": "/loadout/addon/live-wires.webp",
     "slug": "live-wires",
     "name": {
@@ -6388,7 +6388,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Singularity",
+    "character": "Singularity",
     "icon": "/loadout/addon/nanomachine-gel.webp",
     "slug": "nanomachine-gel",
     "name": {
@@ -6401,7 +6401,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Singularity",
+    "character": "Singularity",
     "icon": "/loadout/addon/spent-oxygen-tank.webp",
     "slug": "spent-oxygen-tank",
     "name": {
@@ -6414,7 +6414,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Singularity",
+    "character": "Singularity",
     "icon": "/loadout/addon/crew-manifest.webp",
     "slug": "crew-manifest",
     "name": {
@@ -6427,7 +6427,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Singularity",
+    "character": "Singularity",
     "icon": "/loadout/addon/diagnostic-tool-construction.webp",
     "slug": "diagnostic-tool-construction",
     "name": {
@@ -6440,7 +6440,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Singularity",
+    "character": "Singularity",
     "icon": "/loadout/addon/foreign-plant-fibres.webp",
     "slug": "foreign-plant-fibres",
     "name": {
@@ -6453,7 +6453,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Singularity",
+    "character": "Singularity",
     "icon": "/loadout/addon/soma-family-photo.webp",
     "slug": "soma-family-photo",
     "name": {
@@ -6466,7 +6466,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Singularity",
+    "character": "Singularity",
     "icon": "/loadout/addon/denied-requisition-form.webp",
     "slug": "denied-requisition-form",
     "name": {
@@ -6479,7 +6479,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Singularity",
+    "character": "Singularity",
     "icon": "/loadout/addon/iridescent-crystal-shard.webp",
     "slug": "iridescent-crystal-shard",
     "name": {
@@ -6492,7 +6492,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Deathslinger",
+    "character": "Deathslinger",
     "icon": "/loadout/addon/modified-ammo-belt.webp",
     "slug": "modified-ammo-belt",
     "name": {
@@ -6505,7 +6505,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Deathslinger",
+    "character": "Deathslinger",
     "icon": "/loadout/addon/rickety-chain.webp",
     "slug": "rickety-chain",
     "name": {
@@ -6518,7 +6518,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Deathslinger",
+    "character": "Deathslinger",
     "icon": "/loadout/addon/snake-oil.webp",
     "slug": "snake-oil",
     "name": {
@@ -6531,7 +6531,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Deathslinger",
+    "character": "Deathslinger",
     "icon": "/loadout/addon/spit-polish-rag.webp",
     "slug": "spit-polish-rag",
     "name": {
@@ -6544,7 +6544,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Deathslinger",
+    "character": "Deathslinger",
     "icon": "/loadout/addon/chewing-tobacco.webp",
     "slug": "chewing-tobacco",
     "name": {
@@ -6557,7 +6557,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Deathslinger",
+    "character": "Deathslinger",
     "icon": "/loadout/addon/jaw-smasher.webp",
     "slug": "jaw-smasher",
     "name": {
@@ -6570,7 +6570,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Deathslinger",
+    "character": "Deathslinger",
     "icon": "/loadout/addon/marshal-s-badge.webp",
     "slug": "marshal-s-badge",
     "name": {
@@ -6583,7 +6583,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Deathslinger",
+    "character": "Deathslinger",
     "icon": "/loadout/addon/poison-oak-leaves.webp",
     "slug": "poison-oak-leaves",
     "name": {
@@ -6596,7 +6596,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Deathslinger",
+    "character": "Deathslinger",
     "icon": "/loadout/addon/rusted-spike.webp",
     "slug": "rusted-spike",
     "name": {
@@ -6609,7 +6609,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Deathslinger",
+    "character": "Deathslinger",
     "icon": "/loadout/addon/bayshore-s-gold-tooth.webp",
     "slug": "bayshore-s-gold-tooth",
     "name": {
@@ -6622,7 +6622,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Deathslinger",
+    "character": "Deathslinger",
     "icon": "/loadout/addon/honey-locust-thorn.webp",
     "slug": "honey-locust-thorn",
     "name": {
@@ -6635,7 +6635,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Deathslinger",
+    "character": "Deathslinger",
     "icon": "/loadout/addon/tin-oil-can.webp",
     "slug": "tin-oil-can",
     "name": {
@@ -6648,7 +6648,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Deathslinger",
+    "character": "Deathslinger",
     "icon": "/loadout/addon/wanted-poster.webp",
     "slug": "wanted-poster",
     "name": {
@@ -6661,7 +6661,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Deathslinger",
+    "character": "Deathslinger",
     "icon": "/loadout/addon/warden-s-keys.webp",
     "slug": "warden-s-keys",
     "name": {
@@ -6674,7 +6674,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Deathslinger",
+    "character": "Deathslinger",
     "icon": "/loadout/addon/barbed-wire.webp",
     "slug": "barbed-wire",
     "name": {
@@ -6687,7 +6687,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Deathslinger",
+    "character": "Deathslinger",
     "icon": "/loadout/addon/bayshore-s-cigar.webp",
     "slug": "bayshore-s-cigar",
     "name": {
@@ -6700,7 +6700,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Deathslinger",
+    "character": "Deathslinger",
     "icon": "/loadout/addon/gold-creek-whiskey.webp",
     "slug": "gold-creek-whiskey",
     "name": {
@@ -6713,7 +6713,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Deathslinger",
+    "character": "Deathslinger",
     "icon": "/loadout/addon/prison-chain.webp",
     "slug": "prison-chain",
     "name": {
@@ -6726,7 +6726,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Deathslinger",
+    "character": "Deathslinger",
     "icon": "/loadout/addon/hellshire-iron.webp",
     "slug": "hellshire-iron",
     "name": {
@@ -6739,7 +6739,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Deathslinger",
+    "character": "Deathslinger",
     "icon": "/loadout/addon/iridescent-coin.webp",
     "slug": "iridescent-coin",
     "name": {
@@ -6752,7 +6752,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Dredge",
+    "character": "Dredge",
     "icon": "/loadout/addon/caffeine-tablets.webp",
     "slug": "caffeine-tablets",
     "name": {
@@ -6765,7 +6765,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Dredge",
+    "character": "Dredge",
     "icon": "/loadout/addon/follower-s-cowl.webp",
     "slug": "follower-s-cowl",
     "name": {
@@ -6778,7 +6778,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Dredge",
+    "character": "Dredge",
     "icon": "/loadout/addon/mortar-and-pestle.webp",
     "slug": "mortar-and-pestle",
     "name": {
@@ -6791,7 +6791,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Dredge",
+    "character": "Dredge",
     "icon": "/loadout/addon/wooden-plank.webp",
     "slug": "wooden-plank",
     "name": {
@@ -6804,7 +6804,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Dredge",
+    "character": "Dredge",
     "icon": "/loadout/addon/air-freshener.webp",
     "slug": "air-freshener",
     "name": {
@@ -6817,7 +6817,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Dredge",
+    "character": "Dredge",
     "icon": "/loadout/addon/burnt-letters.webp",
     "slug": "burnt-letters",
     "name": {
@@ -6830,7 +6830,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Dredge",
+    "character": "Dredge",
     "icon": "/loadout/addon/fallen-shingle.webp",
     "slug": "fallen-shingle",
     "name": {
@@ -6843,7 +6843,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Dredge",
+    "character": "Dredge",
     "icon": "/loadout/addon/haddie-s-calendar.webp",
     "slug": "haddie-s-calendar",
     "name": {
@@ -6856,7 +6856,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Dredge",
+    "character": "Dredge",
     "icon": "/loadout/addon/malthinker-s-skull.webp",
     "slug": "malthinker-s-skull",
     "name": {
@@ -6869,7 +6869,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Dredge",
+    "character": "Dredge",
     "icon": "/loadout/addon/broken-doll.webp",
     "slug": "broken-doll",
     "name": {
@@ -6882,7 +6882,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Dredge",
+    "character": "Dredge",
     "icon": "/loadout/addon/destroyed-pillow.webp",
     "slug": "destroyed-pillow",
     "name": {
@@ -6895,7 +6895,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Dredge",
+    "character": "Dredge",
     "icon": "/loadout/addon/ottomarian-writing.webp",
     "slug": "ottomarian-writing",
     "name": {
@@ -6908,7 +6908,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Dredge",
+    "character": "Dredge",
     "icon": "/loadout/addon/war-helmet.webp",
     "slug": "war-helmet",
     "name": {
@@ -6921,7 +6921,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Dredge",
+    "character": "Dredge",
     "icon": "/loadout/addon/worry-stone.webp",
     "slug": "worry-stone",
     "name": {
@@ -6934,7 +6934,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Dredge",
+    "character": "Dredge",
     "icon": "/loadout/addon/boat-key.webp",
     "slug": "boat-key",
     "name": {
@@ -6947,7 +6947,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Dredge",
+    "character": "Dredge",
     "icon": "/loadout/addon/field-recorder.webp",
     "slug": "field-recorder",
     "name": {
@@ -6960,7 +6960,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Dredge",
+    "character": "Dredge",
     "icon": "/loadout/addon/lavalier-microphone.webp",
     "slug": "lavalier-microphone",
     "name": {
@@ -6973,7 +6973,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Dredge",
+    "character": "Dredge",
     "icon": "/loadout/addon/tilling-blade.webp",
     "slug": "tilling-blade",
     "name": {
@@ -6986,7 +6986,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Dredge",
+    "character": "Dredge",
     "icon": "/loadout/addon/iridescent-wooden-plank.webp",
     "slug": "iridescent-wooden-plank",
     "name": {
@@ -6999,7 +6999,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Dredge",
+    "character": "Dredge",
     "icon": "/loadout/addon/sacrificial-knife.webp",
     "slug": "sacrificial-knife",
     "name": {
@@ -7012,7 +7012,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Executioner",
+    "character": "Executioner",
     "icon": "/loadout/addon/black-strap.webp",
     "slug": "black-strap",
     "name": {
@@ -7025,7 +7025,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Executioner",
+    "character": "Executioner",
     "icon": "/loadout/addon/copper-ring.webp",
     "slug": "copper-ring",
     "name": {
@@ -7038,7 +7038,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Executioner",
+    "character": "Executioner",
     "icon": "/loadout/addon/dead-butterfly.webp",
     "slug": "dead-butterfly",
     "name": {
@@ -7051,7 +7051,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Executioner",
+    "character": "Executioner",
     "icon": "/loadout/addon/lead-ring.webp",
     "slug": "lead-ring",
     "name": {
@@ -7064,7 +7064,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Executioner",
+    "character": "Executioner",
     "icon": "/loadout/addon/cinderella-music-box.webp",
     "slug": "cinderella-music-box",
     "name": {
@@ -7077,7 +7077,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Executioner",
+    "character": "Executioner",
     "icon": "/loadout/addon/forgotten-videotape.webp",
     "slug": "forgotten-videotape",
     "name": {
@@ -7090,7 +7090,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Executioner",
+    "character": "Executioner",
     "icon": "/loadout/addon/leopard-print-fabric.webp",
     "slug": "leopard-print-fabric",
     "name": {
@@ -7103,7 +7103,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Executioner",
+    "character": "Executioner",
     "icon": "/loadout/addon/spearhead.webp",
     "slug": "spearhead",
     "name": {
@@ -7116,7 +7116,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Executioner",
+    "character": "Executioner",
     "icon": "/loadout/addon/wax-doll.webp",
     "slug": "wax-doll",
     "name": {
@@ -7129,7 +7129,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Executioner",
+    "character": "Executioner",
     "icon": "/loadout/addon/burning-man-painting.webp",
     "slug": "burning-man-painting",
     "name": {
@@ -7142,7 +7142,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Executioner",
+    "character": "Executioner",
     "icon": "/loadout/addon/mannequin-foot.webp",
     "slug": "mannequin-foot",
     "name": {
@@ -7155,7 +7155,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Executioner",
+    "character": "Executioner",
     "icon": "/loadout/addon/misty-day-remains-of-judgment.webp",
     "slug": "misty-day-remains-of-judgment",
     "name": {
@@ -7168,7 +7168,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Executioner",
+    "character": "Executioner",
     "icon": "/loadout/addon/tablet-of-the-oppressor.webp",
     "slug": "tablet-of-the-oppressor",
     "name": {
@@ -7181,7 +7181,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Executioner",
+    "character": "Executioner",
     "icon": "/loadout/addon/valtiel-sect-photograph.webp",
     "slug": "valtiel-sect-photograph",
     "name": {
@@ -7194,7 +7194,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Executioner",
+    "character": "Executioner",
     "icon": "/loadout/addon/crimson-ceremony-book.webp",
     "slug": "crimson-ceremony-book",
     "name": {
@@ -7207,7 +7207,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Executioner",
+    "character": "Executioner",
     "icon": "/loadout/addon/lost-memories-book.webp",
     "slug": "lost-memories-book",
     "name": {
@@ -7220,7 +7220,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Executioner",
+    "character": "Executioner",
     "icon": "/loadout/addon/rust-coloured-egg.webp",
     "slug": "rust-coloured-egg",
     "name": {
@@ -7233,7 +7233,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Executioner",
+    "character": "Executioner",
     "icon": "/loadout/addon/scarlet-egg.webp",
     "slug": "scarlet-egg",
     "name": {
@@ -7246,7 +7246,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Executioner",
+    "character": "Executioner",
     "icon": "/loadout/addon/iridescent-seal-of-metatron.webp",
     "slug": "iridescent-seal-of-metatron",
     "name": {
@@ -7259,7 +7259,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Executioner",
+    "character": "Executioner",
     "icon": "/loadout/addon/obsidian-goblet.webp",
     "slug": "obsidian-goblet",
     "name": {
@@ -7272,7 +7272,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Trickster",
+    "character": "Trickster",
     "icon": "/loadout/addon/inferno-wires.webp",
     "slug": "inferno-wires",
     "name": {
@@ -7285,7 +7285,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Trickster",
+    "character": "Trickster",
     "icon": "/loadout/addon/killing-part-chords.webp",
     "slug": "killing-part-chords",
     "name": {
@@ -7298,7 +7298,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Trickster",
+    "character": "Trickster",
     "icon": "/loadout/addon/memento-blades.webp",
     "slug": "memento-blades",
     "name": {
@@ -7311,7 +7311,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Trickster",
+    "character": "Trickster",
     "icon": "/loadout/addon/trick-pouch.webp",
     "slug": "trick-pouch",
     "name": {
@@ -7324,7 +7324,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Trickster",
+    "character": "Trickster",
     "icon": "/loadout/addon/caged-heart-shoes.webp",
     "slug": "caged-heart-shoes",
     "name": {
@@ -7337,7 +7337,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Trickster",
+    "character": "Trickster",
     "icon": "/loadout/addon/ji-woon-s-autograph.webp",
     "slug": "ji-woon-s-autograph",
     "name": {
@@ -7350,7 +7350,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Trickster",
+    "character": "Trickster",
     "icon": "/loadout/addon/lucky-blade.webp",
     "slug": "lucky-blade",
     "name": {
@@ -7363,7 +7363,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Trickster",
+    "character": "Trickster",
     "icon": "/loadout/addon/on-target-single.webp",
     "slug": "on-target-single",
     "name": {
@@ -7376,7 +7376,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Trickster",
+    "character": "Trickster",
     "icon": "/loadout/addon/tequila-moonrock.webp",
     "slug": "tequila-moonrock",
     "name": {
@@ -7389,7 +7389,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Trickster",
+    "character": "Trickster",
     "icon": "/loadout/addon/bloody-boa.webp",
     "slug": "bloody-boa",
     "name": {
@@ -7402,7 +7402,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Trickster",
+    "character": "Trickster",
     "icon": "/loadout/addon/fizz-spin-soda.webp",
     "slug": "fizz-spin-soda",
     "name": {
@@ -7415,7 +7415,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Trickster",
+    "character": "Trickster",
     "icon": "/loadout/addon/melodious-murder.webp",
     "slug": "melodious-murder",
     "name": {
@@ -7428,7 +7428,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Trickster",
+    "character": "Trickster",
     "icon": "/loadout/addon/ripper-brace.webp",
     "slug": "ripper-brace",
     "name": {
@@ -7441,7 +7441,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Trickster",
+    "character": "Trickster",
     "icon": "/loadout/addon/waiting-for-you-watch.webp",
     "slug": "waiting-for-you-watch",
     "name": {
@@ -7454,7 +7454,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Trickster",
+    "character": "Trickster",
     "icon": "/loadout/addon/cut-thru-u-single.webp",
     "slug": "cut-thru-u-single",
     "name": {
@@ -7467,7 +7467,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Trickster",
+    "character": "Trickster",
     "icon": "/loadout/addon/diamond-cufflinks.webp",
     "slug": "diamond-cufflinks",
     "name": {
@@ -7480,7 +7480,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Trickster",
+    "character": "Trickster",
     "icon": "/loadout/addon/edge-of-revival-album.webp",
     "slug": "edge-of-revival-album",
     "name": {
@@ -7493,7 +7493,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Trickster",
+    "character": "Trickster",
     "icon": "/loadout/addon/trick-blades.webp",
     "slug": "trick-blades",
     "name": {
@@ -7506,7 +7506,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Trickster",
+    "character": "Trickster",
     "icon": "/loadout/addon/death-throes-compilation.webp",
     "slug": "death-throes-compilation",
     "name": {
@@ -7519,7 +7519,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Trickster",
+    "character": "Trickster",
     "icon": "/loadout/addon/iridescent-photocard.webp",
     "slug": "iridescent-photocard",
     "name": {
@@ -7532,7 +7532,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nurse",
+    "character": "Nurse",
     "icon": "/loadout/addon/metal-spoon.webp",
     "slug": "metal-spoon",
     "name": {
@@ -7545,7 +7545,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nurse",
+    "character": "Nurse",
     "icon": "/loadout/addon/plaid-flannel.webp",
     "slug": "plaid-flannel",
     "name": {
@@ -7558,7 +7558,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nurse",
+    "character": "Nurse",
     "icon": "/loadout/addon/white-nit-comb.webp",
     "slug": "white-nit-comb",
     "name": {
@@ -7571,7 +7571,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nurse",
+    "character": "Nurse",
     "icon": "/loadout/addon/wooden-horse.webp",
     "slug": "wooden-horse",
     "name": {
@@ -7584,7 +7584,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nurse",
+    "character": "Nurse",
     "icon": "/loadout/addon/bad-man-keepsake.webp",
     "slug": "bad-man-keepsake",
     "name": {
@@ -7597,7 +7597,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nurse",
+    "character": "Nurse",
     "icon": "/loadout/addon/catatonic-boy-s-treasure.webp",
     "slug": "catatonic-boy-s-treasure",
     "name": {
@@ -7610,7 +7610,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nurse",
+    "character": "Nurse",
     "icon": "/loadout/addon/dark-cincture.webp",
     "slug": "dark-cincture",
     "name": {
@@ -7623,7 +7623,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nurse",
+    "character": "Nurse",
     "icon": "/loadout/addon/dull-bracelet.webp",
     "slug": "dull-bracelet",
     "name": {
@@ -7636,7 +7636,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nurse",
+    "character": "Nurse",
     "icon": "/loadout/addon/pocket-watch.webp",
     "slug": "pocket-watch",
     "name": {
@@ -7649,7 +7649,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nurse",
+    "character": "Nurse",
     "icon": "/loadout/addon/anxious-gasp.webp",
     "slug": "anxious-gasp",
     "name": {
@@ -7662,7 +7662,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nurse",
+    "character": "Nurse",
     "icon": "/loadout/addon/ataxic-respiration.webp",
     "slug": "ataxic-respiration",
     "name": {
@@ -7675,7 +7675,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nurse",
+    "character": "Nurse",
     "icon": "/loadout/addon/fragile-wheeze.webp",
     "slug": "fragile-wheeze",
     "name": {
@@ -7688,7 +7688,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nurse",
+    "character": "Nurse",
     "icon": "/loadout/addon/heavy-panting.webp",
     "slug": "heavy-panting",
     "name": {
@@ -7701,7 +7701,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nurse",
+    "character": "Nurse",
     "icon": "/loadout/addon/spasmodic-breath.webp",
     "slug": "spasmodic-breath",
     "name": {
@@ -7714,7 +7714,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nurse",
+    "character": "Nurse",
     "icon": "/loadout/addon/bad-man-s-last-breath.webp",
     "slug": "bad-man-s-last-breath",
     "name": {
@@ -7727,7 +7727,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nurse",
+    "character": "Nurse",
     "icon": "/loadout/addon/campbell-s-last-breath.webp",
     "slug": "campbell-s-last-breath",
     "name": {
@@ -7740,7 +7740,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nurse",
+    "character": "Nurse",
     "icon": "/loadout/addon/jenner-s-last-breath.webp",
     "slug": "jenner-s-last-breath",
     "name": {
@@ -7753,7 +7753,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nurse",
+    "character": "Nurse",
     "icon": "/loadout/addon/kavanagh-s-last-breath.webp",
     "slug": "kavanagh-s-last-breath",
     "name": {
@@ -7766,7 +7766,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nurse",
+    "character": "Nurse",
     "icon": "/loadout/addon/matchbox.webp",
     "slug": "matchbox",
     "name": {
@@ -7779,7 +7779,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nurse",
+    "character": "Nurse",
     "icon": "/loadout/addon/torn-bookmark.webp",
     "slug": "torn-bookmark",
     "name": {
@@ -7792,7 +7792,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Cenobite",
+    "character": "Cenobite",
     "icon": "/loadout/addon/bent-nail.webp",
     "slug": "bent-nail",
     "name": {
@@ -7805,7 +7805,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Cenobite",
+    "character": "Cenobite",
     "icon": "/loadout/addon/burning-candle.webp",
     "slug": "burning-candle",
     "name": {
@@ -7818,7 +7818,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Cenobite",
+    "character": "Cenobite",
     "icon": "/loadout/addon/leather-strip.webp",
     "slug": "leather-strip",
     "name": {
@@ -7831,7 +7831,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Cenobite",
+    "character": "Cenobite",
     "icon": "/loadout/addon/lively-crickets.webp",
     "slug": "lively-crickets",
     "name": {
@@ -7844,7 +7844,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Cenobite",
+    "character": "Cenobite",
     "icon": "/loadout/addon/flickering-television.webp",
     "slug": "flickering-television",
     "name": {
@@ -7857,7 +7857,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Cenobite",
+    "character": "Cenobite",
     "icon": "/loadout/addon/liquified-gore.webp",
     "slug": "liquified-gore",
     "name": {
@@ -7870,7 +7870,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Cenobite",
+    "character": "Cenobite",
     "icon": "/loadout/addon/skewered-rat.webp",
     "slug": "skewered-rat",
     "name": {
@@ -7883,7 +7883,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Cenobite",
+    "character": "Cenobite",
     "icon": "/loadout/addon/spoiled-meal.webp",
     "slug": "spoiled-meal",
     "name": {
@@ -7896,7 +7896,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Cenobite",
+    "character": "Cenobite",
     "icon": "/loadout/addon/wriggling-maggots.webp",
     "slug": "wriggling-maggots",
     "name": {
@@ -7909,7 +7909,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Cenobite",
+    "character": "Cenobite",
     "icon": "/loadout/addon/frank-s-heart.webp",
     "slug": "frank-s-heart",
     "name": {
@@ -7922,7 +7922,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Cenobite",
+    "character": "Cenobite",
     "icon": "/loadout/addon/larry-s-blood.webp",
     "slug": "larry-s-blood",
     "name": {
@@ -7935,7 +7935,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Cenobite",
+    "character": "Cenobite",
     "icon": "/loadout/addon/larry-s-remains.webp",
     "slug": "larry-s-remains",
     "name": {
@@ -7948,7 +7948,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Cenobite",
+    "character": "Cenobite",
     "icon": "/loadout/addon/slice-of-frank.webp",
     "slug": "slice-of-frank",
     "name": {
@@ -7961,7 +7961,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Cenobite",
+    "character": "Cenobite",
     "icon": "/loadout/addon/torture-pillar.webp",
     "slug": "torture-pillar",
     "name": {
@@ -7974,7 +7974,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Cenobite",
+    "character": "Cenobite",
     "icon": "/loadout/addon/chatterer-s-tooth.webp",
     "slug": "chatterer-s-tooth",
     "name": {
@@ -7987,7 +7987,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Cenobite",
+    "character": "Cenobite",
     "icon": "/loadout/addon/greasy-black-lens.webp",
     "slug": "greasy-black-lens",
     "name": {
@@ -8000,7 +8000,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Cenobite",
+    "character": "Cenobite",
     "icon": "/loadout/addon/impaling-wire.webp",
     "slug": "impaling-wire",
     "name": {
@@ -8013,7 +8013,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Cenobite",
+    "character": "Cenobite",
     "icon": "/loadout/addon/original-pain.webp",
     "slug": "original-pain",
     "name": {
@@ -8026,7 +8026,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Cenobite",
+    "character": "Cenobite",
     "icon": "/loadout/addon/engineer-s-fang.webp",
     "slug": "engineer-s-fang",
     "name": {
@@ -8039,7 +8039,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Cenobite",
+    "character": "Cenobite",
     "icon": "/loadout/addon/iridescent-lament-configuration.webp",
     "slug": "iridescent-lament-configuration",
     "name": {
@@ -8052,7 +8052,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nemesis",
+    "character": "Nemesis",
     "icon": "/loadout/addon/brian-s-intestine.webp",
     "slug": "brian-s-intestine",
     "name": {
@@ -8065,7 +8065,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nemesis",
+    "character": "Nemesis",
     "icon": "/loadout/addon/damaged-syringe.webp",
     "slug": "damaged-syringe",
     "name": {
@@ -8078,7 +8078,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nemesis",
+    "character": "Nemesis",
     "icon": "/loadout/addon/s-t-a-r-s-field-combat-manual.webp",
     "slug": "s-t-a-r-s-field-combat-manual",
     "name": {
@@ -8091,7 +8091,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nemesis",
+    "character": "Nemesis",
     "icon": "/loadout/addon/visitor-wristband.webp",
     "slug": "visitor-wristband",
     "name": {
@@ -8104,7 +8104,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nemesis",
+    "character": "Nemesis",
     "icon": "/loadout/addon/admin-wristband.webp",
     "slug": "admin-wristband",
     "name": {
@@ -8117,7 +8117,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nemesis",
+    "character": "Nemesis",
     "icon": "/loadout/addon/adrenaline-injector.webp",
     "slug": "adrenaline-injector",
     "name": {
@@ -8130,7 +8130,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nemesis",
+    "character": "Nemesis",
     "icon": "/loadout/addon/marvin-s-blood.webp",
     "slug": "marvin-s-blood",
     "name": {
@@ -8143,7 +8143,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nemesis",
+    "character": "Nemesis",
     "icon": "/loadout/addon/mikhail-s-eye.webp",
     "slug": "mikhail-s-eye",
     "name": {
@@ -8156,7 +8156,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nemesis",
+    "character": "Nemesis",
     "icon": "/loadout/addon/zombie-heart.webp",
     "slug": "zombie-heart",
     "name": {
@@ -8169,7 +8169,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nemesis",
+    "character": "Nemesis",
     "icon": "/loadout/addon/licker-tongue.webp",
     "slug": "licker-tongue",
     "name": {
@@ -8182,7 +8182,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nemesis",
+    "character": "Nemesis",
     "icon": "/loadout/addon/plant-43-vines.webp",
     "slug": "plant-43-vines",
     "name": {
@@ -8195,7 +8195,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nemesis",
+    "character": "Nemesis",
     "icon": "/loadout/addon/serotonin-injector.webp",
     "slug": "serotonin-injector",
     "name": {
@@ -8208,7 +8208,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nemesis",
+    "character": "Nemesis",
     "icon": "/loadout/addon/t-virus-sample.webp",
     "slug": "t-virus-sample",
     "name": {
@@ -8221,7 +8221,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nemesis",
+    "character": "Nemesis",
     "icon": "/loadout/addon/tyrant-gore.webp",
     "slug": "tyrant-gore",
     "name": {
@@ -8234,7 +8234,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nemesis",
+    "character": "Nemesis",
     "icon": "/loadout/addon/broken-recovery-coin.webp",
     "slug": "broken-recovery-coin",
     "name": {
@@ -8247,7 +8247,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nemesis",
+    "character": "Nemesis",
     "icon": "/loadout/addon/depleted-ink-ribbon.webp",
     "slug": "depleted-ink-ribbon",
     "name": {
@@ -8260,7 +8260,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nemesis",
+    "character": "Nemesis",
     "icon": "/loadout/addon/jill-s-sandwich.webp",
     "slug": "jill-s-sandwich",
     "name": {
@@ -8273,7 +8273,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nemesis",
+    "character": "Nemesis",
     "icon": "/loadout/addon/ne-parasite.webp",
     "slug": "ne-parasite",
     "name": {
@@ -8286,7 +8286,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nemesis",
+    "character": "Nemesis",
     "icon": "/loadout/addon/iridescent-umbrella-badge.webp",
     "slug": "iridescent-umbrella-badge",
     "name": {
@@ -8299,7 +8299,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Nemesis",
+    "character": "Nemesis",
     "icon": "/loadout/addon/shattered-s-t-a-r-s-badge.webp",
     "slug": "shattered-s-t-a-r-s-badge",
     "name": {
@@ -8312,7 +8312,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Unknown",
+    "character": "Unknown",
     "icon": "/loadout/addon/blurry-photo.webp",
     "slug": "blurry-photo",
     "name": {
@@ -8325,7 +8325,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Unknown",
+    "character": "Unknown",
     "icon": "/loadout/addon/punctured-eyeball.webp",
     "slug": "punctured-eyeball",
     "name": {
@@ -8338,7 +8338,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Unknown",
+    "character": "Unknown",
     "icon": "/loadout/addon/rabbit-s-foot.webp",
     "slug": "rabbit-s-foot",
     "name": {
@@ -8351,7 +8351,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Unknown",
+    "character": "Unknown",
     "icon": "/loadout/addon/sketch-attempt.webp",
     "slug": "sketch-attempt",
     "name": {
@@ -8364,7 +8364,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Unknown",
+    "character": "Unknown",
     "icon": "/loadout/addon/device-of-undisclosed-origin.webp",
     "slug": "device-of-undisclosed-origin",
     "name": {
@@ -8377,7 +8377,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Unknown",
+    "character": "Unknown",
     "icon": "/loadout/addon/last-known-recording.webp",
     "slug": "last-known-recording",
     "name": {
@@ -8390,7 +8390,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Unknown",
+    "character": "Unknown",
     "icon": "/loadout/addon/notebook-of-theories.webp",
     "slug": "notebook-of-theories",
     "name": {
@@ -8403,7 +8403,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Unknown",
+    "character": "Unknown",
     "icon": "/loadout/addon/slashed-backpack.webp",
     "slug": "slashed-backpack",
     "name": {
@@ -8416,7 +8416,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Unknown",
+    "character": "Unknown",
     "icon": "/loadout/addon/victim-s-map.webp",
     "slug": "victim-s-map",
     "name": {
@@ -8429,7 +8429,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Unknown",
+    "character": "Unknown",
     "icon": "/loadout/addon/b-movie-poster.webp",
     "slug": "b-movie-poster",
     "name": {
@@ -8442,7 +8442,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Unknown",
+    "character": "Unknown",
     "icon": "/loadout/addon/footprint-cast.webp",
     "slug": "footprint-cast",
     "name": {
@@ -8455,7 +8455,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Unknown",
+    "character": "Unknown",
     "icon": "/loadout/addon/front-page-article.webp",
     "slug": "front-page-article",
     "name": {
@@ -8468,7 +8468,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Unknown",
+    "character": "Unknown",
     "icon": "/loadout/addon/hypnotist-s-watch.webp",
     "slug": "hypnotist-s-watch",
     "name": {
@@ -8481,7 +8481,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Unknown",
+    "character": "Unknown",
     "icon": "/loadout/addon/vanishing-box.webp",
     "slug": "vanishing-box",
     "name": {
@@ -8494,7 +8494,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Unknown",
+    "character": "Unknown",
     "icon": "/loadout/addon/discarded-milk-carton.webp",
     "slug": "discarded-milk-carton",
     "name": {
@@ -8507,7 +8507,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Unknown",
+    "character": "Unknown",
     "icon": "/loadout/addon/homemade-mask.webp",
     "slug": "homemade-mask",
     "name": {
@@ -8520,7 +8520,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Unknown",
+    "character": "Unknown",
     "icon": "/loadout/addon/obscure-game-cartridge.webp",
     "slug": "obscure-game-cartridge",
     "name": {
@@ -8533,7 +8533,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Unknown",
+    "character": "Unknown",
     "icon": "/loadout/addon/serum-vial.webp",
     "slug": "serum-vial",
     "name": {
@@ -8546,7 +8546,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Unknown",
+    "character": "Unknown",
     "icon": "/loadout/addon/captured-by-the-dark.webp",
     "slug": "captured-by-the-dark",
     "name": {
@@ -8559,7 +8559,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Unknown",
+    "character": "Unknown",
     "icon": "/loadout/addon/iridescent-oss-report.webp",
     "slug": "iridescent-oss-report",
     "name": {
@@ -8572,7 +8572,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Dark Lord",
+    "character": "Dark Lord",
     "icon": "/loadout/addon/cerberus-talon.webp",
     "slug": "cerberus-talon",
     "name": {
@@ -8585,7 +8585,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Dark Lord",
+    "character": "Dark Lord",
     "icon": "/loadout/addon/clock-tower-gear.webp",
     "slug": "clock-tower-gear",
     "name": {
@@ -8598,7 +8598,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Dark Lord",
+    "character": "Dark Lord",
     "icon": "/loadout/addon/ruby-circlet.webp",
     "slug": "ruby-circlet",
     "name": {
@@ -8611,7 +8611,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Dark Lord",
+    "character": "Dark Lord",
     "icon": "/loadout/addon/traveller-s-hat.webp",
     "slug": "traveller-s-hat",
     "name": {
@@ -8624,7 +8624,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Dark Lord",
+    "character": "Dark Lord",
     "icon": "/loadout/addon/blood-filled-goblet.webp",
     "slug": "blood-filled-goblet",
     "name": {
@@ -8637,7 +8637,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Dark Lord",
+    "character": "Dark Lord",
     "icon": "/loadout/addon/magical-ticket.webp",
     "slug": "magical-ticket",
     "name": {
@@ -8650,7 +8650,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Dark Lord",
+    "character": "Dark Lord",
     "icon": "/loadout/addon/moonstone-necklace.webp",
     "slug": "moonstone-necklace",
     "name": {
@@ -8663,7 +8663,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Dark Lord",
+    "character": "Dark Lord",
     "icon": "/loadout/addon/white-wolf-medallion.webp",
     "slug": "white-wolf-medallion",
     "name": {
@@ -8676,7 +8676,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Dark Lord",
+    "character": "Dark Lord",
     "icon": "/loadout/addon/winged-boots.webp",
     "slug": "winged-boots",
     "name": {
@@ -8689,7 +8689,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Dark Lord",
+    "character": "Dark Lord",
     "icon": "/loadout/addon/force-of-echo.webp",
     "slug": "force-of-echo",
     "name": {
@@ -8702,7 +8702,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Dark Lord",
+    "character": "Dark Lord",
     "icon": "/loadout/addon/killer-doll.webp",
     "slug": "killer-doll",
     "name": {
@@ -8715,7 +8715,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Dark Lord",
+    "character": "Dark Lord",
     "icon": "/loadout/addon/pocket-watch.webp",
     "slug": "pocket-watch",
     "name": {
@@ -8728,7 +8728,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Dark Lord",
+    "character": "Dark Lord",
     "icon": "/loadout/addon/sunglasses.webp",
     "slug": "sunglasses",
     "name": {
@@ -8741,7 +8741,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Dark Lord",
+    "character": "Dark Lord",
     "icon": "/loadout/addon/sylph-feather.webp",
     "slug": "sylph-feather",
     "name": {
@@ -8754,7 +8754,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Dark Lord",
+    "character": "Dark Lord",
     "icon": "/loadout/addon/cube-of-zoe.webp",
     "slug": "cube-of-zoe",
     "name": {
@@ -8767,7 +8767,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Dark Lord",
+    "character": "Dark Lord",
     "icon": "/loadout/addon/lapis-lazuli.webp",
     "slug": "lapis-lazuli",
     "name": {
@@ -8780,7 +8780,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Dark Lord",
+    "character": "Dark Lord",
     "icon": "/loadout/addon/medusa-s-hair.webp",
     "slug": "medusa-s-hair",
     "name": {
@@ -8793,7 +8793,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Dark Lord",
+    "character": "Dark Lord",
     "icon": "/loadout/addon/warg-s-fang.webp",
     "slug": "warg-s-fang",
     "name": {
@@ -8806,7 +8806,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Dark Lord",
+    "character": "Dark Lord",
     "icon": "/loadout/addon/alucard-s-shield.webp",
     "slug": "alucard-s-shield",
     "name": {
@@ -8819,7 +8819,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Dark Lord",
+    "character": "Dark Lord",
     "icon": "/loadout/addon/iridescent-ring-of-vlad.webp",
     "slug": "iridescent-ring-of-vlad",
     "name": {
@@ -8832,7 +8832,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Lich",
+    "character": "Lich",
     "icon": "/loadout/addon/crystal-ball.webp",
     "slug": "crystal-ball",
     "name": {
@@ -8845,7 +8845,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Lich",
+    "character": "Lich",
     "icon": "/loadout/addon/raven-s-feather.webp",
     "slug": "raven-s-feather",
     "name": {
@@ -8858,7 +8858,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Lich",
+    "character": "Lich",
     "icon": "/loadout/addon/tattered-headband.webp",
     "slug": "tattered-headband",
     "name": {
@@ -8871,7 +8871,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Lich",
+    "character": "Lich",
     "icon": "/loadout/addon/trickster-s-glove.webp",
     "slug": "trickster-s-glove",
     "name": {
@@ -8884,7 +8884,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Lich",
+    "character": "Lich",
     "icon": "/loadout/addon/glass-eye.webp",
     "slug": "glass-eye",
     "name": {
@@ -8897,7 +8897,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Lich",
+    "character": "Lich",
     "icon": "/loadout/addon/lantern-of-revealing.webp",
     "slug": "lantern-of-revealing",
     "name": {
@@ -8910,7 +8910,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Lich",
+    "character": "Lich",
     "icon": "/loadout/addon/potion-of-speed.webp",
     "slug": "potion-of-speed",
     "name": {
@@ -8923,7 +8923,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Lich",
+    "character": "Lich",
     "icon": "/loadout/addon/ring-of-spell-storing.webp",
     "slug": "ring-of-spell-storing",
     "name": {
@@ -8936,7 +8936,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Lich",
+    "character": "Lich",
     "icon": "/loadout/addon/ring-of-telekinesis.webp",
     "slug": "ring-of-telekinesis",
     "name": {
@@ -8949,7 +8949,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Lich",
+    "character": "Lich",
     "icon": "/loadout/addon/boots-of-speed.webp",
     "slug": "boots-of-speed",
     "name": {
@@ -8962,7 +8962,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Lich",
+    "character": "Lich",
     "icon": "/loadout/addon/cloak-of-elvenkind.webp",
     "slug": "cloak-of-elvenkind",
     "name": {
@@ -8975,7 +8975,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Lich",
+    "character": "Lich",
     "icon": "/loadout/addon/ornate-horn.webp",
     "slug": "ornate-horn",
     "name": {
@@ -8988,7 +8988,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Lich",
+    "character": "Lich",
     "icon": "/loadout/addon/pearl-of-power.webp",
     "slug": "pearl-of-power",
     "name": {
@@ -9001,7 +9001,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Lich",
+    "character": "Lich",
     "icon": "/loadout/addon/staff-of-withering.webp",
     "slug": "staff-of-withering",
     "name": {
@@ -9014,7 +9014,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Lich",
+    "character": "Lich",
     "icon": "/loadout/addon/bag-of-holding.webp",
     "slug": "bag-of-holding",
     "name": {
@@ -9027,7 +9027,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Lich",
+    "character": "Lich",
     "icon": "/loadout/addon/cloak-of-invisibility.webp",
     "slug": "cloak-of-invisibility",
     "name": {
@@ -9040,7 +9040,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Lich",
+    "character": "Lich",
     "icon": "/loadout/addon/dragontooth-dagger.webp",
     "slug": "dragontooth-dagger",
     "name": {
@@ -9053,7 +9053,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Lich",
+    "character": "Lich",
     "icon": "/loadout/addon/robe-of-eyes.webp",
     "slug": "robe-of-eyes",
     "name": {
@@ -9066,7 +9066,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Lich",
+    "character": "Lich",
     "icon": "/loadout/addon/iridescent-book-of-vile-darkness.webp",
     "slug": "iridescent-book-of-vile-darkness",
     "name": {
@@ -9079,7 +9079,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Lich",
+    "character": "Lich",
     "icon": "/loadout/addon/vorpal-sword.webp",
     "slug": "vorpal-sword",
     "name": {
@@ -9092,7 +9092,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Plague",
+    "character": "Plague",
     "icon": "/loadout/addon/healing-salve.webp",
     "slug": "healing-salve",
     "name": {
@@ -9105,7 +9105,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Plague",
+    "character": "Plague",
     "icon": "/loadout/addon/limestone-seal.webp",
     "slug": "limestone-seal",
     "name": {
@@ -9118,7 +9118,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Plague",
+    "character": "Plague",
     "icon": "/loadout/addon/olibanum-incense.webp",
     "slug": "olibanum-incense",
     "name": {
@@ -9131,7 +9131,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Plague",
+    "character": "Plague",
     "icon": "/loadout/addon/prayer-tablet-fragment.webp",
     "slug": "prayer-tablet-fragment",
     "name": {
@@ -9144,7 +9144,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Plague",
+    "character": "Plague",
     "icon": "/loadout/addon/blessed-apple.webp",
     "slug": "blessed-apple",
     "name": {
@@ -9157,7 +9157,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Plague",
+    "character": "Plague",
     "icon": "/loadout/addon/emetic-potion.webp",
     "slug": "emetic-potion",
     "name": {
@@ -9170,7 +9170,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Plague",
+    "character": "Plague",
     "icon": "/loadout/addon/haematite-seal.webp",
     "slug": "haematite-seal",
     "name": {
@@ -9183,7 +9183,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Plague",
+    "character": "Plague",
     "icon": "/loadout/addon/potent-tincture.webp",
     "slug": "potent-tincture",
     "name": {
@@ -9196,7 +9196,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Plague",
+    "character": "Plague",
     "icon": "/loadout/addon/prophylactic-amulet.webp",
     "slug": "prophylactic-amulet",
     "name": {
@@ -9209,7 +9209,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Plague",
+    "character": "Plague",
     "icon": "/loadout/addon/ashen-apple.webp",
     "slug": "ashen-apple",
     "name": {
@@ -9222,7 +9222,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Plague",
+    "character": "Plague",
     "icon": "/loadout/addon/exorcism-amulet.webp",
     "slug": "exorcism-amulet",
     "name": {
@@ -9235,7 +9235,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Plague",
+    "character": "Plague",
     "icon": "/loadout/addon/incensed-ointment.webp",
     "slug": "incensed-ointment",
     "name": {
@@ -9248,7 +9248,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Plague",
+    "character": "Plague",
     "icon": "/loadout/addon/infected-emetic.webp",
     "slug": "infected-emetic",
     "name": {
@@ -9261,7 +9261,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Plague",
+    "character": "Plague",
     "icon": "/loadout/addon/rubbing-oil.webp",
     "slug": "rubbing-oil",
     "name": {
@@ -9274,7 +9274,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Plague",
+    "character": "Plague",
     "icon": "/loadout/addon/devotee-s-amulet.webp",
     "slug": "devotee-s-amulet",
     "name": {
@@ -9287,7 +9287,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Plague",
+    "character": "Plague",
     "icon": "/loadout/addon/severed-toe.webp",
     "slug": "severed-toe",
     "name": {
@@ -9300,7 +9300,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Plague",
+    "character": "Plague",
     "icon": "/loadout/addon/vile-emetic.webp",
     "slug": "vile-emetic",
     "name": {
@@ -9313,7 +9313,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Plague",
+    "character": "Plague",
     "icon": "/loadout/addon/worship-tablet.webp",
     "slug": "worship-tablet",
     "name": {
@@ -9326,7 +9326,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Plague",
+    "character": "Plague",
     "icon": "/loadout/addon/black-incense.webp",
     "slug": "black-incense",
     "name": {
@@ -9339,7 +9339,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Plague",
+    "character": "Plague",
     "icon": "/loadout/addon/iridescent-seal.webp",
     "slug": "iridescent-seal",
     "name": {
@@ -9352,7 +9352,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Mastermind",
+    "character": "Mastermind",
     "icon": "/loadout/addon/jewel-beetle.webp",
     "slug": "jewel-beetle",
     "name": {
@@ -9365,7 +9365,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Mastermind",
+    "character": "Mastermind",
     "icon": "/loadout/addon/r-p-d-shoulder-walkie.webp",
     "slug": "r-p-d-shoulder-walkie",
     "name": {
@@ -9378,7 +9378,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Mastermind",
+    "character": "Mastermind",
     "icon": "/loadout/addon/unicorn-medallion.webp",
     "slug": "unicorn-medallion",
     "name": {
@@ -9391,7 +9391,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Mastermind",
+    "character": "Mastermind",
     "icon": "/loadout/addon/uroboros-tendril.webp",
     "slug": "uroboros-tendril",
     "name": {
@@ -9404,7 +9404,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Mastermind",
+    "character": "Mastermind",
     "icon": "/loadout/addon/bullhorn.webp",
     "slug": "bullhorn",
     "name": {
@@ -9417,7 +9417,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Mastermind",
+    "character": "Mastermind",
     "icon": "/loadout/addon/chalice-gold.webp",
     "slug": "chalice-gold",
     "name": {
@@ -9430,7 +9430,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Mastermind",
+    "character": "Mastermind",
     "icon": "/loadout/addon/leather-gloves.webp",
     "slug": "leather-gloves",
     "name": {
@@ -9443,7 +9443,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Mastermind",
+    "character": "Mastermind",
     "icon": "/loadout/addon/lion-medallion.webp",
     "slug": "lion-medallion",
     "name": {
@@ -9456,7 +9456,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Mastermind",
+    "character": "Mastermind",
     "icon": "/loadout/addon/loose-crank.webp",
     "slug": "loose-crank",
     "name": {
@@ -9469,7 +9469,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Mastermind",
+    "character": "Mastermind",
     "icon": "/loadout/addon/egg-gold.webp",
     "slug": "egg-gold",
     "name": {
@@ -9482,7 +9482,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Mastermind",
+    "character": "Mastermind",
     "icon": "/loadout/addon/maiden-medallion.webp",
     "slug": "maiden-medallion",
     "name": {
@@ -9495,7 +9495,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Mastermind",
+    "character": "Mastermind",
     "icon": "/loadout/addon/portable-safe.webp",
     "slug": "portable-safe",
     "name": {
@@ -9508,7 +9508,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Mastermind",
+    "character": "Mastermind",
     "icon": "/loadout/addon/red-herb.webp",
     "slug": "red-herb",
     "name": {
@@ -9521,7 +9521,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Mastermind",
+    "character": "Mastermind",
     "icon": "/loadout/addon/video-conference-device.webp",
     "slug": "video-conference-device",
     "name": {
@@ -9534,7 +9534,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Mastermind",
+    "character": "Mastermind",
     "icon": "/loadout/addon/dark-sunglasses.webp",
     "slug": "dark-sunglasses",
     "name": {
@@ -9547,7 +9547,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Mastermind",
+    "character": "Mastermind",
     "icon": "/loadout/addon/green-herb.webp",
     "slug": "green-herb",
     "name": {
@@ -9560,7 +9560,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Mastermind",
+    "character": "Mastermind",
     "icon": "/loadout/addon/helicopter-stick.webp",
     "slug": "helicopter-stick",
     "name": {
@@ -9573,7 +9573,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Mastermind",
+    "character": "Mastermind",
     "icon": "/loadout/addon/uroboros-virus.webp",
     "slug": "uroboros-virus",
     "name": {
@@ -9586,7 +9586,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Mastermind",
+    "character": "Mastermind",
     "icon": "/loadout/addon/iridescent-uroboros-vial.webp",
     "slug": "iridescent-uroboros-vial",
     "name": {
@@ -9599,7 +9599,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Mastermind",
+    "character": "Mastermind",
     "icon": "/loadout/addon/lab-photo.webp",
     "slug": "lab-photo",
     "name": {
@@ -9612,7 +9612,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Wraith",
+    "character": "Wraith",
     "icon": "/loadout/addon/the-beast-soot.webp",
     "slug": "the-beast-soot",
     "name": {
@@ -9625,7 +9625,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Wraith",
+    "character": "Wraith",
     "icon": "/loadout/addon/the-ghost-soot.webp",
     "slug": "the-ghost-soot",
     "name": {
@@ -9638,7 +9638,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Wraith",
+    "character": "Wraith",
     "icon": "/loadout/addon/the-hound-soot.webp",
     "slug": "the-hound-soot",
     "name": {
@@ -9651,7 +9651,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Wraith",
+    "character": "Wraith",
     "icon": "/loadout/addon/the-serpent-soot.webp",
     "slug": "the-serpent-soot",
     "name": {
@@ -9664,7 +9664,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Wraith",
+    "character": "Wraith",
     "icon": "/loadout/addon/blind-warrior-mud.webp",
     "slug": "blind-warrior-mud",
     "name": {
@@ -9677,7 +9677,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Wraith",
+    "character": "Wraith",
     "icon": "/loadout/addon/blink-mud.webp",
     "slug": "blink-mud",
     "name": {
@@ -9690,7 +9690,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Wraith",
+    "character": "Wraith",
     "icon": "/loadout/addon/swift-hunt-mud.webp",
     "slug": "swift-hunt-mud",
     "name": {
@@ -9703,7 +9703,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Wraith",
+    "character": "Wraith",
     "icon": "/loadout/addon/windstorm-mud.webp",
     "slug": "windstorm-mud",
     "name": {
@@ -9716,7 +9716,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Wraith",
+    "character": "Wraith",
     "icon": "/loadout/addon/bone-clapper.webp",
     "slug": "bone-clapper",
     "name": {
@@ -9729,7 +9729,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Wraith",
+    "character": "Wraith",
     "icon": "/loadout/addon/blind-warrior-white.webp",
     "slug": "blind-warrior-white",
     "name": {
@@ -9742,7 +9742,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Wraith",
+    "character": "Wraith",
     "icon": "/loadout/addon/blink-white.webp",
     "slug": "blink-white",
     "name": {
@@ -9755,7 +9755,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Wraith",
+    "character": "Wraith",
     "icon": "/loadout/addon/shadow-dance-white.webp",
     "slug": "shadow-dance-white",
     "name": {
@@ -9768,7 +9768,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Wraith",
+    "character": "Wraith",
     "icon": "/loadout/addon/swift-hunt-white.webp",
     "slug": "swift-hunt-white",
     "name": {
@@ -9781,7 +9781,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Wraith",
+    "character": "Wraith",
     "icon": "/loadout/addon/windstorm-white.webp",
     "slug": "windstorm-white",
     "name": {
@@ -9794,7 +9794,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Wraith",
+    "character": "Wraith",
     "icon": "/loadout/addon/all-seeing-blood.webp",
     "slug": "all-seeing-blood",
     "name": {
@@ -9807,7 +9807,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Wraith",
+    "character": "Wraith",
     "icon": "/loadout/addon/shadow-dance-blood.webp",
     "slug": "shadow-dance-blood",
     "name": {
@@ -9820,7 +9820,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Wraith",
+    "character": "Wraith",
     "icon": "/loadout/addon/swift-hunt-blood.webp",
     "slug": "swift-hunt-blood",
     "name": {
@@ -9833,7 +9833,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Wraith",
+    "character": "Wraith",
     "icon": "/loadout/addon/windstorm-blood.webp",
     "slug": "windstorm-blood",
     "name": {
@@ -9846,7 +9846,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Wraith",
+    "character": "Wraith",
     "icon": "/loadout/addon/all-seeing-spirit.webp",
     "slug": "all-seeing-spirit",
     "name": {
@@ -9859,7 +9859,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Wraith",
+    "character": "Wraith",
     "icon": "/loadout/addon/coxcombed-clapper.webp",
     "slug": "coxcombed-clapper",
     "name": {
@@ -9872,7 +9872,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Spirit",
+    "character": "Spirit",
     "icon": "/loadout/addon/gifted-bamboo-comb.webp",
     "slug": "gifted-bamboo-comb",
     "name": {
@@ -9885,7 +9885,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Spirit",
+    "character": "Spirit",
     "icon": "/loadout/addon/origami-crane.webp",
     "slug": "origami-crane",
     "name": {
@@ -9898,7 +9898,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Spirit",
+    "character": "Spirit",
     "icon": "/loadout/addon/shiawase-amulet.webp",
     "slug": "shiawase-amulet",
     "name": {
@@ -9911,7 +9911,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Spirit",
+    "character": "Spirit",
     "icon": "/loadout/addon/zori.webp",
     "slug": "zori",
     "name": {
@@ -9924,7 +9924,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Spirit",
+    "character": "Spirit",
     "icon": "/loadout/addon/juniper-bonsai.webp",
     "slug": "juniper-bonsai",
     "name": {
@@ -9937,7 +9937,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Spirit",
+    "character": "Spirit",
     "icon": "/loadout/addon/kaiun-talisman.webp",
     "slug": "kaiun-talisman",
     "name": {
@@ -9950,7 +9950,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Spirit",
+    "character": "Spirit",
     "icon": "/loadout/addon/muddy-sports-day-cap.webp",
     "slug": "muddy-sports-day-cap",
     "name": {
@@ -9963,7 +9963,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Spirit",
+    "character": "Spirit",
     "icon": "/loadout/addon/rin-s-broken-watch.webp",
     "slug": "rin-s-broken-watch",
     "name": {
@@ -9976,7 +9976,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Spirit",
+    "character": "Spirit",
     "icon": "/loadout/addon/white-hair-ribbon.webp",
     "slug": "white-hair-ribbon",
     "name": {
@@ -9989,7 +9989,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Spirit",
+    "character": "Spirit",
     "icon": "/loadout/addon/katana-tsuba.webp",
     "slug": "katana-tsuba",
     "name": {
@@ -10002,7 +10002,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Spirit",
+    "character": "Spirit",
     "icon": "/loadout/addon/mother-s-glasses.webp",
     "slug": "mother-s-glasses",
     "name": {
@@ -10015,7 +10015,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Spirit",
+    "character": "Spirit",
     "icon": "/loadout/addon/rusty-flute.webp",
     "slug": "rusty-flute",
     "name": {
@@ -10028,7 +10028,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Spirit",
+    "character": "Spirit",
     "icon": "/loadout/addon/senko-hanabi.webp",
     "slug": "senko-hanabi",
     "name": {
@@ -10041,7 +10041,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Spirit",
+    "character": "Spirit",
     "icon": "/loadout/addon/uchiwa.webp",
     "slug": "uchiwa",
     "name": {
@@ -10054,7 +10054,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Spirit",
+    "character": "Spirit",
     "icon": "/loadout/addon/dried-cherry-blossom.webp",
     "slug": "dried-cherry-blossom",
     "name": {
@@ -10067,7 +10067,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Spirit",
+    "character": "Spirit",
     "icon": "/loadout/addon/furin.webp",
     "slug": "furin",
     "name": {
@@ -10080,7 +10080,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Spirit",
+    "character": "Spirit",
     "icon": "/loadout/addon/wakizashi-saya.webp",
     "slug": "wakizashi-saya",
     "name": {
@@ -10093,7 +10093,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Spirit",
+    "character": "Spirit",
     "icon": "/loadout/addon/yakuyoke-amulet.webp",
     "slug": "yakuyoke-amulet",
     "name": {
@@ -10106,7 +10106,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Spirit",
+    "character": "Spirit",
     "icon": "/loadout/addon/kintsugi-teacup.webp",
     "slug": "kintsugi-teacup",
     "name": {
@@ -10119,7 +10119,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Spirit",
+    "character": "Spirit",
     "icon": "/loadout/addon/mother-daughter-ring.webp",
     "slug": "mother-daughter-ring",
     "name": {
@@ -10132,7 +10132,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Oni",
+    "character": "Oni",
     "icon": "/loadout/addon/blackened-toenail.webp",
     "slug": "blackened-toenail",
     "name": {
@@ -10145,7 +10145,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Oni",
+    "character": "Oni",
     "icon": "/loadout/addon/cracked-sakazuki.webp",
     "slug": "cracked-sakazuki",
     "name": {
@@ -10158,7 +10158,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Oni",
+    "character": "Oni",
     "icon": "/loadout/addon/paper-lantern.webp",
     "slug": "paper-lantern",
     "name": {
@@ -10171,7 +10171,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Oni",
+    "character": "Oni",
     "icon": "/loadout/addon/rotting-rope.webp",
     "slug": "rotting-rope",
     "name": {
@@ -10184,7 +10184,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Oni",
+    "character": "Oni",
     "icon": "/loadout/addon/bloody-sash.webp",
     "slug": "bloody-sash",
     "name": {
@@ -10197,7 +10197,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Oni",
+    "character": "Oni",
     "icon": "/loadout/addon/child-s-wooden-sword.webp",
     "slug": "child-s-wooden-sword",
     "name": {
@@ -10210,7 +10210,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Oni",
+    "character": "Oni",
     "icon": "/loadout/addon/chipped-saihai.webp",
     "slug": "chipped-saihai",
     "name": {
@@ -10223,7 +10223,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Oni",
+    "character": "Oni",
     "icon": "/loadout/addon/ink-lion.webp",
     "slug": "ink-lion",
     "name": {
@@ -10236,7 +10236,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Oni",
+    "character": "Oni",
     "icon": "/loadout/addon/polished-maedate.webp",
     "slug": "polished-maedate",
     "name": {
@@ -10249,7 +10249,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Oni",
+    "character": "Oni",
     "icon": "/loadout/addon/kanai-anzen-talisman.webp",
     "slug": "kanai-anzen-talisman",
     "name": {
@@ -10262,7 +10262,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Oni",
+    "character": "Oni",
     "icon": "/loadout/addon/scalped-topknot.webp",
     "slug": "scalped-topknot",
     "name": {
@@ -10275,7 +10275,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Oni",
+    "character": "Oni",
     "icon": "/loadout/addon/shattered-wakizashi.webp",
     "slug": "shattered-wakizashi",
     "name": {
@@ -10288,7 +10288,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Oni",
+    "character": "Oni",
     "icon": "/loadout/addon/wooden-oni-mask.webp",
     "slug": "wooden-oni-mask",
     "name": {
@@ -10301,7 +10301,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Oni",
+    "character": "Oni",
     "icon": "/loadout/addon/yamaoka-sashimono.webp",
     "slug": "yamaoka-sashimono",
     "name": {
@@ -10314,7 +10314,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Oni",
+    "character": "Oni",
     "icon": "/loadout/addon/akito-s-crutch.webp",
     "slug": "akito-s-crutch",
     "name": {
@@ -10327,7 +10327,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Oni",
+    "character": "Oni",
     "icon": "/loadout/addon/lion-fang.webp",
     "slug": "lion-fang",
     "name": {
@@ -10340,7 +10340,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Oni",
+    "character": "Oni",
     "icon": "/loadout/addon/splintered-hull.webp",
     "slug": "splintered-hull",
     "name": {
@@ -10353,7 +10353,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Oni",
+    "character": "Oni",
     "icon": "/loadout/addon/tear-soaked-tenugui.webp",
     "slug": "tear-soaked-tenugui",
     "name": {
@@ -10366,7 +10366,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Oni",
+    "character": "Oni",
     "icon": "/loadout/addon/iridescent-family-crest.webp",
     "slug": "iridescent-family-crest",
     "name": {
@@ -10379,7 +10379,7 @@
   {
     "kind": "addon",
     "role": "killer",
-    "character": "The Oni",
+    "character": "Oni",
     "icon": "/loadout/addon/renjiro-s-bloody-glove.webp",
     "slug": "renjiro-s-bloody-glove",
     "name": {
