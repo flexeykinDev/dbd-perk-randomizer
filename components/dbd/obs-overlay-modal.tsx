@@ -65,20 +65,23 @@ const PERMISSION_LABEL: Record<TwitchPermission, { ru: string; en: string }> = {
 // combined perks+loadout view can carry up to 4 perks + 4 loadout pieces at
 // once (see randomizer-board.tsx's publish effect), and this used to only
 // have positions for the first 4 — pieces past that fell back to the last
-// defined slot and stacked on top of each other in a real OBS scene. The
-// first 4 entries are unchanged from before (same centered single row) so
-// existing saved layouts and the common perks/loadout-only case still
-// render exactly where they used to; slots 5-8 are a second row underneath,
-// only ever reached in "all" mode.
+// defined slot and stacked on top of each other in a real OBS scene.
+//
+// Row y-positions sit at 28/76 (not 50/85) — with 8 slots each carrying an
+// icon *and* a 2-line label underneath, the old 35%-of-height gap between
+// rows was smaller than the label+icon's actual pixel footprint at the
+// preview's old size, so row 1's labels overlapped row 2's icons. 48%
+// separation plus the taller preview box below (see PREVIEW_MIN_HEIGHT_PX)
+// gives both rows real breathing room instead.
 const DEFAULT_SLOT_POSITIONS: readonly ObsIconPosition[] = [
-  { x: 12.5, y: 50 },
-  { x: 37.5, y: 50 },
-  { x: 62.5, y: 50 },
-  { x: 87.5, y: 50 },
-  { x: 12.5, y: 85 },
-  { x: 37.5, y: 85 },
-  { x: 62.5, y: 85 },
-  { x: 87.5, y: 85 },
+  { x: 12.5, y: 33 },
+  { x: 37.5, y: 33 },
+  { x: 62.5, y: 33 },
+  { x: 87.5, y: 33 },
+  { x: 12.5, y: 78 },
+  { x: 37.5, y: 78 },
+  { x: 62.5, y: 78 },
+  { x: 87.5, y: 78 },
 ];
 
 const MIN_CANVAS_WIDTH = 320;
@@ -149,6 +152,13 @@ const DEFAULT_CANVAS_HEIGHT = DEFAULT_STYLE.canvasHeight;
 
 const PREVIEW_BASE_ICON_PX = 34;
 const PREVIEW_BASE_NAME_MAX_WIDTH_PX = 56;
+// A floor under the aspect-ratio-derived height below — at the modal's old
+// width, a wide/short canvas preset (e.g. "Roomy" at ~2.6:1) rendered the
+// preview box at ~180px tall, too short for two rows of icon+label to fit
+// without overlapping (see the DEFAULT_SLOT_POSITIONS comment above).
+// aspect-ratio still wins whenever it would make the box *taller* than
+// this — this only kicks in as a minimum, not a fixed height.
+const PREVIEW_MIN_HEIGHT_PX = 260;
 
 function PermissionSelect({
   value,
@@ -265,6 +275,7 @@ export function ObsOverlayModal({
   // for the eye"). Twitch integration is opt-in and comparatively rare, so
   // it only costs a tab click instead of a page's worth of scroll.
   const [panelTab, setPanelTab] = useState<"overlay" | "twitch">("overlay");
+  const [obsSetupOpen, setObsSetupOpen] = useState(false);
   const [twitchAdvancedOpen, setTwitchAdvancedOpen] = useState(false);
   const [constructorOpen, setConstructorOpen] = useState(false);
   const [constructorRole, setConstructorRole] = useState<PerkRole>(role);
@@ -468,7 +479,7 @@ export function ObsOverlayModal({
             aria-modal="true"
             aria-labelledby={titleId}
             aria-describedby={descId}
-            className="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-2xl border border-border bg-surface p-5 shadow-2xl lg:max-w-lg"
+            className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-border bg-surface p-5 shadow-2xl lg:max-w-xl"
           >
             <div aria-live="polite" className="sr-only">
               {announcement}
@@ -572,22 +583,12 @@ export function ObsOverlayModal({
                 </div>
 
                 <div className="mt-4">
-                  <div className="mb-1.5 flex items-center justify-between">
-                    <h3 className="text-xs font-medium text-muted">
-                      {t({
-                        ru: "Превью — перетащи иконки",
-                        en: "Preview — drag the icons",
-                      })}
-                    </h3>
-                    <button
-                      type="button"
-                      onClick={() => setPositions(null)}
-                      className="flex items-center gap-1 text-[11px] font-medium text-muted transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:outline-none"
-                    >
-                      <RotateCcw className="size-3" />
-                      {t({ ru: "Сбросить позиции", en: "Reset positions" })}
-                    </button>
-                  </div>
+                  <h3 className="mb-1.5 text-xs font-medium text-muted">
+                    {t({
+                      ru: "Превью — перетащи иконки",
+                      en: "Preview — drag the icons",
+                    })}
+                  </h3>
 
                   <div
                     ref={previewRef}
@@ -595,8 +596,22 @@ export function ObsOverlayModal({
                       "relative w-full touch-none overflow-hidden rounded-xl border border-border bg-[repeating-conic-gradient(#8884_0%_25%,transparent_0%_50%)] bg-[length:16px_16px]",
                       darkBg && "bg-none bg-[#0b0c0f]",
                     )}
-                    style={{ aspectRatio: canvasWidth / canvasHeight }}
+                    style={{
+                      aspectRatio: canvasWidth / canvasHeight,
+                      minHeight: PREVIEW_MIN_HEIGHT_PX,
+                    }}
                   >
+                    {/* Overlay action, not a row above the canvas — keeps
+                        the canvas itself the tall, prominent element and
+                        puts "Reset" right where the icons it affects are. */}
+                    <button
+                      type="button"
+                      onClick={() => setPositions(null)}
+                      className="absolute top-2 right-2 z-20 flex items-center gap-1 rounded-full border border-white/15 bg-black/60 px-2.5 py-1 text-[11px] font-medium text-white/80 backdrop-blur-sm transition-colors hover:bg-black/80 hover:text-white focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:outline-none"
+                    >
+                      <RotateCcw className="size-3" />
+                      {t({ ru: "Сбросить", en: "Reset" })}
+                    </button>
                     {Array.from({ length: previewSlotCount }, (_, index) => {
                       const perk = previewPieces[index];
                       const pos =
@@ -855,35 +870,53 @@ export function ObsOverlayModal({
                 </div>
 
                 <div className="mt-4 rounded-xl border border-border bg-background/60 p-3.5">
-                  <h3 className="mb-2 text-xs font-semibold tracking-wide text-muted uppercase">
+                  {/* Closed by default — this is reference material someone
+                      checks once while setting up their Browser Source, not
+                      something worth its own permanent block of vertical
+                      space every time the modal opens (user feedback: the
+                      instructions "take up way too much vertical space"). */}
+                  <button
+                    type="button"
+                    onClick={() => setObsSetupOpen((v) => !v)}
+                    aria-expanded={obsSetupOpen}
+                    className="flex w-full items-center justify-between text-xs font-semibold tracking-wide text-muted uppercase transition-colors hover:text-foreground"
+                  >
                     {t({ ru: "Настройка в OBS", en: "OBS setup" })}
-                  </h3>
-                  <ol className="list-inside list-decimal space-y-1 text-sm text-muted">
-                    <li>
-                      {t({
-                        ru: "Источники → плюс → «Браузер»",
-                        en: "Sources → plus → “Browser”",
-                      })}
-                    </li>
-                    <li>
-                      {t({
-                        ru: "Вставь ссылку выше в поле URL",
-                        en: "Paste the link above into URL",
-                      })}
-                    </li>
-                    <li>
-                      {t({ ru: "Ширина", en: "Width" })}:{" "}
-                      <b className="text-foreground">{canvasWidth}</b> ·{" "}
-                      {t({ ru: "Высота", en: "Height" })}:{" "}
-                      <b className="text-foreground">{canvasHeight}</b>
-                    </li>
-                    <li>
-                      {t({
-                        ru: "Сними галочку «Закрывать источник, когда не виден» — иначе синхронизация с основной вкладкой прервётся",
-                        en: "Uncheck “Shutdown source when not visible” — otherwise it stops syncing with the main tab",
-                      })}
-                    </li>
-                  </ol>
+                    <ChevronDown
+                      className={cn(
+                        "size-3.5 shrink-0 normal-case transition-transform",
+                        obsSetupOpen && "rotate-180",
+                      )}
+                    />
+                  </button>
+                  {obsSetupOpen && (
+                    <ol className="mt-2 list-inside list-decimal space-y-1 text-sm text-muted">
+                      <li>
+                        {t({
+                          ru: "Источники → плюс → «Браузер»",
+                          en: "Sources → plus → “Browser”",
+                        })}
+                      </li>
+                      <li>
+                        {t({
+                          ru: "Вставь ссылку выше в поле URL",
+                          en: "Paste the link above into URL",
+                        })}
+                      </li>
+                      <li>
+                        {t({ ru: "Ширина", en: "Width" })}:{" "}
+                        <b className="text-foreground">{canvasWidth}</b> ·{" "}
+                        {t({ ru: "Высота", en: "Height" })}:{" "}
+                        <b className="text-foreground">{canvasHeight}</b>
+                      </li>
+                      <li>
+                        {t({
+                          ru: "Сними галочку «Закрывать источник, когда не виден» — иначе синхронизация с основной вкладкой прервётся",
+                          en: "Uncheck “Shutdown source when not visible” — otherwise it stops syncing with the main tab",
+                        })}
+                      </li>
+                    </ol>
+                  )}
                 </div>
 
                 <p className="mt-3 text-xs text-muted/70">

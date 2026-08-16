@@ -38,7 +38,12 @@ export interface ObsOverlayOptions {
 export const DEFAULT_OBS_OPTIONS: ObsOverlayOptions = {
   scale: 135,
   nameScale: 170,
-  showNames: true,
+  // Off by default — a full row of name pills (especially with 8 pieces in
+  // "all" mode) reads as clutter on top of stream footage; the "Show card
+  // names" toggle in the modal turns them back on for anyone who wants
+  // them. See components/dbd/obs-overlay.tsx for the rest of the "less
+  // bulky" pass this default is part of.
+  showNames: false,
   background: "transparent",
   positions: null,
 };
@@ -67,10 +72,12 @@ function parseScale(params: URLSearchParams): number {
   const raw = params.get("scale");
   if (raw !== null) {
     const n = Number(raw);
-    if (Number.isFinite(n)) return Math.min(MAX_OBS_SCALE, Math.max(MIN_OBS_SCALE, n));
+    if (Number.isFinite(n))
+      return Math.min(MAX_OBS_SCALE, Math.max(MIN_OBS_SCALE, n));
   }
   const legacySize = params.get("size");
-  if (legacySize && legacySize in LEGACY_SIZE_SCALE) return LEGACY_SIZE_SCALE[legacySize];
+  if (legacySize && legacySize in LEGACY_SIZE_SCALE)
+    return LEGACY_SIZE_SCALE[legacySize];
   return DEFAULT_OBS_OPTIONS.scale;
 }
 
@@ -78,14 +85,17 @@ function parseNameScale(params: URLSearchParams): number {
   const raw = params.get("nameScale");
   if (raw === null) return DEFAULT_OBS_OPTIONS.nameScale;
   const n = Number(raw);
-  return Number.isFinite(n) ? Math.min(MAX_OBS_NAME_SCALE, Math.max(MIN_OBS_NAME_SCALE, n)) : DEFAULT_OBS_OPTIONS.nameScale;
+  return Number.isFinite(n)
+    ? Math.min(MAX_OBS_NAME_SCALE, Math.max(MIN_OBS_NAME_SCALE, n))
+    : DEFAULT_OBS_OPTIONS.nameScale;
 }
 
 function parsePositions(params: URLSearchParams): ObsIconPosition[] | null {
   const raw = params.get("pos");
   if (!raw) return null;
   const numbers = raw.split(",").map(Number);
-  if (numbers.length < 2 || numbers.some((n) => !Number.isFinite(n))) return null;
+  if (numbers.length < 2 || numbers.some((n) => !Number.isFinite(n)))
+    return null;
   const positions: ObsIconPosition[] = [];
   for (let i = 0; i + 1 < numbers.length; i += 2) {
     positions.push({
@@ -108,7 +118,8 @@ function encodePositions(positions: ObsIconPosition[]): string {
  *  overlay share a browser profile too (they don't — see useObsRoomCode
  *  below), but now bridges across profiles via Firebase. */
 export function useObsOverlayOptions(): ObsOverlayOptions {
-  const [options, setOptions] = useState<ObsOverlayOptions>(DEFAULT_OBS_OPTIONS);
+  const [options, setOptions] =
+    useState<ObsOverlayOptions>(DEFAULT_OBS_OPTIONS);
 
   useEffect(() => {
     function applyFromUrl() {
@@ -152,7 +163,8 @@ export function useIsObsMode(): boolean {
 
   useEffect(() => {
     function check() {
-      const isQueryObs = new URLSearchParams(window.location.search).get("obs") === "1";
+      const isQueryObs =
+        new URLSearchParams(window.location.search).get("obs") === "1";
       setIsObs(window.location.hash === OBS_HASH || isQueryObs);
     }
     check();
@@ -191,7 +203,9 @@ export function useObsRoomCode(): string | null {
  *  suspenders against the fragment getting stripped in transit (see
  *  useIsObsMode's docstring for why that's a real, reported failure
  *  mode), at the cost of a few extra characters on every link. */
-export function obsOverlayUrl(options: Partial<ObsOverlayOptions> = {}): string {
+export function obsOverlayUrl(
+  options: Partial<ObsOverlayOptions> = {},
+): string {
   if (typeof window === "undefined") return OBS_HASH;
   const params = new URLSearchParams();
   params.set("room", getOrCreateRoomCode());
@@ -199,11 +213,17 @@ export function obsOverlayUrl(options: Partial<ObsOverlayOptions> = {}): string 
   if (options.scale && options.scale !== DEFAULT_OBS_OPTIONS.scale) {
     params.set("scale", String(Math.round(options.scale)));
   }
-  if (options.nameScale && options.nameScale !== DEFAULT_OBS_OPTIONS.nameScale) {
+  if (
+    options.nameScale &&
+    options.nameScale !== DEFAULT_OBS_OPTIONS.nameScale
+  ) {
     params.set("nameScale", String(Math.round(options.nameScale)));
   }
   if (options.showNames === false) params.set("names", "0");
-  if (options.background && options.background !== DEFAULT_OBS_OPTIONS.background) {
+  if (
+    options.background &&
+    options.background !== DEFAULT_OBS_OPTIONS.background
+  ) {
     params.set("bg", options.background);
   }
   if (options.positions && options.positions.length > 0) {

@@ -5,7 +5,12 @@ import { AnimatePresence, motion } from "framer-motion";
 import { withBasePath } from "@/lib/asset-path";
 import { cn } from "@/lib/cn";
 import { ROLE_COLOR } from "@/lib/role-color";
-import { loadLastObsState, subscribeObsState, type ObsSyncPayload } from "@/lib/obs-sync";
+import {
+  loadLastObsState,
+  subscribeObsState,
+  type ObsPerk,
+  type ObsSyncPayload,
+} from "@/lib/obs-sync";
 import { useObsOverlayOptions, useObsRoomCode } from "@/lib/use-obs-mode";
 import { useT } from "@/lib/i18n";
 
@@ -14,6 +19,12 @@ import { useT } from "@/lib/i18n";
 // of a fixed sm/md/lg set.
 const BASE_ICON_PX = 84;
 const BASE_GAP_PX = 16;
+// Extra gap between the perk block and the loadout block when both are on
+// screen at once ("all" mode) — visually separates the two groups instead
+// of 8 pieces reading as one long undifferentiated bar. Only applies to the
+// default centered layout; dragged/custom positions are the user's own
+// layout and aren't touched.
+const GROUP_GAP_PX = 40;
 const BASE_NAME_FONT_PX = 12;
 const BASE_NAME_PAD_X_PX = 12;
 const BASE_NAME_PAD_Y_PX = 4;
@@ -23,6 +34,30 @@ const BASE_NAME_PAD_Y_PX = 4;
 // `nameScale` URL param (see the modal's "Ширина имени" slider) multiplies
 // this further for names that still don't fit.
 const BASE_NAME_MAX_WIDTH_PX = 200;
+
+type PieceKind = "perk" | "item" | "addon" | "offering";
+
+// Loadout pieces are published with their slug prefixed "kind:slug" (see
+// randomizer-board.tsx's publish effect) specifically so they can't collide
+// as React keys with a perk on the same list — that prefix doubles as the
+// only signal this component has for which kind of piece it's looking at,
+// so it's reused here rather than widening the sync payload just for this.
+function pieceKind(slug: string): PieceKind {
+  const prefix = slug.split(":")[0];
+  return prefix === "item" || prefix === "addon" || prefix === "offering"
+    ? prefix
+    : "perk";
+}
+
+// Visual hierarchy within a loadout group: the Item (or a killer's Power)
+// reads as the "main" piece and gets a small bump, Add-ons are secondary
+// and get a small reduction, Offerings and perks stay at the base size.
+const KIND_SCALE: Record<PieceKind, number> = {
+  perk: 1,
+  item: 1.15,
+  addon: 0.82,
+  offering: 1,
+};
 
 /** The stream overlay view (`#/obs`) — a fully transparent background (by
  *  default) showing only the current perk cards, animated in/out as the
@@ -62,9 +97,97 @@ export function ObsOverlay() {
   const roleColor = state ? ROLE_COLOR[state.role] : null;
   const scaleRatio = options.scale / 100;
   const nameScaleRatio = options.nameScale / 100;
-  const iconSize = Math.round(BASE_ICON_PX * scaleRatio);
   const gapPx = Math.round(BASE_GAP_PX * scaleRatio);
-  const usePositions = !!options.positions && !!state && options.positions.length >= state.perks.length;
+  const usePositions =
+    !!options.positions &&
+    !!state &&
+    options.positions.length >= state.perks.length;
+
+  // Split into "perks" vs "everything from the loadout" purely to group
+  // them visually in the default (non-dragged) layout — a build that's
+  // perks-only or loadout-only ends up with one empty group and renders
+  // exactly as a single row, same as before this existed.
+  const perkPieces =
+    state?.perks.filter((p) => pieceKind(p.slug) === "perk") ?? [];
+  const loadoutPieces =
+    state?.perks.filter((p) => pieceKind(p.slug) !== "perk") ?? [];
+  const hasBothGroups = perkPieces.length > 0 && loadoutPieces.length > 0;
+
+  function renderCard(
+    perk: ObsPerk,
+    index: number,
+    pos: { x: number; y: number } | null,
+  ) {
+    const iconSize = Math.round(
+      BASE_ICON_PX * scaleRatio * KIND_SCALE[pieceKind(perk.slug)],
+    );
+    return (
+      <motion.div
+        key={perk.slug}
+        initial={{ opacity: 0, scale: 0.75, y: 16 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.75, y: -16 }}
+        transition={{ duration: 0.35, delay: index * 0.06, ease: "easeOut" }}
+        className={cn(
+          "flex flex-col items-center gap-1.5",
+          pos && "absolute -translate-x-1/2 -translate-y-1/2",
+        )}
+        style={pos ? { left: `${pos.x}%`, top: `${pos.y}%` } : undefined}
+      >
+        <span
+          // Soft, low-contrast card instead of a bright neon-style ring —
+          // a thin translucent border plus a subtle drop shadow for depth,
+          // with just a whisper of the role color as a ~15%-opacity outer
+          // ring (the first boxShadow layer below) rather than a solid,
+          // fully-opaque 3px stroke.
+          className="flex items-center justify-center rounded-2xl border border-white/10 bg-black/55 p-1.5 backdrop-blur-sm"
+          style={{
+            boxShadow: `0 0 0 1px ${roleColor?.solid}26, 0 6px 16px -4px rgba(0,0,0,0.5)`,
+          }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element -- overlay renders outside the normal app shell; next/image's basePath handling isn't relevant here either way */}
+          <img
+            src={withBasePath(perk.icon)}
+            alt={perk.name[state!.language]}
+            width={iconSize}
+            height={iconSize}
+            // Inline width/height (not just the size class below) so this
+            // stays correct regardless of any container constraint or
+            // Tailwind Preflight's `img { max-width: 100%; height: auto }`
+            // — `scale` is chosen at runtime via a URL param, so there's
+            // no static Tailwind class to rely on as the sole source of
+            // truth the way the rest of the app's fixed-size icons do.
+            style={{ width: iconSize, height: iconSize, objectFit: "cover" }}
+            className="rounded-xl"
+          />
+        </span>
+        {options.showNames && (
+          <span
+            // Wraps onto up to 2 lines instead of cutting off on one —
+            // long names (RU especially) rarely fit a single-line pill
+            // at any reasonable width, so wrapping is the "just fits"
+            // default; line-clamp-2 still ellipsizes the rare name
+            // that overflows even two lines. A rectangle (not a full
+            // pill) reads better once the box has real height.
+            className="line-clamp-2 inline-block rounded-lg bg-black/55 text-center leading-tight font-bold break-words text-white backdrop-blur-sm"
+            style={{
+              fontSize: Math.round(BASE_NAME_FONT_PX * scaleRatio),
+              paddingLeft: Math.round(BASE_NAME_PAD_X_PX * scaleRatio),
+              paddingRight: Math.round(BASE_NAME_PAD_X_PX * scaleRatio),
+              paddingTop: Math.round(BASE_NAME_PAD_Y_PX * scaleRatio),
+              paddingBottom: Math.round(BASE_NAME_PAD_Y_PX * scaleRatio),
+              maxWidth: Math.round(
+                BASE_NAME_MAX_WIDTH_PX * scaleRatio * nameScaleRatio,
+              ),
+              boxShadow: "0 4px 10px -2px rgba(0,0,0,0.4)",
+            }}
+          >
+            {perk.name[state!.language]}
+          </span>
+        )}
+      </motion.div>
+    );
+  }
 
   return (
     <div
@@ -74,9 +197,13 @@ export function ObsOverlay() {
         // (see globals.css) — visibility, unlike display:none, lets a
         // descendant opt back in even while an ancestor is hidden.
         "obs-overlay-root fixed inset-0 overflow-hidden p-4",
-        usePositions ? "" : "flex items-center justify-center",
+        usePositions ? "" : "flex flex-col items-center justify-center",
       )}
-      style={usePositions ? undefined : { gap: gapPx }}
+      style={
+        usePositions
+          ? undefined
+          : { gap: hasBothGroups ? Math.round(GROUP_GAP_PX * scaleRatio) : 0 }
+      }
     >
       {!state || state.perks.length === 0 ? (
         <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-black/60 px-3 py-1.5 text-xs whitespace-nowrap text-white/70">
@@ -85,65 +212,42 @@ export function ObsOverlay() {
             en: "Waiting for a build from the main site…",
           })}
         </p>
-      ) : (
+      ) : usePositions ? (
         <AnimatePresence mode="popLayout">
-          {state.perks.map((perk, index) => {
-            const pos = usePositions ? options.positions![index] : null;
-            return (
-              <motion.div
-                key={perk.slug}
-                initial={{ opacity: 0, scale: 0.75, y: 16 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.75, y: -16 }}
-                transition={{ duration: 0.35, delay: index * 0.06, ease: "easeOut" }}
-                className={cn("flex flex-col items-center gap-1.5", pos && "absolute -translate-x-1/2 -translate-y-1/2")}
-                style={pos ? { left: `${pos.x}%`, top: `${pos.y}%` } : undefined}
-              >
-                <span
-                  className="flex items-center justify-center rounded-2xl border-[3px] bg-black/70 p-1.5 shadow-2xl backdrop-blur-sm"
-                  style={{ borderColor: roleColor?.solid }}
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element -- overlay renders outside the normal app shell; next/image's basePath handling isn't relevant here either way */}
-                  <img
-                    src={withBasePath(perk.icon)}
-                    alt={perk.name[state.language]}
-                    width={iconSize}
-                    height={iconSize}
-                    // Inline width/height (not just the size class below) so this
-                    // stays correct regardless of any container constraint or
-                    // Tailwind Preflight's `img { max-width: 100%; height: auto }`
-                    // — `scale` is chosen at runtime via a URL param, so there's
-                    // no static Tailwind class to rely on as the sole source of
-                    // truth the way the rest of the app's fixed-size icons do.
-                    style={{ width: iconSize, height: iconSize, objectFit: "cover" }}
-                    className="rounded-xl"
-                  />
-                </span>
-                {options.showNames && (
-                  <span
-                    // Wraps onto up to 2 lines instead of cutting off on one —
-                    // long names (RU especially) rarely fit a single-line pill
-                    // at any reasonable width, so wrapping is the "just fits"
-                    // default; line-clamp-2 still ellipsizes the rare name
-                    // that overflows even two lines. A rectangle (not a full
-                    // pill) reads better once the box has real height.
-                    className="line-clamp-2 inline-block rounded-lg bg-black/70 text-center leading-tight font-bold break-words text-white shadow-lg backdrop-blur-sm"
-                    style={{
-                      fontSize: Math.round(BASE_NAME_FONT_PX * scaleRatio),
-                      paddingLeft: Math.round(BASE_NAME_PAD_X_PX * scaleRatio),
-                      paddingRight: Math.round(BASE_NAME_PAD_X_PX * scaleRatio),
-                      paddingTop: Math.round(BASE_NAME_PAD_Y_PX * scaleRatio),
-                      paddingBottom: Math.round(BASE_NAME_PAD_Y_PX * scaleRatio),
-                      maxWidth: Math.round(BASE_NAME_MAX_WIDTH_PX * scaleRatio * nameScaleRatio),
-                    }}
-                  >
-                    {perk.name[state.language]}
-                  </span>
-                )}
-              </motion.div>
-            );
-          })}
+          {state.perks.map((perk, index) =>
+            renderCard(perk, index, options.positions![index]),
+          )}
         </AnimatePresence>
+      ) : (
+        // Two stacked rows (perks on top, loadout below) instead of one
+        // long horizontal bar once both groups are present — 8 pieces in a
+        // single row was the "stretched, bulky" look this replaces. A
+        // perks-only or loadout-only build never has a second group, so it
+        // still renders as the single centered row it always did.
+        <>
+          {perkPieces.length > 0 && (
+            <div
+              className="flex items-center justify-center"
+              style={{ gap: gapPx }}
+            >
+              <AnimatePresence mode="popLayout">
+                {perkPieces.map((perk, index) => renderCard(perk, index, null))}
+              </AnimatePresence>
+            </div>
+          )}
+          {loadoutPieces.length > 0 && (
+            <div
+              className="flex items-center justify-center"
+              style={{ gap: gapPx }}
+            >
+              <AnimatePresence mode="popLayout">
+                {loadoutPieces.map((perk, index) =>
+                  renderCard(perk, perkPieces.length + index, null),
+                )}
+              </AnimatePresence>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
