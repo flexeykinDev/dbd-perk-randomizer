@@ -262,6 +262,22 @@ test.describe("theme toggle", () => {
   });
 });
 
+test.describe("OBS overlay", () => {
+  test("?obs=1 triggers the overlay even without the #/obs hash", async ({ page }) => {
+    // Regression test for a real report: the #/obs hash fragment can get
+    // stripped in transit before reaching OBS's Browser Source (link-
+    // preview rewriters, a data-saving browser proxy, etc. — see
+    // lib/use-obs-mode.ts's useIsObsMode docstring), silently showing the
+    // normal site instead of the overlay. `obs=1` is the query-param
+    // fallback that survives that kind of URL mangling.
+    await page.goto("/?room=TESTROOM&obs=1");
+    await expect(page.getByRole("link", { name: "Vortex Hub" })).not.toBeVisible();
+    await expect(
+      page.getByText(/Ждём билд с основного сайта|Waiting for a build/),
+    ).toBeVisible();
+  });
+});
+
 test.describe("Build History", () => {
   test("a generated build appears in History and can be reopened", async ({ page }) => {
     await page.goto("/?role=survivor");

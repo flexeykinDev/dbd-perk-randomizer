@@ -132,19 +132,28 @@ export function useObsOverlayOptions(): ObsOverlayOptions {
   return options;
 }
 
-/** True when the URL's hash marks this tab as the stream overlay
- *  (`#/obs`) — used by layout chrome (Nav/Footer) to hide itself and by
+/** True when the URL marks this tab as the stream overlay — primarily
+ *  the `#/obs` hash, but also a `?obs=1` query param as a fallback (see
+ *  obsOverlayUrl below). Reported in the wild: pasting the overlay link
+ *  through certain link-preview rewriters, "safe link" wrappers, or a
+ *  data-saving browser proxy (Yandex Browser's Turbo mode is a common
+ *  one) can silently strip the `#...` fragment before it ever reaches
+ *  OBS's Browser Source — since fragments are client-side-only, some of
+ *  these tools drop them when reconstructing a URL. A query param
+ *  survives that same mangling far more reliably, so it's checked
+ *  first-class here, not just as a hash substitute.
+ *  Used by layout chrome (Nav/Footer) to hide itself and by
  *  RandomizerContent to swap in the overlay instead of the normal app.
  *  Starts `false` to match the server's render (a static export can't know
- *  the hash at build time — hashes never even reach the server) and
- *  corrects itself right after mount, same pattern as the app's other
- *  client-only state. */
+ *  the hash/query at build time) and corrects itself right after mount,
+ *  same pattern as the app's other client-only state. */
 export function useIsObsMode(): boolean {
   const [isObs, setIsObs] = useState(false);
 
   useEffect(() => {
     function check() {
-      setIsObs(window.location.hash === OBS_HASH);
+      const isQueryObs = new URLSearchParams(window.location.search).get("obs") === "1";
+      setIsObs(window.location.hash === OBS_HASH || isQueryObs);
     }
     check();
     window.addEventListener("hashchange", check);
@@ -177,11 +186,16 @@ export function useObsRoomCode(): string | null {
  *  (creating one on first call, see getOrCreateRoomCode) since that's what
  *  lets the overlay receive updates when it's running in OBS's own
  *  isolated browser profile — everything else is only written out when
- *  non-default, so a plain link with no customization stays short. */
+ *  non-default, so a plain link with no customization stays short.
+ *  Also always carries `obs=1` alongside the `#/obs` hash — belt and
+ *  suspenders against the fragment getting stripped in transit (see
+ *  useIsObsMode's docstring for why that's a real, reported failure
+ *  mode), at the cost of a few extra characters on every link. */
 export function obsOverlayUrl(options: Partial<ObsOverlayOptions> = {}): string {
   if (typeof window === "undefined") return OBS_HASH;
   const params = new URLSearchParams();
   params.set("room", getOrCreateRoomCode());
+  params.set("obs", "1");
   if (options.scale && options.scale !== DEFAULT_OBS_OPTIONS.scale) {
     params.set("scale", String(Math.round(options.scale)));
   }
