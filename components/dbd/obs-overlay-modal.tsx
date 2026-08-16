@@ -482,20 +482,31 @@ export function ObsOverlayModal({
   }
 
   // The overlay itself renders whatever publishObsState() last sent it,
-  // which mirrors the current mode (see randomizer-board.tsx) — the
-  // preview needs to mirror the *same* pieces, or it'd show 4 empty
-  // placeholder slots the entire time someone's in Loadout mode while the
-  // real overlay is showing something else entirely.
+  // which mirrors the current mode *and* the "Показывать:" visibility
+  // toggles (see randomizer-board.tsx's visiblePerks/visibleLoadoutPieces) —
+  // the preview needs to mirror that exact same filtered list, not the raw
+  // `perks`/`loadoutPieces` props (which stay unfiltered here because the
+  // Twitch !paste command and Constructor tab below intentionally hand out
+  // the full rolled build regardless of what's hidden from the overlay).
+  // Filtering anywhere else would desync the dragged slot *positions* from
+  // reality: positions are assigned by array index, so if the modal drags
+  // positions against an 8-item unfiltered list while the real overlay
+  // renders a 7-item filtered one, every piece after a hidden one silently
+  // renders at the position dragged for a different piece.
+  const visiblePreviewPerks = pieceVisibility.perks ? perks : [];
+  const visiblePreviewLoadoutPieces = loadoutPieces.filter(
+    (p) => pieceVisibility[p.kind],
+  );
   const previewPieces: {
     slug: string;
     icon: string;
     name: { en: string; ru: string };
   }[] =
     mode === "loadout"
-      ? loadoutPieces
+      ? visiblePreviewLoadoutPieces
       : mode === "all"
-        ? [...perks, ...loadoutPieces]
-        : perks;
+        ? [...visiblePreviewPerks, ...visiblePreviewLoadoutPieces]
+        : visiblePreviewPerks;
   // Capped at 8 — DEFAULT_SLOT_POSITIONS has exactly that many entries,
   // enough for "all" mode's largest possible combined list (4 perks + 4
   // loadout pieces). The real overlay itself has no cap at all (see
