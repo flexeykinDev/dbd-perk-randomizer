@@ -369,6 +369,9 @@ test.describe("Build History", () => {
     await page.reload();
     await page.getByRole("button", { name: "Сгенерировать новый билд" }).click();
 
+    // History moved into the "More" popover (see more-menu.tsx) as part of
+    // decluttering the toolbar — open it before the button becomes clickable.
+    await page.getByRole("button", { name: "Ещё", exact: true }).click();
     await page.getByRole("button", { name: "История", exact: true }).click();
     const panel = page.getByText("История билдов");
     await expect(panel).toBeVisible();
@@ -386,6 +389,9 @@ test.describe("Build History", () => {
     await page.goto("/?role=survivor");
     await page.getByRole("button", { name: "Сгенерировать новый билд" }).click();
 
+    // History moved into the "More" popover (see more-menu.tsx) as part of
+    // decluttering the toolbar — open it before the button becomes clickable.
+    await page.getByRole("button", { name: "Ещё", exact: true }).click();
     await page.getByRole("button", { name: "История", exact: true }).click();
     await page.getByRole("button", { name: "Очистить", exact: true }).click();
     // The confirm dialog's own confirm button shares the same label as the

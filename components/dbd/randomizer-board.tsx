@@ -64,6 +64,7 @@ import { ShareCard, type ShareCardLayout } from "./share-card";
 import { DownloadImageButton } from "./download-image-button";
 import { ObsOverlayModal } from "./obs-overlay-modal";
 import { CharacterPickerModal } from "./character-picker-modal";
+import { MoreMenu } from "./more-menu";
 
 const MAX_PERK_COUNT = 4;
 const DEFAULT_PERK_COUNT = 4;
@@ -1362,51 +1363,13 @@ export function RandomizerBoard() {
         )}
       </div>
 
-      {/* Utility bar — Daily Challenge/seed and the pool/stats dialogs live
-          here, deliberately separated from the primary Generate action
-          below the perk grid so the two don't compete for attention. */}
+      {/* Utility bar — only the controls used on nearly every roll (pool,
+          OBS) stay always-visible; Daily Challenge, custom seed, Stats, and
+          History move into the "More" popover below since they're reached
+          far less often and were crowding this row (user feedback: "too
+          much buttons"). */}
       <div className="flex flex-col items-center gap-1.5">
         <div className="flex flex-wrap items-center justify-center gap-1.5 rounded-full border border-border bg-surface/60 px-2 py-1.5">
-          <button
-            type="button"
-            onClick={toggleDailyChallenge}
-            className={cn(
-              "flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-colors",
-              seedMode === "daily"
-                ? "bg-accent/15 text-accent"
-                : "text-muted hover:bg-surface-hover hover:text-foreground",
-            )}
-          >
-            <CalendarClock className="size-3.5" />
-            {t({ ru: "Задание дня", en: "Daily Challenge" })}
-          </button>
-          <input
-            type="text"
-            value={customSeedInput}
-            onChange={(e) => setCustomSeedInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && applyCustomSeed()}
-            placeholder={t({ ru: "Свой сид…", en: "Custom seed…" })}
-            className="w-28 rounded-full border border-border bg-background px-3 py-1 text-xs text-foreground placeholder:text-muted/60 focus:ring-2 focus:ring-accent/40 focus:outline-none"
-          />
-          <button
-            type="button"
-            onClick={applyCustomSeed}
-            disabled={!customSeedInput.trim()}
-            className="rounded-full px-2.5 py-1 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
-          >
-            {t({ ru: "Задать", en: "Set" })}
-          </button>
-          {seedMode !== "none" && (
-            <button
-              type="button"
-              onClick={clearSeed}
-              aria-label={t({ ru: "Сбросить сид", en: "Clear seed" })}
-              className="flex size-6 items-center justify-center rounded-full text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
-            >
-              <X className="size-3.5" />
-            </button>
-          )}
-          <span className="mx-0.5 h-4 w-px bg-border" aria-hidden />
           {mode === "all" ? (
             <>
               <button
@@ -1449,22 +1412,6 @@ export function RandomizerBoard() {
           )}
           <button
             type="button"
-            onClick={() => setStatsModalOpen(true)}
-            className="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
-          >
-            <BarChart3 className="size-3.5" />
-            {t({ ru: "Статистика", en: "Stats" })}
-          </button>
-          <button
-            type="button"
-            onClick={() => setHistoryModalOpen(true)}
-            className="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
-          >
-            <History className="size-3.5" />
-            {t({ ru: "История", en: "History" })}
-          </button>
-          <button
-            type="button"
             onClick={() => setObsModalOpen(true)}
             title={t({
               ru: "Отдельная ссылка специально для источника «Браузер» в OBS — не та же ссылка, что у кнопки «Поделиться».",
@@ -1475,6 +1422,72 @@ export function RandomizerBoard() {
             <MonitorPlay className="size-3.5" />
             {t({ ru: "Оверлей OBS", en: "OBS Overlay" })}
           </button>
+          <span className="mx-0.5 h-4 w-px bg-border" aria-hidden />
+          <MoreMenu>
+            <div className="flex flex-col gap-1">
+              <button
+                type="button"
+                onClick={toggleDailyChallenge}
+                className={cn(
+                  "flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm font-medium transition-colors",
+                  seedMode === "daily"
+                    ? "bg-accent/15 text-accent"
+                    : "text-foreground hover:bg-surface-hover",
+                )}
+              >
+                <CalendarClock className="size-4 shrink-0" />
+                {t({ ru: "Задание дня", en: "Daily Challenge" })}
+              </button>
+
+              <div className="flex items-center gap-1.5 px-2 py-1">
+                <input
+                  type="text"
+                  value={customSeedInput}
+                  onChange={(e) => setCustomSeedInput(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && applyCustomSeed()}
+                  placeholder={t({ ru: "Свой сид…", en: "Custom seed…" })}
+                  className="min-w-0 flex-1 rounded-full border border-border bg-background px-3 py-1 text-xs text-foreground placeholder:text-muted/60 focus:ring-2 focus:ring-accent/40 focus:outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={applyCustomSeed}
+                  disabled={!customSeedInput.trim()}
+                  className="rounded-full px-2.5 py-1 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
+                >
+                  {t({ ru: "Задать", en: "Set" })}
+                </button>
+                {seedMode !== "none" && (
+                  <button
+                    type="button"
+                    onClick={clearSeed}
+                    aria-label={t({ ru: "Сбросить сид", en: "Clear seed" })}
+                    className="flex size-6 shrink-0 items-center justify-center rounded-full text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+                  >
+                    <X className="size-3.5" />
+                  </button>
+                )}
+              </div>
+
+              <div className="my-1 h-px bg-border" aria-hidden />
+
+              <button
+                type="button"
+                onClick={() => setStatsModalOpen(true)}
+                className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm font-medium text-foreground transition-colors hover:bg-surface-hover"
+              >
+                <BarChart3 className="size-4 shrink-0" />
+                {t({ ru: "Статистика", en: "Stats" })}
+              </button>
+              <button
+                type="button"
+                onClick={() => setHistoryModalOpen(true)}
+                className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm font-medium text-foreground transition-colors hover:bg-surface-hover"
+              >
+                <History className="size-4 shrink-0" />
+                {t({ ru: "История", en: "History" })}
+              </button>
+            </div>
+          </MoreMenu>
         </div>
         {activeSeed && (
           <p className="text-xs text-muted">
