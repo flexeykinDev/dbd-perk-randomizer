@@ -156,6 +156,58 @@ test.describe("Full Loadout", () => {
   });
 });
 
+test.describe("Combined All mode", () => {
+  test("shows both the perk grid and the loadout HUD together", async ({ page }) => {
+    await page.goto("/?role=survivor");
+    await page.getByRole("button", { name: "Всё", exact: true }).click();
+
+    await expect(page.getByTestId("loadout-slot-item")).toBeVisible();
+    await expect(page.getByTestId("loadout-slot-addons")).toBeVisible();
+    await expect(page.getByTestId("loadout-slot-offering")).toBeVisible();
+    // A perk card's Copy button — proves the perk grid rendered alongside
+    // the loadout HUD above, not instead of it.
+    await expect(page.getByRole("button", { name: "Скопировать всё" })).toBeVisible();
+
+    // "All" mode needs two separate pool buttons (one panel can't cover
+    // both perks and loadout pieces at once) instead of the single "Пул"
+    // the other two modes use.
+    await expect(page.getByRole("button", { name: "Пул перков" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Пул экип." })).toBeVisible();
+
+    // Regenerating shares both halves in the URL together.
+    await page.getByRole("button", { name: "Сгенерировать новый билд" }).click();
+    await expect(page).toHaveURL(/[?&]mode=all&(?:.*&)?lp=\d+(%2C\d+)*(?:.*&)?p=\d+(%2C\d+)*/);
+  });
+
+  test("a mode=all share link restores both the perks and the loadout exactly", async ({ page }) => {
+    await page.goto("/?role=survivor");
+    await page.getByRole("button", { name: "Всё", exact: true }).click();
+    await page.getByRole("button", { name: "Сгенерировать новый билд" }).click();
+    const sharedUrl = page.url();
+
+    await page.goto("about:blank");
+    await page.goto(sharedUrl);
+    await expect(page.getByTestId("loadout-slot-item")).toBeVisible();
+    await expect(page.getByRole("button", { name: "Скопировать всё" })).toBeVisible();
+    // Still the exact same URL after the restore effect settles — proves
+    // nothing silently re-rolled on load (a shared build must show
+    // *that* build, not a fresh random one).
+    await expect(page).toHaveURL(sharedUrl);
+  });
+
+  test("each pool button opens its own panel", async ({ page }) => {
+    await page.goto("/?role=survivor");
+    await page.getByRole("button", { name: "Всё", exact: true }).click();
+
+    await page.getByRole("button", { name: "Пул перков" }).click();
+    await expect(page.getByText("Настроить пул перков")).toBeVisible();
+    await page.getByRole("button", { name: "Закрыть" }).click();
+
+    await page.getByRole("button", { name: "Пул экип." }).click();
+    await expect(page.getByText("Настроить пул экипировки")).toBeVisible();
+  });
+});
+
 test.describe("Character picker", () => {
   test("choosing a character shows a portrait chip that can be cleared", async ({ page }) => {
     await page.goto("/?role=survivor");

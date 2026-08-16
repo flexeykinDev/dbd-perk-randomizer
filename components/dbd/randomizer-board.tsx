@@ -77,7 +77,11 @@ const LOADOUT_SLOT_ITEM_STORAGE_KEY = "dbd-randomizer:loadout-slot-item";
 const LOADOUT_SLOT_ADDONS_STORAGE_KEY = "dbd-randomizer:loadout-slot-addons";
 const LOADOUT_SLOT_OFFERING_STORAGE_KEY = "dbd-randomizer:loadout-slot-offering";
 const DEFAULT_LOADOUT_SLOTS: LoadoutSlots = { item: true, addons: true, offering: true };
-type BuildMode = "perks" | "loadout";
+// "all" shows the perk grid and the loadout HUD together — a real player
+// always has both equipped at once in an actual match, so this is what a
+// visitor asking for "just show me everything" gets instead of having to
+// flip between the other two.
+type BuildMode = "perks" | "loadout" | "all";
 const GUARANTEE_TEACHABLES_STORAGE_KEY = "dbd-randomizer:guarantee-teachables";
 const TWITCH_CHANNEL_STORAGE_KEY = "dbd-randomizer:twitch-channel";
 const TWITCH_ENABLED_STORAGE_KEY = "dbd-randomizer:twitch-enabled";
@@ -120,7 +124,7 @@ function loadPerkCount(): number {
   return Number.isInteger(n) && n >= 0 && n <= MAX_PERK_COUNT ? n : DEFAULT_PERK_COUNT;
 }
 
-const VALID_MODES: readonly BuildMode[] = ["perks", "loadout"];
+const VALID_MODES: readonly BuildMode[] = ["perks", "loadout", "all"];
 
 function loadMode(): BuildMode {
   const stored = safeGet("local", MODE_STORAGE_KEY);
@@ -183,7 +187,8 @@ interface InitialUrlState {
  *  shared before short IDs existed) — old links must keep working. `?seed=`
  *  takes priority over an explicit perk/loadout list either way, since a
  *  seed is enough to re-derive the build client-side. `?mode=loadout` plus
- *  `?lp=id1,id2,...` mirrors `?p=` for sharing a specific Full Loadout roll.
+ *  `?lp=id1,id2,...` mirrors `?p=` for sharing a specific Full Loadout roll;
+ *  `?mode=all` carries both `?p=` and `?lp=` together for the combined view.
  *  Mirrors the existing rule that a bare role with no seed/build attached
  *  isn't treated as "shared state" at all — mode only takes effect when it
  *  comes with content, same as role always has. */
@@ -200,24 +205,51 @@ function readInitialUrlState(): InitialUrlState | null {
       : undefined;
   if (!role) return null;
 
-  const mode: BuildMode = params.get("mode") === "loadout" ? "loadout" : "perks";
+  const modeParam = params.get("mode");
+  const mode: BuildMode = modeParam === "loadout" ? "loadout" : modeParam === "all" ? "all" : "perks";
 
   const seed = params.get("seed");
   if (seed) return { role, mode, seed };
 
-  if (mode === "loadout") {
+  const readLoadoutPieces = (): LoadoutPiece[] => {
     const lpParam = params.get("lp");
-    if (lpParam) {
-      const matched = lpParam
+    if (!lpParam) return [];
+    return lpParam
+      .split(",")
+      .map((idStr) => {
+        const id = Number(idStr);
+        const key = Number.isFinite(id) ? getLoadoutPieceKeyForId(id) : undefined;
+        return key ? getLoadoutPiece(key.kind, key.slug) : undefined;
+      })
+      .filter((piece): piece is LoadoutPiece => !!piece);
+  };
+
+  const readPerks = (): Perk[] => {
+    const idsParam = params.get("p");
+    if (idsParam) {
+      const matched = idsParam
         .split(",")
         .map((idStr) => {
           const id = Number(idStr);
-          const key = Number.isFinite(id) ? getLoadoutPieceKeyForId(id) : undefined;
-          return key ? getLoadoutPiece(key.kind, key.slug) : undefined;
+          const slug = Number.isFinite(id) ? getSlugForId(id) : undefined;
+          return slug ? getPerkBySlug(slug) : undefined;
         })
-        .filter((piece): piece is LoadoutPiece => !!piece);
-      if (matched.length > 0) return { role, mode, loadoutPieces: matched };
+        .filter((perk): perk is Perk => !!perk && perk.role === role);
+      if (matched.length > 0) return matched;
     }
+    const slugsParam = params.get("perks");
+    if (slugsParam) {
+      return slugsParam
+        .split(",")
+        .map((slug) => getPerkBySlug(slug))
+        .filter((perk): perk is Perk => !!perk && perk.role === role);
+    }
+    return [];
+  };
+
+  if (mode === "loadout") {
+    const loadoutPieces = readLoadoutPieces();
+    if (loadoutPieces.length > 0) return { role, mode, loadoutPieces };
     // Explicit `?mode=loadout` is itself meaningful intent — unlike a bare
     // `?r=...` alone (which existing perk links deliberately don't treat as
     // "shared state," see the perks branch below), a link that spells out
@@ -226,27 +258,22 @@ function readInitialUrlState(): InitialUrlState | null {
     return { role, mode };
   }
 
-  const idsParam = params.get("p");
-  if (idsParam) {
-    const matched = idsParam
-      .split(",")
-      .map((idStr) => {
-        const id = Number(idStr);
-        const slug = Number.isFinite(id) ? getSlugForId(id) : undefined;
-        return slug ? getPerkBySlug(slug) : undefined;
-      })
-      .filter((perk): perk is Perk => !!perk && perk.role === role);
-    if (matched.length > 0) return { role, mode, perks: matched };
+  if (mode === "all") {
+    const perks = readPerks();
+    const loadoutPieces = readLoadoutPieces();
+    if (perks.length > 0 || loadoutPieces.length > 0) {
+      return {
+        role,
+        mode,
+        perks: perks.length > 0 ? perks : undefined,
+        loadoutPieces: loadoutPieces.length > 0 ? loadoutPieces : undefined,
+      };
+    }
+    return { role, mode }; // same "explicit mode is enough" rule as loadout above
   }
 
-  const slugsParam = params.get("perks");
-  if (slugsParam) {
-    const matched = slugsParam
-      .split(",")
-      .map((slug) => getPerkBySlug(slug))
-      .filter((perk): perk is Perk => !!perk && perk.role === role);
-    if (matched.length > 0) return { role, mode, perks: matched };
-  }
+  const perks = readPerks();
+  if (perks.length > 0) return { role, mode, perks };
 
   return null;
 }
@@ -260,6 +287,11 @@ export function RandomizerBoard() {
   const shareCardRef = useRef<HTMLDivElement>(null);
   const storyShareCardRef = useRef<HTMLDivElement>(null);
   const [excludePanelOpen, setExcludePanelOpen] = useState(false);
+  // Which pool the "Пул" button(s) open — irrelevant outside "all" mode
+  // (there's only one pool to manage there), but "all" mode shows perks
+  // and loadout together, so it needs two separate pool buttons and this
+  // decides which panel opens when one of them is clicked.
+  const [excludePanelKind, setExcludePanelKind] = useState<"perks" | "loadout">("perks");
   // Both start at SSR-safe defaults and are corrected from localStorage in
   // the mount effect below — a lazy useState(loadX) initializer would read
   // localStorage during the client's first render, which happens *before*
@@ -341,11 +373,18 @@ export function RandomizerBoard() {
             setSeedMode("custom");
             setActiveCustomSeed(urlState.seed);
           }
-        } else if (urlState.perks) {
-          setSharedBuild(urlState.perks);
-          setPerkCount(urlState.perks.length);
-        } else if (urlState.loadoutPieces) {
-          setSharedLoadoutPieces(urlState.loadoutPieces);
+        } else {
+          // Not an else-if chain — "all" mode's share link carries both
+          // `p=` and `lp=` together and needs both applied, or the
+          // loadout half would silently re-roll instead of restoring
+          // (only the last branch taken would ever run).
+          if (urlState.perks) {
+            setSharedBuild(urlState.perks);
+            setPerkCount(urlState.perks.length);
+          }
+          if (urlState.loadoutPieces) {
+            setSharedLoadoutPieces(urlState.loadoutPieces);
+          }
         }
       }
       const br = loadBattleRoyale();
@@ -411,9 +450,10 @@ export function RandomizerBoard() {
   const perks = useMemo(() => {
     void nonce; // intentional cache-buster: forces a reshuffle on "regenerate"
     // Gated on mode so every effect keyed off `perks` (stats, URL sync, the
-    // "perks" half of the OBS payload) naturally goes idle in loadout mode
-    // instead of needing its own mode check duplicated everywhere.
-    if (!mounted || mode !== "perks") return [];
+    // "perks" half of the OBS payload) naturally goes idle in loadout-only
+    // mode instead of needing its own mode check duplicated everywhere —
+    // computed for both "perks" and "all" (which shows both at once).
+    if (!mounted || mode === "loadout") return [];
     if (sharedBuild) return sharedBuild;
     if (perkCount === 0) return [];
     if (activeSeed) return getSeededPerks(role, perkCount, activeSeed);
@@ -447,7 +487,7 @@ export function RandomizerBoard() {
 
   const loadout = useMemo((): Loadout | null => {
     void nonce;
-    if (!mounted || mode !== "loadout" || sharedLoadoutPieces) return null;
+    if (!mounted || mode === "perks" || sharedLoadoutPieces) return null;
     if (activeSeed) return getSeededLoadout(role, loadoutSlots, activeSeed);
     return getRandomLoadout(role, loadoutSlots, combinedExcludedLoadout, Math.random, selectedCharacter);
   }, [
@@ -465,7 +505,7 @@ export function RandomizerBoard() {
   // Flattened into the same "just some pieces" shape LoadoutGrid renders,
   // same reasoning as why flattenLoadout exists (see lib/loadout.ts).
   const loadoutPieces = useMemo((): LoadoutPiece[] => {
-    if (mode !== "loadout") return [];
+    if (mode === "perks") return [];
     if (sharedLoadoutPieces) return sharedLoadoutPieces;
     if (!loadout) return [];
     return flattenLoadout(loadout);
@@ -475,20 +515,22 @@ export function RandomizerBoard() {
     function syncUrl() {
       const params = new URLSearchParams();
       params.set("r", ROLE_SHORT[role]);
-      if (mode === "loadout") params.set("mode", "loadout");
+      if (mode !== "perks") params.set("mode", mode); // "loadout" or "all"
       if (activeSeed) {
         params.set("seed", activeSeed);
-      } else if (mode === "loadout") {
-        if (loadoutPieces.length > 0) {
-          const ids = loadoutPieces.map((p) => getIdForLoadoutPiece(p.kind, p.slug));
-          if (ids.every((id): id is number => id !== undefined)) {
-            params.set("lp", ids.join(","));
-          }
-          // No legacy fallback needed here (unlike perks below) — every
-          // loadout piece gets a short ID at scrape time, same guarantee
-          // data/perk-ids.json has always made for perks.
+        window.history.replaceState(null, "", `${window.location.pathname}?${params}`);
+        return;
+      }
+      if (mode !== "perks" && loadoutPieces.length > 0) {
+        const ids = loadoutPieces.map((p) => getIdForLoadoutPiece(p.kind, p.slug));
+        if (ids.every((id): id is number => id !== undefined)) {
+          params.set("lp", ids.join(","));
         }
-      } else if (perks.length > 0) {
+        // No legacy fallback needed here (unlike perks below) — every
+        // loadout piece gets a short ID at scrape time, same guarantee
+        // data/perk-ids.json has always made for perks.
+      }
+      if (mode !== "loadout" && perks.length > 0) {
         const ids = perks.map((p) => getIdForSlug(p.slug));
         if (ids.every((id): id is number => id !== undefined)) {
           params.set("p", ids.join(","));
@@ -555,29 +597,31 @@ export function RandomizerBoard() {
     // a loadout piece fits that same ObsPerk shape as-is, so no separate
     // payload field is needed. Piece slugs are prefixed "kind:" here purely
     // so a killer add-on and an offering that happen to share a slug can't
-    // collide as the same React key on the overlay's own list.
+    // collide as the same React key on the overlay's own list. In "all"
+    // mode both lists are simply concatenated — perk slugs never contain a
+    // colon, so they can't collide with a "kind:slug" loadout key either.
+    const perkPieces = perks.map((p) => ({ slug: p.slug, icon: p.icon, name: p.name }));
+    const loadoutDisplayPieces = loadoutPieces.map((p) => ({
+      slug: `${p.kind}:${p.slug}`,
+      icon: p.icon,
+      name: p.name,
+    }));
     const displayPieces =
-      mode === "loadout"
-        ? loadoutPieces.map((p) => ({ slug: `${p.kind}:${p.slug}`, icon: p.icon, name: p.name }))
-        : perks.map((p) => ({ slug: p.slug, icon: p.icon, name: p.name }));
+      mode === "loadout" ? loadoutDisplayPieces : mode === "all" ? [...perkPieces, ...loadoutDisplayPieces] : perkPieces;
     publishObsState({ role, language, perks: displayPieces });
   }, [mounted, mode, role, language, perks, loadoutPieces, obsModalOpen]);
 
   const eliminateCurrentBuild = useCallback(() => {
-    if (mode === "loadout") {
-      if (loadoutPieces.length === 0) return;
-      setBattleRoyaleUsed((prev) => {
-        const next = new Set(prev);
-        loadoutPieces.forEach((p) => next.add(`${p.kind}:${p.slug}`));
-        persistBattleRoyale({ active: true, used: [...next] });
-        return next;
-      });
-      return;
-    }
-    if (perks.length === 0) return;
+    // "all" mode eliminates both halves together in one update, rather
+    // than two separate setState calls — avoids persisting the evolving
+    // set to storage twice for what's really one user action.
+    const hasPerks = mode !== "loadout" && perks.length > 0;
+    const hasLoadout = mode !== "perks" && loadoutPieces.length > 0;
+    if (!hasPerks && !hasLoadout) return;
     setBattleRoyaleUsed((prev) => {
       const next = new Set(prev);
-      perks.forEach((p) => next.add(p.slug));
+      if (hasPerks) perks.forEach((p) => next.add(p.slug));
+      if (hasLoadout) loadoutPieces.forEach((p) => next.add(`${p.kind}:${p.slug}`));
       persistBattleRoyale({ active: true, used: [...next] });
       return next;
     });
@@ -681,7 +725,12 @@ export function RandomizerBoard() {
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       if (e.key !== " " && e.key !== "Enter") return;
-      if (perkCount === 0 || !!activeSeed || poolExhausted) return;
+      if (!!activeSeed) return;
+      // Only a pure Perks roll needs a non-empty pool to mean anything —
+      // matches the main Generate button's own disabled condition below,
+      // so Loadout/All mode can still reroll via keyboard even if the
+      // perk pool alone happens to be unrollable right now.
+      if (mode === "perks" && (perkCount === 0 || poolExhausted)) return;
       if (excludePanelOpen || statsModalOpen || obsModalOpen) return;
 
       const target = e.target as HTMLElement | null;
@@ -696,7 +745,7 @@ export function RandomizerBoard() {
     }
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [perkCount, activeSeed, poolExhausted, excludePanelOpen, statsModalOpen, obsModalOpen, regenerate]);
+  }, [mode, perkCount, activeSeed, poolExhausted, excludePanelOpen, statsModalOpen, obsModalOpen, regenerate]);
 
   function selectRole(next: PerkRole) {
     setSharedBuild(null);
@@ -759,6 +808,11 @@ export function RandomizerBoard() {
       setSharedLoadoutPieces(matched);
     }
     setHistoryModalOpen(false);
+  }
+
+  function openExcludePanel(kind: "perks" | "loadout") {
+    setExcludePanelKind(kind);
+    setExcludePanelOpen(true);
   }
 
   function selectMode(next: BuildMode) {
@@ -973,6 +1027,19 @@ export function RandomizerBoard() {
     if (battleRoyale) eliminateCurrentBuild();
   }
 
+  function handleCopyAllCombined() {
+    const names = [...perks.map((p) => p.name[language]), ...loadoutPieces.map((p) => p.name[language])];
+    navigator.clipboard
+      .writeText(names.join(", "))
+      .then(() =>
+        showToast(
+          t({ ru: "Всё скопировано в буфер обмена!", en: "Everything copied to clipboard!" }),
+        ),
+      )
+      .catch(() => showToast(t({ ru: "Не удалось скопировать", en: "Couldn't copy" })));
+    if (battleRoyale) eliminateCurrentBuild();
+  }
+
   function handleShare() {
     navigator.clipboard
       .writeText(window.location.href)
@@ -1075,7 +1142,7 @@ export function RandomizerBoard() {
   // new releases), so the picker only offers that narrower list there,
   // keeping the portrait and the roll from disagreeing with each other.
   const characterChoices = mounted
-    ? mode === "loadout" && role === "killer"
+    ? mode !== "perks" && role === "killer"
       ? getKillerCharacters()
       : getCharactersForRole(role)
     : [];
@@ -1134,7 +1201,7 @@ export function RandomizerBoard() {
         </div>
 
         <div className="flex items-center gap-1 rounded-full border border-border bg-surface/60 p-1 text-sm">
-          {(["perks", "loadout"] as const).map((m) => (
+          {(["perks", "loadout", "all"] as const).map((m) => (
             <button
               key={m}
               type="button"
@@ -1146,12 +1213,16 @@ export function RandomizerBoard() {
                   : "text-muted hover:bg-surface-hover hover:text-foreground",
               )}
             >
-              {m === "perks" ? t({ ru: "Перки", en: "Perks" }) : t({ ru: "Экипировка", en: "Full Loadout" })}
+              {m === "perks"
+                ? t({ ru: "Перки", en: "Perks" })
+                : m === "loadout"
+                  ? t({ ru: "Экипировка", en: "Full Loadout" })
+                  : t({ ru: "Всё", en: "Both" })}
             </button>
           ))}
         </div>
 
-        {mode === "perks" && (
+        {mode !== "loadout" && (
           <div className="flex items-center gap-2 text-sm">
             <span className="text-muted">{t({ ru: "Перков:", en: "Perks:" })}</span>
             {Array.from({ length: MAX_PERK_COUNT + 1 }, (_, n) => n).map((n) => (
@@ -1172,7 +1243,7 @@ export function RandomizerBoard() {
           </div>
         )}
 
-        {mode === "perks" && mounted && getTagsForRole(role).length > 0 && (
+        {mode !== "loadout" && mounted && getTagsForRole(role).length > 0 && (
           <div className="flex items-center gap-2 text-sm">
             <span className="text-muted">{t({ ru: "Тема:", en: "Theme:" })}</span>
             <select
@@ -1190,7 +1261,7 @@ export function RandomizerBoard() {
           </div>
         )}
 
-        {mode === "loadout" && (
+        {mode !== "perks" && (
           <div className="flex items-center gap-2 text-sm">
             <span className="text-muted">{t({ ru: "Слоты:", en: "Slots:" })}</span>
             {(
@@ -1278,7 +1349,7 @@ export function RandomizerBoard() {
           </button>
         )}
 
-        {mode === "perks" && selectedCharacter && (
+        {mode !== "loadout" && selectedCharacter && (
           <ToggleSwitch
             checked={guaranteeTeachables}
             onChange={toggleGuaranteeTeachables}
@@ -1336,19 +1407,46 @@ export function RandomizerBoard() {
             </button>
           )}
           <span className="mx-0.5 h-4 w-px bg-border" aria-hidden />
-          <button
-            type="button"
-            onClick={() => setExcludePanelOpen(true)}
-            className="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
-          >
-            <ListFilter className="size-3.5" />
-            {t({ ru: "Пул", en: "Pool" })}
-            {(mode === "perks" ? excludedSlugs.size : excludedLoadoutSlugs.size) > 0 && (
-              <span className="rounded-full bg-accent/15 px-1.5 text-accent">
-                {mode === "perks" ? excludedSlugs.size : excludedLoadoutSlugs.size}
-              </span>
-            )}
-          </button>
+          {mode === "all" ? (
+            <>
+              <button
+                type="button"
+                onClick={() => openExcludePanel("perks")}
+                className="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+              >
+                <ListFilter className="size-3.5" />
+                {t({ ru: "Пул перков", en: "Perk pool" })}
+                {excludedSlugs.size > 0 && (
+                  <span className="rounded-full bg-accent/15 px-1.5 text-accent">{excludedSlugs.size}</span>
+                )}
+              </button>
+              <button
+                type="button"
+                onClick={() => openExcludePanel("loadout")}
+                className="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+              >
+                <ListFilter className="size-3.5" />
+                {t({ ru: "Пул экип.", en: "Loadout pool" })}
+                {excludedLoadoutSlugs.size > 0 && (
+                  <span className="rounded-full bg-accent/15 px-1.5 text-accent">{excludedLoadoutSlugs.size}</span>
+                )}
+              </button>
+            </>
+          ) : (
+            <button
+              type="button"
+              onClick={() => openExcludePanel(mode === "perks" ? "perks" : "loadout")}
+              className="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+            >
+              <ListFilter className="size-3.5" />
+              {t({ ru: "Пул", en: "Pool" })}
+              {(mode === "perks" ? excludedSlugs.size : excludedLoadoutSlugs.size) > 0 && (
+                <span className="rounded-full bg-accent/15 px-1.5 text-accent">
+                  {mode === "perks" ? excludedSlugs.size : excludedLoadoutSlugs.size}
+                </span>
+              )}
+            </button>
+          )}
           <button
             type="button"
             onClick={() => setStatsModalOpen(true)}
@@ -1393,6 +1491,13 @@ export function RandomizerBoard() {
             en: `${battleRoyale ? "Battle Royale" : "Random loadout"} for ${ROLE_LABEL[role].en} — click a card to copy its name`,
           })}
         </p>
+      ) : mode === "all" ? (
+        <p className="text-sm text-muted">
+          {t({
+            ru: `${battleRoyale ? "Battle Royale" : "Случайный билд и экипировка"} для ${ROLE_LABEL[role].ru} — нажмите на карточку, чтобы скопировать название`,
+            en: `${battleRoyale ? "Battle Royale" : "Random build and loadout"} for ${ROLE_LABEL[role].en} — click a card to copy its name`,
+          })}
+        </p>
       ) : perkCount === 0 ? (
         <p className="text-sm text-muted">
           {t({
@@ -1409,7 +1514,11 @@ export function RandomizerBoard() {
         </p>
       )}
 
-      {mode === "loadout" ? (
+      {/* "all" mode stacks both grids instead of picking one — each block
+          below independently no-ops (renders nothing) for the mode it
+          doesn't apply to, so "perks"/"loadout" alone still show exactly
+          one grid, same as before this mode existed. */}
+      {mode !== "perks" && (
         <LoadoutGrid
           pieces={loadoutPieces}
           role={role}
@@ -1421,62 +1530,70 @@ export function RandomizerBoard() {
           })}
           onCopy={handleCopyLoadoutPiece}
         />
-      ) : poolExhausted ? (
-        <div
-          className={cn(
-            "flex min-h-[220px] w-full max-w-md flex-col items-center justify-center gap-3 rounded-2xl border p-6 text-center",
-            roleColor.border,
-            roleColor.bg,
-          )}
-        >
-          <Skull className={cn("size-8", roleColor.text)} />
-          <p className="font-semibold text-foreground">
-            {battleRoyale
-              ? t({ ru: "Пул перков исчерпан!", en: "Perk pool exhausted!" })
-              : t({ ru: "В пуле недостаточно перков", en: "Not enough perks in the pool" })}
-          </p>
-          <p className="text-sm text-muted">
-            {battleRoyale
-              ? t({
-                  ru: `Вы скопировали билды из всех доступных перков ${ROLE_LABEL[role].ru}.`,
-                  en: `You've copied builds from every available ${ROLE_LABEL[role].en} perk.`,
-                })
-              : t({
-                  ru: `Включено только ${availableCount} из ${perkCount} нужных — включите больше перков в пуле или уменьшите их количество.`,
-                  en: `Only ${availableCount} of the ${perkCount} needed are enabled — enable more perks in the pool or lower the count.`,
-                })}
-          </p>
-          <button
-            type="button"
-            onClick={battleRoyale ? restartBattleRoyale : () => setExcludePanelOpen(true)}
-            className="mt-1 rounded-full bg-accent px-5 py-2 text-sm font-semibold text-accent-foreground transition-transform hover:scale-105 active:scale-95"
-          >
-            {battleRoyale
-              ? t({ ru: "Начать заново", en: "Start over" })
-              : t({ ru: "Открыть пул перков", en: "Open perk pool" })}
-          </button>
-        </div>
-      ) : (
-        <PerkGrid
-          perks={perks}
-          language={language}
-          loading={!mounted}
-          emptyMessage={
-            perkCount === 0
-              ? t({ ru: "Ноль перков — режим испытания", en: "Zero perks — challenge mode" })
-              : undefined
-          }
-          onCopy={handleCopy}
-        />
       )}
+      {mode !== "loadout" &&
+        (poolExhausted ? (
+          <div
+            className={cn(
+              "flex min-h-[220px] w-full max-w-md flex-col items-center justify-center gap-3 rounded-2xl border p-6 text-center",
+              roleColor.border,
+              roleColor.bg,
+            )}
+          >
+            <Skull className={cn("size-8", roleColor.text)} />
+            <p className="font-semibold text-foreground">
+              {battleRoyale
+                ? t({ ru: "Пул перков исчерпан!", en: "Perk pool exhausted!" })
+                : t({ ru: "В пуле недостаточно перков", en: "Not enough perks in the pool" })}
+            </p>
+            <p className="text-sm text-muted">
+              {battleRoyale
+                ? t({
+                    ru: `Вы скопировали билды из всех доступных перков ${ROLE_LABEL[role].ru}.`,
+                    en: `You've copied builds from every available ${ROLE_LABEL[role].en} perk.`,
+                  })
+                : t({
+                    ru: `Включено только ${availableCount} из ${perkCount} нужных — включите больше перков в пуле или уменьшите их количество.`,
+                    en: `Only ${availableCount} of the ${perkCount} needed are enabled — enable more perks in the pool or lower the count.`,
+                  })}
+            </p>
+            <button
+              type="button"
+              onClick={battleRoyale ? restartBattleRoyale : () => openExcludePanel("perks")}
+              className="mt-1 rounded-full bg-accent px-5 py-2 text-sm font-semibold text-accent-foreground transition-transform hover:scale-105 active:scale-95"
+            >
+              {battleRoyale
+                ? t({ ru: "Начать заново", en: "Start over" })
+                : t({ ru: "Открыть пул перков", en: "Open perk pool" })}
+            </button>
+          </div>
+        ) : (
+          <PerkGrid
+            perks={perks}
+            language={language}
+            loading={!mounted}
+            emptyMessage={
+              perkCount === 0
+                ? t({ ru: "Ноль перков — режим испытания", en: "Zero perks — challenge mode" })
+                : undefined
+            }
+            onCopy={handleCopy}
+          />
+        ))}
 
       {/* Secondary toolbar — sleek, compact, sits right under the cards it
           acts on rather than competing with Generate for weight. */}
       <div className="flex items-center justify-center gap-2">
         <button
           type="button"
-          onClick={mode === "loadout" ? handleCopyAllLoadout : handleCopyAll}
-          disabled={mode === "loadout" ? loadoutPieces.length === 0 : perks.length === 0}
+          onClick={mode === "loadout" ? handleCopyAllLoadout : mode === "all" ? handleCopyAllCombined : handleCopyAll}
+          disabled={
+            mode === "loadout"
+              ? loadoutPieces.length === 0
+              : mode === "all"
+                ? perks.length === 0 && loadoutPieces.length === 0
+                : perks.length === 0
+          }
           className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
         >
           <Copy className="size-3.5" />
@@ -1559,7 +1676,7 @@ export function RandomizerBoard() {
         <BarChart3 className="size-3.5" />
         {t({ ru: "Статистика пула", en: "Pool stats" })}
       </button>
-      {showStats && mounted && mode === "perks" && (
+      {showStats && mounted && mode !== "loadout" && (
         <div className="rounded-xl border border-border bg-surface px-4 py-3 text-center text-xs text-muted">
           <p>
             {t({ ru: `Всего перков ${ROLE_LABEL[role].ru}:`, en: `Total ${ROLE_LABEL[role].en} perks:` })}{" "}
@@ -1579,7 +1696,7 @@ export function RandomizerBoard() {
           )}
         </div>
       )}
-      {showStats && mounted && mode === "loadout" && (
+      {showStats && mounted && mode !== "perks" && (
         <div className="rounded-xl border border-border bg-surface px-4 py-3 text-center text-xs text-muted">
           <p>
             {t({
@@ -1603,7 +1720,7 @@ export function RandomizerBoard() {
         </div>
       )}
 
-      {mode === "perks" ? (
+      {excludePanelKind === "perks" ? (
         <ExcludePanel
           key={`perk-pool-${role}`}
           open={excludePanelOpen}
@@ -1677,7 +1794,7 @@ export function RandomizerBoard() {
       />
 
       <CharacterPickerModal
-        key={`char-picker-${mode === "loadout" && role === "killer" ? "killer-loadout" : role}`}
+        key={`char-picker-${mode !== "perks" && role === "killer" ? "killer-loadout" : role}`}
         open={characterPickerOpen}
         role={role}
         language={language}

@@ -179,7 +179,7 @@ export function ObsOverlayModal({
    *  actually being published to the overlay (see randomizer-board.tsx's
    *  publish effect), so the preview never shows something the real
    *  overlay wouldn't. */
-  mode: "perks" | "loadout";
+  mode: "perks" | "loadout" | "all";
   loadoutPieces: LoadoutPiece[];
   language: Lang;
   role: PerkRole;
@@ -348,7 +348,11 @@ export function ObsOverlayModal({
   // placeholder slots the entire time someone's in Loadout mode while the
   // real overlay is showing something else entirely.
   const previewPieces: { slug: string; icon: string; name: { en: string; ru: string } }[] =
-    mode === "loadout" ? loadoutPieces : perks;
+    mode === "loadout" ? loadoutPieces : mode === "all" ? [...perks, ...loadoutPieces] : perks;
+  // Capped at 4 regardless of mode — DEFAULT_SLOT_POSITIONS below only has
+  // 4 entries, and "all" mode's combined list can run past that; the real
+  // overlay itself has no such cap (see obs-overlay.tsx), this is just a
+  // rough preview, not a promise every piece will show up here too.
   const previewSlotCount = previewPieces.length > 0 ? Math.min(previewPieces.length, 4) : 4;
   const previewIconPx = Math.round(PREVIEW_BASE_ICON_PX * (scale / 100));
 
