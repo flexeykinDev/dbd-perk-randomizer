@@ -19,11 +19,15 @@ test.describe("DBD randomizer", () => {
     // Regenerating updates the shareable URL query string (compact scheme:
     // r=<role short code>, p=<comma-separated short perk IDs> — see
     // lib/perk-ids.ts / randomizer-board.tsx's syncUrl effect).
-    await page.getByRole("button", { name: "Сгенерировать новый билд" }).click();
+    await page
+      .getByRole("button", { name: "Сгенерировать новый билд" })
+      .click();
     await expect(page).toHaveURL(/[?&]r=k&p=\d+(%2C\d+)*/);
   });
 
-  test("exclude panel toggles a perk and persists to localStorage", async ({ page }) => {
+  test("exclude panel toggles a perk and persists to localStorage", async ({
+    page,
+  }) => {
     await page.goto("/");
     // exact: true — a fuzzy match also catches "Статистика пула" (Pool stats).
     await page.getByRole("button", { name: "Пул", exact: true }).click();
@@ -64,7 +68,9 @@ test.describe("DBD randomizer", () => {
     await expect(panel).not.toBeVisible();
   });
 
-  test("opening a shared build URL loads that exact build", async ({ page }) => {
+  test("opening a shared build URL loads that exact build", async ({
+    page,
+  }) => {
     await page.goto(
       "/?role=killer&perks=agitation,bamboozle,brutal-strength,corrupt-intervention",
     );
@@ -81,7 +87,10 @@ test.describe("DBD randomizer", () => {
     // The whole card is a role="button" and additionally contains its own
     // small info-icon <button> with the same aria-label — both open the
     // same modal, so either works; .first() is the outer card.
-    await page.getByRole("button", { name: "Описание: Аптекарь" }).first().click();
+    await page
+      .getByRole("button", { name: "Описание: Аптекарь" })
+      .first()
+      .click();
     // exact: true — a fuzzy match also catches the "Случайный персонаж"
     // (Random Character) button elsewhere on the page.
     await expect(page.getByText("Персонаж", { exact: true })).toBeVisible();
@@ -92,11 +101,15 @@ test.describe("DBD randomizer", () => {
 });
 
 test.describe("Full Loadout", () => {
-  test("switching to loadout mode rolls an item/add-ons/offering HUD", async ({ page }) => {
+  test("switching to loadout mode rolls an item/add-ons/offering HUD", async ({
+    page,
+  }) => {
     await page.goto("/?role=survivor");
     await page.getByRole("button", { name: "Экипировка" }).click();
 
-    await expect(page.getByText("Случайная экипировка для выжившего")).toBeVisible();
+    await expect(
+      page.getByText("Случайная экипировка для выжившего"),
+    ).toBeVisible();
     // The in-game-style HUD groups pieces under fixed Item/Add-ons/Offering
     // columns instead of a generic card grid — see loadout-grid.tsx.
     await expect(page.getByTestId("loadout-slot-item")).toBeVisible();
@@ -105,7 +118,9 @@ test.describe("Full Loadout", () => {
 
     // Regenerating updates the shareable URL to the loadout scheme
     // (mode=loadout&lp=<comma-separated short loadout-piece IDs>).
-    await page.getByRole("button", { name: "Сгенерировать новый билд" }).click();
+    await page
+      .getByRole("button", { name: "Сгенерировать новый билд" })
+      .click();
     await expect(page).toHaveURL(/[?&]mode=loadout&(?:.*&)?lp=\d+(%2C\d+)*/);
   });
 
@@ -120,10 +135,14 @@ test.describe("Full Loadout", () => {
     await expect(page.getByText("Предмет", { exact: true })).not.toBeVisible();
   });
 
-  test("turning off a slot rolls an empty HUD placeholder for it", async ({ page }) => {
+  test("turning off a slot rolls an empty HUD placeholder for it", async ({
+    page,
+  }) => {
     await page.goto("/?role=survivor&mode=loadout");
     // See the hydration-wait comment on the loadout pool panel test below.
-    await expect(page.locator("main").locator("img[alt]").first()).toBeVisible();
+    await expect(
+      page.locator("main").locator("img[alt]").first(),
+    ).toBeVisible();
     await page.getByRole("button", { name: "Подношение", exact: true }).click();
 
     // The Offering column heading stays (it's a static label), but its slot
@@ -132,19 +151,23 @@ test.describe("Full Loadout", () => {
     // can't assert an exact total piece count, only that this one column
     // is specifically empty.
     const offeringSlot = page.getByTestId("loadout-slot-offering");
-    await expect(offeringSlot.getByRole("button", { name: /^Описание: /, exact: false })).toHaveCount(
-      0,
-    );
+    await expect(
+      offeringSlot.getByRole("button", { name: /^Описание: /, exact: false }),
+    ).toHaveCount(0);
   });
 
-  test("loadout pool panel excludes a piece and persists to localStorage", async ({ page }) => {
+  test("loadout pool panel excludes a piece and persists to localStorage", async ({
+    page,
+  }) => {
     await page.goto("/?role=survivor&mode=loadout");
     // Loadout pieces only render post-hydration (seeded client-side — see
     // `mounted` in randomizer-board.tsx); waiting for one here doubles as a
     // wait for hydration to finish wiring up the Пул button's onClick
     // before we click it. See the same comment in "Combined All mode"
     // below for the failure this avoids.
-    await expect(page.locator("main").locator("img[alt]").first()).toBeVisible();
+    await expect(
+      page.locator("main").locator("img[alt]").first(),
+    ).toBeVisible();
     await page.getByRole("button", { name: "Пул", exact: true }).click();
 
     const panel = page.getByText("Настроить пул экипировки");
@@ -165,14 +188,18 @@ test.describe("Full Loadout", () => {
 });
 
 test.describe("Combined All mode", () => {
-  test("shows both the perk grid and the loadout HUD together", async ({ page }) => {
+  test("shows both the perk grid and the loadout HUD together", async ({
+    page,
+  }) => {
     await page.goto("/?role=survivor");
     // Perks only render post-hydration (they're seeded client-side — see
     // `mounted` in randomizer-board.tsx), so waiting for one here doubles as
     // a wait for hydration to finish attaching the mode toggle's onClick
     // before we click it — otherwise the click can land on the button before
     // React has wired it up and silently do nothing.
-    await expect(page.locator("main").locator("img[alt]").first()).toBeVisible();
+    await expect(
+      page.locator("main").locator("img[alt]").first(),
+    ).toBeVisible();
     await page.getByRole("button", { name: "Всё", exact: true }).click();
 
     await expect(page.getByTestId("loadout-slot-item")).toBeVisible();
@@ -180,31 +207,54 @@ test.describe("Combined All mode", () => {
     await expect(page.getByTestId("loadout-slot-offering")).toBeVisible();
     // A perk card's Copy button — proves the perk grid rendered alongside
     // the loadout HUD above, not instead of it.
-    await expect(page.getByRole("button", { name: "Скопировать всё" })).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: "Скопировать всё" }),
+    ).toBeVisible();
 
     // "All" mode needs two separate pool buttons (one panel can't cover
     // both perks and loadout pieces at once) instead of the single "Пул"
     // the other two modes use.
-    await expect(page.getByRole("button", { name: "Пул перков" })).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: "Пул перков" }),
+    ).toBeVisible();
     await expect(page.getByRole("button", { name: "Пул экип." })).toBeVisible();
 
     // Regenerating shares both halves in the URL together.
-    await page.getByRole("button", { name: "Сгенерировать новый билд" }).click();
-    await expect(page).toHaveURL(/[?&]mode=all&(?:.*&)?lp=\d+(%2C\d+)*(?:.*&)?p=\d+(%2C\d+)*/);
+    await page
+      .getByRole("button", { name: "Сгенерировать новый билд" })
+      .click();
+    await expect(page).toHaveURL(
+      /[?&]mode=all&(?:.*&)?lp=\d+(%2C\d+)*(?:.*&)?p=\d+(%2C\d+)*/,
+    );
   });
 
-  test("a mode=all share link restores both the perks and the loadout exactly", async ({ page }) => {
+  test("a mode=all share link restores both the perks and the loadout exactly", async ({
+    page,
+  }) => {
     await page.goto("/?role=survivor");
     // See the hydration-wait comment in the previous test.
-    await expect(page.locator("main").locator("img[alt]").first()).toBeVisible();
+    await expect(
+      page.locator("main").locator("img[alt]").first(),
+    ).toBeVisible();
     await page.getByRole("button", { name: "Всё", exact: true }).click();
-    await page.getByRole("button", { name: "Сгенерировать новый билд" }).click();
+    await page
+      .getByRole("button", { name: "Сгенерировать новый билд" })
+      .click();
     const sharedUrl = page.url();
 
     await page.goto("about:blank");
     await page.goto(sharedUrl);
+    // Same hydration-wait reasoning as above, but for this second, fresh
+    // page load — a shared link that opens straight into "all" mode still
+    // needs hydration to finish before the loadout HUD (and its testid)
+    // exist at all.
+    await expect(
+      page.locator("main").locator("img[alt]").first(),
+    ).toBeVisible();
     await expect(page.getByTestId("loadout-slot-item")).toBeVisible();
-    await expect(page.getByRole("button", { name: "Скопировать всё" })).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: "Скопировать всё" }),
+    ).toBeVisible();
     // Still the exact same URL after the restore effect settles — proves
     // nothing silently re-rolled on load (a shared build must show
     // *that* build, not a fresh random one).
@@ -214,7 +264,9 @@ test.describe("Combined All mode", () => {
   test("each pool button opens its own panel", async ({ page }) => {
     await page.goto("/?role=survivor");
     // See the hydration-wait comment in the first test of this block.
-    await expect(page.locator("main").locator("img[alt]").first()).toBeVisible();
+    await expect(
+      page.locator("main").locator("img[alt]").first(),
+    ).toBeVisible();
     await page.getByRole("button", { name: "Всё", exact: true }).click();
 
     await page.getByRole("button", { name: "Пул перков" }).click();
@@ -227,9 +279,13 @@ test.describe("Combined All mode", () => {
 });
 
 test.describe("Character picker", () => {
-  test("choosing a character shows a portrait chip that can be cleared", async ({ page }) => {
+  test("choosing a character shows a portrait chip that can be cleared", async ({
+    page,
+  }) => {
     await page.goto("/?role=survivor");
-    const chip = page.getByRole("button", { name: "Убрать персонажа" }).locator("xpath=..");
+    const chip = page
+      .getByRole("button", { name: "Убрать персонажа" })
+      .locator("xpath=..");
     await expect(chip).not.toBeVisible();
 
     await page.getByRole("button", { name: "Выбрать персонажа" }).click();
@@ -242,7 +298,9 @@ test.describe("Character picker", () => {
     await expect(chip).not.toBeVisible();
   });
 
-  test("search filters the grid down to a single portrait to pick", async ({ page }) => {
+  test("search filters the grid down to a single portrait to pick", async ({
+    page,
+  }) => {
     await page.goto("/?role=survivor");
     await page.getByRole("button", { name: "Выбрать персонажа" }).click();
 
@@ -251,7 +309,9 @@ test.describe("Character picker", () => {
     // text with the visible caption span, both "Дуайт".
     await page.getByRole("button", { name: "Дуайт" }).click();
 
-    const chip = page.getByRole("button", { name: "Убрать персонажа" }).locator("xpath=..");
+    const chip = page
+      .getByRole("button", { name: "Убрать персонажа" })
+      .locator("xpath=..");
     await expect(chip).toContainText("Дуайт");
   });
 
@@ -273,7 +333,9 @@ test.describe("Character picker", () => {
     await expect(toggle).not.toBeVisible();
   });
 
-  test("picking a killer narrows the loadout pool to just their own add-ons", async ({ page }) => {
+  test("picking a killer narrows the loadout pool to just their own add-ons", async ({
+    page,
+  }) => {
     // Regression test: before this, the Manage Pool panel always listed
     // every killer's add-ons together (~750+ entries) even after locking in
     // a specific character via the picker — the vast majority of which
@@ -301,7 +363,9 @@ test.describe("Character picker", () => {
     expect(afterTotal).toBeLessThan(beforeTotal);
   });
 
-  test("picking a character in killer loadout mode decides the rolled Power", async ({ page }) => {
+  test("picking a character in killer loadout mode decides the rolled Power", async ({
+    page,
+  }) => {
     await page.goto("/?role=killer&mode=loadout");
     await page.getByRole("button", { name: "Выбрать персонажа" }).click();
     await page.getByRole("button", { name: "Случайный", exact: true }).click();
@@ -315,7 +379,10 @@ test.describe("Character picker", () => {
       .locator("span")
       .last()
       .textContent();
-    const powerCaption = page.getByTestId("loadout-slot-power").locator("span").last();
+    const powerCaption = page
+      .getByTestId("loadout-slot-power")
+      .locator("span")
+      .last();
     await expect(powerCaption).toHaveText(chipName ?? "");
   });
 });
@@ -327,13 +394,17 @@ test.describe("theme toggle", () => {
     await toggle.click();
     await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
 
-    await page.getByRole("button", { name: "Сгенерировать новый билд" }).click();
+    await page
+      .getByRole("button", { name: "Сгенерировать новый билд" })
+      .click();
     await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
   });
 });
 
 test.describe("OBS overlay", () => {
-  test("?obs=1 triggers the overlay even without the #/obs hash", async ({ page }) => {
+  test("?obs=1 triggers the overlay even without the #/obs hash", async ({
+    page,
+  }) => {
     // Regression test for a real report: the #/obs hash fragment can get
     // stripped in transit before reaching OBS's Browser Source (link-
     // preview rewriters, a data-saving browser proxy, etc. — see
@@ -341,13 +412,17 @@ test.describe("OBS overlay", () => {
     // normal site instead of the overlay. `obs=1` is the query-param
     // fallback that survives that kind of URL mangling.
     await page.goto("/?room=TESTROOM&obs=1");
-    await expect(page.getByRole("link", { name: "Vortex Hub" })).not.toBeVisible();
+    await expect(
+      page.getByRole("link", { name: "Vortex Hub" }),
+    ).not.toBeVisible();
     await expect(
       page.getByText(/Ждём билд с основного сайта|Waiting for a build/),
     ).toBeVisible();
   });
 
-  test("the site shell is marked hidden before React even hydrates", async ({ page }) => {
+  test("the site shell is marked hidden before React even hydrates", async ({
+    page,
+  }) => {
     // Regression test for a real report: even with the *correct* overlay
     // link, some viewers (notably a slower/CEF-based renderer like OBS's
     // own Browser Source) briefly or persistently saw the full site
@@ -365,17 +440,26 @@ test.describe("OBS overlay", () => {
     await expect(page.locator(".app-shell")).toHaveCSS("visibility", "hidden");
 
     await page.goto("/?role=survivor");
-    await expect(page.locator("html")).not.toHaveAttribute("data-obs-pending", "1");
+    await expect(page.locator("html")).not.toHaveAttribute(
+      "data-obs-pending",
+      "1",
+    );
     await expect(page.locator(".app-shell")).toHaveCSS("visibility", "visible");
   });
 });
 
 test.describe("Build History", () => {
-  test("a generated build appears in History and can be reopened", async ({ page }) => {
+  test("a generated build appears in History and can be reopened", async ({
+    page,
+  }) => {
     await page.goto("/?role=survivor");
-    await page.evaluate(() => localStorage.removeItem("dbd-randomizer:history"));
+    await page.evaluate(() =>
+      localStorage.removeItem("dbd-randomizer:history"),
+    );
     await page.reload();
-    await page.getByRole("button", { name: "Сгенерировать новый билд" }).click();
+    await page
+      .getByRole("button", { name: "Сгенерировать новый билд" })
+      .click();
 
     // History moved into the "More" popover (see more-menu.tsx) as part of
     // decluttering the toolbar — open it before the button becomes clickable.
@@ -395,7 +479,9 @@ test.describe("Build History", () => {
 
   test("Clear wipes the history list", async ({ page }) => {
     await page.goto("/?role=survivor");
-    await page.getByRole("button", { name: "Сгенерировать новый билд" }).click();
+    await page
+      .getByRole("button", { name: "Сгенерировать новый билд" })
+      .click();
 
     // History moved into the "More" popover (see more-menu.tsx) as part of
     // decluttering the toolbar — open it before the button becomes clickable.
@@ -406,8 +492,13 @@ test.describe("Build History", () => {
     // trigger that opened it ("Очистить") — it's the one rendered later in
     // the DOM (ConfirmDialog mounts after HistoryModal's own JSX), so
     // .last() picks the dialog's button, not the now-covered trigger.
-    await page.getByRole("button", { name: "Очистить", exact: true }).last().click();
+    await page
+      .getByRole("button", { name: "Очистить", exact: true })
+      .last()
+      .click();
 
-    await expect(page.getByText("Пока пусто — сгенерируйте билд")).toBeVisible();
+    await expect(
+      page.getByText("Пока пусто — сгенерируйте билд"),
+    ).toBeVisible();
   });
 });

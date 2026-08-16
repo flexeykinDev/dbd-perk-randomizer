@@ -41,12 +41,18 @@ export interface ObsSyncPayload {
   perks: ObsPerk[];
   language: Lang;
   updatedAt: number;
+  /** The build's character slug, if one is known — see randomizer-board.tsx's
+   *  `shareCharacter` (an explicit character-picker choice, or a killer
+   *  build's rolled Power add-ons) for exactly which. Absent when neither
+   *  applies (e.g. a survivor build with no character forced). */
+  character?: string;
 }
 
 let channel: BroadcastChannel | null | undefined;
 
 function getChannel(): BroadcastChannel | null {
-  if (typeof window === "undefined" || typeof BroadcastChannel === "undefined") return null;
+  if (typeof window === "undefined" || typeof BroadcastChannel === "undefined")
+    return null;
   if (channel === undefined) {
     try {
       channel = new BroadcastChannel(CHANNEL_NAME);
@@ -62,9 +68,12 @@ function randomRoomCode(): string {
   if (typeof crypto !== "undefined" && crypto.getRandomValues) {
     crypto.getRandomValues(bytes);
   } else {
-    for (let i = 0; i < bytes.length; i++) bytes[i] = Math.floor(Math.random() * 256);
+    for (let i = 0; i < bytes.length; i++)
+      bytes[i] = Math.floor(Math.random() * 256);
   }
-  return [...bytes].map((b) => ROOM_CODE_ALPHABET[b % ROOM_CODE_ALPHABET.length]).join("");
+  return [...bytes]
+    .map((b) => ROOM_CODE_ALPHABET[b % ROOM_CODE_ALPHABET.length])
+    .join("");
 }
 
 /** This browser's OBS room code, if one already exists — never creates one.
@@ -87,7 +96,9 @@ export function getOrCreateRoomCode(): string {
   return code;
 }
 
-export function publishObsState(payload: Omit<ObsSyncPayload, "updatedAt">): void {
+export function publishObsState(
+  payload: Omit<ObsSyncPayload, "updatedAt">,
+): void {
   const full: ObsSyncPayload = { ...payload, updatedAt: Date.now() };
   safeSetJSON("local", STORAGE_KEY, full);
   getChannel()?.postMessage(full);

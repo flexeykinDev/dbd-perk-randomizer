@@ -261,6 +261,9 @@ export function ObsOverlayModal({
   const [canvasWidth, setCanvasWidth] = useState(DEFAULT_CANVAS_WIDTH);
   const [canvasHeight, setCanvasHeight] = useState(DEFAULT_CANVAS_HEIGHT);
   const [showNames, setShowNames] = useState(DEFAULT_OBS_OPTIONS.showNames);
+  const [showCharacter, setShowCharacter] = useState(
+    DEFAULT_OBS_OPTIONS.showCharacter,
+  );
   const [darkBg, setDarkBg] = useState(
     DEFAULT_OBS_OPTIONS.background === "dark",
   );
@@ -295,6 +298,7 @@ export function ObsOverlayModal({
         scale,
         nameScale,
         showNames,
+        showCharacter,
         background: darkBg ? "dark" : "transparent",
         positions: positions ?? undefined,
       })
@@ -864,6 +868,18 @@ export function ObsOverlayModal({
                       label={t({
                         ru: "Тёмный фон вместо прозрачного",
                         en: "Dark background instead of transparent",
+                      })}
+                    />
+                    <ToggleSwitch
+                      checked={showCharacter}
+                      onChange={() => setShowCharacter((v) => !v)}
+                      label={t({
+                        ru: "Показывать портрет персонажа",
+                        en: "Show character portrait",
+                      })}
+                      tooltip={t({
+                        ru: "Появляется только если билд привязан к персонажу — выбран вручную или для убийцы определён по аддонам.",
+                        en: "Only shows up when the build has a known character — picked manually, or figured out from a killer's rolled add-ons.",
                       })}
                     />
                   </div>

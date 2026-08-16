@@ -25,14 +25,25 @@ import {
 } from "@/lib/perks";
 import { getCharacterName } from "@/lib/character-name";
 import { getTagsForPerk, getTagsForRole } from "@/lib/perk-tags";
-import type { Loadout, LoadoutPiece, LoadoutSlots, Perk, PerkRole } from "@/lib/types";
+import type {
+  Addon,
+  Loadout,
+  LoadoutPiece,
+  LoadoutSlots,
+  Perk,
+  PerkRole,
+} from "@/lib/types";
 import { cn } from "@/lib/cn";
 import { useMounted } from "@/lib/use-mounted";
 import { ROLE_COLOR } from "@/lib/role-color";
 import { useLanguage, useT } from "@/lib/i18n";
 import { dailyChallengeSeed } from "@/lib/seeded-random";
 import { recordRoll } from "@/lib/stats";
-import { parseLoadoutKey, recordHistoryEntry, type HistoryEntry } from "@/lib/history";
+import {
+  parseLoadoutKey,
+  recordHistoryEntry,
+  type HistoryEntry,
+} from "@/lib/history";
 import { getIdForSlug, getSlugForId } from "@/lib/perk-ids";
 import { withBasePath } from "@/lib/asset-path";
 import {
@@ -43,7 +54,10 @@ import {
   getRandomLoadout,
   getSeededLoadout,
 } from "@/lib/loadout";
-import { getIdForLoadoutPiece, getLoadoutPieceKeyForId } from "@/lib/loadout-ids";
+import {
+  getIdForLoadoutPiece,
+  getLoadoutPieceKeyForId,
+} from "@/lib/loadout-ids";
 import { safeGet, safeGetJSON, safeSet, safeSetJSON } from "@/lib/safe-storage";
 import { publishObsState } from "@/lib/obs-sync";
 import {
@@ -60,7 +74,11 @@ import { LoadoutExcludePanel } from "./loadout-exclude-panel";
 import { StatsModal } from "./stats-modal";
 import { HistoryModal } from "./history-modal";
 import { ToggleSwitch } from "./toggle-switch";
-import { ShareCard, type ShareCardLayout } from "./share-card";
+import {
+  ShareCard,
+  type ShareCardLayout,
+  type ShareCardPiece,
+} from "./share-card";
 import { DownloadImageButton } from "./download-image-button";
 import { ObsOverlayModal } from "./obs-overlay-modal";
 import { CharacterPickerModal } from "./character-picker-modal";
@@ -76,8 +94,13 @@ const MODE_STORAGE_KEY = "dbd-randomizer:mode";
 const EXCLUDED_LOADOUT_STORAGE_KEY = "dbd-randomizer:excluded-loadout";
 const LOADOUT_SLOT_ITEM_STORAGE_KEY = "dbd-randomizer:loadout-slot-item";
 const LOADOUT_SLOT_ADDONS_STORAGE_KEY = "dbd-randomizer:loadout-slot-addons";
-const LOADOUT_SLOT_OFFERING_STORAGE_KEY = "dbd-randomizer:loadout-slot-offering";
-const DEFAULT_LOADOUT_SLOTS: LoadoutSlots = { item: true, addons: true, offering: true };
+const LOADOUT_SLOT_OFFERING_STORAGE_KEY =
+  "dbd-randomizer:loadout-slot-offering";
+const DEFAULT_LOADOUT_SLOTS: LoadoutSlots = {
+  item: true,
+  addons: true,
+  offering: true,
+};
 // "all" shows the perk grid and the loadout HUD together — a real player
 // always has both equipped at once in an actual match, so this is what a
 // visitor asking for "just show me everything" gets instead of having to
@@ -86,12 +109,15 @@ type BuildMode = "perks" | "loadout" | "all";
 const GUARANTEE_TEACHABLES_STORAGE_KEY = "dbd-randomizer:guarantee-teachables";
 const TWITCH_CHANNEL_STORAGE_KEY = "dbd-randomizer:twitch-channel";
 const TWITCH_ENABLED_STORAGE_KEY = "dbd-randomizer:twitch-enabled";
-const TWITCH_REROLL_COMMAND_STORAGE_KEY = "dbd-randomizer:twitch-reroll-command";
-const TWITCH_REROLL_PERMISSION_STORAGE_KEY = "dbd-randomizer:twitch-reroll-permission";
+const TWITCH_REROLL_COMMAND_STORAGE_KEY =
+  "dbd-randomizer:twitch-reroll-command";
+const TWITCH_REROLL_PERMISSION_STORAGE_KEY =
+  "dbd-randomizer:twitch-reroll-permission";
 const TWITCH_COOLDOWN_STORAGE_KEY = "dbd-randomizer:twitch-cooldown-sec";
 const TWITCH_PASTE_ENABLED_STORAGE_KEY = "dbd-randomizer:twitch-paste-enabled";
 const TWITCH_PASTE_COMMAND_STORAGE_KEY = "dbd-randomizer:twitch-paste-command";
-const TWITCH_PASTE_PERMISSION_STORAGE_KEY = "dbd-randomizer:twitch-paste-permission";
+const TWITCH_PASTE_PERMISSION_STORAGE_KEY =
+  "dbd-randomizer:twitch-paste-permission";
 const DEFAULT_TWITCH_REROLL_COMMAND = "!reroll";
 const DEFAULT_TWITCH_PASTE_COMMAND = "!paste";
 const DEFAULT_TWITCH_COOLDOWN_SEC = 4;
@@ -106,7 +132,10 @@ const ROLE_NAME: Record<PerkRole, { ru: string; en: string }> = {
   killer: { ru: "Убийца", en: "Killer" },
 };
 const ROLE_SHORT: Record<PerkRole, string> = { survivor: "s", killer: "k" };
-const ROLE_FROM_SHORT: Record<string, PerkRole> = { s: "survivor", k: "killer" };
+const ROLE_FROM_SHORT: Record<string, PerkRole> = {
+  s: "survivor",
+  k: "killer",
+};
 
 type SeedMode = "none" | "daily" | "custom";
 
@@ -116,20 +145,26 @@ function loadSlugSet(key: string): Set<string> {
   // still the wrong shape (e.g. an object instead of an array), and
   // `new Set()` on a non-iterable throws rather than returning [].
   const stored = safeGetJSON<unknown>("local", key, []);
-  const slugs = Array.isArray(stored) ? stored.filter((s) => typeof s === "string") : [];
+  const slugs = Array.isArray(stored)
+    ? stored.filter((s) => typeof s === "string")
+    : [];
   return new Set(slugs);
 }
 
 function loadPerkCount(): number {
   const n = parseInt(safeGet("local", PERK_COUNT_STORAGE_KEY) ?? "", 10);
-  return Number.isInteger(n) && n >= 0 && n <= MAX_PERK_COUNT ? n : DEFAULT_PERK_COUNT;
+  return Number.isInteger(n) && n >= 0 && n <= MAX_PERK_COUNT
+    ? n
+    : DEFAULT_PERK_COUNT;
 }
 
 const VALID_MODES: readonly BuildMode[] = ["perks", "loadout", "all"];
 
 function loadMode(): BuildMode {
   const stored = safeGet("local", MODE_STORAGE_KEY);
-  return VALID_MODES.includes(stored as BuildMode) ? (stored as BuildMode) : "perks";
+  return VALID_MODES.includes(stored as BuildMode)
+    ? (stored as BuildMode)
+    : "perks";
 }
 
 function loadLoadoutSlots(): LoadoutSlots {
@@ -142,9 +177,16 @@ function loadLoadoutSlots(): LoadoutSlots {
   };
 }
 
-const VALID_TWITCH_PERMISSIONS: readonly TwitchPermission[] = ["everyone", "subs_vips", "mods"];
+const VALID_TWITCH_PERMISSIONS: readonly TwitchPermission[] = [
+  "everyone",
+  "subs_vips",
+  "mods",
+];
 
-function loadTwitchPermission(key: string, fallback: TwitchPermission): TwitchPermission {
+function loadTwitchPermission(
+  key: string,
+  fallback: TwitchPermission,
+): TwitchPermission {
   const stored = safeGet("local", key);
   return VALID_TWITCH_PERMISSIONS.includes(stored as TwitchPermission)
     ? (stored as TwitchPermission)
@@ -153,7 +195,9 @@ function loadTwitchPermission(key: string, fallback: TwitchPermission): TwitchPe
 
 function loadTwitchCooldownSec(): number {
   const n = parseInt(safeGet("local", TWITCH_COOLDOWN_STORAGE_KEY) ?? "", 10);
-  return Number.isInteger(n) && n >= MIN_TWITCH_COOLDOWN_SEC && n <= MAX_TWITCH_COOLDOWN_SEC
+  return Number.isInteger(n) &&
+    n >= MIN_TWITCH_COOLDOWN_SEC &&
+    n <= MAX_TWITCH_COOLDOWN_SEC
     ? n
     : DEFAULT_TWITCH_COOLDOWN_SEC;
 }
@@ -164,10 +208,16 @@ interface BattleRoyaleState {
 }
 
 function loadBattleRoyale(): BattleRoyaleState {
-  const stored = safeGetJSON<Partial<BattleRoyaleState>>("session", BR_STORAGE_KEY, {});
+  const stored = safeGetJSON<Partial<BattleRoyaleState>>(
+    "session",
+    BR_STORAGE_KEY,
+    {},
+  );
   return {
     active: stored.active === true,
-    used: Array.isArray(stored.used) ? stored.used.filter((s) => typeof s === "string") : [],
+    used: Array.isArray(stored.used)
+      ? stored.used.filter((s) => typeof s === "string")
+      : [],
   };
 }
 
@@ -207,7 +257,8 @@ function readInitialUrlState(): InitialUrlState | null {
   if (!role) return null;
 
   const modeParam = params.get("mode");
-  const mode: BuildMode = modeParam === "loadout" ? "loadout" : modeParam === "all" ? "all" : "perks";
+  const mode: BuildMode =
+    modeParam === "loadout" ? "loadout" : modeParam === "all" ? "all" : "perks";
 
   const seed = params.get("seed");
   if (seed) return { role, mode, seed };
@@ -219,7 +270,9 @@ function readInitialUrlState(): InitialUrlState | null {
       .split(",")
       .map((idStr) => {
         const id = Number(idStr);
-        const key = Number.isFinite(id) ? getLoadoutPieceKeyForId(id) : undefined;
+        const key = Number.isFinite(id)
+          ? getLoadoutPieceKeyForId(id)
+          : undefined;
         return key ? getLoadoutPiece(key.kind, key.slug) : undefined;
       })
       .filter((piece): piece is LoadoutPiece => !!piece);
@@ -284,7 +337,8 @@ export function RandomizerBoard() {
   const { lang: language } = useLanguage();
   const [role, setRole] = useState<PerkRole>("survivor");
   const [toast, setToast] = useState<string | null>(null);
-  const [generatingImage, setGeneratingImage] = useState<ShareCardLayout | null>(null);
+  const [generatingImage, setGeneratingImage] =
+    useState<ShareCardLayout | null>(null);
   const shareCardRef = useRef<HTMLDivElement>(null);
   const storyShareCardRef = useRef<HTMLDivElement>(null);
   const [excludePanelOpen, setExcludePanelOpen] = useState(false);
@@ -292,7 +346,9 @@ export function RandomizerBoard() {
   // (there's only one pool to manage there), but "all" mode shows perks
   // and loadout together, so it needs two separate pool buttons and this
   // decides which panel opens when one of them is clicked.
-  const [excludePanelKind, setExcludePanelKind] = useState<"perks" | "loadout">("perks");
+  const [excludePanelKind, setExcludePanelKind] = useState<"perks" | "loadout">(
+    "perks",
+  );
   // Both start at SSR-safe defaults and are corrected from localStorage in
   // the mount effect below — a lazy useState(loadX) initializer would read
   // localStorage during the client's first render, which happens *before*
@@ -304,16 +360,24 @@ export function RandomizerBoard() {
   // Full Loadout mode — same hydration-safety rule as everything else here:
   // SSR-safe defaults, corrected from localStorage/URL in the mount effect.
   const [mode, setMode] = useState<BuildMode>("perks");
-  const [loadoutSlots, setLoadoutSlots] = useState<LoadoutSlots>(DEFAULT_LOADOUT_SLOTS);
-  const [excludedLoadoutSlugs, setExcludedLoadoutSlugs] = useState<Set<string>>(new Set());
-  const [sharedLoadoutPieces, setSharedLoadoutPieces] = useState<LoadoutPiece[] | null>(null);
+  const [loadoutSlots, setLoadoutSlots] = useState<LoadoutSlots>(
+    DEFAULT_LOADOUT_SLOTS,
+  );
+  const [excludedLoadoutSlugs, setExcludedLoadoutSlugs] = useState<Set<string>>(
+    new Set(),
+  );
+  const [sharedLoadoutPieces, setSharedLoadoutPieces] = useState<
+    LoadoutPiece[] | null
+  >(null);
   // Random Character (Feature #2) — deliberately session-only, not synced
   // to the URL or localStorage: it's a flourish on top of a build, not
   // part of what a share link or a returning visit needs to restore.
   // guaranteeTeachables (the perks-mode "always include this character's
   // own perks" toggle) IS persisted, same as the other pool/settings
   // toggles — it only has an effect once a character is actually selected.
-  const [selectedCharacter, setSelectedCharacter] = useState<string | null>(null);
+  const [selectedCharacter, setSelectedCharacter] = useState<string | null>(
+    null,
+  );
   const [guaranteeTeachables, setGuaranteeTeachables] = useState(false);
   const [characterPickerOpen, setCharacterPickerOpen] = useState(false);
   const [showStats, setShowStats] = useState(false);
@@ -322,7 +386,9 @@ export function RandomizerBoard() {
   const [obsModalOpen, setObsModalOpen] = useState(false);
   const [statsVersion, setStatsVersion] = useState(0);
   const [battleRoyale, setBattleRoyale] = useState(false);
-  const [battleRoyaleUsed, setBattleRoyaleUsed] = useState<Set<string>>(new Set());
+  const [battleRoyaleUsed, setBattleRoyaleUsed] = useState<Set<string>>(
+    new Set(),
+  );
   const [seedMode, setSeedMode] = useState<SeedMode>("none");
   const [customSeedInput, setCustomSeedInput] = useState("");
   // Only holds the custom-seed value — Daily Challenge's seed is derived
@@ -341,16 +407,29 @@ export function RandomizerBoard() {
   const [themeTag, setThemeTag] = useState<string | null>(null);
   const [twitchChannel, setTwitchChannel] = useState("");
   const [twitchEnabled, setTwitchEnabled] = useState(false);
-  const [twitchState, setTwitchState] = useState<TwitchConnectionState>("disconnected");
-  const [twitchRerollCommand, setTwitchRerollCommand] = useState(DEFAULT_TWITCH_REROLL_COMMAND);
-  const [twitchRerollPermission, setTwitchRerollPermission] = useState<TwitchPermission>("everyone");
-  const [twitchCooldownSec, setTwitchCooldownSec] = useState(DEFAULT_TWITCH_COOLDOWN_SEC);
+  const [twitchState, setTwitchState] =
+    useState<TwitchConnectionState>("disconnected");
+  const [twitchRerollCommand, setTwitchRerollCommand] = useState(
+    DEFAULT_TWITCH_REROLL_COMMAND,
+  );
+  const [twitchRerollPermission, setTwitchRerollPermission] =
+    useState<TwitchPermission>("everyone");
+  const [twitchCooldownSec, setTwitchCooldownSec] = useState(
+    DEFAULT_TWITCH_COOLDOWN_SEC,
+  );
   const [twitchPasteEnabled, setTwitchPasteEnabled] = useState(false);
-  const [twitchPasteCommand, setTwitchPasteCommand] = useState(DEFAULT_TWITCH_PASTE_COMMAND);
-  const [twitchPastePermission, setTwitchPastePermission] = useState<TwitchPermission>("subs_vips");
+  const [twitchPasteCommand, setTwitchPasteCommand] = useState(
+    DEFAULT_TWITCH_PASTE_COMMAND,
+  );
+  const [twitchPastePermission, setTwitchPastePermission] =
+    useState<TwitchPermission>("subs_vips");
 
   const activeSeed =
-    seedMode === "daily" ? dailyChallengeSeed(role) : seedMode === "custom" ? activeCustomSeed : null;
+    seedMode === "daily"
+      ? dailyChallengeSeed(role)
+      : seedMode === "custom"
+        ? activeCustomSeed
+        : null;
 
   useEffect(() => {
     function applyInitialClientState() {
@@ -360,7 +439,9 @@ export function RandomizerBoard() {
       setMode(loadMode());
       setLoadoutSlots(loadLoadoutSlots());
       setExcludedLoadoutSlugs(loadSlugSet(EXCLUDED_LOADOUT_STORAGE_KEY));
-      setGuaranteeTeachables(safeGet("local", GUARANTEE_TEACHABLES_STORAGE_KEY) === "1");
+      setGuaranteeTeachables(
+        safeGet("local", GUARANTEE_TEACHABLES_STORAGE_KEY) === "1",
+      );
 
       const urlState = readInitialUrlState();
       if (urlState) {
@@ -396,19 +477,26 @@ export function RandomizerBoard() {
 
       const savedChannel = safeGet("local", TWITCH_CHANNEL_STORAGE_KEY) ?? "";
       setTwitchChannel(savedChannel);
-      if (safeGet("local", TWITCH_ENABLED_STORAGE_KEY) === "1" && savedChannel) {
+      if (
+        safeGet("local", TWITCH_ENABLED_STORAGE_KEY) === "1" &&
+        savedChannel
+      ) {
         setTwitchEnabled(true);
       }
       setTwitchRerollCommand(
-        safeGet("local", TWITCH_REROLL_COMMAND_STORAGE_KEY) || DEFAULT_TWITCH_REROLL_COMMAND,
+        safeGet("local", TWITCH_REROLL_COMMAND_STORAGE_KEY) ||
+          DEFAULT_TWITCH_REROLL_COMMAND,
       );
       setTwitchRerollPermission(
         loadTwitchPermission(TWITCH_REROLL_PERMISSION_STORAGE_KEY, "everyone"),
       );
       setTwitchCooldownSec(loadTwitchCooldownSec());
-      setTwitchPasteEnabled(safeGet("local", TWITCH_PASTE_ENABLED_STORAGE_KEY) === "1");
+      setTwitchPasteEnabled(
+        safeGet("local", TWITCH_PASTE_ENABLED_STORAGE_KEY) === "1",
+      );
       setTwitchPasteCommand(
-        safeGet("local", TWITCH_PASTE_COMMAND_STORAGE_KEY) || DEFAULT_TWITCH_PASTE_COMMAND,
+        safeGet("local", TWITCH_PASTE_COMMAND_STORAGE_KEY) ||
+          DEFAULT_TWITCH_PASTE_COMMAND,
       );
       setTwitchPastePermission(
         loadTwitchPermission(TWITCH_PASTE_PERMISSION_STORAGE_KEY, "subs_vips"),
@@ -439,7 +527,9 @@ export function RandomizerBoard() {
     return merged;
   }, [excludedSlugs, battleRoyale, battleRoyaleUsed, themeExcluded]);
 
-  const availableCount = mounted ? getAvailablePool(role, combinedExcluded).length : 0;
+  const availableCount = mounted
+    ? getAvailablePool(role, combinedExcluded).length
+    : 0;
   // Applies to both causes of a too-small pool: Battle Royale attrition and
   // the player just manually excluding too many perks in Manage Pool. Either
   // way, getRandomPerks() refuses to top up from excluded perks (see
@@ -460,7 +550,14 @@ export function RandomizerBoard() {
     if (activeSeed) return getSeededPerks(role, perkCount, activeSeed);
     if (poolExhausted) return [];
     const character = guaranteeTeachables ? selectedCharacter : null;
-    return getRandomPerksWithTeachables(role, perkCount, character, combinedExcluded, Math.random, favoriteSlugs);
+    return getRandomPerksWithTeachables(
+      role,
+      perkCount,
+      character,
+      combinedExcluded,
+      Math.random,
+      favoriteSlugs,
+    );
   }, [
     mounted,
     mode,
@@ -480,7 +577,8 @@ export function RandomizerBoard() {
   // manual-exclusion merge, just namespaced "kind:slug" keys instead of
   // plain perk slugs (see lib/loadout.ts's excludeKey).
   const combinedExcludedLoadout = useMemo(() => {
-    if (!battleRoyale || battleRoyaleUsed.size === 0) return excludedLoadoutSlugs;
+    if (!battleRoyale || battleRoyaleUsed.size === 0)
+      return excludedLoadoutSlugs;
     const merged = new Set(excludedLoadoutSlugs);
     for (const key of battleRoyaleUsed) merged.add(key);
     return merged;
@@ -490,7 +588,13 @@ export function RandomizerBoard() {
     void nonce;
     if (!mounted || mode === "perks" || sharedLoadoutPieces) return null;
     if (activeSeed) return getSeededLoadout(role, loadoutSlots, activeSeed);
-    return getRandomLoadout(role, loadoutSlots, combinedExcludedLoadout, Math.random, selectedCharacter);
+    return getRandomLoadout(
+      role,
+      loadoutSlots,
+      combinedExcludedLoadout,
+      Math.random,
+      selectedCharacter,
+    );
   }, [
     mounted,
     mode,
@@ -512,6 +616,30 @@ export function RandomizerBoard() {
     return flattenLoadout(loadout);
   }, [mode, sharedLoadoutPieces, loadout]);
 
+  // What Download Image actually exports — perks and/or loadout pieces
+  // concatenated the same way the OBS overlay's "all" mode already does
+  // (see the publish effect below), so a downloaded image always matches
+  // whatever's actually on screen instead of being perks-only regardless
+  // of mode.
+  const sharePieces: ShareCardPiece[] = useMemo(() => {
+    return mode === "loadout"
+      ? loadoutPieces
+      : mode === "all"
+        ? [...perks, ...loadoutPieces]
+        : perks;
+  }, [mode, perks, loadoutPieces]);
+
+  // Same "who does this build belong to" logic loadout-grid.tsx's PowerSlot
+  // already uses for the killer's Power-slot badge: an explicitly chosen
+  // character wins, otherwise a killer build's rolled Power add-ons already
+  // say who it belongs to even with nothing manually forced.
+  const shareCharacter = useMemo(() => {
+    if (selectedCharacter) return selectedCharacter;
+    if (role !== "killer") return null;
+    const addon = loadoutPieces.find((p): p is Addon => p.kind === "addon");
+    return addon?.character ?? null;
+  }, [selectedCharacter, role, loadoutPieces]);
+
   useEffect(() => {
     function syncUrl() {
       const params = new URLSearchParams();
@@ -519,11 +647,17 @@ export function RandomizerBoard() {
       if (mode !== "perks") params.set("mode", mode); // "loadout" or "all"
       if (activeSeed) {
         params.set("seed", activeSeed);
-        window.history.replaceState(null, "", `${window.location.pathname}?${params}`);
+        window.history.replaceState(
+          null,
+          "",
+          `${window.location.pathname}?${params}`,
+        );
         return;
       }
       if (mode !== "perks" && loadoutPieces.length > 0) {
-        const ids = loadoutPieces.map((p) => getIdForLoadoutPiece(p.kind, p.slug));
+        const ids = loadoutPieces.map((p) =>
+          getIdForLoadoutPiece(p.kind, p.slug),
+        );
         if (ids.every((id): id is number => id !== undefined)) {
           params.set("lp", ids.join(","));
         }
@@ -543,7 +677,11 @@ export function RandomizerBoard() {
           params.set("perks", perks.map((p) => p.slug).join(","));
         }
       }
-      window.history.replaceState(null, "", `${window.location.pathname}?${params}`);
+      window.history.replaceState(
+        null,
+        "",
+        `${window.location.pathname}?${params}`,
+      );
     }
     if (mounted) syncUrl();
   }, [role, mode, perks, loadoutPieces, mounted, activeSeed]);
@@ -601,16 +739,38 @@ export function RandomizerBoard() {
     // collide as the same React key on the overlay's own list. In "all"
     // mode both lists are simply concatenated — perk slugs never contain a
     // colon, so they can't collide with a "kind:slug" loadout key either.
-    const perkPieces = perks.map((p) => ({ slug: p.slug, icon: p.icon, name: p.name }));
+    const perkPieces = perks.map((p) => ({
+      slug: p.slug,
+      icon: p.icon,
+      name: p.name,
+    }));
     const loadoutDisplayPieces = loadoutPieces.map((p) => ({
       slug: `${p.kind}:${p.slug}`,
       icon: p.icon,
       name: p.name,
     }));
     const displayPieces =
-      mode === "loadout" ? loadoutDisplayPieces : mode === "all" ? [...perkPieces, ...loadoutDisplayPieces] : perkPieces;
-    publishObsState({ role, language, perks: displayPieces });
-  }, [mounted, mode, role, language, perks, loadoutPieces, obsModalOpen]);
+      mode === "loadout"
+        ? loadoutDisplayPieces
+        : mode === "all"
+          ? [...perkPieces, ...loadoutDisplayPieces]
+          : perkPieces;
+    publishObsState({
+      role,
+      language,
+      perks: displayPieces,
+      character: shareCharacter ?? undefined,
+    });
+  }, [
+    mounted,
+    mode,
+    role,
+    language,
+    perks,
+    loadoutPieces,
+    shareCharacter,
+    obsModalOpen,
+  ]);
 
   const eliminateCurrentBuild = useCallback(() => {
     // "all" mode eliminates both halves together in one update, rather
@@ -622,7 +782,8 @@ export function RandomizerBoard() {
     setBattleRoyaleUsed((prev) => {
       const next = new Set(prev);
       if (hasPerks) perks.forEach((p) => next.add(p.slug));
-      if (hasLoadout) loadoutPieces.forEach((p) => next.add(`${p.kind}:${p.slug}`));
+      if (hasLoadout)
+        loadoutPieces.forEach((p) => next.add(`${p.kind}:${p.slug}`));
       persistBattleRoyale({ active: true, used: [...next] });
       return next;
     });
@@ -737,7 +898,10 @@ export function RandomizerBoard() {
       const target = e.target as HTMLElement | null;
       const tag = target?.tagName;
       const isTypingTarget =
-        tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || target?.isContentEditable;
+        tag === "INPUT" ||
+        tag === "TEXTAREA" ||
+        tag === "SELECT" ||
+        target?.isContentEditable;
       const isAlreadyInteractive = tag === "BUTTON" || tag === "A";
       if (isTypingTarget || isAlreadyInteractive) return;
 
@@ -746,7 +910,16 @@ export function RandomizerBoard() {
     }
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [mode, perkCount, activeSeed, poolExhausted, excludePanelOpen, statsModalOpen, obsModalOpen, regenerate]);
+  }, [
+    mode,
+    perkCount,
+    activeSeed,
+    poolExhausted,
+    excludePanelOpen,
+    statsModalOpen,
+    obsModalOpen,
+    regenerate,
+  ]);
 
   function selectRole(next: PerkRole) {
     setSharedBuild(null);
@@ -884,7 +1057,10 @@ export function RandomizerBoard() {
     });
   }
 
-  function toggleExcludedLoadoutPiece(kind: LoadoutPiece["kind"], slug: string) {
+  function toggleExcludedLoadoutPiece(
+    kind: LoadoutPiece["kind"],
+    slug: string,
+  ) {
     const key = `${kind}:${slug}`;
     setExcludedLoadoutSlugs((prev) => {
       const next = new Set(prev);
@@ -908,7 +1084,9 @@ export function RandomizerBoard() {
   }
 
   function resetExcludedLoadoutForRole(targetRole: PerkRole) {
-    const roleKeys = new Set(getLoadoutPoolForRole(targetRole).map((p) => `${p.kind}:${p.slug}`));
+    const roleKeys = new Set(
+      getLoadoutPoolForRole(targetRole).map((p) => `${p.kind}:${p.slug}`),
+    );
     setExcludedLoadoutSlugs((prev) => {
       const next = new Set([...prev].filter((key) => !roleKeys.has(key)));
       safeSetJSON("local", EXCLUDED_LOADOUT_STORAGE_KEY, [...next]);
@@ -947,7 +1125,10 @@ export function RandomizerBoard() {
   }
 
   function updateTwitchCooldownSec(seconds: number) {
-    const clamped = Math.min(MAX_TWITCH_COOLDOWN_SEC, Math.max(MIN_TWITCH_COOLDOWN_SEC, seconds));
+    const clamped = Math.min(
+      MAX_TWITCH_COOLDOWN_SEC,
+      Math.max(MIN_TWITCH_COOLDOWN_SEC, seconds),
+    );
     setTwitchCooldownSec(clamped);
     safeSet("local", TWITCH_COOLDOWN_STORAGE_KEY, String(clamped));
   }
@@ -983,7 +1164,9 @@ export function RandomizerBoard() {
           }),
         ),
       )
-      .catch(() => showToast(t({ ru: "Не удалось скопировать", en: "Couldn't copy" })));
+      .catch(() =>
+        showToast(t({ ru: "Не удалось скопировать", en: "Couldn't copy" })),
+      );
     if (battleRoyale) eliminateCurrentBuild();
   }
 
@@ -993,10 +1176,15 @@ export function RandomizerBoard() {
       .writeText(text)
       .then(() =>
         showToast(
-          t({ ru: "Весь билд скопирован в буфер обмена!", en: "Full build copied to clipboard!" }),
+          t({
+            ru: "Весь билд скопирован в буфер обмена!",
+            en: "Full build copied to clipboard!",
+          }),
         ),
       )
-      .catch(() => showToast(t({ ru: "Не удалось скопировать", en: "Couldn't copy" })));
+      .catch(() =>
+        showToast(t({ ru: "Не удалось скопировать", en: "Couldn't copy" })),
+      );
     if (battleRoyale) eliminateCurrentBuild();
   }
 
@@ -1011,7 +1199,9 @@ export function RandomizerBoard() {
           }),
         ),
       )
-      .catch(() => showToast(t({ ru: "Не удалось скопировать", en: "Couldn't copy" })));
+      .catch(() =>
+        showToast(t({ ru: "Не удалось скопировать", en: "Couldn't copy" })),
+      );
     if (battleRoyale) eliminateCurrentBuild();
   }
 
@@ -1021,38 +1211,61 @@ export function RandomizerBoard() {
       .writeText(text)
       .then(() =>
         showToast(
-          t({ ru: "Вся экипировка скопирована в буфер обмена!", en: "Full loadout copied to clipboard!" }),
+          t({
+            ru: "Вся экипировка скопирована в буфер обмена!",
+            en: "Full loadout copied to clipboard!",
+          }),
         ),
       )
-      .catch(() => showToast(t({ ru: "Не удалось скопировать", en: "Couldn't copy" })));
+      .catch(() =>
+        showToast(t({ ru: "Не удалось скопировать", en: "Couldn't copy" })),
+      );
     if (battleRoyale) eliminateCurrentBuild();
   }
 
   function handleCopyAllCombined() {
-    const names = [...perks.map((p) => p.name[language]), ...loadoutPieces.map((p) => p.name[language])];
+    const names = [
+      ...perks.map((p) => p.name[language]),
+      ...loadoutPieces.map((p) => p.name[language]),
+    ];
     navigator.clipboard
       .writeText(names.join(", "))
       .then(() =>
         showToast(
-          t({ ru: "Всё скопировано в буфер обмена!", en: "Everything copied to clipboard!" }),
+          t({
+            ru: "Всё скопировано в буфер обмена!",
+            en: "Everything copied to clipboard!",
+          }),
         ),
       )
-      .catch(() => showToast(t({ ru: "Не удалось скопировать", en: "Couldn't copy" })));
+      .catch(() =>
+        showToast(t({ ru: "Не удалось скопировать", en: "Couldn't copy" })),
+      );
     if (battleRoyale) eliminateCurrentBuild();
   }
 
   function handleShare() {
     navigator.clipboard
       .writeText(window.location.href)
-      .then(() => showToast(t({ ru: "Ссылка на билд скопирована!", en: "Build link copied!" })))
+      .then(() =>
+        showToast(
+          t({ ru: "Ссылка на билд скопирована!", en: "Build link copied!" }),
+        ),
+      )
       .catch(() =>
-        showToast(t({ ru: "Не удалось скопировать ссылку", en: "Couldn't copy the link" })),
+        showToast(
+          t({
+            ru: "Не удалось скопировать ссылку",
+            en: "Couldn't copy the link",
+          }),
+        ),
       );
   }
 
   async function handleDownloadImage(layout: ShareCardLayout) {
-    const target = layout === "story" ? storyShareCardRef.current : shareCardRef.current;
-    if (!target || perks.length === 0 || generatingImage) return;
+    const target =
+      layout === "story" ? storyShareCardRef.current : shareCardRef.current;
+    if (!target || sharePieces.length === 0 || generatingImage) return;
     setGeneratingImage(layout);
     try {
       const { default: html2canvas } = await import("html2canvas");
@@ -1071,12 +1284,19 @@ export function RandomizerBoard() {
       });
       const link = document.createElement("a");
       const suffix = layout === "story" ? "-story" : "";
-      link.download = `dbd-${role}-build-${perks.map((p) => p.slug).join("-")}${suffix}.png`;
+      link.download = `dbd-${role}-build-${sharePieces.map((p) => p.slug).join("-")}${suffix}.png`;
       link.href = canvas.toDataURL("image/png");
       link.click();
-      showToast(t({ ru: "Картинка билда скачана!", en: "Build image downloaded!" }));
+      showToast(
+        t({ ru: "Картинка билда скачана!", en: "Build image downloaded!" }),
+      );
     } catch {
-      showToast(t({ ru: "Не удалось создать картинку", en: "Couldn't generate the image" }));
+      showToast(
+        t({
+          ru: "Не удалось создать картинку",
+          en: "Couldn't generate the image",
+        }),
+      );
     } finally {
       setGeneratingImage(null);
     }
@@ -1160,10 +1380,14 @@ export function RandomizerBoard() {
     : [];
   const totalLoadoutInRole = loadoutPoolForRole.length;
   const availableLoadoutCount = mounted
-    ? loadoutPoolForRole.filter((p) => !combinedExcludedLoadout.has(`${p.kind}:${p.slug}`)).length
+    ? loadoutPoolForRole.filter(
+        (p) => !combinedExcludedLoadout.has(`${p.kind}:${p.slug}`),
+      ).length
     : 0;
   const battleRoyaleUsedLoadoutInRole = mounted
-    ? loadoutPoolForRole.filter((p) => battleRoyaleUsed.has(`${p.kind}:${p.slug}`)).length
+    ? loadoutPoolForRole.filter((p) =>
+        battleRoyaleUsed.has(`${p.kind}:${p.slug}`),
+      ).length
     : 0;
 
   // Keeps the browser tab useful when juggling several — shows which role
@@ -1225,28 +1449,34 @@ export function RandomizerBoard() {
 
         {mode !== "loadout" && (
           <div className="flex items-center gap-2 text-sm">
-            <span className="text-muted">{t({ ru: "Перков:", en: "Perks:" })}</span>
-            {Array.from({ length: MAX_PERK_COUNT + 1 }, (_, n) => n).map((n) => (
-              <button
-                key={n}
-                type="button"
-                onClick={() => selectPerkCount(n)}
-                className={cn(
-                  "flex size-7 items-center justify-center rounded-full border text-xs font-semibold transition-colors",
-                  perkCount === n
-                    ? cn(roleColor.border, roleColor.bg, roleColor.text)
-                    : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
-                )}
-              >
-                {n}
-              </button>
-            ))}
+            <span className="text-muted">
+              {t({ ru: "Перков:", en: "Perks:" })}
+            </span>
+            {Array.from({ length: MAX_PERK_COUNT + 1 }, (_, n) => n).map(
+              (n) => (
+                <button
+                  key={n}
+                  type="button"
+                  onClick={() => selectPerkCount(n)}
+                  className={cn(
+                    "flex size-7 items-center justify-center rounded-full border text-xs font-semibold transition-colors",
+                    perkCount === n
+                      ? cn(roleColor.border, roleColor.bg, roleColor.text)
+                      : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
+                  )}
+                >
+                  {n}
+                </button>
+              ),
+            )}
           </div>
         )}
 
         {mode !== "loadout" && mounted && getTagsForRole(role).length > 0 && (
           <div className="flex items-center gap-2 text-sm">
-            <span className="text-muted">{t({ ru: "Тема:", en: "Theme:" })}</span>
+            <span className="text-muted">
+              {t({ ru: "Тема:", en: "Theme:" })}
+            </span>
             <select
               value={themeTag ?? ""}
               onChange={(e) => selectTheme(e.target.value || null)}
@@ -1264,7 +1494,9 @@ export function RandomizerBoard() {
 
         {mode !== "perks" && (
           <div className="flex items-center gap-2 text-sm">
-            <span className="text-muted">{t({ ru: "Слоты:", en: "Slots:" })}</span>
+            <span className="text-muted">
+              {t({ ru: "Слоты:", en: "Slots:" })}
+            </span>
             {(
               [
                 ["item", { ru: "Предмет", en: "Item" }],
@@ -1318,7 +1550,9 @@ export function RandomizerBoard() {
                 {getCharacterPortrait(selectedCharacter) ? (
                   // eslint-disable-next-line @next/next/no-img-element -- next/image ignores basePath for unoptimized runtime src, see lib/asset-path.ts
                   <img
-                    src={withBasePath(getCharacterPortrait(selectedCharacter) as string)}
+                    src={withBasePath(
+                      getCharacterPortrait(selectedCharacter) as string,
+                    )}
                     alt={getCharacterName(selectedCharacter, language)}
                     className="size-7 object-cover"
                   />
@@ -1354,7 +1588,10 @@ export function RandomizerBoard() {
           <ToggleSwitch
             checked={guaranteeTeachables}
             onChange={toggleGuaranteeTeachables}
-            label={t({ ru: "Гарантировать тичеблы", en: "Guarantee teachables" })}
+            label={t({
+              ru: "Гарантировать тичеблы",
+              en: "Guarantee teachables",
+            })}
             tooltip={t({
               ru: "В билд гарантированно попадут собственные перки этого персонажа (если они не исключены из пула).",
               en: "The build is guaranteed to include this character's own perks (unless they're excluded from the pool).",
@@ -1380,7 +1617,9 @@ export function RandomizerBoard() {
                 <ListFilter className="size-3.5" />
                 {t({ ru: "Пул перков", en: "Perk pool" })}
                 {excludedSlugs.size > 0 && (
-                  <span className="rounded-full bg-accent/15 px-1.5 text-accent">{excludedSlugs.size}</span>
+                  <span className="rounded-full bg-accent/15 px-1.5 text-accent">
+                    {excludedSlugs.size}
+                  </span>
                 )}
               </button>
               <button
@@ -1391,21 +1630,29 @@ export function RandomizerBoard() {
                 <ListFilter className="size-3.5" />
                 {t({ ru: "Пул экип.", en: "Loadout pool" })}
                 {excludedLoadoutSlugs.size > 0 && (
-                  <span className="rounded-full bg-accent/15 px-1.5 text-accent">{excludedLoadoutSlugs.size}</span>
+                  <span className="rounded-full bg-accent/15 px-1.5 text-accent">
+                    {excludedLoadoutSlugs.size}
+                  </span>
                 )}
               </button>
             </>
           ) : (
             <button
               type="button"
-              onClick={() => openExcludePanel(mode === "perks" ? "perks" : "loadout")}
+              onClick={() =>
+                openExcludePanel(mode === "perks" ? "perks" : "loadout")
+              }
               className="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
             >
               <ListFilter className="size-3.5" />
               {t({ ru: "Пул", en: "Pool" })}
-              {(mode === "perks" ? excludedSlugs.size : excludedLoadoutSlugs.size) > 0 && (
+              {(mode === "perks"
+                ? excludedSlugs.size
+                : excludedLoadoutSlugs.size) > 0 && (
                 <span className="rounded-full bg-accent/15 px-1.5 text-accent">
-                  {mode === "perks" ? excludedSlugs.size : excludedLoadoutSlugs.size}
+                  {mode === "perks"
+                    ? excludedSlugs.size
+                    : excludedLoadoutSlugs.size}
                 </span>
               )}
             </button>
@@ -1492,7 +1739,9 @@ export function RandomizerBoard() {
         {activeSeed && (
           <p className="text-xs text-muted">
             {t({ ru: "Активный сид:", en: "Active seed:" })}{" "}
-            <code className="rounded bg-surface px-1.5 py-0.5 text-accent">{activeSeed}</code>
+            <code className="rounded bg-surface px-1.5 py-0.5 text-accent">
+              {activeSeed}
+            </code>
           </p>
         )}
       </div>
@@ -1557,7 +1806,10 @@ export function RandomizerBoard() {
             <p className="font-semibold text-foreground">
               {battleRoyale
                 ? t({ ru: "Пул перков исчерпан!", en: "Perk pool exhausted!" })
-                : t({ ru: "В пуле недостаточно перков", en: "Not enough perks in the pool" })}
+                : t({
+                    ru: "В пуле недостаточно перков",
+                    en: "Not enough perks in the pool",
+                  })}
             </p>
             <p className="text-sm text-muted">
               {battleRoyale
@@ -1572,7 +1824,11 @@ export function RandomizerBoard() {
             </p>
             <button
               type="button"
-              onClick={battleRoyale ? restartBattleRoyale : () => openExcludePanel("perks")}
+              onClick={
+                battleRoyale
+                  ? restartBattleRoyale
+                  : () => openExcludePanel("perks")
+              }
               className="mt-1 rounded-full bg-accent px-5 py-2 text-sm font-semibold text-accent-foreground transition-transform hover:scale-105 active:scale-95"
             >
               {battleRoyale
@@ -1587,7 +1843,10 @@ export function RandomizerBoard() {
             loading={!mounted}
             emptyMessage={
               perkCount === 0
-                ? t({ ru: "Ноль перков — режим испытания", en: "Zero perks — challenge mode" })
+                ? t({
+                    ru: "Ноль перков — режим испытания",
+                    en: "Zero perks — challenge mode",
+                  })
                 : undefined
             }
             onCopy={handleCopy}
@@ -1599,7 +1858,13 @@ export function RandomizerBoard() {
       <div className="flex items-center justify-center gap-2">
         <button
           type="button"
-          onClick={mode === "loadout" ? handleCopyAllLoadout : mode === "all" ? handleCopyAllCombined : handleCopyAll}
+          onClick={
+            mode === "loadout"
+              ? handleCopyAllLoadout
+              : mode === "all"
+                ? handleCopyAllCombined
+                : handleCopyAll
+          }
           disabled={
             mode === "loadout"
               ? loadoutPieces.length === 0
@@ -1626,20 +1891,41 @@ export function RandomizerBoard() {
           <Link2 className="size-3.5" />
           {t({ ru: "Поделиться", en: "Share" })}
         </button>
-        {mode === "perks" && (
-          <DownloadImageButton
-            onSelect={handleDownloadImage}
-            generating={generatingImage}
-            disabled={perks.length === 0}
-          />
-        )}
+        <DownloadImageButton
+          onSelect={handleDownloadImage}
+          generating={generatingImage}
+          disabled={sharePieces.length === 0}
+        />
       </div>
 
       {/* Off-screen — exists only so html2canvas has real, laid-out DOM to
           rasterize when a download button is clicked; never visible itself. */}
-      <div aria-hidden style={{ position: "fixed", top: 0, left: -9999, pointerEvents: "none" }}>
-        <ShareCard ref={shareCardRef} perks={perks} role={role} language={language} />
-        <ShareCard ref={storyShareCardRef} perks={perks} role={role} language={language} layout="story" />
+      <div
+        aria-hidden
+        style={{
+          position: "fixed",
+          top: 0,
+          left: -9999,
+          pointerEvents: "none",
+        }}
+      >
+        <ShareCard
+          ref={shareCardRef}
+          pieces={sharePieces}
+          mode={mode}
+          role={role}
+          language={language}
+          character={shareCharacter}
+        />
+        <ShareCard
+          ref={storyShareCardRef}
+          pieces={sharePieces}
+          mode={mode}
+          role={role}
+          language={language}
+          character={shareCharacter}
+          layout="story"
+        />
       </div>
 
       {/* Primary CTA — the one action on this page that should visually
@@ -1647,7 +1933,10 @@ export function RandomizerBoard() {
       <button
         type="button"
         onClick={regenerate}
-        disabled={!!activeSeed || (mode === "perks" && (perkCount === 0 || poolExhausted))}
+        disabled={
+          !!activeSeed ||
+          (mode === "perks" && (perkCount === 0 || poolExhausted))
+        }
         title={
           activeSeed
             ? t({
@@ -1664,9 +1953,13 @@ export function RandomizerBoard() {
 
       <p className="-mt-1 text-[11px] text-muted/70">
         {t({ ru: "Подсказка: ", en: "Tip: " })}
-        <kbd className="rounded border border-border bg-surface px-1 py-0.5 font-sans">Space</kbd>
+        <kbd className="rounded border border-border bg-surface px-1 py-0.5 font-sans">
+          Space
+        </kbd>
         {" / "}
-        <kbd className="rounded border border-border bg-surface px-1 py-0.5 font-sans">Enter</kbd>{" "}
+        <kbd className="rounded border border-border bg-surface px-1 py-0.5 font-sans">
+          Enter
+        </kbd>{" "}
         {t({ ru: "тоже рандомизирует", en: "also rolls a new one" })}
       </p>
 
@@ -1692,7 +1985,10 @@ export function RandomizerBoard() {
       {showStats && mounted && mode !== "loadout" && (
         <div className="rounded-xl border border-border bg-surface px-4 py-3 text-center text-xs text-muted">
           <p>
-            {t({ ru: `Всего перков ${ROLE_LABEL[role].ru}:`, en: `Total ${ROLE_LABEL[role].en} perks:` })}{" "}
+            {t({
+              ru: `Всего перков ${ROLE_LABEL[role].ru}:`,
+              en: `Total ${ROLE_LABEL[role].en} perks:`,
+            })}{" "}
             <b className="text-foreground">{totalInRole}</b>
           </p>
           <p>
@@ -1701,7 +1997,10 @@ export function RandomizerBoard() {
           </p>
           {battleRoyale && (
             <p>
-              {t({ ru: "Использовано в Battle Royale:", en: "Used in Battle Royale:" })}{" "}
+              {t({
+                ru: "Использовано в Battle Royale:",
+                en: "Used in Battle Royale:",
+              })}{" "}
               <b className="text-foreground">{battleRoyaleUsedInRole}</b> ·{" "}
               {t({ ru: "Осталось:", en: "Remaining:" })}{" "}
               <b className="text-foreground">{availableCount}</b>
@@ -1724,9 +2023,12 @@ export function RandomizerBoard() {
           </p>
           {battleRoyale && (
             <p>
-              {t({ ru: "Использовано в Battle Royale:", en: "Used in Battle Royale:" })}{" "}
-              <b className="text-foreground">{battleRoyaleUsedLoadoutInRole}</b> ·{" "}
-              {t({ ru: "Осталось:", en: "Remaining:" })}{" "}
+              {t({
+                ru: "Использовано в Battle Royale:",
+                en: "Used in Battle Royale:",
+              })}{" "}
+              <b className="text-foreground">{battleRoyaleUsedLoadoutInRole}</b>{" "}
+              · {t({ ru: "Осталось:", en: "Remaining:" })}{" "}
               <b className="text-foreground">{availableLoadoutCount}</b>
             </p>
           )}

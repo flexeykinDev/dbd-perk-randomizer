@@ -24,6 +24,11 @@ export interface ObsOverlayOptions {
    *  more room to avoid getting cut off than the icon itself does. */
   nameScale: number;
   showNames: boolean;
+  /** Whether to show the build's character portrait badge (see
+   *  ObsSyncPayload.character) when one is known. Independent of
+   *  `showNames` — a streamer might want the "who this is" badge without
+   *  per-card name pills, or vice versa. */
+  showCharacter: boolean;
   background: ObsBackground;
   /** Per-slot custom positions, indexed the same as the current build's
    *  perk list. `null` means "no override — use the default centered row
@@ -44,6 +49,10 @@ export const DEFAULT_OBS_OPTIONS: ObsOverlayOptions = {
   // them. See components/dbd/obs-overlay.tsx for the rest of the "less
   // bulky" pass this default is part of.
   showNames: false,
+  // On by default — a killer's Power/character badge is useful context at
+  // a glance and doesn't add nearly the visual weight a full row of name
+  // pills does, so unlike showNames this defaults on.
+  showCharacter: true,
   background: "transparent",
   positions: null,
 };
@@ -128,7 +137,19 @@ export function useObsOverlayOptions(): ObsOverlayOptions {
       setOptions({
         scale: parseScale(params),
         nameScale: parseNameScale(params),
-        showNames: params.get("names") !== "0",
+        // A bare link with neither param present falls back to
+        // DEFAULT_OBS_OPTIONS rather than hardcoding true/false here — the
+        // modal always writes the param explicitly when it differs from
+        // the default (see obsOverlayUrl below), but an old bookmarked or
+        // hand-typed link might not carry it at all, and should still get
+        // today's default look rather than reverting to whatever the
+        // hardcoded fallback here used to be.
+        showNames: params.has("names")
+          ? params.get("names") !== "0"
+          : DEFAULT_OBS_OPTIONS.showNames,
+        showCharacter: params.has("char")
+          ? params.get("char") !== "0"
+          : DEFAULT_OBS_OPTIONS.showCharacter,
         background: BACKGROUNDS.includes(background as ObsBackground)
           ? (background as ObsBackground)
           : DEFAULT_OBS_OPTIONS.background,
@@ -219,7 +240,23 @@ export function obsOverlayUrl(
   ) {
     params.set("nameScale", String(Math.round(options.nameScale)));
   }
-  if (options.showNames === false) params.set("names", "0");
+  // Compared against the default rather than a hardcoded `false` — that
+  // hardcoding is what let showNames's URL-parsing fallback (see
+  // useObsOverlayOptions above) silently drift out of sync with
+  // DEFAULT_OBS_OPTIONS.showNames when it changed; comparing against the
+  // same constant here keeps them from being able to disagree again.
+  if (
+    options.showNames !== undefined &&
+    options.showNames !== DEFAULT_OBS_OPTIONS.showNames
+  ) {
+    params.set("names", options.showNames ? "1" : "0");
+  }
+  if (
+    options.showCharacter !== undefined &&
+    options.showCharacter !== DEFAULT_OBS_OPTIONS.showCharacter
+  ) {
+    params.set("char", options.showCharacter ? "1" : "0");
+  }
   if (
     options.background &&
     options.background !== DEFAULT_OBS_OPTIONS.background

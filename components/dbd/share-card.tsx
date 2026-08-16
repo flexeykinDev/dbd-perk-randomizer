@@ -1,8 +1,20 @@
 import type { CSSProperties, Ref } from "react";
 import { withBasePath } from "@/lib/asset-path";
+import { getCharacterName } from "@/lib/character-name";
 import { ruPlural } from "@/lib/i18n";
+import { getCharacterPortrait } from "@/lib/perks";
 import { ROLE_COLOR } from "@/lib/role-color";
-import type { Perk, PerkRole } from "@/lib/types";
+import type { PerkRole } from "@/lib/types";
+
+/** What the card grid actually needs from each item — a perk and a loadout
+ *  piece (Item/Add-on/Offering) both satisfy this shape already, so the
+ *  same grid renders either (or both concatenated, for "all" mode) without
+ *  this component needing to know which kind of piece it's looking at. */
+export interface ShareCardPiece {
+  slug: string;
+  icon: string;
+  name: { en: string; ru: string };
+}
 
 // html2canvas (1.4.x, the current release) predates browser support for
 // oklch()/oklab()/color-mix() — colors this app's Tailwind classes resolve
@@ -27,7 +39,10 @@ const MUTED = "#9096a3";
 // per role: warm campfire embers for Survivor (DBD's own camp-fire hub),
 // cold Entity dread for Killer — applied only to the background wash and
 // the low-opacity decorative shapes, never to text or icon borders.
-const MOOD: Record<PerkRole, { glow: string; glowSoft: string; ember: string; vignette: string }> = {
+const MOOD: Record<
+  PerkRole,
+  { glow: string; glowSoft: string; ember: string; vignette: string }
+> = {
   survivor: {
     glow: "#ff7a3d",
     glowSoft: "#ffb35c",
@@ -52,10 +67,11 @@ export type ShareCardLayout = "landscape" | "story";
 // Real, fixed canvas dimensions instead of "however tall the content turns
 // out to be" — landscape is now a genuine 16:9 (what Discord/X crop link
 // previews to), matching the story format's already-fixed 1080x1920.
-const CANVAS_SIZE: Record<ShareCardLayout, { width: number; height: number }> = {
-  landscape: { width: 1600, height: 900 },
-  story: { width: 1080, height: 1920 },
-};
+const CANVAS_SIZE: Record<ShareCardLayout, { width: number; height: number }> =
+  {
+    landscape: { width: 1600, height: 900 },
+    story: { width: 1080, height: 1920 },
+  };
 
 // Perk icons are scraped/stored at a native 128x128 (see
 // scripts/scrape-perks.ts) — displaying them larger than that upscales a
@@ -86,9 +102,30 @@ function FlameShape({ style, color }: { style: CSSProperties; color: string }) {
 function ClawMarks({ style, color }: { style: CSSProperties; color: string }) {
   return (
     <svg viewBox="0 0 120 120" style={style}>
-      <path d="M6 20 Q 55 5 114 60" stroke={color} strokeWidth="4" fill="none" strokeLinecap="round" opacity={0.9} />
-      <path d="M2 42 Q 52 26 110 82" stroke={color} strokeWidth="4" fill="none" strokeLinecap="round" opacity={0.65} />
-      <path d="M0 66 Q 48 50 104 104" stroke={color} strokeWidth="4" fill="none" strokeLinecap="round" opacity={0.4} />
+      <path
+        d="M6 20 Q 55 5 114 60"
+        stroke={color}
+        strokeWidth="4"
+        fill="none"
+        strokeLinecap="round"
+        opacity={0.9}
+      />
+      <path
+        d="M2 42 Q 52 26 110 82"
+        stroke={color}
+        strokeWidth="4"
+        fill="none"
+        strokeLinecap="round"
+        opacity={0.65}
+      />
+      <path
+        d="M0 66 Q 48 50 104 104"
+        stroke={color}
+        strokeWidth="4"
+        fill="none"
+        strokeLinecap="round"
+        opacity={0.4}
+      />
     </svg>
   );
 }
@@ -106,9 +143,27 @@ function VineShape({ style, color }: { style: CSSProperties; color: string }) {
         fill="none"
         strokeLinecap="round"
       />
-      <path d="M46 60 C 60 54, 68 44, 66 32" stroke={color} strokeWidth="3.5" fill="none" strokeLinecap="round" />
-      <path d="M32 118 C 16 116, 6 106, 8 94" stroke={color} strokeWidth="3.5" fill="none" strokeLinecap="round" />
-      <path d="M42 160 C 58 158, 68 148, 66 136" stroke={color} strokeWidth="3.5" fill="none" strokeLinecap="round" />
+      <path
+        d="M46 60 C 60 54, 68 44, 66 32"
+        stroke={color}
+        strokeWidth="3.5"
+        fill="none"
+        strokeLinecap="round"
+      />
+      <path
+        d="M32 118 C 16 116, 6 106, 8 94"
+        stroke={color}
+        strokeWidth="3.5"
+        fill="none"
+        strokeLinecap="round"
+      />
+      <path
+        d="M42 160 C 58 158, 68 148, 66 136"
+        stroke={color}
+        strokeWidth="3.5"
+        fill="none"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
@@ -116,7 +171,12 @@ function VineShape({ style, color }: { style: CSSProperties; color: string }) {
 // Rising embers for Survivor — a fixed, hand-placed constellation rather
 // than randomized, so the export is deterministic and nothing overlaps the
 // card grid in the middle of the canvas.
-const EMBER_SPOTS: readonly { left: string; top: string; size: number; opacity: number }[] = [
+const EMBER_SPOTS: readonly {
+  left: string;
+  top: string;
+  size: number;
+  opacity: number;
+}[] = [
   { left: "6%", top: "88%", size: 10, opacity: 0.8 },
   { left: "10%", top: "74%", size: 6, opacity: 0.6 },
   { left: "4%", top: "60%", size: 5, opacity: 0.45 },
@@ -222,15 +282,29 @@ function ThemeDecor({ role, isStory }: { role: PerkRole; isStory: boolean }) {
 
 export function ShareCard({
   ref,
-  perks,
+  pieces,
+  mode,
   role,
   language,
+  character,
   layout = "landscape",
 }: {
   ref?: Ref<HTMLDivElement>;
-  perks: Perk[];
+  pieces: ShareCardPiece[];
+  /** Drives the subtitle under "Dead by Daylight" — "all" mode's pieces
+   *  are perks and loadout pieces concatenated into one list (same as the
+   *  OBS overlay does), so this is the only way to tell that apart from a
+   *  plain perks-only build for wording purposes ("N perks" reads oddly
+   *  once the count also includes an Offering). */
+  mode: "perks" | "loadout" | "all";
   role: PerkRole;
   language: "en" | "ru";
+  /** The build's character, if one is known — either explicitly chosen via
+   *  the character picker, or (killer only) inferred from the rolled
+   *  Power add-ons, same as the main site's own loadout HUD badge (see
+   *  loadout-grid.tsx's PowerSlot). `null`/absent renders no badge at all,
+   *  same as a survivor build with no character forced. */
+  character?: string | null;
   /** "landscape" (default): fixed 1600x900 (16:9) — used for the regular
    *  "Download Image" option. "story": fixed 1080x1920 (9:16), for
    *  Instagram/TikTok Stories. */
@@ -239,9 +313,28 @@ export function ShareCard({
   const accent = ROLE_COLOR[role].solid;
   const mood = MOOD[role];
   const roleName = ROLE_LABEL[role][language];
+  const characterPortrait = character
+    ? getCharacterPortrait(character)
+    : undefined;
   const isStory = layout === "story";
-  const columns = isStory ? Math.min(Math.max(perks.length, 1), 2) : Math.max(perks.length, 1);
+  const columns = isStory
+    ? Math.min(Math.max(pieces.length, 1), 2)
+    : Math.max(pieces.length, 1);
   const iconSize = ICON_SIZE[layout];
+  // "N perks" only reads sensibly when every card actually is a perk — once
+  // Loadout pieces are mixed in (or it's the only thing shown), a bare
+  // count is either misleading ("4 perks" when 2 are add-ons) or pointless
+  // (a loadout is always up to 4 fixed slots, not a count worth stating).
+  const subtitle =
+    mode === "loadout"
+      ? language === "ru"
+        ? "Экипировка"
+        : "Loadout"
+      : mode === "all"
+        ? language === "ru"
+          ? "Перки и экипировка"
+          : "Perks & Loadout"
+        : `${pieces.length} ${language === "ru" ? ruPlural(pieces.length, "перк", "перка", "перков") : "perks"}`;
   const { width, height } = CANVAS_SIZE[layout];
   const padding = isStory ? 64 : 56;
   const blockGap = isStory ? 72 : 40;
@@ -308,16 +401,74 @@ export function ShareCard({
           />
         </div>
         <div style={{ textAlign: isStory ? "center" : "left" }}>
-          <div style={{ fontSize: isStory ? 46 : 30, fontWeight: 700, lineHeight: 1.2 }}>
+          <div
+            style={{
+              fontSize: isStory ? 46 : 30,
+              fontWeight: 700,
+              lineHeight: 1.2,
+            }}
+          >
             Dead by Daylight
           </div>
-          <div style={{ fontSize: isStory ? 30 : 19, fontWeight: 600, color: accent }}>
-            {roleName} · {perks.length}{" "}
-            {language === "ru"
-              ? ruPlural(perks.length, "перк", "перка", "перков")
-              : "perks"}
+          <div
+            style={{
+              fontSize: isStory ? 30 : 19,
+              fontWeight: 600,
+              color: accent,
+            }}
+          >
+            {roleName} · {subtitle}
           </div>
         </div>
+
+        {character && characterPortrait && (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: isStory ? 16 : 12,
+              // Landscape: pushed to the row's far end, away from the title
+              // block. Story: no "auto" side to push toward in a centered
+              // column, so it just stacks below instead.
+              marginLeft: isStory ? undefined : "auto",
+            }}
+          >
+            <span
+              style={{
+                display: "block",
+                width: isStory ? 90 : 58,
+                height: isStory ? 90 : 58,
+                borderRadius: "50%",
+                overflow: "hidden",
+                border: `${isStory ? 3 : 2}px solid ${accent}`,
+                flexShrink: 0,
+              }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element -- captured by html2canvas, not rendered as a normal page image */}
+              <img
+                src={withBasePath(characterPortrait)}
+                alt={getCharacterName(character, language)}
+                width={isStory ? 90 : 58}
+                height={isStory ? 90 : 58}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  display: "block",
+                }}
+              />
+            </span>
+            <div
+              style={{
+                fontSize: isStory ? 24 : 16,
+                fontWeight: 600,
+                color: MUTED,
+              }}
+            >
+              {getCharacterName(character, language)}
+            </div>
+          </div>
+        )}
       </div>
 
       <div
@@ -331,9 +482,9 @@ export function ShareCard({
           gap: isStory ? 44 : 28,
         }}
       >
-        {perks.map((perk) => (
+        {pieces.map((piece) => (
           <div
-            key={perk.slug}
+            key={piece.slug}
             style={{
               display: "flex",
               flexDirection: "column",
@@ -348,8 +499,8 @@ export function ShareCard({
           >
             {/* eslint-disable-next-line @next/next/no-img-element -- captured by html2canvas, not rendered as a normal page image */}
             <img
-              src={withBasePath(perk.icon)}
-              alt={perk.name[language]}
+              src={withBasePath(piece.icon)}
+              alt={piece.name[language]}
               width={iconSize}
               height={iconSize}
               style={{
@@ -368,7 +519,7 @@ export function ShareCard({
                 lineHeight: 1.3,
               }}
             >
-              {perk.name[language]}
+              {piece.name[language]}
             </div>
           </div>
         ))}

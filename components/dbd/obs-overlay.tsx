@@ -3,16 +3,18 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { withBasePath } from "@/lib/asset-path";
+import { getCharacterName } from "@/lib/character-name";
 import { cn } from "@/lib/cn";
-import { ROLE_COLOR } from "@/lib/role-color";
 import {
   loadLastObsState,
   subscribeObsState,
   type ObsPerk,
   type ObsSyncPayload,
 } from "@/lib/obs-sync";
+import { getCharacterPortrait } from "@/lib/perks";
+import { ROLE_COLOR } from "@/lib/role-color";
 import { useObsOverlayOptions, useObsRoomCode } from "@/lib/use-obs-mode";
-import { useT } from "@/lib/i18n";
+import { useT, type Lang } from "@/lib/i18n";
 
 // Base pixel sizes at scale=100 ("normal") — every other scale value just
 // multiplies these, which is what lets scale be a continuous slider instead
@@ -58,6 +60,66 @@ const KIND_SCALE: Record<PieceKind, number> = {
   addon: 0.82,
   offering: 1,
 };
+
+const BASE_BADGE_PORTRAIT_PX = 48;
+const BASE_BADGE_FONT_PX = 13;
+
+/** A small "who this build belongs to" badge — pinned to a fixed screen
+ *  corner (not part of the perk/loadout row layout, so it doesn't compete
+ *  with slot positions or the "all" mode row grouping above). Same soft
+ *  card treatment as renderCard's pieces: translucent background, thin
+ *  border, faint role-color ring. */
+function CharacterBadge({
+  slug,
+  language,
+  scaleRatio,
+  roleColor,
+}: {
+  slug: string;
+  language: Lang;
+  scaleRatio: number;
+  roleColor: { solid: string };
+}) {
+  const portrait = getCharacterPortrait(slug);
+  if (!portrait) return null;
+  const portraitSize = Math.round(BASE_BADGE_PORTRAIT_PX * scaleRatio);
+
+  return (
+    <div className="absolute bottom-4 left-4 z-10 flex items-center gap-2">
+      <span
+        className="flex shrink-0 items-center justify-center overflow-hidden rounded-full border border-white/10 bg-black/55 backdrop-blur-sm"
+        style={{
+          width: portraitSize,
+          height: portraitSize,
+          boxShadow: `0 0 0 1px ${roleColor.solid}26, 0 6px 16px -4px rgba(0,0,0,0.5)`,
+        }}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element -- overlay renders outside the normal app shell; next/image's basePath handling isn't relevant here either way */}
+        <img
+          src={withBasePath(portrait)}
+          alt={getCharacterName(slug, language)}
+          width={portraitSize}
+          height={portraitSize}
+          style={{
+            width: portraitSize,
+            height: portraitSize,
+            objectFit: "cover",
+          }}
+        />
+      </span>
+      <span
+        className="rounded-lg bg-black/55 font-bold text-white backdrop-blur-sm"
+        style={{
+          fontSize: Math.round(BASE_BADGE_FONT_PX * scaleRatio),
+          padding: `${Math.round(4 * scaleRatio)}px ${Math.round(10 * scaleRatio)}px`,
+          boxShadow: "0 4px 10px -2px rgba(0,0,0,0.4)",
+        }}
+      >
+        {getCharacterName(slug, language)}
+      </span>
+    </div>
+  );
+}
 
 /** The stream overlay view (`#/obs`) — a fully transparent background (by
  *  default) showing only the current perk cards, animated in/out as the
@@ -205,6 +267,14 @@ export function ObsOverlay() {
           : { gap: hasBothGroups ? Math.round(GROUP_GAP_PX * scaleRatio) : 0 }
       }
     >
+      {state?.character && options.showCharacter && roleColor && (
+        <CharacterBadge
+          slug={state.character}
+          language={state.language}
+          scaleRatio={scaleRatio}
+          roleColor={roleColor}
+        />
+      )}
       {!state || state.perks.length === 0 ? (
         <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-black/60 px-3 py-1.5 text-xs whitespace-nowrap text-white/70">
           {t({
