@@ -394,7 +394,7 @@ export function ObsOverlayModal({
             aria-modal="true"
             aria-labelledby={titleId}
             aria-describedby={descId}
-            className="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-2xl border border-border bg-surface p-5 shadow-2xl"
+            className="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-2xl border border-border bg-surface p-5 shadow-2xl lg:max-w-lg"
           >
             <div aria-live="polite" className="sr-only">
               {announcement}

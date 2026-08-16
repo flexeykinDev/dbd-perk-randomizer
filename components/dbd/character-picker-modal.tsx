@@ -69,7 +69,7 @@ export function CharacterPickerModal({
             exit={{ opacity: 0, scale: 0.96, y: 10 }}
             transition={{ type: "spring", stiffness: 400, damping: 34 }}
             onClick={(e) => e.stopPropagation()}
-            className="flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-border bg-surface shadow-2xl"
+            className="flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-border bg-surface shadow-2xl lg:max-w-4xl"
           >
             <div className="flex items-center justify-between gap-3 border-b border-border p-4">
               <p className="font-semibold text-foreground">
@@ -126,7 +126,7 @@ export function CharacterPickerModal({
                   {t({ ru: "Ничего не найдено", en: "Nothing matches" })}
                 </p>
               ) : (
-                <div className="grid grid-cols-4 gap-2 p-4 sm:grid-cols-6">
+                <div className="grid grid-cols-4 gap-2 p-4 sm:grid-cols-6 lg:grid-cols-8">
                   {filtered.map((character) => {
                     const portrait = getCharacterPortrait(character);
                     const isSelected = character === selected;

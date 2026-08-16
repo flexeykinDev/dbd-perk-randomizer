@@ -50,7 +50,7 @@ export function StatsModal({
               exit={{ opacity: 0, scale: 0.96, y: 10 }}
               transition={{ type: "spring", stiffness: 400, damping: 34 }}
               onClick={(e) => e.stopPropagation()}
-              className="flex max-h-[85vh] w-full max-w-lg flex-col overflow-hidden rounded-2xl border border-border bg-surface shadow-2xl"
+              className="flex max-h-[85vh] w-full max-w-lg flex-col overflow-hidden rounded-2xl border border-border bg-surface shadow-2xl lg:max-w-xl"
             >
               <div className="flex items-center justify-between gap-3 border-b border-border p-4">
                 <div>
