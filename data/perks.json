@@ -606,10 +606,10 @@
     "slug": "deja-vu",
     "role": "survivor",
     "name": {
-      "en": "Déjà Vu",
+      "en": "Deja Vu",
       "ru": "Дежавю"
     },
-    "description": "Paranoia paired with your horror of failure helps prepare you from repeating the same mistakes.Unlocks potential in your Aura-reading ability: The Auras of the 3 Generators in closest proximity to one another are revealed to you at all times. Increases your Repair speed on those Generators by 4/5/6 %. Held Map automatically track Auras revealed by Déjà Vu.",
+    "description": "Paranoia paired with your horror of failure helps prepare you from repeating the same mistakes.Unlocks potential in your Aura-reading ability: The Auras of the 3 Generators in closest proximity to one another are revealed to you at all times. Increases your Repair speed on those Generators by 4/5/6 %. Held Map automatically track Auras revealed by Deja Vu.",
     "descriptionRuRaw": "Вы видите ауры генераторов (3), которые стоят ближе всего друг к другу, а починка этих генераторов ускоряется на 4/5/6%.",
     "character": ".All",
     "icon": "/perks/survivor/deja-vu.webp",
