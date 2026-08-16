@@ -234,7 +234,7 @@ function PieceSlot({
                 piece.name[language]
               }
               className={cn(
-                "group absolute inset-0 flex cursor-pointer items-center justify-center overflow-hidden rounded-xl border border-border bg-surface transition-colors hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:outline-none",
+                "absolute inset-0 flex cursor-pointer items-center justify-center overflow-hidden rounded-xl border border-border bg-surface transition-colors hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:outline-none",
                 roleColor.hoverBorder,
               )}
             >
@@ -243,21 +243,6 @@ function PieceSlot({
                   {t({ ru: "НОВОЕ", en: "NEW" })}
                 </span>
               )}
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onCopy(piece);
-                }}
-                aria-label={
-                  t({ ru: "Копировать", en: "Copy" }) +
-                  " " +
-                  piece.name[language]
-                }
-                className="absolute top-0.5 right-0.5 z-10 flex size-4 items-center justify-center rounded-full bg-black/50 text-white/80 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100 hover:bg-black/70 hover:text-white"
-              >
-                <Copy className="size-2.5" />
-              </button>
               {/* eslint-disable-next-line @next/next/no-img-element -- next/image ignores basePath for unoptimized runtime src, see lib/asset-path.ts */}
               <img
                 src={withBasePath(piece.icon)}
@@ -286,7 +271,36 @@ function PieceSlot({
       >
         {piece ? piece.name[language] : " "}
       </span>
+      {piece && <PieceCopyButton size={size} onClick={() => onCopy(piece)} t={t} />}
     </div>
+  );
+}
+
+/** A small, always-visible "Copy" button under a loadout piece — matches
+ *  PerkGrid's card treatment (see perk-grid.tsx) instead of the tiny
+ *  hover-only icon this replaced, which a touch device could never
+ *  reveal at all. */
+function PieceCopyButton({
+  size,
+  onClick,
+  t,
+}: {
+  size: "lg" | "sm";
+  onClick: () => void;
+  t: TFn;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        "flex items-center justify-center gap-1 rounded-md border border-border text-muted transition-colors hover:border-accent/50 hover:bg-accent/10 hover:text-accent",
+        size === "lg" ? "w-24 py-1 text-[10px]" : "w-16 py-0.5 text-[9px]",
+      )}
+    >
+      <Copy className={size === "lg" ? "size-3" : "size-2.5"} />
+      {t({ ru: "Копировать", en: "Copy" })}
+    </button>
   );
 }
 

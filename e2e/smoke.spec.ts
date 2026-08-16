@@ -159,6 +159,12 @@ test.describe("Full Loadout", () => {
 test.describe("Combined All mode", () => {
   test("shows both the perk grid and the loadout HUD together", async ({ page }) => {
     await page.goto("/?role=survivor");
+    // Perks only render post-hydration (they're seeded client-side — see
+    // `mounted` in randomizer-board.tsx), so waiting for one here doubles as
+    // a wait for hydration to finish attaching the mode toggle's onClick
+    // before we click it — otherwise the click can land on the button before
+    // React has wired it up and silently do nothing.
+    await expect(page.locator("main").locator("img[alt]").first()).toBeVisible();
     await page.getByRole("button", { name: "Всё", exact: true }).click();
 
     await expect(page.getByTestId("loadout-slot-item")).toBeVisible();
@@ -181,6 +187,8 @@ test.describe("Combined All mode", () => {
 
   test("a mode=all share link restores both the perks and the loadout exactly", async ({ page }) => {
     await page.goto("/?role=survivor");
+    // See the hydration-wait comment in the previous test.
+    await expect(page.locator("main").locator("img[alt]").first()).toBeVisible();
     await page.getByRole("button", { name: "Всё", exact: true }).click();
     await page.getByRole("button", { name: "Сгенерировать новый билд" }).click();
     const sharedUrl = page.url();
@@ -197,6 +205,8 @@ test.describe("Combined All mode", () => {
 
   test("each pool button opens its own panel", async ({ page }) => {
     await page.goto("/?role=survivor");
+    // See the hydration-wait comment in the first test of this block.
+    await expect(page.locator("main").locator("img[alt]").first()).toBeVisible();
     await page.getByRole("button", { name: "Всё", exact: true }).click();
 
     await page.getByRole("button", { name: "Пул перков" }).click();
