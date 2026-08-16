@@ -101,6 +101,101 @@ const ICON_SOURCE_OVERRIDES: Record<string, string> = {
   "misty-day-remains-of-judgment": "https://deadbydaylight.wiki.gg/images/IconAddon_mistyDay.png",
 };
 
+// Patch 9.1.0 also reworked the Key and Map items' Add-ons specifically —
+// cut from 9 each down to 5 each (1 per Rarity, the same standard the new
+// Fog Vial item introduced) — but unlike most of the wiki, Fandom's own
+// Keys and Map pages were never updated to reflect it: they still list the
+// pre-rework 9-each sets verbatim (confirmed by hand against both pages'
+// live HTML). deadbydaylight.wiki.gg has the current, correct 5-each
+// lists, so — same reasoning as DESCRIPTION_OVERRIDES/ICON_SOURCE_OVERRIDES
+// above, just at the scale of a whole item type instead of one add-on —
+// these two categories are pinned here instead of scraped from Fandom.
+// Remove this once Fandom's Keys/Map pages catch up.
+const KEY_MAP_ADDON_OVERRIDES: (ScrapedPiece & { itemType: "key" | "map" })[] = [
+  // Keys — https://deadbydaylight.wiki.gg/wiki/Keys
+  {
+    itemType: "key",
+    slug: "friendship-charm",
+    name: "Friendship Charm",
+    description:
+      "Someone's thumb has worn off the initials once carved into it. Modifies the Key with the following effect: Increases its Charges by +1.",
+    iconSourceUrl: "https://deadbydaylight.wiki.gg/images/IconAddon_friendshipCharm.png",
+  },
+  {
+    itemType: "key",
+    slug: "shrill-whistle",
+    name: "Shrill Whistle",
+    description:
+      "The high-pitched scream gives a sense of urgency to everything. Modifies the Key with the following effect: Reduces the time it takes to channel the Key by -35 %.",
+    iconSourceUrl: "https://deadbydaylight.wiki.gg/images/IconAddon_shrillWhistle.png",
+  },
+  {
+    itemType: "key",
+    slug: "braided-bauble",
+    name: "Braided Bauble",
+    description:
+      "Four thin but sturdy cords, all masterfully wrapped around one another. Modifies the Key with the following effect: Increases its Aura-reading duration by +2 seconds.",
+    iconSourceUrl: "https://deadbydaylight.wiki.gg/images/IconAddon_braidedBauble.png",
+  },
+  {
+    itemType: "key",
+    slug: "unique-wedding-ring",
+    name: "Unique Wedding Ring",
+    description:
+      "An engraved wedding ring that emerged from the Fog and resonates with an indescribable and incomprehensible energy. Modifies the Key with the following effects: The Aura of the Obsession is permanently revealed to you. Your Aura is permanently revealed to the Obsession. Unique Wedding Ring applies its effects passively and does not require actively using the Key. Reduces your chance of becoming the initial Obsession by reducing the default value by -100 %.",
+    iconSourceUrl: "https://deadbydaylight.wiki.gg/images/IconAddon_uniqueWeddingRing.png",
+  },
+  {
+    itemType: "key",
+    slug: "blood-amber",
+    name: "Blood Amber",
+    description:
+      "A blood-red amber striped with black veins. The amber is warm to the touch. Modifies the Key with the following effects: Reduces its Aura-reveal time by -6 seconds. Reduces its Charges by -2. While using the Key, the following effects apply: The Aura of the Killer is revealed to you. Your Aura is revealed to the Killer.",
+    iconSourceUrl: "https://deadbydaylight.wiki.gg/images/IconAddon_bloodAmber.png",
+  },
+  // Maps — https://deadbydaylight.wiki.gg/wiki/Map
+  {
+    itemType: "map",
+    slug: "glowing-ink",
+    name: "Glowing Ink",
+    description:
+      "Some of the images seemed to jump right off the page. Modifies the Map with the following effect: Increases the duration it reveals Auras for by +2 seconds.",
+    iconSourceUrl: "https://deadbydaylight.wiki.gg/images/IconAddon_glowingInk.png",
+  },
+  {
+    itemType: "map",
+    slug: "gnarled-compass",
+    name: "Gnarled Compass",
+    description:
+      "It seems to set itself to the perfect distance every time. Modifies the Map with the following effect: Increases its Charges by +2.",
+    iconSourceUrl: "https://deadbydaylight.wiki.gg/images/IconAddon_gnarledCompass.png",
+  },
+  {
+    itemType: "map",
+    slug: "battered-tape",
+    name: "Battered Tape",
+    description:
+      "Additional pieces of parchment hung loosely from the map, hastily affixed with tape. Modifies the Map with the following effect: Increases its maximum range by +8 metres.",
+    iconSourceUrl: "https://deadbydaylight.wiki.gg/images/IconAddon_batteredTape.png",
+  },
+  {
+    itemType: "map",
+    slug: "sharpened-flint",
+    name: "Sharpened Flint",
+    description:
+      "When sparked near the map, new sigils appeared in unexpected locations. Modifies the Map with the following effect: Grants the ability to track the location of Totems and reveal their Auras, when using the Map.",
+    iconSourceUrl: "https://deadbydaylight.wiki.gg/images/IconAddon_sharpenedFlint.png",
+  },
+  {
+    itemType: "map",
+    slug: "crimson-stamp",
+    name: "Crimson Stamp",
+    description:
+      "Only those with absolute confidence dared to place their seal upon the map. Modifies the Map with the following effects: The Aura of the Killer is revealed to all Survivors when within 8 metres of the Beam of Light. Reduces the Life time of the Beam of Light by -10 seconds. Reduces its Charges by -2.",
+    iconSourceUrl: "https://deadbydaylight.wiki.gg/images/IconAddon_crimsonStamp.png",
+  },
+];
+
 interface ScrapedPiece {
   name: string;
   slug: string;
@@ -635,9 +730,15 @@ async function main() {
       console.warn(`  Unknown survivor add-on heading "${heading}" — skipping`);
       continue;
     }
+    // Key and Map are pinned via KEY_MAP_ADDON_OVERRIDES instead (see its
+    // comment) — Fandom's own tables for these two are stale post-9.1.0.
+    if (itemType === "key" || itemType === "map") continue;
     for (const piece of parsePieceTable($addons, table)) {
       addonRows.push({ role: "survivor", character: ".All", itemType, piece });
     }
+  }
+  for (const { itemType, ...piece } of KEY_MAP_ADDON_OVERRIDES) {
+    addonRows.push({ role: "survivor", character: ".All", itemType, piece });
   }
 
   const killerAddonSections = findHeadingTables($addons, "Killer Power Add-ons");

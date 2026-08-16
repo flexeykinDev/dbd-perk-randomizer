@@ -37,9 +37,9 @@
   "addon/prayer-beads": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/a/aa/IconAddon_prayerBeads.png",
   "addon/scratched-pearl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/e/e8/IconAddon_scratchedPearl.png",
   "addon/gold-token": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/2/24/IconAddon_goldToken.png",
-  "addon/blood-amber": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/6/61/IconAddon_bloodAmber.png",
+  "addon/blood-amber": "https://deadbydaylight.wiki.gg/images/IconAddon_bloodAmber.png",
   "addon/milky-glass": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/6/65/IconAddon_milkyGlass.png",
-  "addon/unique-wedding-ring": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/4/41/IconAddon_uniqueWeddingRing.png",
+  "addon/unique-wedding-ring": "https://deadbydaylight.wiki.gg/images/IconAddon_uniqueWeddingRing.png",
   "addon/weaved-ring": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/6/6f/IconAddon_weavedRing.png",
   "addon/map-addendum": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/c/cc/IconAddon_mapAddendum.png",
   "addon/glass-bead": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/9/9b/IconAddon_glassBead.png",
@@ -865,5 +865,13 @@
   "offering/vigo-s-shroud": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/e/e2/IconFavors_vigosShroud.png",
   "offering/shroud-of-binding": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/7/7b/IconFavors_shroudOfBinding.png",
   "offering/black-ward": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/5/54/IconFavors_blackWard.png",
-  "offering/white-ward": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/a/ad/IconFavors_whiteWard.png"
+  "offering/white-ward": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/a/ad/IconFavors_whiteWard.png",
+  "addon/friendship-charm": "https://deadbydaylight.wiki.gg/images/IconAddon_friendshipCharm.png",
+  "addon/shrill-whistle": "https://deadbydaylight.wiki.gg/images/IconAddon_shrillWhistle.png",
+  "addon/braided-bauble": "https://deadbydaylight.wiki.gg/images/IconAddon_braidedBauble.png",
+  "addon/glowing-ink": "https://deadbydaylight.wiki.gg/images/IconAddon_glowingInk.png",
+  "addon/gnarled-compass": "https://deadbydaylight.wiki.gg/images/IconAddon_gnarledCompass.png",
+  "addon/battered-tape": "https://deadbydaylight.wiki.gg/images/IconAddon_batteredTape.png",
+  "addon/sharpened-flint": "https://deadbydaylight.wiki.gg/images/IconAddon_sharpenedFlint.png",
+  "addon/crimson-stamp": "https://deadbydaylight.wiki.gg/images/IconAddon_crimsonStamp.png"
 }

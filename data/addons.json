@@ -197,276 +197,6 @@
   {
     "kind": "addon",
     "role": "survivor",
-    "itemType": "key",
-    "character": ".All",
-    "icon": "/loadout/addon/prayer-rope.webp",
-    "slug": "prayer-rope",
-    "name": {
-      "en": "Prayer Rope",
-      "ru": "Молитвенная веревка"
-    },
-    "description": "Tightly knitted rope used in praying rituals. Increases the Use time of Keys by 10 seconds. \"Pray all you want, your words are getting lost somewhere up there, in the Fog.\"",
-    "descriptionRuRaw": "Туго сплетенная веревка, используемая в поминальных ритуалах. На нее можно повесить ключ. Добавляет 10 сек. к использованию ключа. \"Молись сколько влезет, все равно твои слова теряются где-то там, в тумане\".",
-    "addedAt": "2026-08-16T07:16:30.038Z"
-  },
-  {
-    "kind": "addon",
-    "role": "survivor",
-    "itemType": "key",
-    "character": ".All",
-    "icon": "/loadout/addon/eroded-token.webp",
-    "slug": "eroded-token",
-    "name": {
-      "en": "Eroded Token",
-      "ru": "Треснувший жетон"
-    },
-    "description": "A heavily worn out token made of brass.If an inscription or drawing was once engraved in it, it has today completely disappeared. The Auras of other Survivors within 24 metres are revealed to you while Mind Channel is active. Eroded Token does not stack with Gold Token.",
-    "descriptionRuRaw": "Сильно изношенный медный жетон. Если надпись или рисунок когда-то и были выгравированы на нем, сейчас они полностью исчезли. Если прикрепить его к Ключу, откроется умение чтения ауры. Раскрывает ауры выживших в радиусе 24 м от вас.",
-    "addedAt": "2026-08-16T07:16:30.038Z"
-  },
-  {
-    "kind": "addon",
-    "role": "survivor",
-    "itemType": "key",
-    "character": ".All",
-    "icon": "/loadout/addon/prayer-beads.webp",
-    "slug": "prayer-beads",
-    "name": {
-      "en": "Prayer Beads",
-      "ru": "Молитвенные четки"
-    },
-    "description": "A chain of matte beads of various sizes used in praying ritual. Increases the Use time of Keys by 15 seconds.",
-    "descriptionRuRaw": "Цепь из матовых бусин разного размера, используемая в молитвенных ритуалах. Можно прикрепить к ключу. Добавляет 15 сек. к использованию ключа.",
-    "addedAt": "2026-08-16T07:16:30.038Z"
-  },
-  {
-    "kind": "addon",
-    "role": "survivor",
-    "itemType": "key",
-    "character": ".All",
-    "icon": "/loadout/addon/scratched-pearl.webp",
-    "slug": "scratched-pearl",
-    "name": {
-      "en": "Scratched Pearl",
-      "ru": "Поцарапанный жемчуг"
-    },
-    "description": "A porous and scratched white pearl.A minuscule jump ring allows the pearl to be attached to the key. Increases the Aura-reading range of Keys by +12 metres. \"Pray all you want, your words are getting lost somewhere up there, in the Fog.\"",
-    "descriptionRuRaw": "Потертая и поцарапанная жемчужина. Крохотное колечко позволяет прицепить ее к ключу. Увеличивает радиус чтения ауры при использовании ключа на 12 м.",
-    "addedAt": "2026-08-16T07:16:30.038Z"
-  },
-  {
-    "kind": "addon",
-    "role": "survivor",
-    "itemType": "key",
-    "character": ".All",
-    "icon": "/loadout/addon/gold-token.webp",
-    "slug": "gold-token",
-    "name": {
-      "en": "Gold Token",
-      "ru": "Золотой жетон"
-    },
-    "description": "A gold token with a dull appearance.Both faces are smooth and void of any inscriptions. The Auras of other Survivors within 48 metres are revealed to you while Mind Channel is active. Gold Token does not stack with Eroded Token.",
-    "descriptionRuRaw": "Потертый золотой жетон. Обе стороны гладкие и лишены каких-либо надписей. При крепеже к Ключу открывается возможность чтения ауры. Раскрывает ауры выживших в радиусе 48 м от вас.",
-    "addedAt": "2026-08-16T07:16:30.038Z"
-  },
-  {
-    "kind": "addon",
-    "role": "survivor",
-    "itemType": "key",
-    "character": ".All",
-    "icon": "/loadout/addon/blood-amber.webp",
-    "slug": "blood-amber",
-    "name": {
-      "en": "Blood Amber",
-      "ru": "Кровавый янтарь"
-    },
-    "description": "A blood-red amber striped with black veins.The amber is warm to the touch. The Aura of the Killer within 32 metres is revealed to you while Mind Channel is active. Increases the Depletion rate by +100 %.",
-    "descriptionRuRaw": "Кусок кроваво-красного, теплого на ощупь мрамора с черными прожилками. После использования этого ключа вы и убийца видите ауры друг друга Уменьшает время видимости ауры на 6 сек. Уменьшает количество зарядов на 2",
-    "addedAt": "2026-08-16T07:16:30.038Z"
-  },
-  {
-    "kind": "addon",
-    "role": "survivor",
-    "itemType": "key",
-    "character": ".All",
-    "icon": "/loadout/addon/milky-glass.webp",
-    "slug": "milky-glass",
-    "name": {
-      "en": "Milky Glass",
-      "ru": "Матовое стекло"
-    },
-    "description": "This opaque piece of glass emits a dull vibrating noise.Channels the Black Fog's energy. Using a Key to open the closed Hatch consumes this Add-on instead.",
-    "descriptionRuRaw": "Этот кусок матового стекла издает глухой вибрирующий звук. При использовании ключа для открытия черного замка стеклянный медальон защищает ключ от повреждений, направляя энергию тумана в стекло. Открыв черный замок, вы потеряете это улучшение, но сохраните ключ.",
-    "addedAt": "2026-08-16T07:16:30.038Z"
-  },
-  {
-    "kind": "addon",
-    "role": "survivor",
-    "itemType": "key",
-    "character": ".All",
-    "icon": "/loadout/addon/unique-wedding-ring.webp",
-    "slug": "unique-wedding-ring",
-    "name": {
-      "en": "Unique Wedding Ring",
-      "ru": "Уникальное обручальное кольцо"
-    },
-    "description": "An engraved wedding ring that emerged from the Fog and resonates with an indescribable and incomprehensible energy. The Aura of the Obsession is automatically revealed to you at all times. This does not require using the Mind Channel ability. Reduces your chance of becoming the initial Obsession by reducing the default value by -100 %.",
-    "descriptionRuRaw": "Обручальное кольцо с гравировкой, найденное в тумане. Источает неописуемую и необъяснимую энергию. Вы и объект одержимости постоянно видите ауры друг друга Снижает вероятность стать объектом одержимости убийцы",
-    "addedAt": "2026-08-16T07:16:30.038Z"
-  },
-  {
-    "kind": "addon",
-    "role": "survivor",
-    "itemType": "key",
-    "character": ".All",
-    "icon": "/loadout/addon/weaved-ring.webp",
-    "slug": "weaved-ring",
-    "name": {
-      "en": "Weaved Ring",
-      "ru": "Сплетенное кольцо"
-    },
-    "description": "A mundane key ring in appearance with an unusual bluish dark sheen.The ring binds the Key to its user, preventing loss even in the darkest of times. Causes this Add-on to be consumed upon death instead of the Key.",
-    "descriptionRuRaw": "Обычное кольцо для ключей, правда со странным синим сиянием. Оно прицепляет Ключ к вам, предотвращая его потерю даже в самых опасных ситуациях. При смерти вы потеряете это улучшение, но не сам Ключ.",
-    "addedAt": "2026-08-16T07:16:30.038Z"
-  },
-  {
-    "kind": "addon",
-    "role": "survivor",
-    "itemType": "map",
-    "character": ".All",
-    "icon": "/loadout/addon/map-addendum.webp",
-    "slug": "map-addendum",
-    "name": {
-      "en": "Map Addendum",
-      "ru": "Кусок карты"
-    },
-    "description": "A fragmented piece of a thick fibrous material.A partial and faded map is drawn on it which by itself is useless. Increases the Durability of the Map by +5 seconds.",
-    "descriptionRuRaw": "Фрагмент плотного волокнистого материала. Неполная, едва заметная карта, нарисованная на нем, сама по себе бесполезна. Добавляет 5 сек. использования любой карте.",
-    "addedAt": "2026-08-16T07:16:30.038Z"
-  },
-  {
-    "kind": "addon",
-    "role": "survivor",
-    "itemType": "map",
-    "character": ".All",
-    "icon": "/loadout/addon/glass-bead.webp",
-    "slug": "glass-bead",
-    "name": {
-      "en": "Glass Bead",
-      "ru": "Стеклянный прицел"
-    },
-    "description": "A strange bead circled with gold that can be used to magnify the map and mark a specific position.The bead emits an energy which can be felt and seen by Survivors. Press the Secondary Action button while using the Map to use the Glass Bead to place a Pillar of Light at your current location that can be seen by all Survivors.",
-    "descriptionRuRaw": "Странный прицел, обрамленный золотом, которым можно увеличить карту и пометить конкретную позицию. Прицел излучает энергию, которую выжившие могут видеть и чувствовать. Открывает способность ставить метки при активации вспомогательного действия. Устанавливает метку, которую могут видеть все выжившие.",
-    "addedAt": "2026-08-16T07:16:30.038Z"
-  },
-  {
-    "kind": "addon",
-    "role": "survivor",
-    "itemType": "map",
-    "character": ".All",
-    "icon": "/loadout/addon/red-twine.webp",
-    "slug": "red-twine",
-    "name": {
-      "en": "Red Twine",
-      "ru": "Красная бечевка"
-    },
-    "description": "A bristly and rough piece of twine of a deep red colour.Can be tied around the Map to enhance its Aura-reading ability. Unlocks the ability to track Killer Belongings.",
-    "descriptionRuRaw": "Жесткая и шершавая бечевка темно-красного цвета. Ею можно обмотать карту, чтобы улучшить способность чтения ауры. Открывает способность отслеживать нахождение личных вещей убийцы.",
-    "addedAt": "2026-08-16T07:16:30.038Z"
-  },
-  {
-    "kind": "addon",
-    "role": "survivor",
-    "itemType": "map",
-    "character": ".All",
-    "icon": "/loadout/addon/retardant-jelly.webp",
-    "slug": "retardant-jelly",
-    "name": {
-      "en": "Retardant Jelly",
-      "ru": "Огнезащитное желе"
-    },
-    "description": "A slimy, translucent substance with a ghastly lavender shade.This jelly from unknown origin is highly resistant to heat. Reduces the Depletion rate by -20 %.",
-    "descriptionRuRaw": "Склизкое, полупрозрачное вещество с мертвенно-бледным лавандовым оттенком. Это желе неизвестного происхождения отличается высокой устойчивостью к нагреванию. Уменьшает скорость сгорания карты на 20%.",
-    "addedAt": "2026-08-16T07:16:30.038Z"
-  },
-  {
-    "kind": "addon",
-    "role": "survivor",
-    "itemType": "map",
-    "character": ".All",
-    "icon": "/loadout/addon/unusual-stamp.webp",
-    "slug": "unusual-stamp",
-    "name": {
-      "en": "Unusual Stamp",
-      "ru": "Необычная печать"
-    },
-    "description": "A wooden stamp with a cross-hatched rubber pad used to mark documents.It is unclear as to how or by whom this stamp was originally used. Increases the Object Tracking range by +8 metres.",
-    "descriptionRuRaw": "Деревянная печать для документов. Непонятно, как и кем она раньше использовалась. Её можно использовать с картой. Увеличивает радиус действия способности отслеживания с помощью карты на 8 м.",
-    "addedAt": "2026-08-16T07:16:30.038Z"
-  },
-  {
-    "kind": "addon",
-    "role": "survivor",
-    "itemType": "map",
-    "character": ".All",
-    "icon": "/loadout/addon/yellow-wire.webp",
-    "slug": "yellow-wire",
-    "name": {
-      "en": "Yellow Wire",
-      "ru": "Желтый провод"
-    },
-    "description": "A small electrical wire.Both ends are heavily damaged like it has been forcefully torn out of its intended location.Can be tied around the Map to enhance its Aura-reading ability. Unlocks the ability to track the Exit Gate Switches",
-    "descriptionRuRaw": "Небольшой электрический провод. Оба конца сильно повреждены, как будто его вырвали откуда-то силой. Им можно обмотать карту, чтобы усилить способность чтения ауры. Открывает способность отслеживать, где находятся ворота.",
-    "addedAt": "2026-08-16T07:16:30.038Z"
-  },
-  {
-    "kind": "addon",
-    "role": "survivor",
-    "itemType": "map",
-    "character": ".All",
-    "icon": "/loadout/addon/black-silk-cord.webp",
-    "slug": "black-silk-cord",
-    "name": {
-      "en": "Black Silk Cord",
-      "ru": "Черный шелковый шнур"
-    },
-    "description": "A smooth black cord with a soft appearance.Can be tied around the Map to enhance its Aura-reading ability. Unlocks the ability to track the Hatch.",
-    "descriptionRuRaw": "Гладкий черный шнур. Им можно обмотать карту, чтобы увеличить радиус чтения ауры. Открывает способность отслеживать люк.",
-    "addedAt": "2026-08-16T07:16:30.038Z"
-  },
-  {
-    "kind": "addon",
-    "role": "survivor",
-    "itemType": "map",
-    "character": ".All",
-    "icon": "/loadout/addon/odd-stamp.webp",
-    "slug": "odd-stamp",
-    "name": {
-      "en": "Odd Stamp",
-      "ru": "Странная печать"
-    },
-    "description": "A stamp carved out of sturdy blonde wood.The text found at the base is incomprehensible: \"kw'zvre'od\". Increases the Object Tracking range by +12 metres.",
-    "descriptionRuRaw": "Печать, вырезанная из крепкого светлого дерева. Текст, найденный на ее основе, неясен: \"kw'zvre'od\". Может быть использована с картой. Увеличивает радиус действия способности отслеживания с помощью карты на 12 м.",
-    "addedAt": "2026-08-16T07:16:30.038Z"
-  },
-  {
-    "kind": "addon",
-    "role": "survivor",
-    "itemType": "map",
-    "character": ".All",
-    "icon": "/loadout/addon/crystal-bead.webp",
-    "slug": "crystal-bead",
-    "name": {
-      "en": "Crystal Bead",
-      "ru": "Кристальный прицел"
-    },
-    "description": "An intricate set of lenses wrapped up in an astonishingly complex apparatus.The gears controlling the lenses' focus move by themselves as to focus on something invisible to humans. Reveals the tracked Auras to all Survivors.",
-    "descriptionRuRaw": "Сложный аппарат, состоящий из набора линз с изощренной конструкцией. Шестерни, управляющие фокусом линз, двигаются сами по себе, будто фокусируясь на чем-то невидимом для человека. При активации каждый выживший видит ауру, сгенерированную картой.",
-    "addedAt": "2026-08-16T07:16:30.038Z"
-  },
-  {
-    "kind": "addon",
-    "role": "survivor",
     "itemType": "medkit",
     "character": ".All",
     "icon": "/loadout/addon/bandages.webp",
@@ -822,6 +552,156 @@
     "description": "This intricate mechanical part feels oddly out of place.It is clean and shiny as if straight out of the factory. Press the Use Item button while standing next to a Generator to perform the Install Brand New Part action: Triggers a difficult Skill Check. Permanently reduces the Repair requirement by -10 Charges for that Generator upon succeeding the Skill Check. Brand New Part is consumed on use.",
     "descriptionRuRaw": "Странно наблюдать столь затейливую деталь в таком месте. Блестящая и чистая, она словно только сошла с конвейера. Починка инструментами заменяется установкой новой детали Во время установки детали вы должны пройти сложную проверку реакции При успешной проверке реакции число требуемых зарядов генератора уменьшается на 10 Вы лишаетесь предмета после использования.",
     "addedAt": "2026-08-16T07:16:30.038Z"
+  },
+  {
+    "kind": "addon",
+    "role": "survivor",
+    "itemType": "key",
+    "character": ".All",
+    "icon": "/loadout/addon/friendship-charm.webp",
+    "slug": "friendship-charm",
+    "name": {
+      "en": "Friendship Charm",
+      "ru": "Талисман дружбы"
+    },
+    "description": "Someone's thumb has worn off the initials once carved into it. Modifies the Key with the following effect: Increases its Charges by +1.",
+    "descriptionRuRaw": "Чей-то палец стёр когда-то вырезанные на нём инициалы. Модифицирует ключ: увеличивает количество зарядов на +1.",
+    "addedAt": "2026-08-16T18:12:43.244Z"
+  },
+  {
+    "kind": "addon",
+    "role": "survivor",
+    "itemType": "key",
+    "character": ".All",
+    "icon": "/loadout/addon/shrill-whistle.webp",
+    "slug": "shrill-whistle",
+    "name": {
+      "en": "Shrill Whistle",
+      "ru": "Пронзительный свисток"
+    },
+    "description": "The high-pitched scream gives a sense of urgency to everything. Modifies the Key with the following effect: Reduces the time it takes to channel the Key by -35 %.",
+    "descriptionRuRaw": "Пронзительный визг придаёт всему ощущение спешки. Модифицирует ключ: уменьшает время активации ключа на -35%.",
+    "addedAt": "2026-08-16T18:12:43.244Z"
+  },
+  {
+    "kind": "addon",
+    "role": "survivor",
+    "itemType": "key",
+    "character": ".All",
+    "icon": "/loadout/addon/braided-bauble.webp",
+    "slug": "braided-bauble",
+    "name": {
+      "en": "Braided Bauble",
+      "ru": "Плетёная бусина"
+    },
+    "description": "Four thin but sturdy cords, all masterfully wrapped around one another. Modifies the Key with the following effect: Increases its Aura-reading duration by +2 seconds.",
+    "descriptionRuRaw": "Четыре тонких, но прочных шнура, искусно сплетённых друг с другом. Модифицирует ключ: увеличивает длительность чтения ауры на +2 сек.",
+    "addedAt": "2026-08-16T18:12:43.244Z"
+  },
+  {
+    "kind": "addon",
+    "role": "survivor",
+    "itemType": "key",
+    "character": ".All",
+    "icon": "/loadout/addon/unique-wedding-ring.webp",
+    "slug": "unique-wedding-ring",
+    "name": {
+      "en": "Unique Wedding Ring",
+      "ru": "Уникальное обручальное кольцо"
+    },
+    "description": "An engraved wedding ring that emerged from the Fog and resonates with an indescribable and incomprehensible energy. Modifies the Key with the following effects: The Aura of the Obsession is permanently revealed to you. Your Aura is permanently revealed to the Obsession. Unique Wedding Ring applies its effects passively and does not require actively using the Key. Reduces your chance of becoming the initial Obsession by reducing the default value by -100 %.",
+    "descriptionRuRaw": "Гравированное обручальное кольцо, появившееся из тумана и резонирующее необъяснимой энергией. Модифицирует ключ: аура объекта одержимости всегда видна вам, а ваша аура — ему. Действует пассивно, использовать ключ не требуется. Снижает шанс стать первоначальным объектом одержимости на -100%.",
+    "addedAt": "2026-08-16T07:16:30.038Z"
+  },
+  {
+    "kind": "addon",
+    "role": "survivor",
+    "itemType": "key",
+    "character": ".All",
+    "icon": "/loadout/addon/blood-amber.webp",
+    "slug": "blood-amber",
+    "name": {
+      "en": "Blood Amber",
+      "ru": "Кровавый янтарь"
+    },
+    "description": "A blood-red amber striped with black veins. The amber is warm to the touch. Modifies the Key with the following effects: Reduces its Aura-reveal time by -6 seconds. Reduces its Charges by -2. While using the Key, the following effects apply: The Aura of the Killer is revealed to you. Your Aura is revealed to the Killer.",
+    "descriptionRuRaw": "Кроваво-красный янтарь с чёрными прожилками, тёплый на ощупь. Модифицирует ключ: уменьшает время получения ауры на -6 сек., уменьшает количество зарядов на -2. При использовании ключа: аура убийцы видна вам, а ваша аура — ему.",
+    "addedAt": "2026-08-16T07:16:30.038Z"
+  },
+  {
+    "kind": "addon",
+    "role": "survivor",
+    "itemType": "map",
+    "character": ".All",
+    "icon": "/loadout/addon/glowing-ink.webp",
+    "slug": "glowing-ink",
+    "name": {
+      "en": "Glowing Ink",
+      "ru": "Светящиеся чернила"
+    },
+    "description": "Some of the images seemed to jump right off the page. Modifies the Map with the following effect: Increases the duration it reveals Auras for by +2 seconds.",
+    "descriptionRuRaw": "Казалось, будто некоторые изображения вот-вот сойдут со страницы. Модифицирует карту: увеличивает длительность раскрытия аур на +2 сек.",
+    "addedAt": "2026-08-16T18:12:43.244Z"
+  },
+  {
+    "kind": "addon",
+    "role": "survivor",
+    "itemType": "map",
+    "character": ".All",
+    "icon": "/loadout/addon/gnarled-compass.webp",
+    "slug": "gnarled-compass",
+    "name": {
+      "en": "Gnarled Compass",
+      "ru": "Кривой компас"
+    },
+    "description": "It seems to set itself to the perfect distance every time. Modifies the Map with the following effect: Increases its Charges by +2.",
+    "descriptionRuRaw": "Похоже, он сам каждый раз настраивается на идеальное расстояние. Модифицирует карту: увеличивает количество зарядов на +2.",
+    "addedAt": "2026-08-16T18:12:43.244Z"
+  },
+  {
+    "kind": "addon",
+    "role": "survivor",
+    "itemType": "map",
+    "character": ".All",
+    "icon": "/loadout/addon/battered-tape.webp",
+    "slug": "battered-tape",
+    "name": {
+      "en": "Battered Tape",
+      "ru": "Потрёпанный скотч"
+    },
+    "description": "Additional pieces of parchment hung loosely from the map, hastily affixed with tape. Modifies the Map with the following effect: Increases its maximum range by +8 metres.",
+    "descriptionRuRaw": "К карте вдобавок прикреплены обрывки пергамента, наспех примотанные скотчем. Модифицирует карту: увеличивает максимальную дальность действия на +8 м.",
+    "addedAt": "2026-08-16T18:12:43.244Z"
+  },
+  {
+    "kind": "addon",
+    "role": "survivor",
+    "itemType": "map",
+    "character": ".All",
+    "icon": "/loadout/addon/sharpened-flint.webp",
+    "slug": "sharpened-flint",
+    "name": {
+      "en": "Sharpened Flint",
+      "ru": "Заточенный кремень"
+    },
+    "description": "When sparked near the map, new sigils appeared in unexpected locations. Modifies the Map with the following effect: Grants the ability to track the location of Totems and reveal their Auras, when using the Map.",
+    "descriptionRuRaw": "При высекании искры рядом с картой на ней проступают новые символы в неожиданных местах. Модифицирует карту: даёт возможность отслеживать местоположение тотемов и раскрывать их ауры при использовании карты.",
+    "addedAt": "2026-08-16T18:12:43.244Z"
+  },
+  {
+    "kind": "addon",
+    "role": "survivor",
+    "itemType": "map",
+    "character": ".All",
+    "icon": "/loadout/addon/crimson-stamp.webp",
+    "slug": "crimson-stamp",
+    "name": {
+      "en": "Crimson Stamp",
+      "ru": "Багровая печать"
+    },
+    "description": "Only those with absolute confidence dared to place their seal upon the map. Modifies the Map with the following effects: The Aura of the Killer is revealed to all Survivors when within 8 metres of the Beam of Light. Reduces the Life time of the Beam of Light by -10 seconds. Reduces its Charges by -2.",
+    "descriptionRuRaw": "Только тот, кто абсолютно уверен в себе, осмеливался поставить свою печать на карту. Модифицирует карту: аура убийцы раскрывается всем выжившим в радиусе 8 м от луча света. Уменьшает время жизни луча света на -10 сек. Уменьшает количество зарядов на -2.",
+    "addedAt": "2026-08-16T18:12:43.244Z"
   },
   {
     "kind": "addon",
