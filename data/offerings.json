@@ -1,7 +1,7 @@
 [
   {
     "kind": "offering",
-    "role": "both",
+    "role": "killer",
     "category": "Bonus Bloodpoints",
     "icon": "/loadout/offering/hollow-shell.webp",
     "slug": "hollow-shell",
@@ -15,7 +15,7 @@
   },
   {
     "kind": "offering",
-    "role": "both",
+    "role": "survivor",
     "category": "Bonus Bloodpoints",
     "icon": "/loadout/offering/sealed-envelope.webp",
     "slug": "sealed-envelope",
@@ -29,7 +29,7 @@
   },
   {
     "kind": "offering",
-    "role": "both",
+    "role": "killer",
     "category": "Bonus Bloodpoints",
     "icon": "/loadout/offering/survivor-pudding.webp",
     "slug": "survivor-pudding",
@@ -57,7 +57,7 @@
   },
   {
     "kind": "offering",
-    "role": "both",
+    "role": "survivor",
     "category": "Bonus Bloodpoints",
     "icon": "/loadout/offering/bound-envelope.webp",
     "slug": "bound-envelope",
@@ -68,6 +68,230 @@
     "description": "Grants +25 % bonus Bloodpoints in all Scoring Categories to all Survivors. The bonus Bloodpoints are applied after exiting the Trial. \"An opened envelope re-sealed and bound with four coloured ribbons.\"",
     "descriptionRuRaw": "Дарует 25% дополнительных очков крови во всех категориях всем выжившим.",
     "addedAt": "2026-08-16T07:16:30.038Z"
+  },
+  {
+    "kind": "offering",
+    "role": "survivor",
+    "category": "Bonus Bloodpoints",
+    "icon": "/loadout/offering/fresh-primrose-blossom.webp",
+    "slug": "fresh-primrose-blossom",
+    "name": {
+      "en": "Fresh Primrose Blossom",
+      "ru": "Свежий цветок примулы"
+    },
+    "description": "Grants +75 % bonus Bloodpoints in the Altruism Scoring Category. The bonus Bloodpoints are applied after exiting the Trial. \"Golden flowers harvested at their peak.The primrose opens at the very last moment before the sun gives place to the night.\"",
+    "descriptionRuRaw": "Даёт 75% бонусных очков крови в категории \"Альтруизм\". Личное подношение.",
+    "addedAt": "2026-08-16T15:09:41.923Z"
+  },
+  {
+    "kind": "offering",
+    "role": "survivor",
+    "category": "Bonus Bloodpoints",
+    "icon": "/loadout/offering/fragrant-primrose-blossom.webp",
+    "slug": "fragrant-primrose-blossom",
+    "name": {
+      "en": "Fragrant Primrose Blossom",
+      "ru": "Душистый цветок примулы"
+    },
+    "description": "Grants +100 % bonus Bloodpoints in the Altruism Scoring Category. The bonus Bloodpoints are applied after exiting the Trial. \"Golden flowers harvested at their peak.Releases a strong earthy and comforting aroma.\"",
+    "descriptionRuRaw": "Даёт 100% бонусных очков крови в категории \"Альтруизм\". Личное подношение.",
+    "addedAt": "2026-08-16T15:09:41.923Z"
+  },
+  {
+    "kind": "offering",
+    "role": "survivor",
+    "category": "Bonus Bloodpoints",
+    "icon": "/loadout/offering/fresh-sweet-william.webp",
+    "slug": "fresh-sweet-william",
+    "name": {
+      "en": "Fresh Sweet William",
+      "ru": "Свежая гвоздика"
+    },
+    "description": "Grants +75 % bonus Bloodpoints in the Boldness Scoring Category. The bonus Bloodpoints are applied after exiting the Trial. \"A bunch of flowers with pink petals and a blood red core.Releases a spicy, clove-like scent.\"",
+    "descriptionRuRaw": "Даёт 75% бонусных очков крови в категории \"Храбрость\". Личное подношение.",
+    "addedAt": "2026-08-16T15:09:41.923Z"
+  },
+  {
+    "kind": "offering",
+    "role": "survivor",
+    "category": "Bonus Bloodpoints",
+    "icon": "/loadout/offering/fragrant-sweet-william.webp",
+    "slug": "fragrant-sweet-william",
+    "name": {
+      "en": "Fragrant Sweet William",
+      "ru": "Душистый цветок гвоздики"
+    },
+    "description": "Grants +100 % bonus Bloodpoints in the Boldness Scoring Category. The bonus Bloodpoints are applied after exiting the Trial. \"A bunch of flowers with pink petals and a blood red core.Releases a strong spicy, clove-like scent.\"",
+    "descriptionRuRaw": "Даёт 100% бонусных очков крови в категории \"Храбрость\". Личное подношение.",
+    "addedAt": "2026-08-16T15:09:41.923Z"
+  },
+  {
+    "kind": "offering",
+    "role": "killer",
+    "category": "Bonus Bloodpoints",
+    "icon": "/loadout/offering/devout-tanager-wreath.webp",
+    "slug": "devout-tanager-wreath",
+    "name": {
+      "en": "Devout Tanager Wreath",
+      "ru": "Молитвенный венок танагры"
+    },
+    "description": "Grants +75 % bonus Bloodpoints in the Brutality Scoring Category. The bonus Bloodpoints are applied after exiting the Trial. \"Devoutly crafted out of sticks and guts, this wreath calls on The Entity's blessing for more blood.\"",
+    "descriptionRuRaw": "Даёт 75% бонусных очков крови в категории \"Жестокость\".",
+    "addedAt": "2026-08-16T15:09:41.923Z"
+  },
+  {
+    "kind": "offering",
+    "role": "killer",
+    "category": "Bonus Bloodpoints",
+    "icon": "/loadout/offering/ardent-tanager-wreath.webp",
+    "slug": "ardent-tanager-wreath",
+    "name": {
+      "en": "Ardent Tanager Wreath",
+      "ru": "Пламенный венок танагры"
+    },
+    "description": "Grants +100 % bonus Bloodpoints in the Brutality Scoring Category. The bonus Bloodpoints are applied after exiting the Trial. \"Crafted with a fiery, undying passion out of bloody sticks and guts, this wreath calls on The Entity's blessing fore more blood.\"",
+    "descriptionRuRaw": "Даёт 100% бонусных очков крови в категории \"Жестокость\".",
+    "addedAt": "2026-08-16T15:09:41.923Z"
+  },
+  {
+    "kind": "offering",
+    "role": "killer",
+    "category": "Bonus Bloodpoints",
+    "icon": "/loadout/offering/devout-raven-wreath.webp",
+    "slug": "devout-raven-wreath",
+    "name": {
+      "en": "Devout Raven Wreath",
+      "ru": "Молитвенный венок ворона"
+    },
+    "description": "Grants +75 % bonus Bloodpoints in the Deviousness Scoring Category. The bonus Bloodpoints are applied after exiting the Trial. \"Devoutly crafted out of blackened branches and coals, this wreath calls on The Entity's blessing for more blood.\"",
+    "descriptionRuRaw": "Даёт 75% бонусных очков крови в категории \"Хитрость\".",
+    "addedAt": "2026-08-16T15:09:41.923Z"
+  },
+  {
+    "kind": "offering",
+    "role": "killer",
+    "category": "Bonus Bloodpoints",
+    "icon": "/loadout/offering/ardent-raven-wreath.webp",
+    "slug": "ardent-raven-wreath",
+    "name": {
+      "en": "Ardent Raven Wreath",
+      "ru": "Пламенный венок ворона"
+    },
+    "description": "Grants +100 % bonus Bloodpoints in the Deviousness Scoring Category. The bonus Bloodpoints are applied after exiting the Trial. \"Crafted with a fiery, undying passion out of blackened branches and coals, this wreath calls on The Entity's blessing for more blood.\"",
+    "descriptionRuRaw": "Даёт 100% бонусных очков крови в категории \"Хитрость\".",
+    "addedAt": "2026-08-16T15:09:41.923Z"
+  },
+  {
+    "kind": "offering",
+    "role": "killer",
+    "category": "Bonus Bloodpoints",
+    "icon": "/loadout/offering/devout-spotted-owl-wreath.webp",
+    "slug": "devout-spotted-owl-wreath",
+    "name": {
+      "en": "Devout Spotted Owl Wreath",
+      "ru": "Молитвенный венок пятнистой совы"
+    },
+    "description": "Grants +75 % bonus Bloodpoints in the Hunter Scoring Category. The bonus Bloodpoints are applied after exiting the Trial. \"Devoutly crafted out of sharp metals, rope and features, this wreath calls on The Entity's blessing for more blood.\"",
+    "descriptionRuRaw": "Даёт 75% бонусных очков крови в категории \"Охота\".",
+    "addedAt": "2026-08-16T15:09:41.923Z"
+  },
+  {
+    "kind": "offering",
+    "role": "killer",
+    "category": "Bonus Bloodpoints",
+    "icon": "/loadout/offering/ardent-spotted-owl-wreath.webp",
+    "slug": "ardent-spotted-owl-wreath",
+    "name": {
+      "en": "Ardent Spotted Owl Wreath",
+      "ru": "Пламенный венок пятнистой совы"
+    },
+    "description": "Grants +100 % bonus Bloodpoints in the Hunter Scoring Category. The bonus Bloodpoints are applied after exiting the Trial. \"Crafted with a fiery, undying passion out of sharp metals, ropes and feathers, this wreath calls on The Entity's blessing for more blood.\"",
+    "descriptionRuRaw": "Даёт 100% бонусных очков крови в категории \"Охота\".",
+    "addedAt": "2026-08-16T15:09:41.923Z"
+  },
+  {
+    "kind": "offering",
+    "role": "survivor",
+    "category": "Bonus Bloodpoints",
+    "icon": "/loadout/offering/fresh-bog-laurel.webp",
+    "slug": "fresh-bog-laurel",
+    "name": {
+      "en": "Fresh Bog Laurel",
+      "ru": "Свежий вереск"
+    },
+    "description": "Grants +75 % bonus Bloodpoints in the Objectives Scoring Category. The bonus Bloodpoints are applied after exiting the Trial. \"A beautiful purple flower that grows in the midst of the tainted swamp.Releases a mild tea-like aroma.\"",
+    "descriptionRuRaw": "Даёт 75% бонусных очков крови в категории \"Цели\". Личное подношение.",
+    "addedAt": "2026-08-16T15:09:41.923Z"
+  },
+  {
+    "kind": "offering",
+    "role": "survivor",
+    "category": "Bonus Bloodpoints",
+    "icon": "/loadout/offering/fragrant-bog-laurel.webp",
+    "slug": "fragrant-bog-laurel",
+    "name": {
+      "en": "Fragrant Bog Laurel",
+      "ru": "Душистый вереск"
+    },
+    "description": "Grants +100 % bonus Bloodpoints in the Objectives Scoring Category. The bonus Bloodpoints are applied after exiting the Trial. \"A beautiful purple flower that grows in the midst of the tainted swamp.Releases a strong tea-like aroma.\"",
+    "descriptionRuRaw": "Даёт 100% бонусных очков крови в категории \"Цели\". Личное подношение.",
+    "addedAt": "2026-08-16T15:09:41.923Z"
+  },
+  {
+    "kind": "offering",
+    "role": "killer",
+    "category": "Bonus Bloodpoints",
+    "icon": "/loadout/offering/devout-shrike-wreath.webp",
+    "slug": "devout-shrike-wreath",
+    "name": {
+      "en": "Devout Shrike Wreath",
+      "ru": "Молитвенный венок сорокопута"
+    },
+    "description": "Grants +75 % bonus Bloodpoints in the Sacrifice Scoring Category. The bonus Bloodpoints are applied after exiting the Trial. \"Devoutly crafted out of sticks, strings and bones, this wreath calls on The Entity's blessing for more blood.\"",
+    "descriptionRuRaw": "Даёт 75% бонусных очков крови в категории \"Жертвоприношение\".",
+    "addedAt": "2026-08-16T15:09:41.923Z"
+  },
+  {
+    "kind": "offering",
+    "role": "killer",
+    "category": "Bonus Bloodpoints",
+    "icon": "/loadout/offering/ardent-shrike-wreath.webp",
+    "slug": "ardent-shrike-wreath",
+    "name": {
+      "en": "Ardent Shrike Wreath",
+      "ru": "Пламенный венок сорокопута"
+    },
+    "description": "Grants +100 % bonus Bloodpoints in the Sacrifice Scoring Category. The bonus Bloodpoints are applied after exiting the Trial. \"Crafted with a fiery, undying passion out of sticks, strings and bones, this wreath calls on The Entity's blessing for more blood.\"",
+    "descriptionRuRaw": "Даёт 100% бонусных очков крови в категории \"Жертвоприношение\".",
+    "addedAt": "2026-08-16T15:09:41.923Z"
+  },
+  {
+    "kind": "offering",
+    "role": "survivor",
+    "category": "Bonus Bloodpoints",
+    "icon": "/loadout/offering/fresh-crispleaf-amaranth.webp",
+    "slug": "fresh-crispleaf-amaranth",
+    "name": {
+      "en": "Fresh Crispleaf Amaranth",
+      "ru": "Свежая ширица"
+    },
+    "description": "Grants +75 % bonus Bloodpoints in the Survival Scoring Category. The bonus Bloodpoints are applied after exiting the Trial. \"The pale green leaves are highlighted with peculiar crimson veins.Amaranth is said to be everlasting.\"",
+    "descriptionRuRaw": "Даёт 75% бонусных очков крови в категории \"Выживание\". Личное подношение.",
+    "addedAt": "2026-08-16T15:09:41.923Z"
+  },
+  {
+    "kind": "offering",
+    "role": "survivor",
+    "category": "Bonus Bloodpoints",
+    "icon": "/loadout/offering/fragrant-crispleaf-amaranth.webp",
+    "slug": "fragrant-crispleaf-amaranth",
+    "name": {
+      "en": "Fragrant Crispleaf Amaranth",
+      "ru": "Душистый лист ширицы"
+    },
+    "description": "Grants +100 % bonus Bloodpoints in the Survival Scoring Category. The bonus Bloodpoints are applied after exiting the Trial. \"The pale green leaves are highlighted with peculiar crimson veins.Amaranth is said to be everlasting.\"",
+    "descriptionRuRaw": "Даёт 100% бонусных очков крови в категории \"Выживание\". Личное подношение.",
+    "addedAt": "2026-08-16T15:09:41.923Z"
   },
   {
     "kind": "offering",
@@ -99,6 +323,34 @@
   },
   {
     "kind": "offering",
+    "role": "survivor",
+    "category": "Luck",
+    "icon": "/loadout/offering/black-salt-statuette.webp",
+    "slug": "black-salt-statuette",
+    "name": {
+      "en": "Black Salt Statuette",
+      "ru": "Статуэтка из черной соли"
+    },
+    "description": "Increases every Survivor's chance of succeeding a Self-Unhook by +2 %. \"A friable miniature statuette made of black salt representing a woman in a kneeling position offering a gift.Some believe it brings good fortune.\"",
+    "descriptionRuRaw": "Все выжившие получают возможность попытаться слезть с крюка. Повышает удачу всех выживших на 2%.",
+    "addedAt": "2026-08-16T15:09:41.923Z"
+  },
+  {
+    "kind": "offering",
+    "role": "survivor",
+    "category": "Luck",
+    "icon": "/loadout/offering/vigo-s-jar-of-salty-lips.webp",
+    "slug": "vigo-s-jar-of-salty-lips",
+    "name": {
+      "en": "Vigo's Jar of Salty Lips",
+      "ru": "Банка Виго с засоленными губами"
+    },
+    "description": "Increases every Survivor's chance of succeeding a Self-Unhook by +3 %. \"A tightly sealed glass jar containing torn human lips floating in a murky brine.Some believe it brings good fortune.\"",
+    "descriptionRuRaw": "Все выжившие получают возможность попытаться слезть с крюка. Увеличивает удачу всех выживших на 3%.",
+    "addedAt": "2026-08-16T15:09:41.923Z"
+  },
+  {
+    "kind": "offering",
     "role": "both",
     "category": "Map Modifications",
     "icon": "/loadout/offering/torn-blueprint.webp",
@@ -110,6 +362,146 @@
     "description": "Grants the following effects at the start of the Trial: Increases the likelihood of the Basement spawning in the Landmark Building by +100 %, if it is available. The Auras of the Basement Hooks are revealed to you for 20 seconds. \"Though brittle and torn, the design is mostly legible.\"",
     "descriptionRuRaw": "Показывает вам ауру крюков в подвале на 20 сек. в начале матча. Чрезвычайно повышает шанс появления подвала в основном здании, если оно есть на карте. Тайна.",
     "addedAt": "2026-08-16T07:16:30.038Z"
+  },
+  {
+    "kind": "offering",
+    "role": "survivor",
+    "category": "Map Modifications",
+    "icon": "/loadout/offering/tarnished-coin.webp",
+    "slug": "tarnished-coin",
+    "name": {
+      "en": "Tarnished Coin",
+      "ru": "Потускневшая монета"
+    },
+    "description": "Calls upon The Entity for the following effect: Increases the number of Chests in the environment by +1. \"A round piece of metal which has lost all sheen.\"",
+    "descriptionRuRaw": "Призывает Сущность создать на 1 сундук больше. Тайна.",
+    "addedAt": "2026-08-16T15:09:41.923Z"
+  },
+  {
+    "kind": "offering",
+    "role": "killer",
+    "category": "Map Modifications",
+    "icon": "/loadout/offering/cut-coin.webp",
+    "slug": "cut-coin",
+    "name": {
+      "en": "Cut Coin",
+      "ru": "Разрезанная монета"
+    },
+    "description": "Calls upon The Entity for the following effect: Reduces the number of Chests in the environment by -2. \"Two halves of a thick metallic coin.\"",
+    "descriptionRuRaw": "Призывает Сущность предотвратить появление 2 сундуков. Тайна.",
+    "addedAt": "2026-08-16T15:09:41.923Z"
+  },
+  {
+    "kind": "offering",
+    "role": "survivor",
+    "category": "Map Modifications",
+    "icon": "/loadout/offering/shiny-coin.webp",
+    "slug": "shiny-coin",
+    "name": {
+      "en": "Shiny Coin",
+      "ru": "Блестящая монета"
+    },
+    "description": "Calls upon The Entity for the following effect: Increases the number of Chests in the environment by +2. \"A clean and polished piece of gold.\"",
+    "descriptionRuRaw": "Призывает Сущность создать еще 2 сундука. Тайна.",
+    "addedAt": "2026-08-16T15:09:41.923Z"
+  },
+  {
+    "kind": "offering",
+    "role": "both",
+    "category": "Map Modifications",
+    "icon": "/loadout/offering/faint-reagent.webp",
+    "slug": "faint-reagent",
+    "name": {
+      "en": "Faint Reagent",
+      "ru": "Слабый реагент"
+    },
+    "description": "Calls upon The Entity for the following effect: Increases the thickness of the Dark Mist by +25 %. \"Paralysed, I stand in the cold as death lingers.\"",
+    "descriptionRuRaw": "Слегка сгущает Темный туман. Тайна.",
+    "addedAt": "2026-08-16T15:09:41.923Z"
+  },
+  {
+    "kind": "offering",
+    "role": "both",
+    "category": "Map Modifications",
+    "icon": "/loadout/offering/hazy-reagent.webp",
+    "slug": "hazy-reagent",
+    "name": {
+      "en": "Hazy Reagent",
+      "ru": "Туманный реагент"
+    },
+    "description": "Calls upon The Entity for the following effect: Increases the thickness of the Dark Mist by +50 %. \"The Mist is alluring, hypnotising.I love it and fear it at the same time.\" — Donna's Sketchbook",
+    "descriptionRuRaw": "Умеренно сгущает Темный туман. Тайна.",
+    "addedAt": "2026-08-16T15:09:41.923Z"
+  },
+  {
+    "kind": "offering",
+    "role": "both",
+    "category": "Map Modifications",
+    "icon": "/loadout/offering/murky-reagent.webp",
+    "slug": "murky-reagent",
+    "name": {
+      "en": "Murky Reagent",
+      "ru": "Мутный реагент"
+    },
+    "description": "Calls upon The Entity for the following effect: Increases the thickness of the Dark Mist by +75 %. \"The Mist seems to protect us from the beast, but it is a poison, a cancer, filling us with darkness and insanity.\" — Unknown, Notebook",
+    "descriptionRuRaw": "Сильно сгущает Темный туман. Тайна.",
+    "addedAt": "2026-08-16T15:09:41.923Z"
+  },
+  {
+    "kind": "offering",
+    "role": "both",
+    "category": "Map Modifications",
+    "icon": "/loadout/offering/vigo-s-blueprint.webp",
+    "slug": "vigo-s-blueprint",
+    "name": {
+      "en": "Vigo's Blueprint",
+      "ru": "Чертеж Виго"
+    },
+    "description": "Grants the following effect at the start of the Trial: Increases the likelihood of the Hatch spawning by the Landmark Building by +100 %, if it is available. \"A clever design that has the letter 'V' etched on the bottom.\"",
+    "descriptionRuRaw": "Чрезвычайно повышает шанс появления люка в основном здании, если оно есть на карте. Тайна.",
+    "addedAt": "2026-08-16T15:09:41.923Z"
+  },
+  {
+    "kind": "offering",
+    "role": "killer",
+    "category": "Map Modifications",
+    "icon": "/loadout/offering/rotten-oak.webp",
+    "slug": "rotten-oak",
+    "name": {
+      "en": "Rotten Oak",
+      "ru": "Гнилой дуб"
+    },
+    "description": "Calls upon The Entity for the following effect: Reduces the minimum distance between Spawn locations for Hooks by -2.5 metres. \"A decomposing piece of oak in which strange markings have been etched.\"",
+    "descriptionRuRaw": "Призывает Сущность умеренно уменьшить расстояние между крюками для жертвоприношений. Тайна.",
+    "addedAt": "2026-08-16T15:09:41.923Z"
+  },
+  {
+    "kind": "offering",
+    "role": "survivor",
+    "category": "Map Modifications",
+    "icon": "/loadout/offering/petrified-oak.webp",
+    "slug": "petrified-oak",
+    "name": {
+      "en": "Petrified Oak",
+      "ru": "Окаменевший дуб"
+    },
+    "description": "Calls upon The Entity for the following effect: Increases the minimum distance between Spawn locations for Hooks by +1 metre. \"A deteriorating piece of petrified wood.\"",
+    "descriptionRuRaw": "Успокаивает Сущность и слегка увеличивает расстояние между крюками для жертвоприношений. Тайна.",
+    "addedAt": "2026-08-16T15:09:41.923Z"
+  },
+  {
+    "kind": "offering",
+    "role": "killer",
+    "category": "Map Modifications",
+    "icon": "/loadout/offering/putrid-oak.webp",
+    "slug": "putrid-oak",
+    "name": {
+      "en": "Putrid Oak",
+      "ru": "Разложившийся дуб"
+    },
+    "description": "Calls upon The Entity for the following effect: Reduces the minimum distance between Spawn locations for Hooks by -3.5 metres. \"A ruined piece of oak oozing with a black putrescent liquid.\"",
+    "descriptionRuRaw": "Призывает Сущность значительно уменьшить расстояние между крюками для жертвоприношений. Тайна.",
+    "addedAt": "2026-08-16T15:09:41.923Z"
   },
   {
     "kind": "offering",
@@ -155,6 +547,117 @@
   },
   {
     "kind": "offering",
+    "role": "both",
+    "category": "Realm Selection",
+    "icon": "/loadout/offering/grandma-s-cookbook.webp",
+    "slug": "grandma-s-cookbook",
+    "name": {
+      "en": "Grandma's Cookbook",
+      "ru": "Grandma's Cookbook"
+    },
+    "description": "Increases the likelihood of being sent to a Map in the Backwater Swamp Realm. Modifies the Realm Selector Logic by a value of 9999. \"A leather-bound book containing horrible human meat recipes such as the granny-slapping good chilli.\"",
+    "addedAt": "2026-08-16T15:09:41.923Z"
+  },
+  {
+    "kind": "offering",
+    "role": "both",
+    "category": "Realm Selection",
+    "icon": "/loadout/offering/heart-locket.webp",
+    "slug": "heart-locket",
+    "name": {
+      "en": "Heart Locket",
+      "ru": "Медальон в форме сердца"
+    },
+    "description": "Increases the likelihood of being sent to a Map in the Coldwind Farm Realm. Modifies the Realm Selector Logic by a value of 9999. \"A silver heart locket necklace.The simple interior is engraved with the following: 'E+M'.\"",
+    "descriptionRuRaw": "Чрезвычайно увеличивает шансы отправиться на карту \"Ферма Колдвинд\" после сожжения. Тайна. Эффект не суммируется.",
+    "addedAt": "2026-08-16T15:09:41.923Z"
+  },
+  {
+    "kind": "offering",
+    "role": "both",
+    "category": "Realm Selection",
+    "icon": "/loadout/offering/charred-wedding-photograph.webp",
+    "slug": "charred-wedding-photograph",
+    "name": {
+      "en": "Charred Wedding Photograph",
+      "ru": "Обугленная свадебная фотография"
+    },
+    "description": "Increases the likelihood of being sent to a Map in the Crotus Prenn Asylum Realm. Modifies the Realm Selector Logic by a value of 9999. \"A burned portrait of a couple on their wedding day, the faces are completely charred and unidentifiable.\"",
+    "descriptionRuRaw": "Чрезвычайно увеличивает шансы отправиться в психлечебницу Кротус Пренн после сожжения. Тайна. Эффект не суммируется.",
+    "addedAt": "2026-08-16T15:09:41.923Z"
+  },
+  {
+    "kind": "offering",
+    "role": "both",
+    "category": "Realm Selection",
+    "icon": "/loadout/offering/alien-flora.webp",
+    "slug": "alien-flora",
+    "name": {
+      "en": "Alien Flora",
+      "ru": "Инопланетная флора"
+    },
+    "description": "Increases the likelihood of being sent to the Toba Landing Map in the Dvarka Deepwood Realm. Modifies the Realm Selector Logic by a value of 9999. \"Our arrival will change the face of this planet as we know it.\" — Sarah, Science Officer",
+    "descriptionRuRaw": "При сожжении чрезвычайно увеличивает вероятность попасть на карту \"Площадка Тоба\". Тайна. Эффект не суммируется.",
+    "addedAt": "2026-08-16T15:09:41.923Z"
+  },
+  {
+    "kind": "offering",
+    "role": "both",
+    "category": "Realm Selection",
+    "icon": "/loadout/offering/strode-realty-key.webp",
+    "slug": "strode-realty-key",
+    "name": {
+      "en": "Strode Realty Key",
+      "ru": "Ключ риелторского агентства Строуд"
+    },
+    "description": "Increases the likelihood of being sent to a Map in the Haddonfield Realm. Modifies the Realm Selector Logic by a value of 9999. \"A house key, mundane in appearance.A cardboard key-tag attached to it reads 'Strode Real Estate', followed by a handwritten address:'45 Lampkin Lane'.\"",
+    "descriptionRuRaw": "Чрезвычайно увеличивает шансы отправиться на карту \"Хэддонфилд\" после сожжения. Тайна. Эффект не суммируется.",
+    "addedAt": "2026-08-16T15:09:41.923Z"
+  },
+  {
+    "kind": "offering",
+    "role": "both",
+    "category": "Realm Selection",
+    "icon": "/loadout/offering/shattered-glasses.webp",
+    "slug": "shattered-glasses",
+    "name": {
+      "en": "Shattered Glasses",
+      "ru": "Сломанные очки"
+    },
+    "description": "Increases the likelihood of being sent to a Map in the Léry's Memorial Institute Realm. Modifies the Realm Selector Logic by a value of 9999. \"Bent reading glasses.Speckles of dried blood can be seen on the shattered lenses.\"",
+    "descriptionRuRaw": "Чрезвычайно увеличивает шансы отправиться на карту \"Мемориальный институт Лэри\" после сожжения. Тайна. Эффект не суммируется.",
+    "addedAt": "2026-08-16T15:09:41.923Z"
+  },
+  {
+    "kind": "offering",
+    "role": "both",
+    "category": "Realm Selection",
+    "icon": "/loadout/offering/macmillan-s-phalanx-bone.webp",
+    "slug": "macmillan-s-phalanx-bone",
+    "name": {
+      "en": "MacMillan's Phalanx Bone",
+      "ru": "Кость фаланги МакМиллана"
+    },
+    "description": "Increases the likelihood of being sent to a Map in the The MacMillan Estate Realm. Modifies the Realm Selector Logic by a value of 9999. \"MacMillan's skeletal remains were found in the basement of the mine's storehouse.His leg bones shattered into pieces and a mining hammer lying in his lap.\"",
+    "descriptionRuRaw": "Чрезвычайно увеличивает шансы отправиться на карту \"Поместье МакМиллан\" после сожжения. Тайна. Эффект не суммируется.",
+    "addedAt": "2026-08-16T15:09:41.923Z"
+  },
+  {
+    "kind": "offering",
+    "role": "both",
+    "category": "Realm Selection",
+    "icon": "/loadout/offering/the-last-mask.webp",
+    "slug": "the-last-mask",
+    "name": {
+      "en": "The Last Mask",
+      "ru": "Последняя маска"
+    },
+    "description": "Increases the likelihood of being sent to a Map in the Red Forest Realm. Modifies the Realm Selector Logic by a value of 9999. \"A beautifully crafted tiger mask that would fit snug on a child's face.A faded note in the Cyrillic alphabet can be found scripted on the back.\"",
+    "descriptionRuRaw": "Чрезвычайно увеличивает шансы отправиться на карту \"Красный лес\" после сожжения. Тайна. Эффект не суммируется.",
+    "addedAt": "2026-08-16T15:09:41.923Z"
+  },
+  {
+    "kind": "offering",
     "role": "survivor",
     "category": "Shrouds",
     "icon": "/loadout/offering/shroud-of-union.webp",
@@ -197,7 +700,7 @@
   },
   {
     "kind": "offering",
-    "role": "both",
+    "role": "killer",
     "category": "Wards",
     "icon": "/loadout/offering/black-ward.webp",
     "slug": "black-ward",
@@ -211,7 +714,7 @@
   },
   {
     "kind": "offering",
-    "role": "both",
+    "role": "survivor",
     "category": "Wards",
     "icon": "/loadout/offering/white-ward.webp",
     "slug": "white-ward",

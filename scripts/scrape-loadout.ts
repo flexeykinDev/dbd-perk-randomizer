@@ -183,6 +183,46 @@ function findHeadingTables(
   return results;
 }
 
+/** Offerings-page counterpart of findHeadingTables above — can't reuse it
+ *  directly because this page's h3 categories are often themselves split
+ *  into h4 sub-headings, each with its own table (e.g. "Bonus
+ *  Bloodpoints" -> "Altruism"/"Brutality"/... , "Realm Selection" -> one
+ *  h4 per Realm). findHeadingTables pairs only the *first* table after a
+ *  heading with it (fine for Add-ons, where every h3 has exactly one
+ *  table) — on this page that silently dropped every h4-level table
+ *  after the first, undercounting entire categories (confirmed by hand:
+ *  Realm Selection has one h4+table per Realm, only the first was ever
+ *  scraped). This walks every table regardless of h3/h4 nesting depth
+ *  and pairs each with whichever h3 most recently preceded it — h4 text
+ *  itself is discarded, since role is resolved per-offering instead (see
+ *  resolveOfferingRole) rather than guessed from category structure. */
+function findOfferingTables(
+  $: cheerio.CheerioAPI,
+  sectionTitle: string,
+): { heading: string; table: Cheerio<AnyNode> }[] {
+  const results: { heading: string; table: Cheerio<AnyNode> }[] = [];
+  const h2 = $("h2")
+    .filter((_, el) => $(el).text().trim().startsWith(sectionTitle))
+    .first();
+  if (!h2.length) return results;
+
+  const container = h2.nextUntil("h2");
+  const nodes = container.filter("h3, table.wikitable").add(container.find("h3, table.wikitable"));
+
+  let currentH3: string | null = null;
+  nodes.each((_, el) => {
+    const node = $(el);
+    if (node.is("h3")) {
+      currentH3 = node.text().replace(/\[.*\]\s*$/, "").trim();
+    } else if (node.is("table.wikitable") && currentH3) {
+      // No reset here, deliberately unlike findHeadingTables — an h3
+      // category on this page can be followed by any number of tables.
+      results.push({ heading: currentH3, table: node as Cheerio<AnyNode> });
+    }
+  });
+  return results;
+}
+
 const ITEM_TYPE_BY_ADDON_HEADING: Record<string, ItemType> = {
   Firecrackers: "firecracker",
   Flashlights: "flashlight",
@@ -218,6 +258,12 @@ const ITEM_TABLE_TYPES: readonly (ItemType | null)[] = [
   null, // "browse other unlockables" nav box
 ];
 
+// Deliberately just a fallback now, not the source of truth — see
+// resolveOfferingRole, which fetches each offering's own page instead.
+// A category-level guess can't distinguish e.g. "Bonus Bloodpoints",
+// which mixes Survivor-only, Killer-only, and shared offerings under its
+// own h4 sub-headings; these values only matter if that per-offering
+// lookup itself fails.
 const OFFERING_CATEGORY_ROLE: Record<string, PerkRole | "both"> = {
   "Bonus Bloodpoints": "both",
   Luck: "survivor",
@@ -231,7 +277,7 @@ const OFFERING_CATEGORY_ROLE: Record<string, PerkRole | "both"> = {
   // time-limited, and this scraper has no way to know whether a given
   // event is currently running, so none of them are reliably obtainable
   // right now. "Mobile Offerings" (a separate <h2>, never visited by
-  // findHeadingTables here) is skipped the same way.
+  // findOfferingTables here) is skipped the same way.
 };
 
 // A couple of killer-power heading titles don't wiki-redirect to
@@ -359,8 +405,11 @@ async function downloadIcon(
 
 // Same MediaWiki parse endpoint as fetchWikiPageHtml, but following
 // redirects — killer names ("The Trapper") are themselves redirect pages
-// to the character's real-name article ("Evan MacMillan"), unlike
-// Items/Add-ons/Offerings which are already canonical page titles.
+// to the character's real-name article ("Evan MacMillan"). Items/Add-ons
+// page titles are already canonical, but individual Offering titles
+// aren't guaranteed to be (e.g. punctuation quirks like "Escape! Cake"),
+// so resolveOfferingRole below uses this too rather than the plain
+// fetchWikiPageHtml.
 async function fetchWikiPageHtmlFollowingRedirects(page: string): Promise<string> {
   const url = `https://deadbydaylight.fandom.com/api.php?action=parse&page=${encodeURIComponent(page)}&redirects=1&format=json&prop=text`;
   const res = await fetch(url, { headers: REQUEST_HEADERS });
@@ -371,6 +420,48 @@ async function fetchWikiPageHtmlFollowingRedirects(page: string): Promise<string
     throw new Error(`Unexpected MediaWiki API response for ${page}: ${json.error?.info ?? "no parse.text.*"}`);
   }
   return html;
+}
+
+// Every Offering's own article opens with a standard sentence — "<Name>
+// is a(n) <Rarity> Offering belonging to <Survivors|Killers|all
+// Players>." — confirmed by hand against several real pages, including
+// the exact bug report that motivated this: "Survivor Pudding is an
+// Uncommon Offering belonging to Killers." (its name notwithstanding —
+// it's genuinely Killer-only, a real wiki/game naming quirk, not a typo).
+// This is the only reliable per-offering role signal available: the List
+// of Offerings page groups tables by scoring category / Realm / etc, not
+// consistently by role — "Bonus Bloodpoints" alone mixes Survivor-only,
+// Killer-only, and shared offerings under h4 sub-headings a category-
+// level guess can't tell apart.
+const OFFERING_BELONGS_TO_PATTERN = /\bOffering belonging to ([^.]+)\./i;
+
+function offeringRoleFromPageText(text: string): PerkRole | "both" | null {
+  const match = text.match(OFFERING_BELONGS_TO_PATTERN);
+  if (!match) return null;
+  const who = match[1].trim().toLowerCase();
+  if (who.includes("all players")) return "both";
+  if (who.includes("survivor")) return "survivor";
+  if (who.includes("killer")) return "killer";
+  return null;
+}
+
+/** Resolves one offering's real role by fetching its own wiki page —
+ *  falls back to the category-level guess (OFFERING_CATEGORY_ROLE) only
+ *  if the fetch fails or the page doesn't match the expected sentence
+ *  shape, logging either case so a wiki-format change doesn't fail
+ *  silently. */
+async function resolveOfferingRole(name: string, fallback: PerkRole | "both"): Promise<PerkRole | "both"> {
+  try {
+    const html = await fetchWikiPageHtmlFollowingRedirects(name);
+    const text = cheerio.load(html)(".mw-parser-output").first().text();
+    const role = offeringRoleFromPageText(text);
+    if (role) return role;
+    console.warn(`  Offering "${name}": couldn't parse its role sentence, using category fallback (${fallback})`);
+    return fallback;
+  } catch (err) {
+    console.warn(`  Offering "${name}": role lookup failed (${(err as Error).message}), using category fallback (${fallback})`);
+    return fallback;
+  }
 }
 
 // Every killer's character page has a "Power: <name>" heading followed
@@ -595,12 +686,14 @@ async function main() {
   const offeringsHtml = await fetchWikiPageHtml(OFFERINGS_PAGE);
   const $offerings = cheerio.load(offeringsHtml);
   const offerings: Offering[] = [];
-  const offeringSections = findHeadingTables($offerings, "List of Offerings");
+  const offeringSections = findOfferingTables($offerings, "List of Offerings");
+  console.log("Resolving each offering's role from its own page ...");
   for (const { heading, table } of offeringSections) {
-    const role = OFFERING_CATEGORY_ROLE[heading];
-    if (!role) continue; // "Events" and any unrecognized category — see OFFERING_CATEGORY_ROLE comment
+    const fallbackRole = OFFERING_CATEGORY_ROLE[heading];
+    if (!fallbackRole) continue; // "Events" and any unrecognized category — see OFFERING_CATEGORY_ROLE comment
     const pieces = parsePieceTable($offerings, table);
     for (const piece of pieces) {
+      const role = await resolveOfferingRole(piece.name, fallbackRole);
       offerings.push({ kind: "offering", role, category: heading, icon: "", ...toLocalized("offering", piece) });
     }
   }
