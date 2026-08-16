@@ -69,7 +69,11 @@ export function ObsOverlay() {
   return (
     <div
       className={cn(
-        "fixed inset-0 overflow-hidden p-4",
+        // obs-overlay-root: stays visible despite living inside the
+        // .app-shell wrapper that data-obs-pending hides pre-hydration
+        // (see globals.css) — visibility, unlike display:none, lets a
+        // descendant opt back in even while an ancestor is hidden.
+        "obs-overlay-root fixed inset-0 overflow-hidden p-4",
         usePositions ? "" : "flex items-center justify-center",
       )}
       style={usePositions ? undefined : { gap: gapPx }}

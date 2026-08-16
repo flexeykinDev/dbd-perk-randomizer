@@ -56,6 +56,24 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* Hides the normal site shell (Nav/board/Footer) the instant the DOM
+   parses, before React even hydrates — a static export can't know the
+   #/obs URL at build time, so the very first paint always renders the
+   full site regardless (see useIsObsMode's docstring); without this, an
+   OBS Browser Source briefly (or, on a slow/CEF renderer, sometimes not
+   so briefly) shows that full-site flash behind the transparent overlay.
+   data-obs-pending is set synchronously by the inline script in
+   app/layout.tsx's <head>, the same trick already used to prevent a
+   dark/light theme flash. .obs-overlay-root opts back into visibility
+   despite living inside a hidden ancestor — visibility (unlike
+   display:none) lets a descendant override it. */
+html[data-obs-pending="1"] .app-shell {
+  visibility: hidden;
+}
+.obs-overlay-root {
+  visibility: visible;
+}
+
 /* Crisp lucide-react icons at any browser zoom level, instead of the blur
    non-integer device-pixel scaling can cause. */
 svg {

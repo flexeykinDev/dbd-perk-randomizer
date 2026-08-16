@@ -81,21 +81,38 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             __html: `try{if(localStorage.getItem('${THEME_STORAGE_KEY}')==='light')document.documentElement.dataset.theme='light'}catch(e){}`,
           }}
         />
+        {/* Same before-first-paint trick as the theme script above, for
+            the OBS overlay route instead of the theme — see the
+            data-obs-pending CSS rule in globals.css for why this exists:
+            a static export can't know the #/obs hash/obs=1 query at
+            build time, so without this, an OBS Browser Source always
+            gets one flash (sometimes longer, on a slow/CEF renderer) of
+            the full site before React's own useIsObsMode effect swaps
+            to the transparent overlay. */}
+        <script
+          type={typeof window === "undefined" ? "text/javascript" : "text/plain"}
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html: `try{if(location.hash==='#/obs'||new URLSearchParams(location.search).get('obs')==='1')document.documentElement.dataset.obsPending='1'}catch(e){}`,
+          }}
+        />
       </head>
       <body className="flex min-h-full flex-col bg-background text-foreground">
         <LanguageProvider>
-          <Nav />
-          {/* max-w-6xl reads comfortably up to a normal 1080p/1440p
-              screen, but on anything wider than 16:9 (ultrawide, 4K) it
-              left a huge dead margin on both sides with the whole app
-              looking small in the middle — the 2xl step gives large
-              monitors meaningfully more room without going full-bleed
-              (which would stretch card grids and text lines too wide to
-              read comfortably). */}
-          <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-4 2xl:max-w-[100rem]">
-            {children}
-          </main>
-          <Footer />
+          <div className="app-shell flex min-h-full flex-1 flex-col">
+            <Nav />
+            {/* max-w-6xl reads comfortably up to a normal 1080p/1440p
+                screen, but on anything wider than 16:9 (ultrawide, 4K) it
+                left a huge dead margin on both sides with the whole app
+                looking small in the middle — the 2xl step gives large
+                monitors meaningfully more room without going full-bleed
+                (which would stretch card grids and text lines too wide to
+                read comfortably). */}
+            <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-4 2xl:max-w-[100rem]">
+              {children}
+            </main>
+            <Footer />
+          </div>
         </LanguageProvider>
       </body>
     </html>

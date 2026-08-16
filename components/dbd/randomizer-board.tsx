@@ -1368,6 +1368,10 @@ export function RandomizerBoard() {
           <button
             type="button"
             onClick={() => setObsModalOpen(true)}
+            title={t({
+              ru: "Отдельная ссылка специально для источника «Браузер» в OBS — не та же ссылка, что у кнопки «Поделиться».",
+              en: "A separate link made specifically for an OBS Browser source — not the same link as the “Share” button.",
+            })}
             className="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
           >
             <MonitorPlay className="size-3.5" />
@@ -1483,6 +1487,10 @@ export function RandomizerBoard() {
         <button
           type="button"
           onClick={handleShare}
+          title={t({
+            ru: "Ссылка на этот билд для обычного просмотра — не для OBS, для этого есть отдельная кнопка «Оверлей OBS».",
+            en: "A link to view this exact build — not for OBS, use the separate “OBS Overlay” button for that.",
+          })}
           className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
         >
           <Link2 className="size-3.5" />

@@ -276,6 +276,28 @@ test.describe("OBS overlay", () => {
       page.getByText(/Ждём билд с основного сайта|Waiting for a build/),
     ).toBeVisible();
   });
+
+  test("the site shell is marked hidden before React even hydrates", async ({ page }) => {
+    // Regression test for a real report: even with the *correct* overlay
+    // link, some viewers (notably a slower/CEF-based renderer like OBS's
+    // own Browser Source) briefly or persistently saw the full site
+    // behind the transparent overlay — because a static export can't know
+    // the URL at build time, so the very first paint always renders the
+    // full site regardless of the URL, and only a post-hydration effect
+    // swaps to the overlay. The fix is a synchronous pre-hydration script
+    // (app/layout.tsx) plus a CSS rule (globals.css) that hides
+    // .app-shell immediately, before any JS framework code runs at all.
+    // Since Playwright's own navigation already outruns that pre-paint
+    // window, this asserts the underlying mechanism directly instead of
+    // trying to catch a frame of flash.
+    await page.goto("/?room=TESTROOM&obs=1#/obs");
+    await expect(page.locator("html")).toHaveAttribute("data-obs-pending", "1");
+    await expect(page.locator(".app-shell")).toHaveCSS("visibility", "hidden");
+
+    await page.goto("/?role=survivor");
+    await expect(page.locator("html")).not.toHaveAttribute("data-obs-pending", "1");
+    await expect(page.locator(".app-shell")).toHaveCSS("visibility", "visible");
+  });
 });
 
 test.describe("Build History", () => {
