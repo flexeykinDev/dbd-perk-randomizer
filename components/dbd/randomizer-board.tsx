@@ -9,6 +9,7 @@ import {
   BarChart3,
   CalendarClock,
   Copy,
+  History,
   MonitorPlay,
   Users,
   X,
@@ -31,6 +32,7 @@ import { ROLE_COLOR } from "@/lib/role-color";
 import { useLanguage, useT } from "@/lib/i18n";
 import { dailyChallengeSeed } from "@/lib/seeded-random";
 import { recordRoll } from "@/lib/stats";
+import { parseLoadoutKey, recordHistoryEntry, type HistoryEntry } from "@/lib/history";
 import { getIdForSlug, getSlugForId } from "@/lib/perk-ids";
 import { withBasePath } from "@/lib/asset-path";
 import {
@@ -56,6 +58,7 @@ import { CopyToast } from "./copy-toast";
 import { ExcludePanel } from "./exclude-panel";
 import { LoadoutExcludePanel } from "./loadout-exclude-panel";
 import { StatsModal } from "./stats-modal";
+import { HistoryModal } from "./history-modal";
 import { ToggleSwitch } from "./toggle-switch";
 import { ShareCard, type ShareCardLayout } from "./share-card";
 import { DownloadImageButton } from "./download-image-button";
@@ -282,6 +285,7 @@ export function RandomizerBoard() {
   const [characterPickerOpen, setCharacterPickerOpen] = useState(false);
   const [showStats, setShowStats] = useState(false);
   const [statsModalOpen, setStatsModalOpen] = useState(false);
+  const [historyModalOpen, setHistoryModalOpen] = useState(false);
   const [obsModalOpen, setObsModalOpen] = useState(false);
   const [statsVersion, setStatsVersion] = useState(0);
   const [battleRoyale, setBattleRoyale] = useState(false);
@@ -512,8 +516,29 @@ export function RandomizerBoard() {
     if (lastRecordedKey.current === key) return;
     lastRecordedKey.current = key;
     recordRoll(role, perks);
+    recordHistoryEntry({ mode: "perks", role, keys: perks.map((p) => p.slug) });
     setStatsVersion((v) => v + 1);
   }, [perks, role, nonce, mounted, activeSeed, sharedBuild]);
+
+  // Loadout counterpart of the perks-recording effect above — same
+  // dedup-by-key and "don't record someone else's shared/history build"
+  // rules, just keyed off loadoutPieces/sharedLoadoutPieces instead.
+  // Loadout mode has no roll-frequency stats today (getRoleStatsSummary is
+  // perk-only), so this only feeds history, not recordRoll.
+  const lastRecordedLoadoutKey = useRef<string>("");
+  useEffect(() => {
+    if (!mounted || loadoutPieces.length === 0) return;
+    const key = `${role}:${nonce}:${activeSeed ?? ""}:${sharedLoadoutPieces ? "shared" : "rolled"}`;
+    if (sharedLoadoutPieces) return;
+    if (lastRecordedLoadoutKey.current === key) return;
+    lastRecordedLoadoutKey.current = key;
+    recordHistoryEntry({
+      mode: "loadout",
+      role,
+      keys: loadoutPieces.map((p) => `${p.kind}:${p.slug}`),
+    });
+    setStatsVersion((v) => v + 1);
+  }, [loadoutPieces, role, nonce, mounted, activeSeed, sharedLoadoutPieces]);
 
   // Mirrors whatever's currently on screen to the OBS overlay tab, if one's
   // open — see lib/obs-sync.ts. Fires on every display change (regenerate,
@@ -698,6 +723,42 @@ export function RandomizerBoard() {
     safeSet("local", GUARANTEE_TEACHABLES_STORAGE_KEY, next ? "1" : "0");
     setSharedBuild(null);
     setNonce((n) => n + 1);
+  }
+
+  // Jumps back to a past roll from the History modal — same "shared build"
+  // display path a Share link or Twitch !paste already uses (readInitialUrlState
+  // / handleTwitchPaste above), so re-viewing history is exactly as inert
+  // as viewing someone else's shared build: it doesn't touch the pool,
+  // Battle Royale progress, or roll further. Silently no-ops if every
+  // slug/key in the entry has since become unresolvable (e.g. a perk
+  // retired from the wiki) rather than opening onto an empty build.
+  function restoreHistoryEntry(entry: HistoryEntry) {
+    if (entry.mode === "perks") {
+      const matched = entry.keys
+        .map((slug) => getPerkBySlug(slug))
+        .filter((p): p is Perk => !!p);
+      if (matched.length === 0) return;
+      setRole(entry.role);
+      setMode("perks");
+      safeSet("local", MODE_STORAGE_KEY, "perks");
+      setSharedLoadoutPieces(null);
+      setSharedBuild(matched);
+      setPerkCount(matched.length);
+    } else {
+      const matched = entry.keys
+        .map((key) => {
+          const parsed = parseLoadoutKey(key);
+          return parsed ? getLoadoutPiece(parsed.kind, parsed.slug) : undefined;
+        })
+        .filter((p): p is LoadoutPiece => !!p);
+      if (matched.length === 0) return;
+      setRole(entry.role);
+      setMode("loadout");
+      safeSet("local", MODE_STORAGE_KEY, "loadout");
+      setSharedBuild(null);
+      setSharedLoadoutPieces(matched);
+    }
+    setHistoryModalOpen(false);
   }
 
   function selectMode(next: BuildMode) {
@@ -1298,6 +1359,14 @@ export function RandomizerBoard() {
           </button>
           <button
             type="button"
+            onClick={() => setHistoryModalOpen(true)}
+            className="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+          >
+            <History className="size-3.5" />
+            {t({ ru: "История", en: "History" })}
+          </button>
+          <button
+            type="button"
             onClick={() => setObsModalOpen(true)}
             className="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
           >
@@ -1561,6 +1630,14 @@ export function RandomizerBoard() {
         open={statsModalOpen}
         language={language}
         onClose={() => setStatsModalOpen(false)}
+        version={statsVersion}
+      />
+
+      <HistoryModal
+        open={historyModalOpen}
+        language={language}
+        onClose={() => setHistoryModalOpen(false)}
+        onRestore={restoreHistoryEntry}
         version={statsVersion}
       />
 

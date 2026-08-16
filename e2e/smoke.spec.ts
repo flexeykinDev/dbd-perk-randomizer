@@ -261,3 +261,39 @@ test.describe("theme toggle", () => {
     await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
   });
 });
+
+test.describe("Build History", () => {
+  test("a generated build appears in History and can be reopened", async ({ page }) => {
+    await page.goto("/?role=survivor");
+    await page.evaluate(() => localStorage.removeItem("dbd-randomizer:history"));
+    await page.reload();
+    await page.getByRole("button", { name: "Сгенерировать новый билд" }).click();
+
+    await page.getByRole("button", { name: "История", exact: true }).click();
+    const panel = page.getByText("История билдов");
+    await expect(panel).toBeVisible();
+    // Exactly how many rolls React's dev-mode Strict Mode double-invoke
+    // ends up recording isn't worth pinning down here — what matters is
+    // that at least one landed and can be reopened.
+    const entries = page.getByRole("button", { name: "Открыть" });
+    await expect(entries.first()).toBeVisible();
+
+    await entries.first().click();
+    await expect(panel).not.toBeVisible();
+  });
+
+  test("Clear wipes the history list", async ({ page }) => {
+    await page.goto("/?role=survivor");
+    await page.getByRole("button", { name: "Сгенерировать новый билд" }).click();
+
+    await page.getByRole("button", { name: "История", exact: true }).click();
+    await page.getByRole("button", { name: "Очистить", exact: true }).click();
+    // The confirm dialog's own confirm button shares the same label as the
+    // trigger that opened it ("Очистить") — it's the one rendered later in
+    // the DOM (ConfirmDialog mounts after HistoryModal's own JSX), so
+    // .last() picks the dialog's button, not the now-covered trigger.
+    await page.getByRole("button", { name: "Очистить", exact: true }).last().click();
+
+    await expect(page.getByText("Пока пусто — сгенерируйте билд")).toBeVisible();
+  });
+});
