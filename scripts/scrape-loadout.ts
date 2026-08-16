@@ -29,6 +29,7 @@ const LOADOUT_IDS_JSON = join(DATA_DIR, "loadout-ids.json");
 const LOADOUT_TRANSLATIONS_JSON = join(DATA_DIR, "loadout-translations.ru.json");
 const LOADOUT_DESCRIPTION_RU_RAW_JSON = join(DATA_DIR, "loadout-description-ru-raw.json");
 const KILLER_POWER_ICONS_JSON = join(DATA_DIR, "killer-power-icons.json");
+const LOADOUT_ICON_SOURCES_JSON = join(DATA_DIR, "loadout-icon-sources.json");
 
 const ICON_SIZE = 128;
 const REQUEST_HEADERS = {
@@ -330,13 +331,20 @@ async function downloadIcon(
   kind: "item" | "addon" | "offering",
   slug: string,
   sourceUrl: string,
-  previousIconSlugs: Set<string>,
+  iconSources: Record<string, string>,
 ): Promise<string> {
   const destRelative = `/loadout/${kind}/${slug}.webp`;
   const destAbsolute = join(PUBLIC_LOADOUT_DIR, kind, `${slug}.webp`);
+  const cacheKey = `${kind}/${slug}`;
 
-  if (previousIconSlugs.has(`${kind}/${slug}`) && existsSync(destAbsolute)) {
-    return destRelative; // already have this icon from a previous run
+  // Compares against the *source* URL actually used last time (not just
+  // "did some icon land on this slug before") — the source is already in
+  // hand from the same page fetch this run makes anyway, so checking it
+  // costs nothing extra and means a wiki-side icon rework (art gets
+  // redrawn on an existing add-on) actually gets picked up on the next
+  // scrape instead of the local copy staying stale forever.
+  if (iconSources[cacheKey] === sourceUrl && existsSync(destAbsolute)) {
+    return destRelative;
   }
 
   const res = await fetch(sourceUrl, { headers: REQUEST_HEADERS });
@@ -345,6 +353,7 @@ async function downloadIcon(
 
   mkdirSync(dirname(destAbsolute), { recursive: true });
   await sharp(buffer).resize(ICON_SIZE, ICON_SIZE, { fit: "cover" }).webp({ quality: 90 }).toFile(destAbsolute);
+  iconSources[cacheKey] = sourceUrl;
   return destRelative;
 }
 
@@ -395,9 +404,13 @@ function findFirstImageAfterHeading($: cheerio.CheerioAPI, pattern: RegExp): str
 // One request per killer (their own character page) — there's no single
 // wiki page listing every Power icon together the way Items/Add-ons/
 // Offerings do, so this can't be folded into the table-based passes
-// above. Cached by killer name + the icon file already existing on disk,
-// same pattern as downloadIcon's previousIconSlugs check, so a rescrape
-// only re-fetches a killer whose icon is missing or new.
+// above. Cached by killer name + the icon file already existing on disk —
+// unlike downloadIcon's iconSources cache, this deliberately does NOT
+// compare against the actual source URL, since doing that would require
+// fetching the killer's whole character page first, defeating the point
+// of skipping it. A rescrape only re-fetches a killer whose icon is
+// missing or new; a wiki-side Power icon rework needs the local file
+// deleted by hand to be picked up.
 //
 // `killers` here are the bare, app-wide names ("Trapper") — see the
 // normalization note in resolvePowerToCharacter — but the wiki's actual
@@ -464,10 +477,7 @@ async function main() {
   for (const p of [...previousItems, ...previousAddons, ...previousOfferings]) {
     previousBySlug.set(`${p.kind}:${p.slug}`, p);
   }
-  const previousIconSlugs = new Set<string>();
-  for (const p of previousItems) previousIconSlugs.add(`item/${p.slug}`);
-  for (const p of previousAddons) previousIconSlugs.add(`addon/${p.slug}`);
-  for (const p of previousOfferings) previousIconSlugs.add(`offering/${p.slug}`);
+  const iconSources = loadJson<Record<string, string>>(LOADOUT_ICON_SOURCES_JSON, {});
 
   const scrapedAt = new Date().toISOString();
 
@@ -617,7 +627,7 @@ async function main() {
     for (const piece of pieces) {
       const url = urlBySlug.get(piece.slug);
       if (!url) continue;
-      piece.icon = await downloadIcon(piece.kind as "item" | "addon" | "offering", piece.slug, url, previousIconSlugs);
+      piece.icon = await downloadIcon(piece.kind as "item" | "addon" | "offering", piece.slug, url, iconSources);
     }
   }
 
@@ -688,6 +698,7 @@ async function main() {
   writeFileSync(OFFERINGS_JSON, JSON.stringify(offerings, null, 2) + "\n");
   writeFileSync(LOADOUT_META_JSON, JSON.stringify(meta, null, 2) + "\n");
   writeFileSync(LOADOUT_IDS_JSON, JSON.stringify(loadoutIds, null, 2) + "\n");
+  writeFileSync(LOADOUT_ICON_SOURCES_JSON, JSON.stringify(iconSources, null, 2) + "\n");
 
   console.log(
     `Wrote ${items.length} items, ${addons.length} add-ons, ${offerings.length} offerings -> ${DATA_DIR}`,

@@ -29,6 +29,7 @@ const DESCRIPTION_RU_RAW_JSON = join(DATA_DIR, "description-ru-raw.json");
 const DESCRIPTION_OVERRIDES_EN_JSON = join(DATA_DIR, "description-overrides.en.json");
 const CHARACTERS_JSON = join(DATA_DIR, "characters.json");
 const PERK_IDS_JSON = join(DATA_DIR, "perk-ids.json");
+const ICON_SOURCES_JSON = join(DATA_DIR, "icon-sources.json");
 
 const ICON_SIZE = 128;
 const TABLE_INDEX_BY_ROLE: Record<PerkRole, number> = {
@@ -43,15 +44,6 @@ interface ScrapedRow {
   character: string;
   iconSourceUrl: string;
   characterPortraitUrl: string;
-}
-
-function loadPreviousCharacters(): Record<string, string> {
-  if (!existsSync(CHARACTERS_JSON)) return {};
-  try {
-    return JSON.parse(readFileSync(CHARACTERS_JSON, "utf8"));
-  } catch {
-    return {};
-  }
 }
 
 function loadTranslations(): Record<string, string> {
@@ -84,6 +76,21 @@ function loadPerkIds(): Record<string, number> {
   if (!existsSync(PERK_IDS_JSON)) return {};
   try {
     return JSON.parse(readFileSync(PERK_IDS_JSON, "utf8"));
+  } catch {
+    return {};
+  }
+}
+
+// Keyed "perk:<role>/<slug>" or "character:<name>" -> the iconSourceUrl (or
+// characterPortraitUrl) used the last time that icon was actually
+// downloaded. downloadIcon/downloadPortrait below compare against this
+// (not just "did a file already land on disk") so a wiki-side icon rework
+// gets picked up on the next scrape instead of the local copy silently
+// going stale forever the first time it's cached.
+function loadIconSources(): Record<string, string> {
+  if (!existsSync(ICON_SOURCES_JSON)) return {};
+  try {
+    return JSON.parse(readFileSync(ICON_SOURCES_JSON, "utf8"));
   } catch {
     return {};
   }
@@ -173,13 +180,13 @@ function parseRole($: cheerio.CheerioAPI, role: PerkRole): ScrapedRow[] {
 async function downloadIcon(
   row: ScrapedRow,
   role: PerkRole,
-  previous: Map<string, Perk>,
+  iconSources: Record<string, string>,
 ): Promise<string> {
   const destRelative = `/perks/${role}/${row.slug}.webp`;
   const destAbsolute = join(PUBLIC_PERKS_DIR, role, `${row.slug}.webp`);
+  const cacheKey = `perk:${role}/${row.slug}`;
 
-  const prev = previous.get(`${role}/${row.slug}`);
-  if (prev && existsSync(destAbsolute)) {
+  if (iconSources[cacheKey] === row.iconSourceUrl && existsSync(destAbsolute)) {
     // Skip re-downloading when the source URL hasn't changed since last run.
     return destRelative;
   }
@@ -198,20 +205,22 @@ async function downloadIcon(
     .webp({ quality: 90 })
     .toFile(destAbsolute);
 
+  iconSources[cacheKey] = row.iconSourceUrl;
   return destRelative;
 }
 
 async function downloadPortrait(
   characterName: string,
   sourceUrl: string,
-  previous: Record<string, string>,
+  iconSources: Record<string, string>,
 ): Promise<string> {
   const slug = slugify(characterName);
   const destRelative = `/characters/${slug}.webp`;
   const destAbsolute = join(PUBLIC_CHARACTERS_DIR, `${slug}.webp`);
+  const cacheKey = `character:${characterName}`;
 
-  if (previous[characterName] === destRelative && existsSync(destAbsolute)) {
-    // Skip re-downloading when we already have this character's portrait.
+  if (iconSources[cacheKey] === sourceUrl && existsSync(destAbsolute)) {
+    // Skip re-downloading when the source URL hasn't changed since last run.
     return destRelative;
   }
 
@@ -229,6 +238,7 @@ async function downloadPortrait(
     .webp({ quality: 90 })
     .toFile(destAbsolute);
 
+  iconSources[cacheKey] = sourceUrl;
   return destRelative;
 }
 
@@ -244,7 +254,7 @@ async function main() {
   const previous = new Map(
     loadPreviousPerks().map((p) => [`${p.role}/${p.slug}`, p]),
   );
-  const previousCharacters = loadPreviousCharacters();
+  const iconSources = loadIconSources();
   const scrapedAt = new Date().toISOString();
 
   const perks: Perk[] = [];
@@ -254,7 +264,7 @@ async function main() {
     console.log(`Found ${rows.length} ${role} perks`);
 
     for (const row of rows) {
-      const icon = await downloadIcon(row, role, previous);
+      const icon = await downloadIcon(row, role, iconSources);
       const prev = previous.get(`${role}/${row.slug}`);
       perks.push({
         slug: row.slug,
@@ -275,7 +285,7 @@ async function main() {
 
   const characters: Record<string, string> = {};
   for (const [characterName, sourceUrl] of characterPortraitUrls) {
-    characters[characterName] = await downloadPortrait(characterName, sourceUrl, previousCharacters);
+    characters[characterName] = await downloadPortrait(characterName, sourceUrl, iconSources);
   }
   console.log(`Found ${characterPortraitUrls.size} unique characters`);
 
@@ -304,6 +314,7 @@ async function main() {
   writeFileSync(META_JSON, JSON.stringify(meta, null, 2) + "\n");
   writeFileSync(CHARACTERS_JSON, JSON.stringify(characters, null, 2) + "\n");
   writeFileSync(PERK_IDS_JSON, JSON.stringify(perkIds, null, 2) + "\n");
+  writeFileSync(ICON_SOURCES_JSON, JSON.stringify(iconSources, null, 2) + "\n");
 
   console.log(
     `Wrote ${perks.length} perks (${meta.survivorCount} survivor / ${meta.killerCount} killer) -> ${PERKS_JSON}`,

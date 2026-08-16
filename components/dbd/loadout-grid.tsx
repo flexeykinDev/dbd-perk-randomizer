@@ -491,7 +491,7 @@ function LoadoutDetailModal({
               />
               {language === "ru" &&
                 (piece.name.ru === piece.name.en ||
-                  !piece.descriptionRuRaw) && (
+                  (!piece.descriptionRu && !piece.descriptionRuRaw)) && (
                   <p className="mt-2 text-[11px] text-muted/60">
                     {t({
                       ru: "Перевод для этого предмета пока не добавлен — название и/или описание показаны на английском.",
