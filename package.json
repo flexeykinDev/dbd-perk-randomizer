@@ -15,7 +15,8 @@
     "sync:loadout-localization": "tsx scripts/sync-loadout-localization.ts",
     "sync:loadout-descriptions": "tsx scripts/sync-loadout-descriptions.ts",
     "sync:loadout-addons": "tsx scripts/sync-loadout-addons.ts",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "capture:screenshots": "node scripts/capture-screenshots.mjs"
   },
   "dependencies": {
     "firebase": "^12.17.1",
