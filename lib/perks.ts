@@ -2,7 +2,7 @@ import perksData from "@/data/perks.json";
 import metaData from "@/data/meta.json";
 import charactersData from "@/data/characters.json";
 import type { Perk, PerkRole, PerksMeta } from "./types";
-import { createSeededRandom } from "./seeded-random";
+import { createSeededRandom, shuffle } from "./seeded-random";
 
 export const perks: Perk[] = perksData as Perk[];
 export const perksMeta: PerksMeta = metaData as PerksMeta;
@@ -26,17 +26,6 @@ export function getPerkBySlug(slug: string): Perk | undefined {
 
 export function isNewPerk(perk: Perk): boolean {
   return Date.now() - new Date(perk.addedAt).getTime() < NEW_WINDOW_MS;
-}
-
-/** @param random Defaults to Math.random; pass a seeded RNG (see
- *  lib/seeded-random.ts) for deterministic shuffling, e.g. Daily Challenge. */
-function shuffle<T>(items: T[], random: () => number = Math.random): T[] {
-  const shuffled = [...items];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  return shuffled;
 }
 
 export function getAvailablePool(

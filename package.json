@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "scrape:perks": "tsx scripts/scrape-perks.ts",
+    "scrape:loadout": "tsx scripts/scrape-loadout.ts",
     "sync:localization": "tsx scripts/sync-localization.ts",
     "sync:characters": "tsx scripts/sync-characters.ts",
     "sync:descriptions": "tsx scripts/sync-descriptions.ts",

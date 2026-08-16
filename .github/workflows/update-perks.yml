@@ -1,4 +1,4 @@
-name: Update DBD perk data
+name: Update DBD perk and loadout data
 
 on:
   schedule:
@@ -21,20 +21,29 @@ jobs:
       - run: npm ci
       - name: Scrape perks from the DBD wiki
         run: npm run scrape:perks
-      - name: Open PR with updated perk data
+      - name: Scrape items/add-ons/offerings from the DBD wiki
+        run: npm run scrape:loadout
+      - name: Open PR with updated perk + loadout data
         uses: peter-evans/create-pull-request@v6
         with:
-          commit-message: "chore: update DBD perk data from wiki"
-          title: "Update DBD perk data"
+          commit-message: "chore: update DBD perk and loadout data from wiki"
+          title: "Update DBD perk and loadout data"
           body: |
-            Automated weekly scrape of the [DBD wiki Perks page](https://deadbydaylight.fandom.com/wiki/Perks).
+            Automated weekly scrape of the DBD wiki's [Perks](https://deadbydaylight.fandom.com/wiki/Perks), [Items](https://deadbydaylight.fandom.com/wiki/Items), [Add-ons](https://deadbydaylight.fandom.com/wiki/Add-ons), and [Offerings](https://deadbydaylight.fandom.com/wiki/Offerings) pages.
 
-            Review the icon/name/description/character-portrait diff before merging.
+            Review the icon/name/description/character-portrait diff before merging. For the loadout data specifically, also spot-check that any *new* killer's add-ons resolved to the right character name (see `resolvePowerToCharacter` in `scripts/scrape-loadout.ts`) — it falls back to `.All` and logs a warning if it can't, so check the workflow log for `Could not resolve a killer for power heading` too. A new killer should also pick up a Power icon automatically (`scrapeKillerPowerIcons`) — check the log for `No Power icon found on <killer>'s wiki page` if one's missing from `data/killer-power-icons.json`.
           branch: auto/update-perks
           add-paths: |
             data/perks.json
             data/meta.json
             data/characters.json
             data/perk-ids.json
+            data/items.json
+            data/addons.json
+            data/offerings.json
+            data/loadout-meta.json
+            data/loadout-ids.json
+            data/killer-power-icons.json
             public/perks/**
             public/characters/**
+            public/loadout/**

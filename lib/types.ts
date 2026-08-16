@@ -39,3 +39,89 @@ export interface PerksMeta {
   survivorCount: number;
   killerCount: number;
 }
+
+/** The 6 survivor item families — also the vocabulary used to pair an
+ *  Item with its matching Addon pool (see lib/loadout.ts). "special" is
+ *  the licensed/crossover items (Void Crystal, Eye of Vecna, etc.) that
+ *  don't have a normal add-on category on the wiki. */
+export type ItemType = "firecracker" | "flashlight" | "key" | "map" | "medkit" | "toolbox" | "special";
+
+export type LoadoutKind = "item" | "addon" | "offering";
+
+/** Shared shape for the 3 Full Loadout piece types — deliberately mirrors
+ *  Perk's field names (slug/name/description/icon/addedAt) so UI
+ *  components (grid, card, detail modal) can stay generic across perks
+ *  and loadout pieces instead of duplicating rendering logic per type. */
+interface LoadoutPieceBase {
+  slug: string;
+  name: { en: string; ru: string };
+  /** English only for now — RU descriptions for perks are hand-curated
+   *  (data/description-translations.ru.json) or synced from the RU wiki
+   *  (data/description-ru-raw.json); loadout pieces don't have either yet,
+   *  so RU-language users see the English text, same honest fallback the
+   *  perk system already uses for any perk without a translation. */
+  description: string;
+  descriptionRu?: LocalizedDescription;
+  descriptionRuRaw?: string;
+  icon: string;
+  addedAt: string;
+}
+
+export interface Item extends LoadoutPieceBase {
+  kind: "item";
+  itemType: ItemType;
+}
+
+export interface Addon extends LoadoutPieceBase {
+  kind: "addon";
+  role: PerkRole;
+  /** Which survivor item type this add-on fits (role === "survivor") —
+   *  killer power add-ons don't have one; each killer's power is unique
+   *  to them, so there's no shared "type" the way survivor items have. */
+  itemType?: ItemType;
+  /** The killer this add-on belongs to (role === "killer"), or ".All" for
+   *  survivor item add-ons (role === "survivor", not tied to one
+   *  character) — mirrors Perk.character, including the same ".All"
+   *  sentinel from lib/character-name.ts. */
+  character: string;
+}
+
+export interface Offering extends LoadoutPieceBase {
+  kind: "offering";
+  /** "survivor" | "killer" | "both" — most offerings (Bloodpoint bonuses,
+   *  Map/Realm selection) work for either role; a handful of wiki
+   *  categories are role-specific (Luck = survivor, Memento Mori/Splinters
+   *  = killer) — see OFFERING_CATEGORY_ROLE in scripts/scrape-loadout.ts. */
+  role: PerkRole | "both";
+  category: string;
+}
+
+export type LoadoutPiece = Item | Addon | Offering;
+
+export interface LoadoutMeta {
+  scrapedAt: string;
+  sourceUrls: { items: string; addons: string; offerings: string };
+  itemCount: number;
+  addonCount: number;
+  offeringCount: number;
+}
+
+/** Which of the 3 Full Loadout pieces to roll — independently toggleable
+ *  per the feature spec. For survivor, `addons` only has an effect while
+ *  `item` is also on (see lib/loadout.ts). */
+export interface LoadoutSlots {
+  item: boolean;
+  addons: boolean;
+  offering: boolean;
+}
+
+/** The result of one Full Loadout roll. `character` is set only for
+ *  killer (the killer whose Power add-ons were drawn); `item` is set only
+ *  for survivor (killers don't carry Items in DBD). */
+export interface Loadout {
+  role: PerkRole;
+  character: string | null;
+  item: Item | null;
+  addons: Addon[];
+  offering: Offering | null;
+}

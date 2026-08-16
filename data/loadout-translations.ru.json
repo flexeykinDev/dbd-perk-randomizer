@@ -1,0 +1,3 @@
+{
+  "_comment": "Hand/script-maintained RU names for items/add-ons/offerings, keyed by 'kind:slug' (e.g. 'item:flashlight', 'addon:bear-oil', 'offering:escape-cake') — same shape as translations.ru.json for perks, just namespaced since the same word could slugify identically across item/add-on/offering. Empty for now: no sync script exists yet (see README), so RU-language users see the English name/description until one is added, same honest fallback the perk system uses for any perk without a translation."
+}

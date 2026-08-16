@@ -73,6 +73,71 @@ test.describe("DBD randomizer", () => {
   });
 });
 
+test.describe("Full Loadout", () => {
+  test("switching to loadout mode rolls an item/add-ons/offering HUD", async ({ page }) => {
+    await page.goto("/?role=survivor");
+    await page.getByRole("button", { name: "Экипировка" }).click();
+
+    await expect(page.getByText("Случайная экипировка для выжившего")).toBeVisible();
+    // The in-game-style HUD groups pieces under fixed Item/Add-ons/Offering
+    // columns instead of a generic card grid — see loadout-grid.tsx.
+    await expect(page.getByTestId("loadout-slot-item")).toBeVisible();
+    await expect(page.getByTestId("loadout-slot-addons")).toBeVisible();
+    await expect(page.getByTestId("loadout-slot-offering")).toBeVisible();
+
+    // Regenerating updates the shareable URL to the loadout scheme
+    // (mode=loadout&lp=<comma-separated short loadout-piece IDs>).
+    await page.getByRole("button", { name: "Сгенерировать новый билд" }).click();
+    await expect(page).toHaveURL(/[?&]mode=loadout&(?:.*&)?lp=\d+(%2C\d+)*/);
+  });
+
+  test("killer loadout shows the rolled killer's Power icon instead of an item", async ({
+    page,
+  }) => {
+    await page.goto("/?role=killer&mode=loadout");
+    // Killers don't carry an Item — the Item column is replaced by the
+    // Power the rolled add-ons belong to (see the killer-power-icons.json
+    // dataset built by scripts/scrape-loadout.ts).
+    await expect(page.getByText("Сила", { exact: true })).toBeVisible();
+    await expect(page.getByText("Предмет", { exact: true })).not.toBeVisible();
+  });
+
+  test("turning off a slot rolls an empty HUD placeholder for it", async ({ page }) => {
+    await page.goto("/?role=survivor&mode=loadout");
+    await page.getByRole("button", { name: "Подношение", exact: true }).click();
+
+    // The Offering column heading stays (it's a static label), but its slot
+    // no longer has a clickable piece card inside — toggling it off also
+    // rerolls the other slots (same nonce bump Generate uses), so this
+    // can't assert an exact total piece count, only that this one column
+    // is specifically empty.
+    const offeringSlot = page.getByTestId("loadout-slot-offering");
+    await expect(offeringSlot.getByRole("button", { name: /^Описание: /, exact: false })).toHaveCount(
+      0,
+    );
+  });
+
+  test("loadout pool panel excludes a piece and persists to localStorage", async ({ page }) => {
+    await page.goto("/?role=survivor&mode=loadout");
+    await page.getByRole("button", { name: "Пул", exact: true }).click();
+
+    const panel = page.getByText("Настроить пул экипировки");
+    await expect(panel).toBeVisible();
+
+    const firstPieceButton = page
+      .locator("div.fixed.inset-0")
+      .locator('[role="button"]:has(img)')
+      .first();
+    await firstPieceButton.click();
+
+    const excludedKeys = await page.evaluate(() =>
+      window.localStorage.getItem("dbd-randomizer:excluded-loadout"),
+    );
+    expect(excludedKeys).not.toBeNull();
+    expect(JSON.parse(excludedKeys ?? "[]").length).toBeGreaterThan(0);
+  });
+});
+
 test.describe("theme toggle", () => {
   test("switches theme and persists across interaction", async ({ page }) => {
     await page.goto("/");

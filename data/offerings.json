@@ -1,0 +1,210 @@
+[
+  {
+    "kind": "offering",
+    "role": "both",
+    "category": "Bonus Bloodpoints",
+    "icon": "/loadout/offering/hollow-shell.webp",
+    "slug": "hollow-shell",
+    "name": {
+      "en": "Hollow Shell",
+      "ru": "Hollow Shell"
+    },
+    "description": "Grants +25 % bonus Bloodpoints in all Scoring Categories. The bonus Bloodpoints are applied after exiting the Trial. \"An unidentifiable cocoon which was breached by whatever was inside.\"",
+    "addedAt": "2026-08-16T07:16:30.038Z"
+  },
+  {
+    "kind": "offering",
+    "role": "both",
+    "category": "Bonus Bloodpoints",
+    "icon": "/loadout/offering/sealed-envelope.webp",
+    "slug": "sealed-envelope",
+    "name": {
+      "en": "Sealed Envelope",
+      "ru": "Sealed Envelope"
+    },
+    "description": "Grants +25 % bonus Bloodpoints in all Scoring Categories. The bonus Bloodpoints are applied after exiting the Trial. \"An unaddressed and unopened envelope yellowed by its time.Its message will never be known.\"",
+    "addedAt": "2026-08-16T07:16:30.038Z"
+  },
+  {
+    "kind": "offering",
+    "role": "both",
+    "category": "Bonus Bloodpoints",
+    "icon": "/loadout/offering/survivor-pudding.webp",
+    "slug": "survivor-pudding",
+    "name": {
+      "en": "Survivor Pudding",
+      "ru": "Survivor Pudding"
+    },
+    "description": "Grants +100 % bonus Bloodpoints in all Scoring Categories. The bonus Bloodpoints are applied after exiting the Trial. \"A heavily salted pudding...\"",
+    "addedAt": "2026-08-16T07:16:30.038Z"
+  },
+  {
+    "kind": "offering",
+    "role": "both",
+    "category": "Bonus Bloodpoints",
+    "icon": "/loadout/offering/bloody-party-streamers.webp",
+    "slug": "bloody-party-streamers",
+    "name": {
+      "en": "Bloody Party Streamers",
+      "ru": "Bloody Party Streamers"
+    },
+    "description": "Grants +100 % bonus Bloodpoints in all Scoring Categories to all Players. The bonus Bloodpoints are applied after exiting the Trial. \"A reminder of a bloody good time when people came together, but left screaming.\"",
+    "addedAt": "2026-08-16T07:16:30.038Z"
+  },
+  {
+    "kind": "offering",
+    "role": "both",
+    "category": "Bonus Bloodpoints",
+    "icon": "/loadout/offering/bound-envelope.webp",
+    "slug": "bound-envelope",
+    "name": {
+      "en": "Bound Envelope",
+      "ru": "Bound Envelope"
+    },
+    "description": "Grants +25 % bonus Bloodpoints in all Scoring Categories to all Survivors. The bonus Bloodpoints are applied after exiting the Trial. \"An opened envelope re-sealed and bound with four coloured ribbons.\"",
+    "addedAt": "2026-08-16T07:16:30.038Z"
+  },
+  {
+    "kind": "offering",
+    "role": "survivor",
+    "category": "Luck",
+    "icon": "/loadout/offering/cream-chalk-pouch.webp",
+    "slug": "cream-chalk-pouch",
+    "name": {
+      "en": "Cream Chalk Pouch",
+      "ru": "Cream Chalk Pouch"
+    },
+    "description": "Increases your personal chance of succeeding a Self-Unhook by +2 %. \"A small cotton pouch half-filled with a cream coloured chalky powder of unknown origin.Releases a faint herbal aroma. Some believe it brings good fortune.\"",
+    "addedAt": "2026-08-16T07:16:30.038Z"
+  },
+  {
+    "kind": "offering",
+    "role": "survivor",
+    "category": "Luck",
+    "icon": "/loadout/offering/ivory-chalk-pouch.webp",
+    "slug": "ivory-chalk-pouch",
+    "name": {
+      "en": "Ivory Chalk Pouch",
+      "ru": "Ivory Chalk Pouch"
+    },
+    "description": "Increases your personal chance of succeeding a Self-Unhook by +3 %. \"A small leather pouch displaying a straight white line hand-sewn on one of its sides.The bag is filled with an ivory chalky powder that shines under the moonlight.Some believe it brings good fortune.\"",
+    "addedAt": "2026-08-16T07:16:30.038Z"
+  },
+  {
+    "kind": "offering",
+    "role": "both",
+    "category": "Map Modifications",
+    "icon": "/loadout/offering/torn-blueprint.webp",
+    "slug": "torn-blueprint",
+    "name": {
+      "en": "Torn Blueprint",
+      "ru": "Torn Blueprint"
+    },
+    "description": "Grants the following effects at the start of the Trial: Increases the likelihood of the Basement spawning in the Landmark Building by +100 %, if it is available. The Auras of the Basement Hooks are revealed to you for 20 seconds. \"Though brittle and torn, the design is mostly legible.\"",
+    "addedAt": "2026-08-16T07:16:30.038Z"
+  },
+  {
+    "kind": "offering",
+    "role": "killer",
+    "category": "Memento Mori",
+    "icon": "/loadout/offering/ivory-memento-mori.webp",
+    "slug": "ivory-memento-mori",
+    "name": {
+      "en": "Ivory Memento Mori",
+      "ru": "Ivory Memento Mori"
+    },
+    "description": "This description is based on the changes announced for or featured in the upcoming Patch 4.4.1THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Grants the ability to kill one Survivor with 2 Hook Stages once they are in the Dying State. \"Grant me the favour of killing one.\"",
+    "addedAt": "2026-08-16T07:16:30.038Z"
+  },
+  {
+    "kind": "offering",
+    "role": "killer",
+    "category": "Memento Mori",
+    "icon": "/loadout/offering/ebony-memento-mori.webp",
+    "slug": "ebony-memento-mori",
+    "name": {
+      "en": "Ebony Memento Mori",
+      "ru": "Ebony Memento Mori"
+    },
+    "description": "This description is based on the changes announced for or featured in the upcoming Patch 4.4.1THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Grants the ability to kill all Survivors with 2 Hook Stages once they are in the Dying State. \"I could swear It spoke to the beast.It came to a halt, as if calmly listening to the leaves rustling, and then... grinned.\"",
+    "addedAt": "2026-08-16T07:16:30.038Z"
+  },
+  {
+    "kind": "offering",
+    "role": "both",
+    "category": "Realm Selection",
+    "icon": "/loadout/offering/azarov-s-key.webp",
+    "slug": "azarov-s-key",
+    "name": {
+      "en": "Azarov's Key",
+      "ru": "Azarov's Key"
+    },
+    "description": "Increases the likelihood of being sent to a Map in the Autohaven Wreckers Realm. Modifies the Realm Selector Logic by a value of 9999. \"A broken key pertaining to a vehicle of unknown brand.A key-chain attached to it identifies the owner as a certain 'A. Azarov'\"",
+    "addedAt": "2026-08-16T07:16:30.038Z"
+  },
+  {
+    "kind": "offering",
+    "role": "survivor",
+    "category": "Shrouds",
+    "icon": "/loadout/offering/shroud-of-union.webp",
+    "slug": "shroud-of-union",
+    "name": {
+      "en": "Shroud of Union",
+      "ru": "Shroud of Union"
+    },
+    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Causes all Survivors to spawn together in pairs in two different locations. \"A knotted piece of fabric.\"",
+    "addedAt": "2026-08-16T07:16:30.038Z"
+  },
+  {
+    "kind": "offering",
+    "role": "survivor",
+    "category": "Shrouds",
+    "icon": "/loadout/offering/vigo-s-shroud.webp",
+    "slug": "vigo-s-shroud",
+    "name": {
+      "en": "Vigo's Shroud",
+      "ru": "Vigo's Shroud"
+    },
+    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Causes you to spawn as far away from the Killer as possible. \"I found marvels through the years in The Fog, but only now do I understand how to bend The Fog's irrefragable rules.\" — Vigo's Journal",
+    "addedAt": "2026-08-16T07:16:30.038Z"
+  },
+  {
+    "kind": "offering",
+    "role": "survivor",
+    "category": "Shrouds",
+    "icon": "/loadout/offering/shroud-of-binding.webp",
+    "slug": "shroud-of-binding",
+    "name": {
+      "en": "Shroud of Binding",
+      "ru": "Shroud of Binding"
+    },
+    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Causes all Survivors to spawn together in the same location. \"A square and washed out piece of fabric with small knots on each end.\"",
+    "addedAt": "2026-08-16T07:16:30.038Z"
+  },
+  {
+    "kind": "offering",
+    "role": "both",
+    "category": "Wards",
+    "icon": "/loadout/offering/black-ward.webp",
+    "slug": "black-ward",
+    "name": {
+      "en": "Black Ward",
+      "ru": "Black Ward"
+    },
+    "description": "Calls upon The Entity for the following effect: Causes your Add-ons to not be consumed after ending the Trial. \"Hear my voice, spare my ways, protect me from the void.\"",
+    "addedAt": "2026-08-16T07:16:30.038Z"
+  },
+  {
+    "kind": "offering",
+    "role": "both",
+    "category": "Wards",
+    "icon": "/loadout/offering/white-ward.webp",
+    "slug": "white-ward",
+    "name": {
+      "en": "White Ward",
+      "ru": "White Ward"
+    },
+    "description": "Calls upon The Entity for the following effect: Causes your held Item to be protected from loss upon death. Causes any attached Add-ons to not be consumed upon death or escaping the Trial. \"Keep me from evil, defend me, and pass away.\"",
+    "addedAt": "2026-08-16T07:16:30.038Z"
+  }
+]
