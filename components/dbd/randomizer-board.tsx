@@ -1455,6 +1455,14 @@ export function RandomizerBoard() {
         {t({ ru: "Сгенерировать новый билд", en: "Generate a new build" })}
       </button>
 
+      <p className="-mt-1 text-[11px] text-muted/70">
+        {t({ ru: "Подсказка: ", en: "Tip: " })}
+        <kbd className="rounded border border-border bg-surface px-1 py-0.5 font-sans">Space</kbd>
+        {" / "}
+        <kbd className="rounded border border-border bg-surface px-1 py-0.5 font-sans">Enter</kbd>{" "}
+        {t({ ru: "тоже рандомизирует", en: "also rolls a new one" })}
+      </p>
+
       <ToggleSwitch
         checked={battleRoyale}
         onChange={toggleBattleRoyale}
