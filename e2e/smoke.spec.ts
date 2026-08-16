@@ -140,17 +140,33 @@ test.describe("Full Loadout", () => {
   });
 });
 
-test.describe("Random Character", () => {
-  test("rolling a character shows a portrait chip that can be cleared", async ({ page }) => {
+test.describe("Character picker", () => {
+  test("choosing a character shows a portrait chip that can be cleared", async ({ page }) => {
     await page.goto("/?role=survivor");
     const chip = page.getByRole("button", { name: "Убрать персонажа" }).locator("xpath=..");
     await expect(chip).not.toBeVisible();
 
-    await page.getByRole("button", { name: "Случайный персонаж" }).click();
+    await page.getByRole("button", { name: "Выбрать персонажа" }).click();
+    // "Random" inside the modal picks and closes in one step, same as
+    // clicking any specific portrait would.
+    await page.getByRole("button", { name: "Случайный", exact: true }).click();
     await expect(chip).toBeVisible();
 
     await page.getByRole("button", { name: "Убрать персонажа" }).click();
     await expect(chip).not.toBeVisible();
+  });
+
+  test("search filters the grid down to a single portrait to pick", async ({ page }) => {
+    await page.goto("/?role=survivor");
+    await page.getByRole("button", { name: "Выбрать персонажа" }).click();
+
+    await page.getByPlaceholder("Поиск персонажа…").fill("Дуайт");
+    // Not exact: the button's accessible name combines the portrait's alt
+    // text with the visible caption span, both "Дуайт".
+    await page.getByRole("button", { name: "Дуайт" }).click();
+
+    const chip = page.getByRole("button", { name: "Убрать персонажа" }).locator("xpath=..");
+    await expect(chip).toContainText("Дуайт");
   });
 
   test("guarantee-teachables toggle only shows in Perks mode with a character selected", async ({
@@ -160,19 +176,21 @@ test.describe("Random Character", () => {
     const toggle = page.getByRole("switch", { name: "Гарантировать тичеблы" });
     await expect(toggle).not.toBeVisible();
 
-    await page.getByRole("button", { name: "Случайный персонаж" }).click();
+    await page.getByRole("button", { name: "Выбрать персонажа" }).click();
+    await page.getByRole("button", { name: "Случайный", exact: true }).click();
     await expect(toggle).toBeVisible();
 
     // Loadout mode has no "teachable perks" concept — forcing the killer
-    // character (see the next test) is what "Random Character" does there
-    // instead, so the toggle should disappear rather than sit around inert.
+    // character (see the next test) is what the picker does there instead,
+    // so the toggle should disappear rather than sit around inert.
     await page.getByRole("button", { name: "Экипировка" }).click();
     await expect(toggle).not.toBeVisible();
   });
 
-  test("random character in killer loadout mode decides the rolled Power", async ({ page }) => {
+  test("picking a character in killer loadout mode decides the rolled Power", async ({ page }) => {
     await page.goto("/?role=killer&mode=loadout");
-    await page.getByRole("button", { name: "Случайный персонаж" }).click();
+    await page.getByRole("button", { name: "Выбрать персонажа" }).click();
+    await page.getByRole("button", { name: "Случайный", exact: true }).click();
 
     // The chip is [portrait span, name span, clear button] — the name is
     // always the last <span> regardless of whether the portrait rendered

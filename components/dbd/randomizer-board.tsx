@@ -5,12 +5,12 @@ import {
   Link2,
   ListFilter,
   Dices,
-  Shuffle,
   Skull,
   BarChart3,
   CalendarClock,
   Copy,
   MonitorPlay,
+  Users,
   X,
 } from "lucide-react";
 import {
@@ -60,6 +60,7 @@ import { ToggleSwitch } from "./toggle-switch";
 import { ShareCard, type ShareCardLayout } from "./share-card";
 import { DownloadImageButton } from "./download-image-button";
 import { ObsOverlayModal } from "./obs-overlay-modal";
+import { CharacterPickerModal } from "./character-picker-modal";
 
 const MAX_PERK_COUNT = 4;
 const DEFAULT_PERK_COUNT = 4;
@@ -278,6 +279,7 @@ export function RandomizerBoard() {
   // toggles — it only has an effect once a character is actually selected.
   const [selectedCharacter, setSelectedCharacter] = useState<string | null>(null);
   const [guaranteeTeachables, setGuaranteeTeachables] = useState(false);
+  const [characterPickerOpen, setCharacterPickerOpen] = useState(false);
   const [showStats, setShowStats] = useState(false);
   const [statsModalOpen, setStatsModalOpen] = useState(false);
   const [obsModalOpen, setObsModalOpen] = useState(false);
@@ -679,24 +681,13 @@ export function RandomizerBoard() {
     setThemeTag(null); // survivor/killer tags don't overlap — stale otherwise
   }
 
-  function rollRandomCharacter() {
-    // Loadout mode for killer needs a character with rolled add-ons to
-    // actually mean something (see getRandomLoadout's forcedCharacter) —
-    // a small handful of killers have perks scraped but no add-ons yet
-    // (very new releases), so picking from that narrower list keeps the
-    // portrait and the roll from disagreeing with each other.
-    const pool =
-      mode === "loadout" && role === "killer" ? getKillerCharacters() : getCharactersForRole(role);
-    if (pool.length === 0) return;
-    const next = pool[Math.floor(Math.random() * pool.length)];
-    setSelectedCharacter(next);
+  // Single entry point for both picking a specific character (the picker
+  // modal's grid) and clearing the selection ("Убрать выбор" / clicking the
+  // chip's ×) — both need the exact same side effects, so there's one
+  // function instead of two that could drift out of sync.
+  function selectCharacter(character: string | null) {
+    setSelectedCharacter(character);
     setSharedBuild(null);
-    setSharedLoadoutPieces(null);
-    setNonce((n) => n + 1);
-  }
-
-  function clearSelectedCharacter() {
-    setSelectedCharacter(null);
     setSharedLoadoutPieces(null);
     setNonce((n) => n + 1);
   }
@@ -1017,6 +1008,16 @@ export function RandomizerBoard() {
   }
 
   const roleColor = ROLE_COLOR[role];
+  // Loadout mode for killer needs a character with rolled add-ons to
+  // actually mean something (see getRandomLoadout's forcedCharacter) — a
+  // small handful of killers have perks scraped but no add-ons yet (very
+  // new releases), so the picker only offers that narrower list there,
+  // keeping the portrait and the roll from disagreeing with each other.
+  const characterChoices = mounted
+    ? mode === "loadout" && role === "killer"
+      ? getKillerCharacters()
+      : getCharactersForRole(role)
+    : [];
   const totalInRole = mounted ? getAvailablePool(role).length : 0;
   // battleRoyaleUsed accumulates eliminated slugs across BOTH roles (nothing
   // resets it on a role switch — see selectRole), so it must be filtered to
@@ -1156,52 +1157,62 @@ export function RandomizerBoard() {
         )}
       </div>
 
-      {/* Random Character (Feature #2) — flavor-picks a character for the
+      {/* Character picker (Feature #2) — picks a specific character for the
           portrait chip below and, in Perks mode with the toggle on,
           guarantees their own teachable perks in the roll; in Loadout mode
           for killer, it's what actually decides whose Power/add-ons get
-          rolled (see getRandomLoadout's forcedCharacter). */}
+          rolled (see getRandomLoadout's forcedCharacter). A modal with a
+          search + portrait grid, not a single "reroll" button — Space/
+          Generate already rerolls the build at random, so this is
+          specifically for choosing *which* character, with random still
+          available as one option inside rather than the only one. */}
       <div className="flex flex-wrap items-center justify-center gap-2">
-        <button
-          type="button"
-          onClick={rollRandomCharacter}
-          className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
-        >
-          <Shuffle className="size-3.5" />
-          {t({ ru: "Случайный персонаж", en: "Random Character" })}
-        </button>
-
-        {selectedCharacter && (
+        {selectedCharacter ? (
           <div className="flex items-center gap-2 rounded-full border border-border bg-surface/60 py-1 pr-1 pl-1.5">
-            <span
-              className={cn(
-                "relative flex size-7 shrink-0 items-center justify-center overflow-hidden rounded-full ring-1 ring-offset-1 ring-offset-surface",
-                roleColor.ring,
-              )}
-            >
-              {getCharacterPortrait(selectedCharacter) ? (
-                // eslint-disable-next-line @next/next/no-img-element -- next/image ignores basePath for unoptimized runtime src, see lib/asset-path.ts
-                <img
-                  src={withBasePath(getCharacterPortrait(selectedCharacter) as string)}
-                  alt={getCharacterName(selectedCharacter, language)}
-                  className="size-7 object-cover"
-                />
-              ) : (
-                <span className="text-[10px] text-muted">?</span>
-              )}
-            </span>
-            <span className="text-xs font-medium text-foreground">
-              {getCharacterName(selectedCharacter, language)}
-            </span>
             <button
               type="button"
-              onClick={clearSelectedCharacter}
+              onClick={() => setCharacterPickerOpen(true)}
+              className="flex items-center gap-2 rounded-full"
+            >
+              <span
+                className={cn(
+                  "relative flex size-7 shrink-0 items-center justify-center overflow-hidden rounded-full ring-1 ring-offset-1 ring-offset-surface",
+                  roleColor.ring,
+                )}
+              >
+                {getCharacterPortrait(selectedCharacter) ? (
+                  // eslint-disable-next-line @next/next/no-img-element -- next/image ignores basePath for unoptimized runtime src, see lib/asset-path.ts
+                  <img
+                    src={withBasePath(getCharacterPortrait(selectedCharacter) as string)}
+                    alt={getCharacterName(selectedCharacter, language)}
+                    className="size-7 object-cover"
+                  />
+                ) : (
+                  <span className="text-[10px] text-muted">?</span>
+                )}
+              </span>
+              <span className="text-xs font-medium text-foreground">
+                {getCharacterName(selectedCharacter, language)}
+              </span>
+            </button>
+            <button
+              type="button"
+              onClick={() => selectCharacter(null)}
               aria-label={t({ ru: "Убрать персонажа", en: "Clear character" })}
               className="flex size-5 items-center justify-center rounded-full text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
             >
               <X className="size-3" />
             </button>
           </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setCharacterPickerOpen(true)}
+            className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+          >
+            <Users className="size-3.5" />
+            {t({ ru: "Выбрать персонажа", en: "Choose Character" })}
+          </button>
         )}
 
         {mode === "perks" && selectedCharacter && (
@@ -1565,6 +1576,17 @@ export function RandomizerBoard() {
         onTwitchPasteToggle={toggleTwitchPaste}
         onTwitchPasteCommandChange={updateTwitchPasteCommand}
         onTwitchPastePermissionChange={updateTwitchPastePermission}
+      />
+
+      <CharacterPickerModal
+        key={mode === "loadout" && role === "killer" ? "killer-loadout" : role}
+        open={characterPickerOpen}
+        role={role}
+        language={language}
+        characters={characterChoices}
+        selected={selectedCharacter}
+        onSelect={selectCharacter}
+        onClose={() => setCharacterPickerOpen(false)}
       />
 
       <CopyToast message={toast} />
