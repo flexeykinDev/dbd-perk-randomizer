@@ -1447,7 +1447,7 @@ export function RandomizerBoard() {
   return (
     <div className="flex flex-col items-center gap-3">
       <title>{pageTitle}</title>
-      <div className="flex flex-wrap items-center justify-center gap-4">
+      <div className="flex flex-wrap items-center justify-center gap-3">
         <div className="flex flex-wrap items-center justify-center gap-2">
           {(Object.keys(ROLE_LABEL) as PerkRole[]).map((r) => {
             const c = ROLE_COLOR[r];
@@ -1490,9 +1490,15 @@ export function RandomizerBoard() {
             </button>
           ))}
         </div>
+      </div>
 
+      {/* Contextual filters — kept in a bordered, divided panel (rather than
+          loose in the row above) so they read as one "roll settings" group
+          distinct from the role/mode identity controls, and stay legible
+          even on wide viewports where flex-wrap never breaks the row. */}
+      <div className="flex flex-wrap items-center justify-center divide-x divide-border rounded-2xl border border-border bg-surface/40">
         {mode !== "loadout" && (
-          <div className="flex items-center gap-2 text-sm">
+          <div className="flex items-center gap-2 px-4 py-2 text-sm">
             <span className="text-muted">
               {t({ ru: "Перков:", en: "Perks:" })}
             </span>
@@ -1517,7 +1523,7 @@ export function RandomizerBoard() {
         )}
 
         {mode !== "loadout" && mounted && getTagsForRole(role).length > 0 && (
-          <div className="flex items-center gap-2 text-sm">
+          <div className="flex items-center gap-2 px-4 py-2 text-sm">
             <span className="text-muted">
               {t({ ru: "Тема:", en: "Theme:" })}
             </span>
@@ -1537,7 +1543,7 @@ export function RandomizerBoard() {
         )}
 
         {mode !== "perks" && (
-          <div className="flex items-center gap-2 text-sm">
+          <div className="flex items-center gap-2 px-4 py-2 text-sm">
             <span className="text-muted">
               {t({ ru: "Слоты:", en: "Slots:" })}
             </span>
