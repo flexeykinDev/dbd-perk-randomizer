@@ -108,7 +108,15 @@ export function publishObsState(
   const db = getObsDatabase();
   if (!db) return;
   const roomRef = ref(db, `obs-rooms/${room}`);
-  set(roomRef, full).catch(() => {
+  // Firebase's set() rejects a value tree containing a literal `undefined`
+  // *synchronously* — it throws before ever returning the promise the
+  // .catch() below attaches to, so an optional field like `character`
+  // left as `undefined` (rather than omitted) crashed this as an uncaught
+  // exception on every publish with no character, not a caught rejection.
+  // JSON round-tripping drops `undefined`-valued keys the same way
+  // JSON.stringify always has, which is exactly what Firebase needs here.
+  const firebaseSafe = JSON.parse(JSON.stringify(full)) as ObsSyncPayload;
+  set(roomRef, firebaseSafe).catch(() => {
     // Best-effort — same-profile sync above already covers the case where
     // this tab and the overlay share a browser, so a Firebase hiccup
     // (offline, blocked, rules misconfigured) just means the OBS overlay

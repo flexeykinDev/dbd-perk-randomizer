@@ -15,10 +15,11 @@ import {
 } from "lucide-react";
 import { useId, useMemo, useRef, useState } from "react";
 import { withBasePath } from "@/lib/asset-path";
+import { getCharacterName } from "@/lib/character-name";
 import { cn } from "@/lib/cn";
 import { useT, type Lang } from "@/lib/i18n";
 import { getIdForSlug } from "@/lib/perk-ids";
-import { getPerksByRole } from "@/lib/perks";
+import { getCharacterPortrait, getPerksByRole } from "@/lib/perks";
 import type {
   TwitchConnectionState,
   TwitchPermission,
@@ -27,8 +28,10 @@ import type { LoadoutPiece, Perk, PerkRole } from "@/lib/types";
 import { ToggleSwitch } from "./toggle-switch";
 import {
   DEFAULT_OBS_OPTIONS,
+  MAX_CHARACTER_SCALE,
   MAX_OBS_NAME_SCALE,
   MAX_OBS_SCALE,
+  MIN_CHARACTER_SCALE,
   MIN_OBS_NAME_SCALE,
   MIN_OBS_SCALE,
   obsOverlayUrl,
@@ -88,6 +91,18 @@ const MIN_CANVAS_WIDTH = 320;
 const MAX_CANVAS_WIDTH = 1920;
 const MIN_CANVAS_HEIGHT = 120;
 const MAX_CANVAS_HEIGHT = 800;
+
+/** Which loadout piece kinds (plus perks) are shown in the OBS overlay and
+ *  in Download Image — see the `pieceVisibility` prop doc above for why
+ *  this is separate from the Слоты toggles that decide what gets rolled.
+ *  Owned by randomizer-board.tsx; declared here since this modal is the
+ *  only place that renders the toggle UI for it. */
+export interface PieceVisibility {
+  perks: boolean;
+  item: boolean;
+  addon: boolean;
+  offering: boolean;
+}
 
 type StyleId = "compact" | "standard" | "roomy" | "custom";
 
@@ -159,6 +174,13 @@ const PREVIEW_BASE_NAME_MAX_WIDTH_PX = 56;
 // aspect-ratio still wins whenever it would make the box *taller* than
 // this — this only kicks in as a minimum, not a fixed height.
 const PREVIEW_MIN_HEIGHT_PX = 260;
+const PREVIEW_BASE_CHARACTER_PX = 28;
+// Bottom-left, inset from the edge — mirrors obs-overlay.tsx's own
+// pre-drag fallback (a fixed `bottom-4 left-4` corner) in the same 0-100
+// percentage space the rest of the preview positions use, so an
+// untouched character badge starts in roughly the same spot the real
+// overlay would put it before ever being dragged.
+const DEFAULT_CHARACTER_POSITION: ObsIconPosition = { x: 8, y: 90 };
 
 function PermissionSelect({
   value,
@@ -191,6 +213,9 @@ export function ObsOverlayModal({
   loadoutPieces,
   language,
   role,
+  character,
+  pieceVisibility,
+  onPieceVisibilityChange,
   twitchChannel,
   twitchEnabled,
   twitchState,
@@ -220,6 +245,19 @@ export function ObsOverlayModal({
   loadoutPieces: LoadoutPiece[];
   language: Lang;
   role: PerkRole;
+  /** The build's character, if one is known — see randomizer-board.tsx's
+   *  `shareCharacter`. Drives the draggable/scroll-resizable portrait
+   *  badge in the preview below and in the real overlay. */
+  character?: string | null;
+  /** Which piece kinds to actually show in the overlay and in Download
+   *  Image — independent of `loadoutSlots` (which controls what gets
+   *  *rolled* in the first place). Owned by randomizer-board.tsx, not
+   *  local state here, since it also filters ShareCard's export. */
+  pieceVisibility: PieceVisibility;
+  onPieceVisibilityChange: (
+    kind: keyof PieceVisibility,
+    value: boolean,
+  ) => void;
   twitchChannel: string;
   twitchEnabled: boolean;
   twitchState: TwitchConnectionState;
@@ -270,17 +308,29 @@ export function ObsOverlayModal({
   // null = no custom layout yet, overlay falls back to its default centered
   // row. Set the first time the user drags any icon in the preview below.
   const [positions, setPositions] = useState<ObsIconPosition[] | null>(null);
-  // Splits the modal into two tabs instead of one long scroll — the Twitch
-  // chat section (channel connect, commands, the perk-picker constructor)
-  // used to always render inline below the overlay/appearance controls even
-  // for someone who only wants an OBS link, which is most of what made this
-  // modal feel overwhelming (user feedback: "too much content ... too catchy
-  // for the eye"). Twitch integration is opt-in and comparatively rare, so
-  // it only costs a tab click instead of a page's worth of scroll.
-  const [panelTab, setPanelTab] = useState<"overlay" | "twitch">("overlay");
+  // Same "no override yet" convention as `positions`, but for the
+  // character badge — it isn't one of the numbered perk/loadout slots
+  // (see obs-overlay.tsx's CharacterBadge), so it needs its own position
+  // and its own independent size (set by scrolling over it, not the
+  // shared "Card size" slider).
+  const [characterPosition, setCharacterPosition] =
+    useState<ObsIconPosition | null>(null);
+  const [characterScale, setCharacterScale] = useState(
+    DEFAULT_OBS_OPTIONS.characterScale,
+  );
+  // Splits the modal into tabs instead of one long scroll — the Twitch
+  // chat section (channel connect, commands) and the perk-build
+  // constructor used to both render inline (the constructor nested three
+  // levels deep inside Twitch → Advanced → "paste enabled"), which is most
+  // of what made this modal feel overwhelming (user feedback: "too much
+  // content", and separately, the constructor being "very deep hidden").
+  // Each is opt-in/occasional, so a tab click replaces either a page of
+  // scroll or a multi-step reveal.
+  const [panelTab, setPanelTab] = useState<
+    "overlay" | "twitch" | "constructor"
+  >("overlay");
   const [obsSetupOpen, setObsSetupOpen] = useState(false);
   const [twitchAdvancedOpen, setTwitchAdvancedOpen] = useState(false);
-  const [constructorOpen, setConstructorOpen] = useState(false);
   const [constructorRole, setConstructorRole] = useState<PerkRole>(role);
   const [constructorSearch, setConstructorSearch] = useState("");
   const [constructorSelected, setConstructorSelected] = useState<Perk[]>([]);
@@ -301,6 +351,8 @@ export function ObsOverlayModal({
         showCharacter,
         background: darkBg ? "dark" : "transparent",
         positions: positions ?? undefined,
+        characterPosition: characterPosition ?? undefined,
+        characterScale,
       })
     : "";
 
@@ -390,22 +442,43 @@ export function ObsOverlayModal({
       .catch(() => {});
   }
 
-  function handleDrag(index: number, clientX: number, clientY: number) {
+  // Shared by every draggable element in the preview (perk/loadout slots
+  // and the character badge) — converts a pointer position into the same
+  // 0-100 percentage coordinate space the overlay itself uses for
+  // `positions`/`characterPosition`.
+  function clientToPercent(clientX: number, clientY: number): ObsIconPosition {
     const rect = previewRef.current?.getBoundingClientRect();
-    if (!rect) return;
-    const x = Math.min(
-      100,
-      Math.max(0, ((clientX - rect.left) / rect.width) * 100),
-    );
-    const y = Math.min(
-      100,
-      Math.max(0, ((clientY - rect.top) / rect.height) * 100),
-    );
+    if (!rect) return { x: 50, y: 50 };
+    return {
+      x: Math.min(100, Math.max(0, ((clientX - rect.left) / rect.width) * 100)),
+      y: Math.min(100, Math.max(0, ((clientY - rect.top) / rect.height) * 100)),
+    };
+  }
+
+  function handleDrag(index: number, clientX: number, clientY: number) {
+    const pos = clientToPercent(clientX, clientY);
     setPositions((prev) => {
       const base = prev ? [...prev] : [...DEFAULT_SLOT_POSITIONS];
-      base[index] = { x, y };
+      base[index] = pos;
       return base;
     });
+  }
+
+  function handleCharacterDrag(clientX: number, clientY: number) {
+    setCharacterPosition(clientToPercent(clientX, clientY));
+  }
+
+  // Scroll-to-resize instead of a slider — the character badge is a single
+  // element with its own free-floating position, so adjusting it in place
+  // (hover + wheel) reads more directly than hunting for a separate
+  // control elsewhere in the modal for just this one piece.
+  function handleCharacterWheel(deltaY: number) {
+    setCharacterScale((prev) =>
+      Math.min(
+        MAX_CHARACTER_SCALE,
+        Math.max(MIN_CHARACTER_SCALE, Math.round(prev - deltaY / 4)),
+      ),
+    );
   }
 
   // The overlay itself renders whatever publishObsState() last sent it,
@@ -430,6 +503,12 @@ export function ObsOverlayModal({
   const previewSlotCount =
     previewPieces.length > 0 ? Math.min(previewPieces.length, 8) : 4;
   const previewIconPx = Math.round(PREVIEW_BASE_ICON_PX * (scale / 100));
+  const characterPortrait = character
+    ? getCharacterPortrait(character)
+    : undefined;
+  const previewCharacterPx = Math.round(
+    PREVIEW_BASE_CHARACTER_PX * (characterScale / 100),
+  );
 
   function updateCanvasWidth(width: number) {
     if (!Number.isFinite(width)) return;
@@ -530,7 +609,7 @@ export function ObsOverlayModal({
               className="mt-4 flex items-center gap-1 rounded-full border border-border bg-background/60 p-1 text-sm"
               role="tablist"
             >
-              {(["overlay", "twitch"] as const).map((tab) => (
+              {(["overlay", "twitch", "constructor"] as const).map((tab) => (
                 <button
                   key={tab}
                   type="button"
@@ -546,7 +625,9 @@ export function ObsOverlayModal({
                 >
                   {tab === "overlay"
                     ? t({ ru: "Оверлей", en: "Overlay" })
-                    : t({ ru: "Twitch чат", en: "Twitch chat" })}
+                    : tab === "twitch"
+                      ? t({ ru: "Twitch чат", en: "Twitch chat" })
+                      : t({ ru: "Конструктор", en: "Constructor" })}
                 </button>
               ))}
             </div>
@@ -610,7 +691,11 @@ export function ObsOverlayModal({
                         puts "Reset" right where the icons it affects are. */}
                     <button
                       type="button"
-                      onClick={() => setPositions(null)}
+                      onClick={() => {
+                        setPositions(null);
+                        setCharacterPosition(null);
+                        setCharacterScale(DEFAULT_OBS_OPTIONS.characterScale);
+                      }}
                       className="absolute top-2 right-2 z-20 flex items-center gap-1 rounded-full border border-white/15 bg-black/60 px-2.5 py-1 text-[11px] font-medium text-white/80 backdrop-blur-sm transition-colors hover:bg-black/80 hover:text-white focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:outline-none"
                     >
                       <RotateCcw className="size-3" />
@@ -682,11 +767,62 @@ export function ObsOverlayModal({
                         </div>
                       );
                     })}
+                    {character && characterPortrait && (
+                      <div
+                        onPointerDown={(e) =>
+                          e.currentTarget.setPointerCapture(e.pointerId)
+                        }
+                        onPointerMove={(e) => {
+                          if (e.buttons !== 1) return;
+                          handleCharacterDrag(e.clientX, e.clientY);
+                        }}
+                        // Hovering to scroll needs a live preventDefault on the
+                        // wheel event itself — React's onWheel is passive by
+                        // default, which can't stop the page behind the modal
+                        // from also scrolling while resizing this badge.
+                        onWheel={(e) => {
+                          e.preventDefault();
+                          handleCharacterWheel(e.deltaY);
+                        }}
+                        title={t({
+                          ru: "Перетащи, чтобы переместить; крути колесо мыши, чтобы изменить размер",
+                          en: "Drag to move; scroll to resize",
+                        })}
+                        className="absolute flex -translate-x-1/2 -translate-y-1/2 cursor-grab flex-col items-center gap-1 active:cursor-grabbing"
+                        style={{
+                          left: `${(characterPosition ?? DEFAULT_CHARACTER_POSITION).x}%`,
+                          top: `${(characterPosition ?? DEFAULT_CHARACTER_POSITION).y}%`,
+                        }}
+                      >
+                        <span
+                          className="flex items-center justify-center overflow-hidden rounded-full border-2 border-white/25 bg-black/70 shadow-lg"
+                          style={{
+                            width: previewCharacterPx + 4,
+                            height: previewCharacterPx + 4,
+                          }}
+                        >
+                          {/* eslint-disable-next-line @next/next/no-img-element -- tiny drag-preview thumbnail, next/image is overkill here */}
+                          <img
+                            src={withBasePath(characterPortrait)}
+                            alt={getCharacterName(character, language)}
+                            width={previewCharacterPx}
+                            height={previewCharacterPx}
+                            style={{
+                              width: previewCharacterPx,
+                              height: previewCharacterPx,
+                              objectFit: "cover",
+                            }}
+                            className="pointer-events-none select-none"
+                            draggable={false}
+                          />
+                        </span>
+                      </div>
+                    )}
                   </div>
                   <p className="mt-1.5 text-[11px] text-muted/70">
                     {t({
-                      ru: "Позиции сохраняются в самой ссылке — «Сбросить» вернёт стандартный ряд по центру.",
-                      en: "Positions are saved right in the link — “Reset” restores the default centered row.",
+                      ru: "Позиции сохраняются в самой ссылке — «Сбросить» вернёт стандартный ряд по центру. Портрет персонажа: перетащи, чтобы переместить, крути колесо мыши над ним, чтобы изменить размер.",
+                      en: "Positions are saved right in the link — “Reset” restores the default centered row. Character portrait: drag to move it, scroll over it to resize.",
                     })}
                   </p>
                 </div>
@@ -882,6 +1018,73 @@ export function ObsOverlayModal({
                         en: "Only shows up when the build has a known character — picked manually, or figured out from a killer's rolled add-ons.",
                       })}
                     />
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-xs font-medium text-muted">
+                      {t({ ru: "Показывать:", en: "Show:" })}
+                    </span>
+                    <div
+                      className="flex flex-wrap gap-1.5"
+                      role="group"
+                      aria-label={t({
+                        ru: "Какие элементы билда показывать в оверлее и на скачанной картинке",
+                        en: "Which build pieces to show in the overlay and in the downloaded image",
+                      })}
+                    >
+                      {(
+                        [
+                          [
+                            "perks",
+                            { ru: "Перки", en: "Perks" },
+                            mode !== "loadout",
+                          ],
+                          [
+                            "item",
+                            { ru: "Предмет", en: "Item" },
+                            mode !== "perks",
+                          ],
+                          [
+                            "addon",
+                            { ru: "Аддоны", en: "Add-ons" },
+                            mode !== "perks",
+                          ],
+                          [
+                            "offering",
+                            { ru: "Подношение", en: "Offering" },
+                            mode !== "perks",
+                          ],
+                        ] as const
+                      )
+                        .filter(([, , relevant]) => relevant)
+                        .map(([kind, label]) => (
+                          <button
+                            key={kind}
+                            type="button"
+                            aria-pressed={pieceVisibility[kind]}
+                            onClick={() =>
+                              onPieceVisibilityChange(
+                                kind,
+                                !pieceVisibility[kind],
+                              )
+                            }
+                            className={cn(
+                              "rounded-full border px-2.5 py-1 text-[11px] font-medium transition-colors",
+                              pieceVisibility[kind]
+                                ? "border-accent/50 bg-accent/15 text-accent"
+                                : "border-border text-muted/50 hover:bg-surface-hover hover:text-foreground",
+                            )}
+                          >
+                            {t(label)}
+                          </button>
+                        ))}
+                    </div>
+                    <p className="text-[11px] text-muted/70">
+                      {t({
+                        ru: "Не влияет на то, что реально выпадает — только на то, что видно в оверлее и на картинке.",
+                        en: "Doesn't change what actually gets rolled — only what's visible in the overlay and the downloaded image.",
+                      })}
+                    </p>
                   </div>
                 </div>
 
@@ -1135,184 +1338,17 @@ export function ObsOverlayModal({
                             </div>
                           )}
 
-                          <div className="pl-5">
-                            <button
-                              type="button"
-                              onClick={() => setConstructorOpen((v) => !v)}
-                              className="flex items-center gap-1.5 text-[11px] font-medium text-accent transition-colors hover:text-accent/80"
-                            >
-                              <Wrench className="size-3" />
-                              {t({
-                                ru: "Собрать билд вручную",
-                                en: "Build one from scratch",
-                              })}
-                              <ChevronDown
-                                className={cn(
-                                  "size-3 transition-transform",
-                                  constructorOpen && "rotate-180",
-                                )}
-                              />
-                            </button>
-
-                            {constructorOpen && (
-                              <div className="mt-2 flex flex-col gap-2 rounded-lg border border-border bg-background/60 p-2.5">
-                                <div className="flex items-center gap-1.5">
-                                  {(["survivor", "killer"] as const).map(
-                                    (option) => (
-                                      <button
-                                        key={option}
-                                        type="button"
-                                        onClick={() =>
-                                          setConstructorRoleAndClear(option)
-                                        }
-                                        className={cn(
-                                          "rounded-full border px-2.5 py-1 text-[11px] font-medium transition-colors",
-                                          constructorRole === option
-                                            ? "border-accent/50 bg-accent/15 text-accent"
-                                            : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
-                                        )}
-                                      >
-                                        {option === "survivor"
-                                          ? t({
-                                              ru: "Выживший",
-                                              en: "Survivor",
-                                            })
-                                          : t({ ru: "Убийца", en: "Killer" })}
-                                      </button>
-                                    ),
-                                  )}
-                                  <span className="ml-auto text-[11px] text-muted">
-                                    {constructorSelected.length}/4
-                                  </span>
-                                  {constructorSelected.length > 0 && (
-                                    <button
-                                      type="button"
-                                      onClick={() => setConstructorSelected([])}
-                                      className="text-[11px] font-medium text-muted transition-colors hover:text-foreground"
-                                    >
-                                      {t({ ru: "Очистить", en: "Clear" })}
-                                    </button>
-                                  )}
-                                </div>
-
-                                <div className="flex min-h-9 flex-wrap gap-1.5">
-                                  {Array.from(
-                                    { length: 4 },
-                                    (_, i) => constructorSelected[i],
-                                  ).map((perk, i) =>
-                                    perk ? (
-                                      <button
-                                        key={perk.slug}
-                                        type="button"
-                                        onClick={() =>
-                                          toggleConstructorPerk(perk)
-                                        }
-                                        title={perk.name[language]}
-                                        className="relative flex size-9 items-center justify-center rounded-lg border-2 border-accent bg-black/70"
-                                      >
-                                        {/* eslint-disable-next-line @next/next/no-img-element -- tiny selection-slot thumbnail, next/image is overkill here */}
-                                        <img
-                                          src={withBasePath(perk.icon)}
-                                          alt={perk.name[language]}
-                                          width={32}
-                                          height={32}
-                                          className="size-8 rounded object-cover"
-                                        />
-                                        <span className="absolute -top-1.5 -right-1.5 flex size-3.5 items-center justify-center rounded-full bg-red-500 text-white">
-                                          <X className="size-2.5" />
-                                        </span>
-                                      </button>
-                                    ) : (
-                                      <span
-                                        key={`empty-${i}`}
-                                        className="size-9 rounded-lg border-2 border-dashed border-border"
-                                      />
-                                    ),
-                                  )}
-                                </div>
-
-                                <div className="relative">
-                                  <Search className="pointer-events-none absolute top-1/2 left-2 size-3 -translate-y-1/2 text-muted" />
-                                  <input
-                                    type="text"
-                                    value={constructorSearch}
-                                    onChange={(e) =>
-                                      setConstructorSearch(e.target.value)
-                                    }
-                                    placeholder={t({
-                                      ru: "Поиск перка…",
-                                      en: "Search perks…",
-                                    })}
-                                    aria-label={t({
-                                      ru: "Поиск перка",
-                                      en: "Search perks",
-                                    })}
-                                    className="w-full rounded-full border border-border bg-background py-1.5 pr-3 pl-7 text-[11px] text-foreground placeholder:text-muted/60 focus:ring-2 focus:ring-accent/40 focus:outline-none"
-                                  />
-                                </div>
-
-                                <div className="grid max-h-40 grid-cols-6 gap-1 overflow-y-auto">
-                                  {constructorFiltered.map((perk) => {
-                                    const selected = constructorSelected.some(
-                                      (p) => p.slug === perk.slug,
-                                    );
-                                    return (
-                                      <button
-                                        key={perk.slug}
-                                        type="button"
-                                        onClick={() =>
-                                          toggleConstructorPerk(perk)
-                                        }
-                                        title={perk.name[language]}
-                                        disabled={
-                                          !selected &&
-                                          constructorSelected.length >= 4
-                                        }
-                                        className={cn(
-                                          "flex items-center justify-center rounded-lg border-2 p-0.5 transition-colors disabled:cursor-not-allowed disabled:opacity-30",
-                                          selected
-                                            ? "border-accent"
-                                            : "border-transparent hover:border-border",
-                                        )}
-                                      >
-                                        {/* eslint-disable-next-line @next/next/no-img-element -- tiny picker thumbnail, next/image is overkill here */}
-                                        <img
-                                          src={withBasePath(perk.icon)}
-                                          alt={perk.name[language]}
-                                          width={30}
-                                          height={30}
-                                          className="size-[30px] rounded object-cover"
-                                        />
-                                      </button>
-                                    );
-                                  })}
-                                </div>
-
-                                {constructorCommand && (
-                                  <div className="flex items-center gap-1.5 border-t border-border pt-2">
-                                    <code className="min-w-0 flex-1 truncate rounded-full border border-border bg-background px-2.5 py-1 text-[11px] text-foreground">
-                                      {constructorCommand}
-                                    </code>
-                                    <button
-                                      type="button"
-                                      onClick={handleCopyConstructorCommand}
-                                      aria-label={t({
-                                        ru: "Скопировать команду",
-                                        en: "Copy command",
-                                      })}
-                                      className="flex size-6 shrink-0 items-center justify-center rounded-full border border-border text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
-                                    >
-                                      {constructorCopied ? (
-                                        <Check className="size-3 text-accent" />
-                                      ) : (
-                                        <Copy className="size-3" />
-                                      )}
-                                    </button>
-                                  </div>
-                                )}
-                              </div>
-                            )}
-                          </div>
+                          <button
+                            type="button"
+                            onClick={() => setPanelTab("constructor")}
+                            className="flex items-center gap-1.5 pl-5 text-[11px] font-medium text-accent transition-colors hover:text-accent/80"
+                          >
+                            <Wrench className="size-3" />
+                            {t({
+                              ru: "Собрать билд вручную — вкладка «Конструктор»",
+                              en: "Build one from scratch — see the “Constructor” tab",
+                            })}
+                          </button>
                         </>
                       )}
                     </div>
@@ -1324,6 +1360,179 @@ export function ObsOverlayModal({
                       })}
                     </p>
                   </div>
+                )}
+              </div>
+            )}
+
+            {panelTab === "constructor" && (
+              <div className="mt-4 rounded-xl border border-border bg-background/60 p-3.5">
+                <div className="mb-2 flex items-center gap-2">
+                  <Wrench className="size-3.5 text-muted" />
+                  <h3 className="text-xs font-semibold tracking-wide text-muted uppercase">
+                    {t({ ru: "Конструктор билда", en: "Build constructor" })}
+                  </h3>
+                </div>
+                <p className="mb-3 text-xs text-muted/80">
+                  {t({
+                    ru: "Собери билд с нуля — независимо от того, что сгенерировано на сайте сейчас, например чтобы заранее подготовить билд для анонса.",
+                    en: "Build one from scratch — independent of whatever's currently rolled on the main site, e.g. to prepare an announcement build ahead of time.",
+                  })}
+                </p>
+
+                <div className="flex flex-col gap-2 rounded-lg border border-border bg-background/60 p-2.5">
+                  <div className="flex items-center gap-1.5">
+                    {(["survivor", "killer"] as const).map((option) => (
+                      <button
+                        key={option}
+                        type="button"
+                        onClick={() => setConstructorRoleAndClear(option)}
+                        className={cn(
+                          "rounded-full border px-2.5 py-1 text-[11px] font-medium transition-colors",
+                          constructorRole === option
+                            ? "border-accent/50 bg-accent/15 text-accent"
+                            : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
+                        )}
+                      >
+                        {option === "survivor"
+                          ? t({ ru: "Выживший", en: "Survivor" })
+                          : t({ ru: "Убийца", en: "Killer" })}
+                      </button>
+                    ))}
+                    <span className="ml-auto text-[11px] text-muted">
+                      {constructorSelected.length}/4
+                    </span>
+                    {constructorSelected.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => setConstructorSelected([])}
+                        className="text-[11px] font-medium text-muted transition-colors hover:text-foreground"
+                      >
+                        {t({ ru: "Очистить", en: "Clear" })}
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="flex min-h-9 flex-wrap gap-1.5">
+                    {Array.from(
+                      { length: 4 },
+                      (_, i) => constructorSelected[i],
+                    ).map((perk, i) =>
+                      perk ? (
+                        <button
+                          key={perk.slug}
+                          type="button"
+                          onClick={() => toggleConstructorPerk(perk)}
+                          title={perk.name[language]}
+                          className="relative flex size-9 items-center justify-center rounded-lg border-2 border-accent bg-black/70"
+                        >
+                          {/* eslint-disable-next-line @next/next/no-img-element -- tiny selection-slot thumbnail, next/image is overkill here */}
+                          <img
+                            src={withBasePath(perk.icon)}
+                            alt={perk.name[language]}
+                            width={32}
+                            height={32}
+                            className="size-8 rounded object-cover"
+                          />
+                          <span className="absolute -top-1.5 -right-1.5 flex size-3.5 items-center justify-center rounded-full bg-red-500 text-white">
+                            <X className="size-2.5" />
+                          </span>
+                        </button>
+                      ) : (
+                        <span
+                          key={`empty-${i}`}
+                          className="size-9 rounded-lg border-2 border-dashed border-border"
+                        />
+                      ),
+                    )}
+                  </div>
+
+                  <div className="relative">
+                    <Search className="pointer-events-none absolute top-1/2 left-2 size-3 -translate-y-1/2 text-muted" />
+                    <input
+                      type="text"
+                      value={constructorSearch}
+                      onChange={(e) => setConstructorSearch(e.target.value)}
+                      placeholder={t({
+                        ru: "Поиск перка…",
+                        en: "Search perks…",
+                      })}
+                      aria-label={t({ ru: "Поиск перка", en: "Search perks" })}
+                      className="w-full rounded-full border border-border bg-background py-1.5 pr-3 pl-7 text-[11px] text-foreground placeholder:text-muted/60 focus:ring-2 focus:ring-accent/40 focus:outline-none"
+                    />
+                  </div>
+
+                  <div className="grid max-h-40 grid-cols-6 gap-1 overflow-y-auto">
+                    {constructorFiltered.map((perk) => {
+                      const selected = constructorSelected.some(
+                        (p) => p.slug === perk.slug,
+                      );
+                      return (
+                        <button
+                          key={perk.slug}
+                          type="button"
+                          onClick={() => toggleConstructorPerk(perk)}
+                          title={perk.name[language]}
+                          disabled={
+                            !selected && constructorSelected.length >= 4
+                          }
+                          className={cn(
+                            "flex items-center justify-center rounded-lg border-2 p-0.5 transition-colors disabled:cursor-not-allowed disabled:opacity-30",
+                            selected
+                              ? "border-accent"
+                              : "border-transparent hover:border-border",
+                          )}
+                        >
+                          {/* eslint-disable-next-line @next/next/no-img-element -- tiny picker thumbnail, next/image is overkill here */}
+                          <img
+                            src={withBasePath(perk.icon)}
+                            alt={perk.name[language]}
+                            width={30}
+                            height={30}
+                            className="size-[30px] rounded object-cover"
+                          />
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {constructorCommand ? (
+                    <div className="flex items-center gap-1.5 border-t border-border pt-2">
+                      <code className="min-w-0 flex-1 truncate rounded-full border border-border bg-background px-2.5 py-1 text-[11px] text-foreground">
+                        {constructorCommand}
+                      </code>
+                      <button
+                        type="button"
+                        onClick={handleCopyConstructorCommand}
+                        aria-label={t({
+                          ru: "Скопировать команду",
+                          en: "Copy command",
+                        })}
+                        className="flex size-6 shrink-0 items-center justify-center rounded-full border border-border text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+                      >
+                        {constructorCopied ? (
+                          <Check className="size-3 text-accent" />
+                        ) : (
+                          <Copy className="size-3" />
+                        )}
+                      </button>
+                    </div>
+                  ) : (
+                    <p className="border-t border-border pt-2 text-[11px] text-muted/70">
+                      {t({
+                        ru: "Выбери до 4 перков, чтобы получить команду.",
+                        en: "Pick up to 4 perks to get a command.",
+                      })}
+                    </p>
+                  )}
+                </div>
+
+                {!twitchPasteEnabled && (
+                  <p className="mt-3 text-[11px] text-muted/60">
+                    {t({
+                      ru: "Команда «вставить билд по коду» сейчас выключена во вкладке Twitch — включи её там, чтобы зрители могли использовать эту команду в чате.",
+                      en: 'The "paste a build by code" command is currently off in the Twitch tab — turn it on there for viewers to actually use this command in chat.',
+                    })}
+                  </p>
                 )}
               </div>
             )}

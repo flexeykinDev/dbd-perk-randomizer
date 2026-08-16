@@ -34,6 +34,15 @@ export interface ObsOverlayOptions {
    *  perk list. `null` means "no override — use the default centered row
    *  layout," which is also what a fresh install and a `pos`-less URL get. */
   positions: ObsIconPosition[] | null;
+  /** Where the character badge sits, dragged independently of the perk/
+   *  loadout slots above (it isn't part of that list at all — see
+   *  ObsSyncPayload.character). `null` falls back to the fixed
+   *  bottom-left corner obs-overlay.tsx has always used. */
+  characterPosition: ObsIconPosition | null;
+  /** Character badge size as a percentage of its default, independent of
+   *  `scale` — set via scroll-wheel while hovering it in the modal
+   *  preview, same as dragging sets `characterPosition`. */
+  characterScale: number;
 }
 
 // Matches the "Roomy" style preset (see obs-overlay-modal.tsx) — testing
@@ -55,6 +64,8 @@ export const DEFAULT_OBS_OPTIONS: ObsOverlayOptions = {
   showCharacter: true,
   background: "transparent",
   positions: null,
+  characterPosition: null,
+  characterScale: 100,
 };
 
 export const MIN_OBS_SCALE = 50;
@@ -64,6 +75,8 @@ export const MAX_OBS_SCALE = 200;
 // known to look broken.
 export const MIN_OBS_NAME_SCALE = 100;
 export const MAX_OBS_NAME_SCALE = 300;
+export const MIN_CHARACTER_SCALE = 40;
+export const MAX_CHARACTER_SCALE = 250;
 
 const BACKGROUNDS: readonly ObsBackground[] = ["transparent", "dark"];
 
@@ -119,6 +132,25 @@ function encodePositions(positions: ObsIconPosition[]): string {
   return positions.map((p) => `${round1(p.x)},${round1(p.y)}`).join(",");
 }
 
+function parseCharacterPosition(
+  params: URLSearchParams,
+): ObsIconPosition | null {
+  const raw = params.get("cpos");
+  if (!raw) return null;
+  const [x, y] = raw.split(",").map(Number);
+  if (!Number.isFinite(x) || !Number.isFinite(y)) return null;
+  return { x: Math.min(100, Math.max(0, x)), y: Math.min(100, Math.max(0, y)) };
+}
+
+function parseCharacterScale(params: URLSearchParams): number {
+  const raw = params.get("cscale");
+  if (raw === null) return DEFAULT_OBS_OPTIONS.characterScale;
+  const n = Number(raw);
+  return Number.isFinite(n)
+    ? Math.min(MAX_CHARACTER_SCALE, Math.max(MIN_CHARACTER_SCALE, n))
+    : DEFAULT_OBS_OPTIONS.characterScale;
+}
+
 /** Reads overlay customization from ordinary query params (e.g.
  *  `?scale=140&names=0#/obs`) rather than localStorage, so the URL alone
  *  fully describes how the overlay renders — it has to work when pasted
@@ -154,6 +186,8 @@ export function useObsOverlayOptions(): ObsOverlayOptions {
           ? (background as ObsBackground)
           : DEFAULT_OBS_OPTIONS.background,
         positions: parsePositions(params),
+        characterPosition: parseCharacterPosition(params),
+        characterScale: parseCharacterScale(params),
       });
     }
     applyFromUrl();
@@ -265,6 +299,15 @@ export function obsOverlayUrl(
   }
   if (options.positions && options.positions.length > 0) {
     params.set("pos", encodePositions(options.positions));
+  }
+  if (options.characterPosition) {
+    params.set("cpos", encodePositions([options.characterPosition]));
+  }
+  if (
+    options.characterScale &&
+    options.characterScale !== DEFAULT_OBS_OPTIONS.characterScale
+  ) {
+    params.set("cscale", String(Math.round(options.characterScale)));
   }
   const query = params.toString();
   return `${window.location.origin}${window.location.pathname}${query ? `?${query}` : ""}${OBS_HASH}`;

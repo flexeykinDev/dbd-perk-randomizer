@@ -80,7 +80,7 @@ import {
   type ShareCardPiece,
 } from "./share-card";
 import { DownloadImageButton } from "./download-image-button";
-import { ObsOverlayModal } from "./obs-overlay-modal";
+import { ObsOverlayModal, type PieceVisibility } from "./obs-overlay-modal";
 import { CharacterPickerModal } from "./character-picker-modal";
 import { MoreMenu } from "./more-menu";
 
@@ -118,6 +118,13 @@ const TWITCH_PASTE_ENABLED_STORAGE_KEY = "dbd-randomizer:twitch-paste-enabled";
 const TWITCH_PASTE_COMMAND_STORAGE_KEY = "dbd-randomizer:twitch-paste-command";
 const TWITCH_PASTE_PERMISSION_STORAGE_KEY =
   "dbd-randomizer:twitch-paste-permission";
+const PIECE_VISIBILITY_STORAGE_KEY = "dbd-randomizer:piece-visibility";
+const DEFAULT_PIECE_VISIBILITY: PieceVisibility = {
+  perks: true,
+  item: true,
+  addon: true,
+  offering: true,
+};
 const DEFAULT_TWITCH_REROLL_COMMAND = "!reroll";
 const DEFAULT_TWITCH_PASTE_COMMAND = "!paste";
 const DEFAULT_TWITCH_COOLDOWN_SEC = 4;
@@ -423,6 +430,13 @@ export function RandomizerBoard() {
   );
   const [twitchPastePermission, setTwitchPastePermission] =
     useState<TwitchPermission>("subs_vips");
+  // Display-only filter for the OBS overlay and Download Image — separate
+  // from `loadoutSlots` (which decides what actually gets *rolled*): a
+  // streamer might still want the full loadout rolled (to copy/reference
+  // themselves) while only showing perks + Item on stream, for instance.
+  const [pieceVisibility, setPieceVisibility] = useState<PieceVisibility>(
+    DEFAULT_PIECE_VISIBILITY,
+  );
 
   const activeSeed =
     seedMode === "daily"
@@ -500,6 +514,13 @@ export function RandomizerBoard() {
       );
       setTwitchPastePermission(
         loadTwitchPermission(TWITCH_PASTE_PERMISSION_STORAGE_KEY, "subs_vips"),
+      );
+      setPieceVisibility(
+        safeGetJSON(
+          "local",
+          PIECE_VISIBILITY_STORAGE_KEY,
+          DEFAULT_PIECE_VISIBILITY,
+        ),
       );
     }
     applyInitialClientState();
@@ -620,14 +641,25 @@ export function RandomizerBoard() {
   // concatenated the same way the OBS overlay's "all" mode already does
   // (see the publish effect below), so a downloaded image always matches
   // whatever's actually on screen instead of being perks-only regardless
-  // of mode.
+  // of mode. Also where `pieceVisibility` (the OBS modal's "Показывать:"
+  // toggles) applies — a display-only filter, so a piece hidden here can
+  // still show up via "Copy full build" or the loadout HUD itself; only
+  // the export and the OBS overlay respect it.
+  const visiblePerks = useMemo(
+    () => (pieceVisibility.perks ? perks : []),
+    [pieceVisibility.perks, perks],
+  );
+  const visibleLoadoutPieces = useMemo(
+    () => loadoutPieces.filter((p) => pieceVisibility[p.kind]),
+    [pieceVisibility, loadoutPieces],
+  );
   const sharePieces: ShareCardPiece[] = useMemo(() => {
     return mode === "loadout"
-      ? loadoutPieces
+      ? visibleLoadoutPieces
       : mode === "all"
-        ? [...perks, ...loadoutPieces]
-        : perks;
-  }, [mode, perks, loadoutPieces]);
+        ? [...visiblePerks, ...visibleLoadoutPieces]
+        : visiblePerks;
+  }, [mode, visiblePerks, visibleLoadoutPieces]);
 
   // Same "who does this build belong to" logic loadout-grid.tsx's PowerSlot
   // already uses for the killer's Power-slot badge: an explicitly chosen
@@ -739,12 +771,16 @@ export function RandomizerBoard() {
     // collide as the same React key on the overlay's own list. In "all"
     // mode both lists are simply concatenated — perk slugs never contain a
     // colon, so they can't collide with a "kind:slug" loadout key either.
-    const perkPieces = perks.map((p) => ({
+    // Filtered by `pieceVisibility` first (see sharePieces above) — the
+    // overlay renders exactly what gets published, so hiding a kind here
+    // is what actually keeps it off stream, not a flag the overlay itself
+    // has to know about.
+    const perkPieces = visiblePerks.map((p) => ({
       slug: p.slug,
       icon: p.icon,
       name: p.name,
     }));
-    const loadoutDisplayPieces = loadoutPieces.map((p) => ({
+    const loadoutDisplayPieces = visibleLoadoutPieces.map((p) => ({
       slug: `${p.kind}:${p.slug}`,
       icon: p.icon,
       name: p.name,
@@ -766,8 +802,8 @@ export function RandomizerBoard() {
     mode,
     role,
     language,
-    perks,
-    loadoutPieces,
+    visiblePerks,
+    visibleLoadoutPieces,
     shareCharacter,
     obsModalOpen,
   ]);
@@ -1146,6 +1182,14 @@ export function RandomizerBoard() {
   function updateTwitchPastePermission(permission: TwitchPermission) {
     setTwitchPastePermission(permission);
     safeSet("local", TWITCH_PASTE_PERMISSION_STORAGE_KEY, permission);
+  }
+
+  function updatePieceVisibility(kind: keyof PieceVisibility, value: boolean) {
+    setPieceVisibility((prev) => {
+      const next = { ...prev, [kind]: value };
+      safeSetJSON("local", PIECE_VISIBILITY_STORAGE_KEY, next);
+      return next;
+    });
   }
 
   function showToast(message: string) {
@@ -2089,6 +2133,9 @@ export function RandomizerBoard() {
         loadoutPieces={loadoutPieces}
         language={language}
         role={role}
+        character={shareCharacter}
+        pieceVisibility={pieceVisibility}
+        onPieceVisibilityChange={updatePieceVisibility}
         twitchChannel={twitchChannel}
         twitchEnabled={twitchEnabled}
         twitchState={twitchState}

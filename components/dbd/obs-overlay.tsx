@@ -74,18 +74,33 @@ function CharacterBadge({
   language,
   scaleRatio,
   roleColor,
+  position,
 }: {
   slug: string;
   language: Lang;
   scaleRatio: number;
   roleColor: { solid: string };
+  /** Dragged position from the modal preview, or `null` for the original
+   *  fixed bottom-left corner — same "no override yet" convention
+   *  `positions` uses for the perk/loadout slots. */
+  position: { x: number; y: number } | null;
 }) {
   const portrait = getCharacterPortrait(slug);
   if (!portrait) return null;
   const portraitSize = Math.round(BASE_BADGE_PORTRAIT_PX * scaleRatio);
 
   return (
-    <div className="absolute bottom-4 left-4 z-10 flex items-center gap-2">
+    <div
+      className={cn(
+        "z-10 flex items-center gap-2",
+        position
+          ? "absolute -translate-x-1/2 -translate-y-1/2"
+          : "absolute bottom-4 left-4",
+      )}
+      style={
+        position ? { left: `${position.x}%`, top: `${position.y}%` } : undefined
+      }
+    >
       <span
         className="flex shrink-0 items-center justify-center overflow-hidden rounded-full border border-white/10 bg-black/55 backdrop-blur-sm"
         style={{
@@ -271,8 +286,9 @@ export function ObsOverlay() {
         <CharacterBadge
           slug={state.character}
           language={state.language}
-          scaleRatio={scaleRatio}
+          scaleRatio={options.characterScale / 100}
           roleColor={roleColor}
+          position={options.characterPosition}
         />
       )}
       {!state || state.perks.length === 0 ? (
