@@ -1501,8 +1501,15 @@ export function RandomizerBoard() {
           it, so without an explicit width its border sat visibly indented
           from theirs on a phone — full width there lines its edges up with
           the rest of the page's boxed elements; reverts to its own
-          content width from `sm` up, where that mismatch isn't visible. */}
-      <div className="flex w-full flex-wrap items-center justify-center divide-x divide-border rounded-2xl border border-border bg-surface/40 sm:w-auto">
+          content width from `sm` up, where that mismatch isn't visible.
+          justify-start (not -center): once w-full, the 3 rows stack at very
+          different widths (a short "Перков:" row vs. a much wider "Слоты:"
+          row) — centering each independently left a jagged block of
+          inconsistent empty space on both sides; left-aligning them all
+          reads as one tidy list instead. Meaningless once `sm:w-auto` takes
+          over and the panel hugs its content, so no responsive variant
+          needed here. */}
+      <div className="flex w-full flex-wrap items-center justify-start divide-x divide-border rounded-2xl border border-border bg-surface/40 sm:w-auto">
         {mode !== "loadout" && (
           <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 px-4 py-2 text-sm">
             <span className="text-muted">
