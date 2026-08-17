@@ -92,13 +92,35 @@ const UNAVAILABLE_MARKERS =
 // content, or dropping the piece until the wiki fixes itself, patch known
 // cases from deadbydaylight.wiki.gg (a different, faster-updated fan wiki)
 // by slug — remove an entry here once Fandom's own page is fixed upstream.
-const BROKEN_DESCRIPTION_RE = /unable to retrieve the .*description/i;
+//
+// Also doubles as a general "Fandom is stale, not just broken" override:
+// Patch 9.3.0 reworked the Anti-Haemorrhagic Syringe (renamed to
+// Anti-Exhaustion Syringe, no longer heals — it now cures Exhausted
+// instead) and Styptic Agent (Healing Efficiency only, no more Endurance).
+// Fandom's live page still had the pre-rework text as of this writing
+// (confirmed against the full official patch-note history, not just the
+// current wiki state — Fandom can silently lag a real rework even though
+// nothing about the page "looks" broken); deadbydaylight.wiki.gg already
+// had both corrected. Applied unconditionally by slug, same as the Misty
+// Day case above.
 const DESCRIPTION_OVERRIDES: Record<string, string> = {
   "misty-day-remains-of-judgment":
     "A painting of an imposing figure wearing a steel pyramid atop his head. Victims are caged in the background. Successful Punishment of the Damned attacks trigger the following effect: Causes the Auras of hit Survivors to be revealed to you for 8 seconds.",
+  "anti-haemorrhagic-syringe":
+    "A mysterious fluid that reinvigorates both body and mind. While using the Med-Kit to heal yourself or another Survivor, press the Secondary Action button to trigger the following effect: Causes the affected Survivor to instantly recover from the Exhausted Status Effect. Anti-Exhaustion Syringe consumes the Med-Kit after use.",
+  "styptic-agent":
+    "A white powder with coagulant properties. Apply the agent to a wound to stop it from haemorrhaging. Modifies the Med-Kit with the following effect: Increases the Efficiency of Personal Healing actions by +15%.",
 };
 const ICON_SOURCE_OVERRIDES: Record<string, string> = {
   "misty-day-remains-of-judgment": "https://deadbydaylight.wiki.gg/images/IconAddon_mistyDay.png",
+};
+
+// Fandom's slug-producing name (the pre-rework "Anti-Haemorrhagic Syringe")
+// is kept as the map key everywhere above/below so a Fandom update doesn't
+// silently orphan these overrides — only the *displayed* name changes here,
+// to the current official name, same slug either way.
+const NAME_OVERRIDES: Record<string, string> = {
+  "anti-haemorrhagic-syringe": "Anti-Exhaustion Syringe",
 };
 
 // Patch 9.1.0 also reworked the Key and Map items' Add-ons specifically —
@@ -219,12 +241,10 @@ function parsePieceTable($: cheerio.CheerioAPI, table: Cheerio<AnyNode>): Scrape
     const nameCell = cells.eq(1);
     const descriptionCell = cells.eq(2);
 
-    const name = cleanText(nameCell.text());
-    const slug = slugify(name);
-    let description = cleanDescription(descriptionCell.text());
-    if (BROKEN_DESCRIPTION_RE.test(description)) {
-      description = DESCRIPTION_OVERRIDES[slug] ?? description;
-    }
+    const rawName = cleanText(nameCell.text());
+    const slug = slugify(rawName);
+    const name = NAME_OVERRIDES[slug] ?? rawName;
+    const description = DESCRIPTION_OVERRIDES[slug] ?? cleanDescription(descriptionCell.text());
     const rawIconSourceUrl = iconCell.find("img").attr("data-src") ?? "";
     const iconSourceUrl = ICON_SOURCE_OVERRIDES[slug] ?? rawIconSourceUrl.split("/revision/")[0];
     if (!name || !iconSourceUrl || !description) return;

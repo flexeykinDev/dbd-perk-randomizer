@@ -355,7 +355,7 @@
       "en": "Styptic Agent",
       "ru": "Кровоостанавливающий препарат"
     },
-    "description": "A white powder with coagulant properties.Apply the agent to a wound to stop it from haemorrhaging. Press the Secondary Action button while healing yourself or another Survivor with a Med-Kit to use the Styptic Agent to grant the Endurance Status Effect for 5 seconds. Endurance is cancelled prematurely when performing a Conspicuous Action. Styptic Agent consumes the Med-Kit on use.",
+    "description": "A white powder with coagulant properties. Apply the agent to a wound to stop it from haemorrhaging. Modifies the Med-Kit with the following effect: Increases the Efficiency of Personal Healing actions by +15%.",
     "descriptionRuRaw": "Белый порошок, улучшающий свертываемость крови. Нанесите вещество на рану, чтобы остановить кровотечение. Повышает эффективность лечения с помощью аптечки на 15%",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
@@ -367,10 +367,10 @@
     "icon": "/loadout/addon/anti-haemorrhagic-syringe.webp",
     "slug": "anti-haemorrhagic-syringe",
     "name": {
-      "en": "Anti-Haemorrhagic Syringe",
-      "ru": "Anti-Haemorrhagic Syringe"
+      "en": "Anti-Exhaustion Syringe",
+      "ru": "Anti-Exhaustion Syringe"
     },
-    "description": "An anti-haemorrhagic substance that stops the bleeding in a matter of seconds. Press the Secondary Action button while healing yourself or another Survivor with a Med-Kit to use the Anti-Haemorrhagic Syringe to automatically heal the affected Survivor for 1 Health State over the next 16 seconds. Healing Speed modifiers affect the Healing time. Taking damage or being picked up by the Killer cancels the Healing effect. Anti-Haemorrhagic Syringe consumes the Med-Kit on use.",
+    "description": "A mysterious fluid that reinvigorates both body and mind. While using the Med-Kit to heal yourself or another Survivor, press the Secondary Action button to trigger the following effect: Causes the affected Survivor to instantly recover from the Exhausted Status Effect. Anti-Exhaustion Syringe consumes the Med-Kit after use.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
