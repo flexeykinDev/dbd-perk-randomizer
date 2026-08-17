@@ -23,15 +23,33 @@ jobs:
         run: npm run scrape:perks
       - name: Scrape items/add-ons/offerings from the DBD wiki
         run: npm run scrape:loadout
+      - name: Classify the diff (new entries vs changes to existing ones)
+        id: classify
+        run: npx tsx scripts/classify-scrape-diff.ts
+      - name: Build the PR description
+        run: |
+          {
+            echo "Automated scrape of the DBD wiki's [Perks](https://deadbydaylight.fandom.com/wiki/Perks), [Items](https://deadbydaylight.fandom.com/wiki/Items), [Add-ons](https://deadbydaylight.fandom.com/wiki/Add-ons), and [Offerings](https://deadbydaylight.fandom.com/wiki/Offerings) pages."
+            echo
+            if [ "${{ steps.classify.outputs.safe }}" = "true" ]; then
+              echo "**Only brand-new entries — auto-merging.** Nothing pre-existing changed, so nothing that already worked can have regressed."
+            else
+              echo "**Changes to pre-existing entries — needs a human look before merging** (see below). A change here could be a legitimate wiki correction, or the scraper clobbering something — same class of bug that silently reverted \`data/name-overrides.en.json\`/\`data/icon-overrides.json\`'s two pins before those existed."
+            fi
+            echo
+            cat scrape-diff-summary.md
+            echo
+            echo "---"
+            echo
+            echo "For the loadout data specifically, also spot-check that any *new* killer's add-ons resolved to the right character name (see \`resolvePowerToCharacter\` in \`scripts/scrape-loadout.ts\`) — it falls back to \`.All\` and logs a warning if it can't, so check the workflow log for \`Could not resolve a killer for power heading\` too. A new killer should also pick up a Power icon automatically (\`scrapeKillerPowerIcons\`) — check the log for \`No Power icon found on <killer>'s wiki page\` if one's missing from \`data/killer-power-icons.json\`."
+          } > pr-body.md
       - name: Open PR with updated perk + loadout data
+        id: cpr
         uses: peter-evans/create-pull-request@v6
         with:
           commit-message: "chore: update DBD perk and loadout data from wiki"
           title: "Update DBD perk and loadout data"
-          body: |
-            Automated weekly scrape of the DBD wiki's [Perks](https://deadbydaylight.fandom.com/wiki/Perks), [Items](https://deadbydaylight.fandom.com/wiki/Items), [Add-ons](https://deadbydaylight.fandom.com/wiki/Add-ons), and [Offerings](https://deadbydaylight.fandom.com/wiki/Offerings) pages.
-
-            Review the icon/name/description/character-portrait diff before merging. For the loadout data specifically, also spot-check that any *new* killer's add-ons resolved to the right character name (see `resolvePowerToCharacter` in `scripts/scrape-loadout.ts`) — it falls back to `.All` and logs a warning if it can't, so check the workflow log for `Could not resolve a killer for power heading` too. A new killer should also pick up a Power icon automatically (`scrapeKillerPowerIcons`) — check the log for `No Power icon found on <killer>'s wiki page` if one's missing from `data/killer-power-icons.json`.
+          body-path: pr-body.md
           branch: auto/update-perks
           add-paths: |
             data/perks.json
@@ -47,3 +65,9 @@ jobs:
             public/perks/**
             public/characters/**
             public/loadout/**
+      - name: Auto-merge (only when nothing pre-existing changed)
+        if: steps.cpr.outputs.pull-request-number != '' && steps.classify.outputs.safe == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr merge "${{ steps.cpr.outputs.pull-request-number }}" --squash --delete-branch

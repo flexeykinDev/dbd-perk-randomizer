@@ -53,3 +53,8 @@ next-env.d.ts
 /playwright-report/
 /test-results/
 /blob-report/
+
+# scraper CI scratch files (see .github/workflows/update-perks.yml /
+# scripts/classify-scrape-diff.ts) — generated fresh each run, never source
+/pr-body.md
+/scrape-diff-summary.md
