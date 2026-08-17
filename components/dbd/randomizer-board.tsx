@@ -1495,8 +1495,14 @@ export function RandomizerBoard() {
       {/* Contextual filters — kept in a bordered, divided panel (rather than
           loose in the row above) so they read as one "roll settings" group
           distinct from the role/mode identity controls, and stay legible
-          even on wide viewports where flex-wrap never breaks the row. */}
-      <div className="flex flex-wrap items-center justify-center divide-x divide-border rounded-2xl border border-border bg-surface/40">
+          even on wide viewports where flex-wrap never breaks the row.
+          w-full below `sm`: its content (esp. a wrapped "Слоты:" row) is
+          often narrower than the trailer/utility-bar boxes above and below
+          it, so without an explicit width its border sat visibly indented
+          from theirs on a phone — full width there lines its edges up with
+          the rest of the page's boxed elements; reverts to its own
+          content width from `sm` up, where that mismatch isn't visible. */}
+      <div className="flex w-full flex-wrap items-center justify-center divide-x divide-border rounded-2xl border border-border bg-surface/40 sm:w-auto">
         {mode !== "loadout" && (
           <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 px-4 py-2 text-sm">
             <span className="text-muted">
