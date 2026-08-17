@@ -30,6 +30,7 @@ const LOADOUT_TRANSLATIONS_JSON = join(DATA_DIR, "loadout-translations.ru.json")
 const LOADOUT_DESCRIPTION_RU_RAW_JSON = join(DATA_DIR, "loadout-description-ru-raw.json");
 const KILLER_POWER_ICONS_JSON = join(DATA_DIR, "killer-power-icons.json");
 const LOADOUT_ICON_SOURCES_JSON = join(DATA_DIR, "loadout-icon-sources.json");
+const SUPPLEMENTAL_ADDONS_EN_JSON = join(DATA_DIR, "supplemental-addons.en.json");
 
 const ICON_SIZE = 128;
 const REQUEST_HEADERS = {
@@ -607,6 +608,19 @@ function findFirstImageAfterHeading($: cheerio.CheerioAPI, pattern: RegExp): str
   return found;
 }
 
+// Fandom has no page at all yet for a killer only data/supplemental-perks.en.json
+// and data/supplemental-addons.en.json know about (same Fandom-lag pattern
+// as everywhere else in this file) — `The <Killer>` 404s outright rather
+// than just missing the Power heading, so scrapeKillerPowerIcons's normal
+// fetch-and-search can't run at all. Sourced by hand from each killer's own
+// deadbydaylight.wiki.gg page instead. Remove an entry once Fandom's own
+// page for that killer exists.
+const POWER_ICON_SOURCE_OVERRIDES: Record<string, string> = {
+  Krasue: "https://deadbydaylight.wiki.gg/images/IconPowers_HeadForm_K41.png",
+  First: "https://deadbydaylight.wiki.gg/images/T_UI_iconPowers_EnterUpsideDown.png",
+  Slasher: "https://deadbydaylight.wiki.gg/images/T_UI_iconPowers_DramaticEntrance.png",
+};
+
 // One request per killer (their own character page) — there's no single
 // wiki page listing every Power icon together the way Items/Add-ons/
 // Offerings do, so this can't be folded into the table-based passes
@@ -633,8 +647,13 @@ async function scrapeKillerPowerIcons(killers: string[]): Promise<Record<string,
       continue;
     }
     try {
-      const html = await fetchWikiPageHtmlFollowingRedirects(`The ${killer}`);
-      const iconUrl = findFirstImageAfterHeading(cheerio.load(html), POWER_HEADING_PATTERN);
+      let iconUrl: string | null;
+      if (POWER_ICON_SOURCE_OVERRIDES[killer]) {
+        iconUrl = POWER_ICON_SOURCE_OVERRIDES[killer];
+      } else {
+        const html = await fetchWikiPageHtmlFollowingRedirects(`The ${killer}`);
+        iconUrl = findFirstImageAfterHeading(cheerio.load(html), POWER_HEADING_PATTERN);
+      }
       if (!iconUrl) {
         console.warn(`  No Power icon found on ${killer}'s wiki page — skipping`);
         continue;
@@ -671,6 +690,20 @@ function loadDescriptionRuRaw(): Record<string, string> {
   const raw = loadJson<Record<string, string>>(LOADOUT_DESCRIPTION_RU_RAW_JSON, {});
   delete raw._comment;
   return raw;
+}
+
+interface SupplementalAddonEntry {
+  character: string;
+  addons: { name: string; description: string; iconSourceUrl: string }[];
+}
+
+// See data/supplemental-addons.en.json's own comment — same "Fandom hasn't
+// caught up yet" pattern as data/supplemental-perks.en.json, just for a
+// killer's Power add-ons instead of teachable perks.
+function loadSupplementalAddons(): SupplementalAddonEntry[] {
+  if (!existsSync(SUPPLEMENTAL_ADDONS_EN_JSON)) return [];
+  const raw = JSON.parse(readFileSync(SUPPLEMENTAL_ADDONS_EN_JSON, "utf8"));
+  return raw.entries ?? [];
 }
 
 async function main() {
@@ -767,6 +800,24 @@ async function main() {
     const character = powerToCharacter[heading];
     for (const piece of parsePieceTable($addons, table)) {
       addonRows.push({ role: "killer", character, piece });
+    }
+  }
+  const scrapedKillerCharacters = new Set(
+    addonRows.filter((r) => r.role === "killer").map((r) => r.character),
+  );
+  for (const entry of loadSupplementalAddons()) {
+    if (scrapedKillerCharacters.has(entry.character)) continue; // Fandom's own table caught up
+    for (const addon of entry.addons) {
+      addonRows.push({
+        role: "killer",
+        character: entry.character,
+        piece: {
+          name: addon.name,
+          slug: slugify(addon.name),
+          description: cleanDescription(addon.description),
+          iconSourceUrl: addon.iconSourceUrl,
+        },
+      });
     }
   }
 

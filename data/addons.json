@@ -368,9 +368,10 @@
     "slug": "anti-haemorrhagic-syringe",
     "name": {
       "en": "Anti-Exhaustion Syringe",
-      "ru": "Anti-Exhaustion Syringe"
+      "ru": "Укол от усталости"
     },
     "description": "A mysterious fluid that reinvigorates both body and mind. While using the Med-Kit to heal yourself or another Survivor, press the Secondary Action button to trigger the following effect: Causes the affected Survivor to instantly recover from the Exhausted Status Effect. Anti-Exhaustion Syringe consumes the Med-Kit after use.",
+    "descriptionRuRaw": "Таинственная жидкость, придающая сил телу и разуму. Нажмите кнопку вспомогательного действия во время лечения, чтобы использовать кровоостанавливающий шприц При этом проходит эффект усталости После использования аптечка исчезает \"Усталость\" не дает выжившим активировать утомляющие навыки",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -10996,5 +10997,843 @@
     },
     "description": "The glove Renjiro held to his sternum following the strike dealt by his son Kazan. The Auras of Survivors coming into contact with a Blood Orb are revealed to you for 2 seconds. This effect stacks per Blood Orb. Causes Blood Orbs to be visible to Survivors and to be absorbed when they come into contact with them. \"When all else spills out, cling only to your honour.\" — Renjiro's Doctrine 14:12",
     "addedAt": "2026-08-16T07:16:30.038Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Krasue",
+    "icon": "/loadout/addon/broken-tiara.webp",
+    "slug": "broken-tiara",
+    "name": {
+      "en": "Broken Tiara",
+      "ru": "Сломанная тиара"
+    },
+    "description": "\"A dazzling stage prop worn by a Pharoah's daughter, as distracting as it is fake.\" Modifies the Glowing Fungus with the following effect: Causes Survivors to suffer from the Oblivious Status Effect while under its effects.",
+    "descriptionRuRaw": "Обворожительный предмет реквизита дочери фараона. Блестящая фальшивка. Выжившие с эффектом светящихся грибов получают \"Забывчивость\" \"Забывчивость\" мешает выжившим слышать или подвергаться действию радиуса террора убийцы.",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Krasue",
+    "icon": "/loadout/addon/first-libretto.webp",
+    "slug": "first-libretto",
+    "name": {
+      "en": "First Libretto",
+      "ru": "Первое либретто"
+    },
+    "description": "\"She felt as if she could walk on air after landing a role in her first opera.\" Whenever you hook a Survivor afflicted with Leeched, you benefit from the following effect: Reduces the Consumption rate of Headlong Flight by -30 % for 15 seconds.",
+    "descriptionRuRaw": "Впервые получив роль в опере, она почувствовала, что ноги отрываются от земли. Уменьшает расход на способность \"Очертя голову\" на 30% в течение 15 сек., когда вы вешаете на крюк выжившего с \"Иссушением\"",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Krasue",
+    "icon": "/loadout/addon/luckless-mouse.webp",
+    "slug": "luckless-mouse",
+    "name": {
+      "en": "Luckless Mouse",
+      "ru": "Несчастная мышь"
+    },
+    "description": "\"A game of cat and mouse always gets the blood pumping.\" Modifies Headlong Flight with the following effect: Increases its Charge capacity by +2 Charges.",
+    "descriptionRuRaw": "Игра в кошки-мышки всегда будоражит кровь. Увеличивает количество зарядов \"Очертя голову\" на 2",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Krasue",
+    "icon": "/loadout/addon/sticky-lozenge.webp",
+    "slug": "sticky-lozenge",
+    "name": {
+      "en": "Sticky Lozenge",
+      "ru": "Липкая пастилка"
+    },
+    "description": "\"A simple tablet to moisten a dry throat, often taken before an audition.\" Modifies Regurgitate with the following effect: Displays a preview of the impact zone while charging it.",
+    "descriptionRuRaw": "Небольшая пилюля для смачивания пересохшего горла. Такие обычно принимают перед собеседованиями. При зарядке \"Изрыгания\" показывается область попадания",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Krasue",
+    "icon": "/loadout/addon/chunk-of-malai.webp",
+    "slug": "chunk-of-malai",
+    "name": {
+      "en": "Chunk of Malai",
+      "ru": "Ошметок Малай"
+    },
+    "description": "\"A varied source of protein contributes to good gut health.\" Modifies the Glowing Fungus with the following effect: Incurs a stack-able -8 % Efficiency penalty per Leeched Survivor to its Depletion rate of the Leech Meter, up to a maximum of -32 %.",
+    "descriptionRuRaw": "Разные источники белка - залог здорового кишечника. Снижает скорость очищения светящегося гриба на 8% за каждого выжившего с эффектом \"Иссушение\"",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Krasue",
+    "icon": "/loadout/addon/crumpled-sheet-music.webp",
+    "slug": "crumpled-sheet-music",
+    "name": {
+      "en": "Crumpled Sheet Music",
+      "ru": "Скомканные ноты"
+    },
+    "description": "\"Before her desperation, she hoped that continued practice would be enough to succeed.\" Successfully hitting a Survivor with a Leeching Gland triggers the following effect: Causes Headlong Flight to instantly gain +12 Charges.",
+    "descriptionRuRaw": "Когда надежда еще не угасла, она думала, что для успеха достаточно не останавливаться. Добавляет 12 зарядов способности \"Очертя голову\" за попадание высасывающей железой",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Krasue",
+    "icon": "/loadout/addon/defective-metronome.webp",
+    "slug": "defective-metronome",
+    "name": {
+      "en": "Defective Metronome",
+      "ru": "Испорченный метроном"
+    },
+    "description": "\"The metronome sparks as it plays at a frenetic pace.\" Modifies the Glowing Fungus with the following effect: Causes Survivors to suffer from the Exhausted Status Effect while under its effects.",
+    "descriptionRuRaw": "Метроном неистово мечется, разбрасывая искры. Действие светящихся грибов также вызывает \"Усталость\" у выживших \"Усталость\" не дает выжившим активировать некоторые навыки.",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Krasue",
+    "icon": "/loadout/addon/pig-s-eye.webp",
+    "slug": "pig-s-eye",
+    "name": {
+      "en": "Pig's Eye",
+      "ru": "Свиной глаз"
+    },
+    "description": "\"It still glistens with saliva.\" Modifies the Glowing Fungus with the following effect: Survivors eating it while at least 40 metres from your current location have their Auras revealed to you for 6 seconds.",
+    "descriptionRuRaw": "До сих пор блестит от слюны. Когда выживший съедает светящийся гриб на расстоянии более 40м от вас, вы видите его ауру в течение 6 сек.",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Krasue",
+    "icon": "/loadout/addon/wriggling-parasite.webp",
+    "slug": "wriggling-parasite",
+    "name": {
+      "en": "Wriggling Parasite",
+      "ru": "Извивающийся паразит"
+    },
+    "description": "\"A fragile organism that has an unusual effect on its host.\" Modifies the Leech Meter with the following effects: Increases its Charge rate by +16 %.",
+    "descriptionRuRaw": "Хрупкий организм, оказывающий необычное воздействие на своего носителя. Повышает скорость пассивного роста до состояния \"Иссушение II\" на 16%",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Krasue",
+    "icon": "/loadout/addon/dulled-knife.webp",
+    "slug": "dulled-knife",
+    "name": {
+      "en": "Dulled Knife",
+      "ru": "Затупленный нож"
+    },
+    "description": "\"A stage prop, symbolic of a woman's gambit in an attempt to save her lover on death's row.\" Modifies Headlong Flight with the following effect: Reduces its Consumption rate by -25 %. Modifies the Glowing Fungus with the following effects: Causes Survivors eating it to benefit from the following additional effects for 5 seconds: Grants a +5 % Haste Status Effect and the Elusive Status Effect.",
+    "descriptionRuRaw": "Реквизит, символизирующий жертву, на которую женщина идет, чтобы спасти любимого от смертного приговора. Уменьшает расход заряда \"Очертя голову\" на 25% Светящиеся грибы дают выжившим 10% спешки на 5 сек. Выжившие не оставляют следы-трещины, лужи крови и не кричат от боли, а эффекты, проявляющие ауру, не происходят \"Спешка\" ускоряет перемещение выжившего.",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Krasue",
+    "icon": "/loadout/addon/framed-newspaper.webp",
+    "slug": "framed-newspaper",
+    "name": {
+      "en": "Framed Newspaper",
+      "ru": "Газета в рамке"
+    },
+    "description": "\"She had once made it onto the entertainment section of the city's newspaper, but she wanted more.\" Modifies Headlong Flight with the following effects: Increases its Charge capacity by +6 Charges. Increases its Recharge rate by +15 %. Raises its Activation threshold to 50 %.",
+    "descriptionRuRaw": "Однажды она попала в развлекательную рубрику городской газеты, но этого было мало. Увеличивает максимальное количество зарядов \"Очертя голову\" на 6 и скорость перезарядки на 15% \"Очертя голову\" можно использовать при половине заряда",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Krasue",
+    "icon": "/loadout/addon/janjira-s-hand.webp",
+    "slug": "janjira-s-hand",
+    "name": {
+      "en": "Janjira's Hand",
+      "ru": "Рука Джанджиры"
+    },
+    "description": "\"One of the few distinguishable parts that remained of her friend.\" Whenever a Generator is completed, Janjira's Hand triggers its primary effects: Causes Headlong Flight to instantly gain +2 Charges. Increases its Recharge rate by +25 % for 15 seconds. Once the last Generator is completed, Janjira's Hand triggers its secondary effects: Instantly recharges Headlong Flight. Increases its Recharge rate by +25 % for the remainder of the Trial.",
+    "descriptionRuRaw": "Одна из нескольких памятных частей ее подруги. Вы получаете по 2 заряда \"Очертя голову\" при завершении ремонта генератора. Скорость перезарядки \"Очертя голову\" увеличивается на 25% на 15 сек. Когда отремонтировано 5 генераторов, \"Очертя голову\" полностью заряжается, а скорость перезарядки навсегда увеличивается на 25%",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Krasue",
+    "icon": "/loadout/addon/spattered-handkerchief.webp",
+    "slug": "spattered-handkerchief",
+    "name": {
+      "en": "Spattered Handkerchief",
+      "ru": "Забрызганный носовой платок"
+    },
+    "description": "\"A sign that something was very wrong presented itself, but she chose to ignore it.\" Once the Exit Gates are powered, Spattered Handkerchief triggers the following effects: Causes all remaining Survivors to suffer from Leeched I. Causes all remaining Glowing Fungi to start decaying. Activating Corporeal Weave no longer spawns a new Glowing Fungus.",
+    "descriptionRuRaw": "Что-то явно было неладно, но она закрывала глаза на дурные знаки. Когда на ворота подается питание, все выжившие получают эффект \"Иссушение I\". Светящиеся грибы начинают гнить, а использование \"Мирских уз\" не приводит к появлению новых светящихся грибов",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Krasue",
+    "icon": "/loadout/addon/theatre-binoculars.webp",
+    "slug": "theatre-binoculars",
+    "name": {
+      "en": "Theatre Binoculars",
+      "ru": "Theatre Binoculars"
+    },
+    "description": "\"A pair of glasses that have watched many tragedies.\" Successfully hitting a Survivor not currently afflicted with Leeched with an Intestinal Whip attack triggers the following effect: The Auras of all other Survivors within 24 metres are revealed to you for 6 seconds.",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Krasue",
+    "icon": "/loadout/addon/lorenza-s-remains.webp",
+    "slug": "lorenza-s-remains",
+    "name": {
+      "en": "Lorenza's Remains",
+      "ru": "Остатки лоренцы"
+    },
+    "description": "\"Even her pet bird would fall victim to The Krasue's thirst for blood.\" Survivors afflicted with Leeched also suffer from the following effects: Tier I: Blindness Status Effect. Tier II: -4 % Hindered Status Effect.",
+    "descriptionRuRaw": "Даже ручная птичка пала жертвой кровожадности Красу. \"Иссушение I\" вызывает слепоту \"Иссушение II\" замедляет на 4% \"Слепота\" не дает выжившим видеть ауры. \"Замедление\" снижает скорость передвижения выжившего.",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Krasue",
+    "icon": "/loadout/addon/mysterious-elixir.webp",
+    "slug": "mysterious-elixir",
+    "name": {
+      "en": "Mysterious Elixir",
+      "ru": "Загадочный эликсир"
+    },
+    "description": "\"A liquid moulded from The Fog itself. Though similar to the concoction she drank, there seem to be slight alterations.\" Modifies Regurgitate with the following effect: Hitting Windows with a Leeching Gland causes them to become Marked. This effect can affect multiple objects at a time. Vaulting a Marked Window by any means triggers the following effect: Blocks it for 10 seconds and removes its Mark.",
+    "descriptionRuRaw": "Жидкость, выделенная из самого Тумана. Напоминает снадобье, которое пила она, но с некоторыми изменениями. При попадании высасывающей железы в окно на нем появляется метка Если вы выпрыгиваете в помеченное окно, оно блокируется на 10 сек., после чего метка исчезает Одновременно может быть отмечено только одно окно",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Krasue",
+    "icon": "/loadout/addon/queen-s-sceptre.webp",
+    "slug": "queen-s-sceptre",
+    "name": {
+      "en": "Queen's Sceptre",
+      "ru": "Queen's Sceptre"
+    },
+    "description": "\"The stage prop of a vengeful queen who demands blood.\" Successfully hitting a Survivor with an Intestinal Whip attack triggers the following effect: Causes a Leeching Gland to spatter from their location.",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Krasue",
+    "icon": "/loadout/addon/rotten-swine.webp",
+    "slug": "rotten-swine",
+    "name": {
+      "en": "Rotten Swine",
+      "ru": "Гнилая свинья"
+    },
+    "description": "\"A revolting meal that left her disgusted when she awoke.\" Modifies Regurgitate with the following effect: Hitting Breakable Walls, Generators, or Pallets with a Leeching Gland causes them to become Marked. This effect can only affect a single object at a time. While interacting with the Marked Prop, you benefit from the following effect: Increases the Action speed for Breaking and Damaging by +15 %.",
+    "descriptionRuRaw": "Отталкивающая пища - отвратительное зрелище, которое ждало ее по пробуждении. При попадании по генератору, опрокинутой доске или разрушаемой стене высасывающей железой ставится метка Повреждение или базовая поломка отмеченных предметов занимают на 15% меньше времени и снимают метку Одновременно может быть отмечен только один объект",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Krasue",
+    "icon": "/loadout/addon/chicken-head.webp",
+    "slug": "chicken-head",
+    "name": {
+      "en": "Chicken Head",
+      "ru": "Цыплячья голова"
+    },
+    "description": "\"Believed by some to have mystical properties, this particular sample was lodged in The Krasue's throat after a feed.\" Modifies Unbodied Flesh with the following effects: All Survivors are afflicted with Leeched I at the start of the Trial. Increases the initial count of Glowing Fungus by +2.",
+    "descriptionRuRaw": "Согласно поверью, они наделены мистической силой. Конкретно этот экземпляр оказался в глотке Красу после кормления. Все выжившие получают эффект \"Иссушение I\" В начале матча на карте появляются 2 дополнительных светящихся гриба",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Krasue",
+    "icon": "/loadout/addon/shredded-gown.webp",
+    "slug": "shredded-gown",
+    "name": {
+      "en": "Shredded Gown",
+      "ru": "Изодранное платье"
+    },
+    "description": "\"She tore at her clothes and into her flesh as her body burned.\" Unlocks potential in your Aura-reading ability while using Corporeal Weave: The Auras of all Survivors who are either within 8 metres of a Glowing Fungus or holding one are revealed to you for 5 seconds.",
+    "descriptionRuRaw": "Ее тело горело, она разрывала на себе одежду и плоть. \"Мирские узы\" на 5 сек. делают видимыми ауры всех выживших, находящихся в пределах 8м от светящегося гриба и подобравших светящийся гриб",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "First",
+    "icon": "/loadout/addon/bead-maze.webp",
+    "slug": "bead-maze",
+    "name": {
+      "en": "Bead Maze",
+      "ru": "Бисерный лабиринт"
+    },
+    "description": "\"A developmental toy used to enrich the minds of captive children.\" Modifies Worldbreaker with the following effect: The second phase of the Worldbreaker Timer is increased by 2.5 seconds for each living Survivor.",
+    "descriptionRuRaw": "Развивающая игрушка для детей, содержащихся в неволе. Вторая фаза таймера \"Крушителя миров\" продлевается на 2.5 сек. за каждого живого выжившего.",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "First",
+    "icon": "/loadout/addon/mid-century-radio.webp",
+    "slug": "mid-century-radio",
+    "name": {
+      "en": "Mid-Century Radio",
+      "ru": "Винтажный радиоприемник"
+    },
+    "description": "\"It sat silent in the Creel's dining room until the slaughter was about to begin.\" Unlocks potential in your Aura-reading ability while using Worldbreaker: Survivors more than 32 metres away have their Auras revealed while interacting with Grandfather Clocks.",
+    "descriptionRuRaw": "Он молча стоял в столовой Крилов до самого начала резни. Пока действует режим \"Крушителя миров\", дедушкины часы дальше 32 м от вас показывают ауры работающих с ними выживших",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "First",
+    "icon": "/loadout/addon/orderly-id.webp",
+    "slug": "orderly-id",
+    "name": {
+      "en": "Orderly ID",
+      "ru": "Бейдж санитара"
+    },
+    "description": "\"Bears the face of Henry Creel as he appeared before he was changed by another dimension.\" Modifies Vine Attack with the following effect: While not in Worldbreaker Mode, the aiming range is increased by 2 metres.",
+    "descriptionRuRaw": "На бейдже есть фотография Генри Крила в прежнем виде, пока другое измерение не изменило его до неузнаваемости. Вне режима \"Крушителя миров\" дальность прицеливания \"Атакой лозой\" увеличивается на 2 м.",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "First",
+    "icon": "/loadout/addon/stained-glass-mural.webp",
+    "slug": "stained-glass-mural",
+    "name": {
+      "en": "Stained Glass Mural",
+      "ru": "Витражная роспись"
+    },
+    "description": "\"A design once found on the Creel family door. Now it darkens the door of another dimension.\" Modifies The Upside Down with the following effect: While on cooldown, breaking Pallets and Breakable Walls decreases that cooldown by 12 seconds.",
+    "descriptionRuRaw": "Узор, прежде украшавший дверь семьи Крилов. Теперь он мрачной печатью стоит на двери в другое измерение. Пока перезаряжается переход на Изнанку, разрушение досок и стен ускоряет эту перезарядку на 12 сек.",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "First",
+    "icon": "/loadout/addon/bloody-roller-skate.webp",
+    "slug": "bloody-roller-skate",
+    "name": {
+      "en": "Bloody Roller Skate",
+      "ru": "Окровавленный конек"
+    },
+    "description": "\"A memento of the fury that Eleven was capable of.\" Modifies the Undergate Attack with the following effect: Grants the 20 % Haste Status Effect for 1.5 seconds.",
+    "descriptionRuRaw": "Напоминание о том, какую ярость способна выплеснуть Одиннадцатая. При использовании \"Атаки через ворота\" убийца получает 20% эффекта \"Спешка\" на 1.5 сек. после выхода из ворот. \"Спешка\" повышает скорость передвижения убийцы.",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "First",
+    "icon": "/loadout/addon/clock-hands.webp",
+    "slug": "clock-hands",
+    "name": {
+      "en": "Clock Hands",
+      "ru": "Стрелки часов"
+    },
+    "description": "\"Hands of the Creel family's grandfather clock, corrupted by Henry's dark power.\" Modifies the Grandfather Clocks with the following effect: Causes Survivors to gain the Oblivious Status Effect while interacting with the Grandfather Clocks and for 12 seconds after.",
+    "descriptionRuRaw": "Стрелки дедушкиных часов Крила, оскверненные темной силой Генри. При взаимодействии с дедушкиными часами на выживших накладывается эффект \"Забывчивость\" на 12 сек. AND FOR 12 SECONDS AFTER[2] \"Забывчивость\" мешает выжившим слышать или подвергаться действию радиуса террора убийцы",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "First",
+    "icon": "/loadout/addon/gutted-supercom.webp",
+    "slug": "gutted-supercom",
+    "name": {
+      "en": "Gutted Supercom",
+      "ru": "Разобранный суперком"
+    },
+    "description": "\"A broken communication device that now crackles to life at the most terrifying times.\" Unlocks potential in your Aura-reading ability while using Vine Attack: While not in Worldbreaker Mode, hitting a Survivor with a Vine Attack reveals their Aura to you for 1.5 seconds.",
+    "descriptionRuRaw": "Сломанное устройство связи, оживающее и начинающее потрескивать в самые пугающие моменты. Ауры выживших, пораженных \"Атакой лозой\" во время действия режима \"Крушитель миров\", видны в течение 1.5 сек.",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "First",
+    "icon": "/loadout/addon/shattered-wrist-rocket.webp",
+    "slug": "shattered-wrist-rocket",
+    "name": {
+      "en": "Shattered Wrist Rocket",
+      "ru": "Сломанная \"Ракета\""
+    },
+    "description": "\"A once-powerful slingshot, now laid to ruin.\" Modifies Undergate Attack with the following effect: The explosion from the Undergate Attack breaks Pallets instantly and damages Generators.",
+    "descriptionRuRaw": "Некогда мощная, но теперь совершенно испорченная рогатка. При \"Атаке через ворота\" упавшие доски и генераторы, попавшие в зону эффекта, ломаются и взрываются",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "First",
+    "icon": "/loadout/addon/smashed-cassette-deck.webp",
+    "slug": "smashed-cassette-deck",
+    "name": {
+      "en": "Smashed Cassette Deck",
+      "ru": "Раздолбанный кассетник"
+    },
+    "description": "\"They once used music to escape Henry's grasp. Without it, they do not stand a chance.\" At the start of the match, all Survivors scream. All Survivors start with one Worldbreaker token. When Worldbreaker is activated for the first time, all Survivors lose their Worldbreaker token. 1 less Grandfather Clock appears on the map.",
+    "descriptionRuRaw": "Когда-то музыка помогала им спасаться от Генри. Без нее шансов у них никаких. Все выжившие начинают с одним жетоном \"Крушителя миров\". Когда одноименный режим активируется впервые, все выжившие теряют эти жетоны. Дедушкиных часов на карте будет на 1 меньше.",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "First",
+    "icon": "/loadout/addon/electrode-cap.webp",
+    "slug": "electrode-cap",
+    "name": {
+      "en": "Electrode Cap",
+      "ru": "Колпак с электродами"
+    },
+    "description": "\"Used to measure the brain's activity. In the lab, nothing goes unnoticed.\" Modifies Worldbreaker with the following effect: At the start of the second phase, Survivors more than 26 metres away have their Auras revealed to you for 6 seconds.",
+    "descriptionRuRaw": "Использовался для оценки электрической активности мозга. В лаборатории должны регистрироваться все показатели. В начале второй фазы режима \"Крушителя миров\" (или когда выжившие COMPLETE[1] взаимодействуют с дедушкиными часами), ауры всех выживших дальше 26м от убийцы проявляются на 6 сек.",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "First",
+    "icon": "/loadout/addon/forged-death-certificate.webp",
+    "slug": "forged-death-certificate",
+    "name": {
+      "en": "Forged Death Certificate",
+      "ru": "Поддельное свидетельство о смерти"
+    },
+    "description": "\"A piece of paper used to prove the death of a powerful person who was very much alive.\" Modifies Vine Attack with the following effect: Applying a Worldbreaker Token on any Survivor afflicts the Killer with the Undetectable Status Effect until the next Worldbreaker Mode activation.",
+    "descriptionRuRaw": "Документ, свидетельствующий о смерти влиятельного человека, который вообще-то жив и здоров. Каждый жетон \"Крушителя миров\", накладываемый на выживших \"Атакой лозой\", дает вам эффект \"Незаметность\" до следующей активации режима \"Крушитель миров\". \"Незаметность\" скрывает ауру, радиус террора и красное свечение убийцы.",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "First",
+    "icon": "/loadout/addon/neck-tendril.webp",
+    "slug": "neck-tendril",
+    "name": {
+      "en": "Neck Tendril",
+      "ru": "Шейное щупальце"
+    },
+    "description": "\"He was furious when the tendril was torn from his neck as Max escaped his mind realm.\" Modifies Vine Attack with the following effect: While in Worldbreaker Mode, Survivors hit by Vine Attack gain the Haemorrhage and Mangled Status Effects for 70 seconds.",
+    "descriptionRuRaw": "Он пришел в ярость, когда из его шеи выдрали щупальце, а Макс сбежала из воображаемой реальности. Выжившие, пораженные \"Атакой лозой\" в режиме \"Крушитель миров\", получают эффекты \"Кровотечение\" и \"Травма\" на 70 сек. \"Кровотечение\" уменьшает прогресс лечения, когда выжившего не лечат, и увеличивает кровавый след за ранеными выжившими. Длится указанное время или до полного исцеления. \"Травма\" увеличивает время лечения на 25% и действует указанное время или до полного исцеления",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "First",
+    "icon": "/loadout/addon/pizza-goggles.webp",
+    "slug": "pizza-goggles",
+    "name": {
+      "en": "Pizza Goggles",
+      "ru": "Очки из пиццерии"
+    },
+    "description": "\"Used while Eleven entered sensory deprivation, they rid the user of distractions and focus the mind.\" Modifies The Upside Down with the following effect: Cooldown is reduced by 25 seconds. Modifies Undergate Attack with the following effects: Attack radius is decreased by 90 %. Attack cool-down is reduced by 80 %.",
+    "descriptionRuRaw": "Одиннадцать входила в состояние сенсорной депривации, чтобы закрыться от сторонних раздражителей и сосредоточиться. Область воздействия \"Атаки через ворота\" уменьшается на 90%, но ее время перезарядки снижается на 25 сек. Ваше время перезарядки выхода уменьшается на 80% после выполнения \"Атаки через ворота\".",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "First",
+    "icon": "/loadout/addon/victor-s-razor-blade.webp",
+    "slug": "victor-s-razor-blade",
+    "name": {
+      "en": "Victor's Razor Blade",
+      "ru": "Бритва Виктора"
+    },
+    "description": "\"In his own grief, Henry's father used a hidden blade to take out his own eyes.\" Modifies Worldbreaker with the following effect: Upon ending, injured Survivors gain the Broken Status Effect for 20 seconds.",
+    "descriptionRuRaw": "Скорбящий отец Генри воспользовался спрятанной бритвой, чтобы лишить себя глаз. Когда заканчивается действие режима \"Крушитель миров\", на раненых выживших накладывается эффект \"Ослабление\" на 20 сек. \"Ослабление\" не дает выжившим лечиться",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "First",
+    "icon": "/loadout/addon/black-widow-spider.webp",
+    "slug": "black-widow-spider",
+    "name": {
+      "en": "Black Widow Spider",
+      "ru": "Черная вдова"
+    },
+    "description": "\"A terrifying spider that is no longer a mere hallucination.\" Unlocks potential in your Aura-reading ability while using The Upside Down in Worldbreaker Mode: The Aura of the furthest Survivor more than 36 metres away is revealed to you for 3 seconds.",
+    "descriptionRuRaw": "Жуткий паук, переставший быть простой галлюцинацией. Переход на Изнанку в режиме \"Крушителя миров\" вынуждает выжившего, находящегося дальше всех на расстоянии более 36м раскрыть свою ауру на 3 сек.",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "First",
+    "icon": "/loadout/addon/broken-skateboard.webp",
+    "slug": "broken-skateboard",
+    "name": {
+      "en": "Broken Skateboard",
+      "ru": "Сломанный скейт"
+    },
+    "description": "\"A cool way to get around, smashed by a furious brother as a means of control.\" Modifies Worldbreaker with the following effect: When Worldbreaker Mode activates, the following effects trigger for 65 seconds: Increases vaulting speed by 30 %. Pallet and Window Auras are revealed within 32 metres.",
+    "descriptionRuRaw": "Крутой транспорт для катания по округе, разбитый обозленным братом в качестве наказания. При активации \"Крушителя миров\" в течение следующих 65 сек. скорость базовых прыжков убийцы повышается на 30% и вы можете видеть ауры досок и окон в радиусе 32м.",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "First",
+    "icon": "/loadout/addon/electroshock-collar.webp",
+    "slug": "electroshock-collar",
+    "name": {
+      "en": "Electroshock Collar",
+      "ru": "Ошейник-электрошокер"
+    },
+    "description": "\"A cruelly efficient way of training and punishing the facility's prisoners.\" Modifies The Upside Down with the following effect: When exiting, all Vault locations within 32 metres are blocked for 12 seconds.",
+    "descriptionRuRaw": "Жестокий и эффективный метод обучения и наказания пленников в учреждении. При выходе с Изнанки на 12 сек. блокируются все окна в пределах 32м",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "First",
+    "icon": "/loadout/addon/rabbit-remains.webp",
+    "slug": "rabbit-remains",
+    "name": {
+      "en": "Rabbit Remains",
+      "ru": "Останки кролика"
+    },
+    "description": "\"Before massacring his family, Henry started small, killing rabbits and leaving their corpses strewn about town.\" Modifies Undergate Attack with the following effect: Survivors standing in or entering the area of effect gain the Exhausted Status Effect and for 10 seconds after. Modifies The Upside Down with the following effect: Increases cool-down by 5 seconds.",
+    "descriptionRuRaw": "Прежде чем убить родных, Генри пробовал силы, убивая кроликов и оставляя их тушки валяться по всему городу. На выживших накладывается эффект \"Усталость\", когда они находятся в зоне действия \"Атаки через ворота\" или входят в нее. Действует 10 сек. Увеличивает перезарядку передвижения по Изнанке на 5 сек. \"Усталость\" не дает выжившим активировать некоторые навыки",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "First",
+    "icon": "/loadout/addon/chess-piece.webp",
+    "slug": "chess-piece",
+    "name": {
+      "en": "Chess Piece",
+      "ru": "Шахматная фигурка"
+    },
+    "description": "\"One of the few forms of entertainment while in the facility, it helped the students learn logic and tactics.\" Modifies the Vine Attack with the following effect: Gains two charges, and has its attack radius reduced by 40 %.",
+    "descriptionRuRaw": "Одна из немногих доступных подопытным игр, развивающая логику и тактическое мышление. У \"Атаки лозой\" 2 заряда, но радиус действия уменьшен на 40%.",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "First",
+    "icon": "/loadout/addon/iridescent-soteria-chip.webp",
+    "slug": "iridescent-soteria-chip",
+    "name": {
+      "en": "Iridescent Soteria Chip",
+      "ru": "Радужный чип подавления"
+    },
+    "description": "\"A chip that once limited his powers is now a source of even greater power.\" Modifies Worldbreaker with the following effect: Upon activation, grants the Undetectable Status Effect and the Auras of Survivors with at least one Worldbreaker Token are revealed to you when they are within 12 metres. This lasts until you perform a Vine Attack, enter The Upside Down, or when Worldbreaker ends.",
+    "descriptionRuRaw": "Чип, некогда ограничивавший его силы, стал источником еще большего могущества. При активации \"Крушителя миров\" убийца получает \"Незаметность\", а выжившие как минимум с одним жетоном \"Крушителя миров\" раскрывают свою ауру, проходя в пределах 12 м от убийцы. Эффект длится до тех пор, пока убийца не проведет \"Атаку лозой\" или не перейдет на Изнанку, либо с завершением режима \"Крушитель миров\". \"Незаметность\" скрывает ауру, радиус террора и красное свечение убийцы",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Slasher",
+    "icon": "/loadout/addon/bent-wheel.webp",
+    "slug": "bent-wheel",
+    "name": {
+      "en": "Bent Wheel",
+      "ru": "Погнутое колесо"
+    },
+    "description": "\"All that remained of the victim's wheelchair after the fatal blow.\" Increases the Jump Scare targeting range by +4 metres.",
+    "descriptionRuRaw": "Все, что осталось от кресла-каталки жертвы после фатального удара. Увеличивает расстояние, на котором вы можете применить пугалку, на 4 м.",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Slasher",
+    "icon": "/loadout/addon/garden-claw.webp",
+    "slug": "garden-claw",
+    "name": {
+      "en": "Garden Claw",
+      "ru": "Ручной культиватор"
+    },
+    "description": "\"Good for digging up weeds and digging into human flesh.\" Increases the duration of Killer Instinct after a Jump Scare by +2 seconds.",
+    "descriptionRuRaw": "Одинаково хорошо позволяет вспахать землю и вспороть человеческую плоть. Продлевает действие инстинкта убийцы после пугалки на 2 сек.",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Slasher",
+    "icon": "/loadout/addon/knitting-needle.webp",
+    "slug": "knitting-needle",
+    "name": {
+      "en": "Knitting Needle",
+      "ru": "Вязальная спица"
+    },
+    "description": "\"You won't believe what—and who—this thing has been through.\" Increases the time it takes for Survivors to remove an impaled Hook Spike from themselves by +20 %.",
+    "descriptionRuRaw": "Вы просто не поверите, через что — и через кого — проходила эта штуковина. Увеличивает срок, необходимый раненым пронзенным выжившим, чтобы самостоятельно извлечь из себя шип, на 20%.",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Slasher",
+    "icon": "/loadout/addon/orderly-s-shoe.webp",
+    "slug": "orderly-s-shoe",
+    "name": {
+      "en": "Orderly's Shoe",
+      "ru": "Туфля санитарки"
+    },
+    "description": "\"It hung from her twitching foot as the knife plunged into her belly.\" Increases the duration of the Haste Status Effect after a Jump Scare by +5 seconds.",
+    "descriptionRuRaw": "Она свисала с дергающейся ноги, когда нож вонзался в живот жертвы. Продлевает \"Спешку\" после использования пугалки на 5 сек. \"Спешка\" повышает скорость передвижения убийцы.",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Slasher",
+    "icon": "/loadout/addon/bloody-smile.webp",
+    "slug": "bloody-smile",
+    "name": {
+      "en": "Bloody Smile",
+      "ru": "Кровавая улыбка"
+    },
+    "description": "\"He wasn't happy after his face was smashed into a tree.\" Increase the detection ranges of Jump Scare and Omnipresent Evil by +4 metres.",
+    "descriptionRuRaw": "Он был совсем не рад, когда его приложили лицом о дерево. Увеличивает дальность действия пугалки и радиус обнаружения выживших в режиме \"Вездесущее зло\" на 4 м.",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Slasher",
+    "icon": "/loadout/addon/coroner-s-coffee.webp",
+    "slug": "coroner-s-coffee",
+    "name": {
+      "en": "Coroner's Coffee",
+      "ru": "Кофе коронера"
+    },
+    "description": "\"A cup of coffee that went unfinished.\" Increases the duration of Throwing Spike's push by +25 %. Gain +13 % Haste Status Effect for 3 seconds after injuring a Survivor with a Throwing Spike if they do not collide with the environment during the push.",
+    "descriptionRuRaw": "Чашка кофе, оставшегося недопитым. Увеличивает дистанцию, на которую выжившие отбрасываются железками, на 25%. Вы получаете 8% \"Спешки\" на 3 сек., когда раните выжившего железкой. \"Спешка\" повышает скорость передвижения убийцы.",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Slasher",
+    "icon": "/loadout/addon/party-noisemaker.webp",
+    "slug": "party-noisemaker",
+    "name": {
+      "en": "Party Noisemaker",
+      "ru": "Праздничная шумелка"
+    },
+    "description": "\"A party instrument that tore through a woman's eyeball and gouged her brain.\" Breaking a Pallet or a Breakable Wall with Jump Scare reveals all Survivors further than 28 metres for 6 seconds.",
+    "descriptionRuRaw": "Игрушка для вечеринки, пробившая одной женщине глаз и вошедшая в ее мозг. Ломая доски или разрушаемые стены с помощью пугалки, вы начинаете видеть ауры выживших дальше 32 м от вас в течение 6 сек[5].",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Slasher",
+    "icon": "/loadout/addon/sleeping-bag.webp",
+    "slug": "sleeping-bag",
+    "name": {
+      "en": "Sleeping Bag",
+      "ru": "Спальный мешок"
+    },
+    "description": "\"An absolutely awful place to hide from a killer.\" After grabbing a Hook Spike while in Omnipresent Evil, Survivors who are within 10 metres of any Hook have their location revealed for 5 seconds.",
+    "descriptionRuRaw": "Абсолютно не подходящее место для того, чтобы спрятаться от убийцы. Взяв шип с крюка в режиме \"Вездесущее зло\", вы увидите местоположение выживших в пределах 8 м от крюков[6].",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Slasher",
+    "icon": "/loadout/addon/toxic-waste.webp",
+    "slug": "toxic-waste",
+    "name": {
+      "en": "Toxic Waste",
+      "ru": "Токсичные отходы"
+    },
+    "description": "\"No one could survive being submerged in this poison.\" After performing a Jump Scare, Survivors within 10 metres of a Hook or a Scrap Pile are inflicted with the Oblivious Status Effect for 13 seconds.",
+    "descriptionRuRaw": "Никто не выживет, если окунуть его в эту отраву. После применения пугалки на всех выживших в пределах 8 м[7] от крюка или груды хлама накладывается эффект \"Забывчивость\" на 13 сек. \"Забывчивость\" мешает выжившим слышать или подвергаться действию радиуса террора убийцы.",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Slasher",
+    "icon": "/loadout/addon/eye-goop.webp",
+    "slug": "eye-goop",
+    "name": {
+      "en": "Eye Goop",
+      "ru": "Глазная слизь"
+    },
+    "description": "\"What remains when a harpoon is shoved into one's eye.\" Gain the Undetectable Status Effect after grabbing a Hook Spike for 13 seconds.",
+    "descriptionRuRaw": "Вот что остается от глаза после попадания гарпуна. Получите эффект \"Незаметность\" на 13 сек., когда берете железку с крюка. \"Незаметность\" скрывает ауру, радиус террора и красное свечение убийцы",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Slasher",
+    "icon": "/loadout/addon/imprinted-aluminum.webp",
+    "slug": "imprinted-aluminum",
+    "name": {
+      "en": "Imprinted Aluminum",
+      "ru": "Рельефный алюминий"
+    },
+    "description": "\"It's either avant-garde artwork, or the horrified imprint of a woman whose face was slammed into it.\" Injuring a healthy Survivor with a Throwing Spike inflicts them with the Mangled and Haemorrhage Status Effects for 70 seconds.",
+    "descriptionRuRaw": "Это либо авангардная картина, либо ужасный отпечаток лица женщины, которую били об нее головой. Здоровые выжившие, в которых попадает железка, страдают от эффектов \"Травма\" и \"Кровотечение\" в течение 70 сек. \"Травма\" увеличивает время лечения на 25% и действует указанное время или до полного исцеления. \"Кровотечение\" уменьшает прогресс лечения, когда выжившего не лечат, и увеличивает кровавый след за ранеными выжившими. Действует в течение указанного срока или до полного исцеления.",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Slasher",
+    "icon": "/loadout/addon/mirror-shards-slasher.webp",
+    "slug": "mirror-shards-slasher",
+    "name": {
+      "en": "Mirror Shards",
+      "ru": "Осколки зеркала"
+    },
+    "description": "\"A weapon that dealt more than bad luck.\" Survivors are inflicted with the Broken Status Effect after extracting a Hook Spike from themselves for 40 seconds.",
+    "descriptionRuRaw": "Осколки разбившегося зеркала создают игру света и тени, сильнее сбивая заплутавших с толку. Хороший Парень может видеть иллюзорные следы \"Топотка\" возле выживших",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Slasher",
+    "icon": "/loadout/addon/sauna-rock.webp",
+    "slug": "sauna-rock",
+    "name": {
+      "en": "Sauna Rock",
+      "ru": "Камень для сауны"
+    },
+    "description": "\"Nicely weighted, could be used to crush a rib cage.\" After performing a Jump Scare, inflict all detected Survivors with the Exhausted Status Effect for 3 seconds.",
+    "descriptionRuRaw": "В самый раз по весу, чтобы проломить грудную клетку. После использования пугалки вы накладываете эффект \"Усталость\" на всех выживших в зоне обнаружения инстинкта убийцы на 13 сек[3]. \"Усталость\" не дает выжившим активировать утомляющие навыки.",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Slasher",
+    "icon": "/loadout/addon/two-nails.webp",
+    "slug": "two-nails",
+    "name": {
+      "en": "Two Nails",
+      "ru": "Два гвоздя"
+    },
+    "description": "\"A reliable way to hold a corpse's wrist in place.\" Survivors that come within 1 metre of a Throwing Spike have their Aura revealed for 5 seconds.",
+    "descriptionRuRaw": "Надежный способ зафиксировать запястье трупа. Шипы, пролетающие в пределах 1 м от выживших, раскрывают их ауры на 6 сек[2].",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Slasher",
+    "icon": "/loadout/addon/bloody-magazine.webp",
+    "slug": "bloody-magazine",
+    "name": {
+      "en": "Bloody Magazine",
+      "ru": "Кровавый журнал"
+    },
+    "description": "\"The spattering of blood told the story of a brutal massacre.\" When a Hook Spike misses, all Survivors within 8 metres of the Hook Spike's impact zone scream and reveal their Auras for 3 seconds.",
+    "descriptionRuRaw": "Брызги крови повествовали историю жестокой бойни. Когда железка с крюка не попадает в цель, все выжившие в пределах 8 м от точки падения кричат, показывая свои ауры на 3 сек.",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Slasher",
+    "icon": "/loadout/addon/burnt-fuse.webp",
+    "slug": "burnt-fuse",
+    "name": {
+      "en": "Burnt Fuse",
+      "ru": "Сгоревший предохранитель"
+    },
+    "description": "\"The surge of electricity was overwhelming. It left the man's flesh charred and smelling of cooked meat.\" When a Survivor is impaled by a Hook Spike, the Exit Gates are blocked for them and any Survivor within 13 metres. This effect persists for 5 seconds after the Survivor is no longer impaled.",
+    "descriptionRuRaw": "Удар током был настолько сокрушительным, что опалил кожу мужчины, заполнив воздух запахом горелого мяса. Когда выживший пронзен и еще 5 сек. после вынимания железки: ворота блокируются для всех выживших в пределах 13 м.",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Slasher",
+    "icon": "/loadout/addon/deputy-s-badge.webp",
+    "slug": "deputy-s-badge",
+    "name": {
+      "en": "Deputy's Badge",
+      "ru": "Жетон помощника шерифа"
+    },
+    "description": "\"The badge of an officer who discovered that some things aren't worth investigating.\" While in Omnipresent Evil, passing within 2 metres of a Generator causes the Generator to explode, lose -5 % progress and begin regressing. If a Survivor is repairing the Generator, all Survivors repairing it will instead get a special Skill Check. If the Skill Check is failed, the Generator loses -10 % additional progress on top of the base Skill Check penalty.",
+    "descriptionRuRaw": "Значок полицейского, осознавшего, что некоторым делам лучше оставаться не раскрытыми. Пока вы находитесь в режиме \"Вездесущее зло\", вам достаточно приблизиться к генератору на 4 м[1], чтобы тот взорвался, потерял 5% прогресса и начал разрушаться. Если в этот момент генератор чинят выжившие, тот не взорвется, но им придется пройти особую проверку реакции.",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Slasher",
+    "icon": "/loadout/addon/missing-corkscrew.webp",
+    "slug": "missing-corkscrew",
+    "name": {
+      "en": "Missing Corkscrew",
+      "ru": "Пропавший штопор"
+    },
+    "description": "\"It seems to always be missing when you need it on-hand.\" When a Survivor is impaled by a Hook Spike, they emit a 32 metre Terror Radius until the Hook Spike is removed. Gain the Undetectable Status Effect when impaling a Survivor with a Hook Spike. This effect persists for 13 seconds after the Survivor is no longer impaled.",
+    "descriptionRuRaw": "Он будто нарочно прячется всякий раз, когда нужен. Пронзенные выжившие получают радиус террора 32 м до тех пор, пока из них не вытащат железку. Вы получаете эффект \"Незаметность\", когда выживший пронзен и еще 13 сек. после вынимания железки. \"Незаметность\" скрывает ауру, радиус террора и красное свечение убийцы",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Slasher",
+    "icon": "/loadout/addon/dirty-money.webp",
+    "slug": "dirty-money",
+    "name": {
+      "en": "Dirty Money",
+      "ru": "Грязные деньги"
+    },
+    "description": "\"No amount of money can save you from him.\" When a Generator is repaired, gain 2 tokens. When you vault a Window or break a Pallet or a Breakable Wall, consume 1 token and gain a regular Spike if you don't have one already.",
+    "descriptionRuRaw": "От него вы не откупитесь никакими деньгами. Получайте по 2 жетона всякий раз, когда будет починен генератор. Если у вас нет в руках железки, когда вы прыгаете в окно, ломаете доски или стену, то вы сразу же тратите жетон и получаете железку.",
+    "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Slasher",
+    "icon": "/loadout/addon/iridescent-boat-motor.webp",
+    "slug": "iridescent-boat-motor",
+    "name": {
+      "en": "Iridescent Boat Motor",
+      "ru": "Радужный лодочный мотор"
+    },
+    "description": "\"The blades are chipped and cracked, as if having cut through something solid.\" Passing through Windows while in Omnipresent Evil marks them for 13 seconds. Performing a Jump Scare blocks all marked Windows for 13 seconds.",
+    "descriptionRuRaw": "Лопасти покрыты зазубринами и трещинами, словно налетели на что-то твердое. Преодолевание окон в режиме \"Вездесущее зло\" помечает их на 13 сек. Когда вы применяете пугалку, все помеченные окна блокируются на 13 сек.",
+    "addedAt": "2026-08-17T19:16:57.947Z"
   }
 ]

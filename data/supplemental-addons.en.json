@@ -1,0 +1,323 @@
+{
+  "_comment": "Killer add-ons for characters deadbydaylight.fandom.com/wiki/Add-ons hasn't added yet (same Fandom-lag pattern as data/supplemental-perks.en.json) — sourced from each killer's own deadbydaylight.wiki.gg page's Add-ons table.",
+  "entries": [
+    {
+      "character": "Krasue",
+      "releasedAt": "2025-09-23",
+      "addons": [
+        {
+          "name": "Broken Tiara",
+          "description": "\"A dazzling stage prop worn by a Pharoah's daughter, as distracting as it is fake.\" Modifies the Glowing Fungus with the following effect: Causes Survivors to suffer from the Oblivious Status Effect while under its effects.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/IconAddon_brokenTiara.png"
+        },
+        {
+          "name": "First Libretto",
+          "description": "\"She felt as if she could walk on air after landing a role in her first opera.\" Whenever you hook a Survivor afflicted with Leeched, you benefit from the following effect: Reduces the Consumption rate of Headlong Flight by -30 % for 15 seconds.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/IconAddon_firstLibretto.png"
+        },
+        {
+          "name": "Luckless Mouse",
+          "description": "\"A game of cat and mouse always gets the blood pumping.\" Modifies Headlong Flight with the following effect: Increases its Charge capacity by +2 Charges.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/IconAddon_lucklessMouse.png"
+        },
+        {
+          "name": "Sticky Lozenge",
+          "description": "\"A simple tablet to moisten a dry throat, often taken before an audition.\" Modifies Regurgitate with the following effect: Displays a preview of the impact zone while charging it.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/IconAddon_stickyLozenge.png"
+        },
+        {
+          "name": "Chunk of Malai",
+          "description": "\"A varied source of protein contributes to good gut health.\" Modifies the Glowing Fungus with the following effect: Incurs a stack-able -8 % Efficiency penalty per Leeched Survivor to its Depletion rate of the Leech Meter, up to a maximum of -32 %.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/IconAddon_chunkOfMalai.png"
+        },
+        {
+          "name": "Crumpled Sheet Music",
+          "description": "\"Before her desperation, she hoped that continued practice would be enough to succeed.\" Successfully hitting a Survivor with a Leeching Gland triggers the following effect: Causes Headlong Flight to instantly gain +12 Charges.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/IconAddon_crumpledSheetMusic.png"
+        },
+        {
+          "name": "Defective Metronome",
+          "description": "\"The metronome sparks as it plays at a frenetic pace.\" Modifies the Glowing Fungus with the following effect: Causes Survivors to suffer from the Exhausted Status Effect while under its effects.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/IconAddon_defectiveMetronome.png"
+        },
+        {
+          "name": "Pig's Eye",
+          "description": "\"It still glistens with saliva.\" Modifies the Glowing Fungus with the following effect: Survivors eating it while at least 40 metres from your current location have their Auras revealed to you for 6 seconds.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/IconAddon_pigsEye.png"
+        },
+        {
+          "name": "Wriggling Parasite",
+          "description": "\"A fragile organism that has an unusual effect on its host.\" Modifies the Leech Meter with the following effects: Increases its Charge rate by +16 %.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/IconAddon_wrigglingParasite.png"
+        },
+        {
+          "name": "Dulled Knife",
+          "description": "\"A stage prop, symbolic of a woman's gambit in an attempt to save her lover on death's row.\" Modifies Headlong Flight with the following effect: Reduces its Consumption rate by -25 %. Modifies the Glowing Fungus with the following effects: Causes Survivors eating it to benefit from the following additional effects for 5 seconds: Grants a +5 % Haste Status Effect and the Elusive Status Effect.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/IconAddon_dulledKnife.png"
+        },
+        {
+          "name": "Framed Newspaper",
+          "description": "\"She had once made it onto the entertainment section of the city's newspaper, but she wanted more.\" Modifies Headlong Flight with the following effects: Increases its Charge capacity by +6 Charges. Increases its Recharge rate by +15 %. Raises its Activation threshold to 50 %.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/IconAddon_framedNewspaper.png"
+        },
+        {
+          "name": "Janjira's Hand",
+          "description": "\"One of the few distinguishable parts that remained of her friend.\" Whenever a Generator is completed, Janjira's Hand triggers its primary effects: Causes Headlong Flight to instantly gain +2 Charges. Increases its Recharge rate by +25 % for 15 seconds. Once the last Generator is completed, Janjira's Hand triggers its secondary effects: Instantly recharges Headlong Flight. Increases its Recharge rate by +25 % for the remainder of the Trial.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/IconAddon_janjirasHand.png"
+        },
+        {
+          "name": "Spattered Handkerchief",
+          "description": "\"A sign that something was very wrong presented itself, but she chose to ignore it.\" Once the Exit Gates are powered, Spattered Handkerchief triggers the following effects: Causes all remaining Survivors to suffer from Leeched I. Causes all remaining Glowing Fungi to start decaying. Activating Corporeal Weave no longer spawns a new Glowing Fungus.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/IconAddon_spottedHandkerchief.png"
+        },
+        {
+          "name": "Theatre Binoculars",
+          "description": "\"A pair of glasses that have watched many tragedies.\" Successfully hitting a Survivor not currently afflicted with Leeched with an Intestinal Whip attack triggers the following effect: The Auras of all other Survivors within 24 metres are revealed to you for 6 seconds.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/IconAddon_theaterBinoculars.png"
+        },
+        {
+          "name": "Lorenza's Remains",
+          "description": "\"Even her pet bird would fall victim to The Krasue's thirst for blood.\" Survivors afflicted with Leeched also suffer from the following effects: Tier I: Blindness Status Effect. Tier II: -4 % Hindered Status Effect.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/IconAddon_lorenzasRemains.png"
+        },
+        {
+          "name": "Mysterious Elixir",
+          "description": "\"A liquid moulded from The Fog itself. Though similar to the concoction she drank, there seem to be slight alterations.\" Modifies Regurgitate with the following effect: Hitting Windows with a Leeching Gland causes them to become Marked. This effect can affect multiple objects at a time. Vaulting a Marked Window by any means triggers the following effect: Blocks it for 10 seconds and removes its Mark.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/IconAddon_iridescentElixir.png"
+        },
+        {
+          "name": "Queen's Sceptre",
+          "description": "\"The stage prop of a vengeful queen who demands blood.\" Successfully hitting a Survivor with an Intestinal Whip attack triggers the following effect: Causes a Leeching Gland to spatter from their location.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/IconAddon_queensScepter.png"
+        },
+        {
+          "name": "Rotten Swine",
+          "description": "\"A revolting meal that left her disgusted when she awoke.\" Modifies Regurgitate with the following effect: Hitting Breakable Walls, Generators, or Pallets with a Leeching Gland causes them to become Marked. This effect can only affect a single object at a time. While interacting with the Marked Prop, you benefit from the following effect: Increases the Action speed for Breaking and Damaging by +15 %.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/IconAddon_rottenSwine.png"
+        },
+        {
+          "name": "Chicken Head",
+          "description": "\"Believed by some to have mystical properties, this particular sample was lodged in The Krasue's throat after a feed.\" Modifies Unbodied Flesh with the following effects: All Survivors are afflicted with Leeched I at the start of the Trial. Increases the initial count of Glowing Fungus by +2.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/IconAddon_chickenHead.png"
+        },
+        {
+          "name": "Shredded Gown",
+          "description": "\"She tore at her clothes and into her flesh as her body burned.\" Unlocks potential in your Aura-reading ability while using Corporeal Weave: The Auras of all Survivors who are either within 8 metres of a Glowing Fungus or holding one are revealed to you for 5 seconds.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/IconAddon_shreddedGown.png"
+        }
+      ]
+    },
+    {
+      "character": "First",
+      "releasedAt": "2026-01-27",
+      "addons": [
+        {
+          "name": "Bead Maze",
+          "description": "\"A developmental toy used to enrich the minds of captive children.\" Modifies Worldbreaker with the following effect: The second phase of the Worldbreaker Timer is increased by 2.5 seconds for each living Survivor.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/IconAddon_BeadMaze.png"
+        },
+        {
+          "name": "Mid-Century Radio",
+          "description": "\"It sat silent in the Creel's dining room until the slaughter was about to begin.\" Unlocks potential in your Aura-reading ability while using Worldbreaker: Survivors more than 32 metres away have their Auras revealed while interacting with Grandfather Clocks.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/IconAddon_Mid-CenturyRadio.png"
+        },
+        {
+          "name": "Orderly ID",
+          "description": "\"Bears the face of Henry Creel as he appeared before he was changed by another dimension.\" Modifies Vine Attack with the following effect: While not in Worldbreaker Mode, the aiming range is increased by 2 metres.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/IconAddon_OrderlyID.png"
+        },
+        {
+          "name": "Stained Glass Mural",
+          "description": "\"A design once found on the Creel family door. Now it darkens the door of another dimension.\" Modifies The Upside Down with the following effect: While on cooldown, breaking Pallets and Breakable Walls decreases that cooldown by 12 seconds.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/IconAddon_StainedGlassMural.png"
+        },
+        {
+          "name": "Bloody Roller Skate",
+          "description": "\"A memento of the fury that Eleven was capable of.\" Modifies the Undergate Attack with the following effect: Grants the 20 % Haste Status Effect for 1.5 seconds.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/IconAddon_BloodyRollerSkate.png"
+        },
+        {
+          "name": "Clock Hands",
+          "description": "\"Hands of the Creel family's grandfather clock, corrupted by Henry's dark power.\" Modifies the Grandfather Clocks with the following effect: Causes Survivors to gain the Oblivious Status Effect while interacting with the Grandfather Clocks and for 12 seconds after.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/IconAddon_ClockHands.png"
+        },
+        {
+          "name": "Gutted Supercom",
+          "description": "\"A broken communication device that now crackles to life at the most terrifying times.\" Unlocks potential in your Aura-reading ability while using Vine Attack: While not in Worldbreaker Mode, hitting a Survivor with a Vine Attack reveals their Aura to you for 1.5 seconds.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/IconAddon_GuttedSupercom.png"
+        },
+        {
+          "name": "Shattered Wrist Rocket",
+          "description": "\"A once-powerful slingshot, now laid to ruin.\" Modifies Undergate Attack with the following effect: The explosion from the Undergate Attack breaks Pallets instantly and damages Generators.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/IconAddon_ShatteredWristRocket.png"
+        },
+        {
+          "name": "Smashed Cassette Deck",
+          "description": "\"They once used music to escape Henry's grasp. Without it, they do not stand a chance.\" At the start of the match, all Survivors scream. All Survivors start with one Worldbreaker token. When Worldbreaker is activated for the first time, all Survivors lose their Worldbreaker token. 1 less Grandfather Clock appears on the map.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/IconAddon_SmashedCassetteDeck.png"
+        },
+        {
+          "name": "Electrode Cap",
+          "description": "\"Used to measure the brain's activity. In the lab, nothing goes unnoticed.\" Modifies Worldbreaker with the following effect: At the start of the second phase, Survivors more than 26 metres away have their Auras revealed to you for 6 seconds.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/IconAddon_ElectrodeCap.png"
+        },
+        {
+          "name": "Forged Death Certificate",
+          "description": "\"A piece of paper used to prove the death of a powerful person who was very much alive.\" Modifies Vine Attack with the following effect: Applying a Worldbreaker Token on any Survivor afflicts the Killer with the Undetectable Status Effect until the next Worldbreaker Mode activation.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/IconAddon_ForgedDeathCertificate.png"
+        },
+        {
+          "name": "Neck Tendril",
+          "description": "\"He was furious when the tendril was torn from his neck as Max escaped his mind realm.\" Modifies Vine Attack with the following effect: While in Worldbreaker Mode, Survivors hit by Vine Attack gain the Haemorrhage and Mangled Status Effects for 70 seconds.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/IconAddon_NeckTendril.png"
+        },
+        {
+          "name": "Pizza Goggles",
+          "description": "\"Used while Eleven entered sensory deprivation, they rid the user of distractions and focus the mind.\" Modifies The Upside Down with the following effect: Cooldown is reduced by 25 seconds. Modifies Undergate Attack with the following effects: Attack radius is decreased by 90 %. Attack cool-down is reduced by 80 %.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/IconAddon_PizzaGoggles.png"
+        },
+        {
+          "name": "Victor's Razor Blade",
+          "description": "\"In his own grief, Henry's father used a hidden blade to take out his own eyes.\" Modifies Worldbreaker with the following effect: Upon ending, injured Survivors gain the Broken Status Effect for 20 seconds.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/IconAddon_VictorsRazorBlade.png"
+        },
+        {
+          "name": "Black Widow Spider",
+          "description": "\"A terrifying spider that is no longer a mere hallucination.\" Unlocks potential in your Aura-reading ability while using The Upside Down in Worldbreaker Mode: The Aura of the furthest Survivor more than 36 metres away is revealed to you for 3 seconds.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/IconAddon_BlackWidowSpider.png"
+        },
+        {
+          "name": "Broken Skateboard",
+          "description": "\"A cool way to get around, smashed by a furious brother as a means of control.\" Modifies Worldbreaker with the following effect: When Worldbreaker Mode activates, the following effects trigger for 65 seconds: Increases vaulting speed by 30 %. Pallet and Window Auras are revealed within 32 metres.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/IconAddon_BrokenSkateboard.png"
+        },
+        {
+          "name": "Electroshock Collar",
+          "description": "\"A cruelly efficient way of training and punishing the facility's prisoners.\" Modifies The Upside Down with the following effect: When exiting, all Vault locations within 32 metres are blocked for 12 seconds.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/IconAddon_ElectroshockCollar.png"
+        },
+        {
+          "name": "Rabbit Remains",
+          "description": "\"Before massacring his family, Henry started small, killing rabbits and leaving their corpses strewn about town.\" Modifies Undergate Attack with the following effect: Survivors standing in or entering the area of effect gain the Exhausted Status Effect and for 10 seconds after. Modifies The Upside Down with the following effect: Increases cool-down by 5 seconds.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/IconAddon_RabbitRemains.png"
+        },
+        {
+          "name": "Chess Piece",
+          "description": "\"One of the few forms of entertainment while in the facility, it helped the students learn logic and tactics.\" Modifies the Vine Attack with the following effect: Gains two charges, and has its attack radius reduced by 40 %.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/IconAddon_ChessPiece.png"
+        },
+        {
+          "name": "Iridescent Soteria Chip",
+          "description": "\"A chip that once limited his powers is now a source of even greater power.\" Modifies Worldbreaker with the following effect: Upon activation, grants the Undetectable Status Effect and the Auras of Survivors with at least one Worldbreaker Token are revealed to you when they are within 12 metres. This lasts until you perform a Vine Attack, enter The Upside Down, or when Worldbreaker ends.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/IconAddon_IridescentSoteriaChip.png"
+        }
+      ]
+    },
+    {
+      "character": "Slasher",
+      "releasedAt": "2026-06-16",
+      "addons": [
+        {
+          "name": "Bent Wheel",
+          "description": "\"All that remained of the victim's wheelchair after the fatal blow.\" Increases the Jump Scare targeting range by +4 metres.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_BentWheel.png"
+        },
+        {
+          "name": "Garden Claw",
+          "description": "\"Good for digging up weeds and digging into human flesh.\" Increases the duration of Killer Instinct after a Jump Scare by +2 seconds.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_GardenClaw.png"
+        },
+        {
+          "name": "Knitting Needle",
+          "description": "\"You won't believe what—and who—this thing has been through.\" Increases the time it takes for Survivors to remove an impaled Hook Spike from themselves by +20 %.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_KnittingNeedle.png"
+        },
+        {
+          "name": "Orderly's Shoe",
+          "description": "\"It hung from her twitching foot as the knife plunged into her belly.\" Increases the duration of the Haste Status Effect after a Jump Scare by +5 seconds.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_OrderlysShoe.png"
+        },
+        {
+          "name": "Bloody Smile",
+          "description": "\"He wasn't happy after his face was smashed into a tree.\" Increase the detection ranges of Jump Scare and Omnipresent Evil by +4 metres.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_BloodySmile.png"
+        },
+        {
+          "name": "Coroner's Coffee",
+          "description": "\"A cup of coffee that went unfinished.\" Increases the duration of Throwing Spike's push by +25 %. Gain +13 % Haste Status Effect for 3 seconds after injuring a Survivor with a Throwing Spike if they do not collide with the environment during the push.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_CoronersCoffee.png"
+        },
+        {
+          "name": "Party Noisemaker",
+          "description": "\"A party instrument that tore through a woman's eyeball and gouged her brain.\" Breaking a Pallet or a Breakable Wall with Jump Scare reveals all Survivors further than 28 metres for 6 seconds.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_PartyNoisemaker.png"
+        },
+        {
+          "name": "Sleeping Bag",
+          "description": "\"An absolutely awful place to hide from a killer.\" After grabbing a Hook Spike while in Omnipresent Evil, Survivors who are within 10 metres of any Hook have their location revealed for 5 seconds.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_SleepingBag.png"
+        },
+        {
+          "name": "Toxic Waste",
+          "description": "\"No one could survive being submerged in this poison.\" After performing a Jump Scare, Survivors within 10 metres of a Hook or a Scrap Pile are inflicted with the Oblivious Status Effect for 13 seconds.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_ToxicWaste.png"
+        },
+        {
+          "name": "Eye Goop",
+          "description": "\"What remains when a harpoon is shoved into one's eye.\" Gain the Undetectable Status Effect after grabbing a Hook Spike for 13 seconds.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_EyeGoop.png"
+        },
+        {
+          "name": "Imprinted Aluminum",
+          "description": "\"It's either avant-garde artwork, or the horrified imprint of a woman whose face was slammed into it.\" Injuring a healthy Survivor with a Throwing Spike inflicts them with the Mangled and Haemorrhage Status Effects for 70 seconds.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_ImprintedAluminum.png"
+        },
+        {
+          "name": "Mirror Shards",
+          "description": "\"A weapon that dealt more than bad luck.\" Survivors are inflicted with the Broken Status Effect after extracting a Hook Spike from themselves for 40 seconds.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_MirrorShards.png"
+        },
+        {
+          "name": "Sauna Rock",
+          "description": "\"Nicely weighted, could be used to crush a rib cage.\" After performing a Jump Scare, inflict all detected Survivors with the Exhausted Status Effect for 3 seconds.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_SaunaRock.png"
+        },
+        {
+          "name": "Two Nails",
+          "description": "\"A reliable way to hold a corpse's wrist in place.\" Survivors that come within 1 metre of a Throwing Spike have their Aura revealed for 5 seconds.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_TwoNails.png"
+        },
+        {
+          "name": "Bloody Magazine",
+          "description": "\"The spattering of blood told the story of a brutal massacre.\" When a Hook Spike misses, all Survivors within 8 metres of the Hook Spike's impact zone scream and reveal their Auras for 3 seconds.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_BloodyMagazine.png"
+        },
+        {
+          "name": "Burnt Fuse",
+          "description": "\"The surge of electricity was overwhelming. It left the man's flesh charred and smelling of cooked meat.\" When a Survivor is impaled by a Hook Spike, the Exit Gates are blocked for them and any Survivor within 13 metres. This effect persists for 5 seconds after the Survivor is no longer impaled.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_BurntFuse.png"
+        },
+        {
+          "name": "Deputy's Badge",
+          "description": "\"The badge of an officer who discovered that some things aren't worth investigating.\" While in Omnipresent Evil, passing within 2 metres of a Generator causes the Generator to explode, lose -5 % progress and begin regressing. If a Survivor is repairing the Generator, all Survivors repairing it will instead get a special Skill Check. If the Skill Check is failed, the Generator loses -10 % additional progress on top of the base Skill Check penalty.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_DeputysBadge.png"
+        },
+        {
+          "name": "Missing Corkscrew",
+          "description": "\"It seems to always be missing when you need it on-hand.\" When a Survivor is impaled by a Hook Spike, they emit a 32 metre Terror Radius until the Hook Spike is removed. Gain the Undetectable Status Effect when impaling a Survivor with a Hook Spike. This effect persists for 13 seconds after the Survivor is no longer impaled.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_MissingCorkscrew.png"
+        },
+        {
+          "name": "Dirty Money",
+          "description": "\"No amount of money can save you from him.\" When a Generator is repaired, gain 2 tokens. When you vault a Window or break a Pallet or a Breakable Wall, consume 1 token and gain a regular Spike if you don't have one already.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_DirtyMoney.png"
+        },
+        {
+          "name": "Iridescent Boat Motor",
+          "description": "\"The blades are chipped and cracked, as if having cut through something solid.\" Passing through Windows while in Omnipresent Evil marks them for 13 seconds. Performing a Jump Scare blocks all marked Windows for 13 seconds.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_IridescentBoatMotor.png"
+        }
+      ]
+    }
+  ]
+}
