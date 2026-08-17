@@ -1498,7 +1498,7 @@ export function RandomizerBoard() {
           even on wide viewports where flex-wrap never breaks the row. */}
       <div className="flex flex-wrap items-center justify-center divide-x divide-border rounded-2xl border border-border bg-surface/40">
         {mode !== "loadout" && (
-          <div className="flex items-center gap-2 px-4 py-2 text-sm">
+          <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 px-4 py-2 text-sm">
             <span className="text-muted">
               {t({ ru: "Перков:", en: "Perks:" })}
             </span>
@@ -1523,7 +1523,7 @@ export function RandomizerBoard() {
         )}
 
         {mode !== "loadout" && mounted && getTagsForRole(role).length > 0 && (
-          <div className="flex items-center gap-2 px-4 py-2 text-sm">
+          <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 px-4 py-2 text-sm">
             <span className="text-muted">
               {t({ ru: "Тема:", en: "Theme:" })}
             </span>
@@ -1543,7 +1543,7 @@ export function RandomizerBoard() {
         )}
 
         {mode !== "perks" && (
-          <div className="flex items-center gap-2 px-4 py-2 text-sm">
+          <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 px-4 py-2 text-sm">
             <span className="text-muted">
               {t({ ru: "Слоты:", en: "Slots:" })}
             </span>
@@ -1904,8 +1904,13 @@ export function RandomizerBoard() {
         ))}
 
       {/* Secondary toolbar — sleek, compact, sits right under the cards it
-          acts on rather than competing with Generate for weight. */}
-      <div className="flex items-center justify-center gap-2">
+          acts on rather than competing with Generate for weight. Stacked
+          full-width below `sm` instead of a bare unwrapped row: three
+          worded pill buttons never fit a 320-375px phone on one line, and
+          naive flex-wrap here would've just produced the same lopsided
+          2-then-1 wrap the loadout HUD had (see LoadoutGrid) — a
+          deliberate vertical stack reads cleanly instead. */}
+      <div className="flex w-full max-w-xs flex-col gap-2 sm:w-auto sm:max-w-none sm:flex-row sm:items-center sm:justify-center">
         <button
           type="button"
           onClick={
@@ -1922,7 +1927,7 @@ export function RandomizerBoard() {
                 ? perks.length === 0 && loadoutPieces.length === 0
                 : perks.length === 0
           }
-          className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
+          className="flex w-full items-center justify-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground disabled:pointer-events-none disabled:opacity-40 sm:w-auto"
         >
           <Copy className="size-3.5" />
           {mode === "loadout"
@@ -1936,7 +1941,7 @@ export function RandomizerBoard() {
             ru: "Ссылка на этот билд для обычного просмотра — не для OBS, для этого есть отдельная кнопка «Оверлей OBS».",
             en: "A link to view this exact build — not for OBS, use the separate “OBS Overlay” button for that.",
           })}
-          className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+          className="flex w-full items-center justify-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground sm:w-auto"
         >
           <Link2 className="size-3.5" />
           {t({ ru: "Поделиться", en: "Share" })}

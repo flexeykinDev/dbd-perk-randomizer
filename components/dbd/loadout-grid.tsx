@@ -86,7 +86,11 @@ export function LoadoutGrid({
 
   return (
     <>
-      <div className="flex w-full max-w-4xl flex-wrap items-start justify-center gap-5 rounded-2xl border border-border bg-surface/40 p-4 sm:gap-8 sm:p-5">
+      {/* Column below `sm`, row-with-wrap from `sm` up — plain flex-wrap at
+          phone widths let the 3 differently-sized slot groups reflow into
+          a lopsided 2-then-1 layout (Item+Add-ons on one row, Offering
+          alone on the next) instead of reading as one clean stack. */}
+      <div className="flex w-full max-w-4xl flex-col items-center justify-center gap-5 rounded-2xl border border-border bg-surface/40 p-4 sm:flex-row sm:flex-wrap sm:items-start sm:gap-8 sm:p-5">
         {role === "survivor" ? (
           <SlotGroup
             testId="loadout-slot-item"
