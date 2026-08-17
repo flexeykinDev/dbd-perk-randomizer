@@ -27,6 +27,8 @@ const TRANSLATIONS_JSON = join(DATA_DIR, "translations.ru.json");
 const DESCRIPTION_TRANSLATIONS_JSON = join(DATA_DIR, "description-translations.ru.json");
 const DESCRIPTION_RU_RAW_JSON = join(DATA_DIR, "description-ru-raw.json");
 const DESCRIPTION_OVERRIDES_EN_JSON = join(DATA_DIR, "description-overrides.en.json");
+const NAME_OVERRIDES_EN_JSON = join(DATA_DIR, "name-overrides.en.json");
+const ICON_OVERRIDES_JSON = join(DATA_DIR, "icon-overrides.json");
 const CHARACTERS_JSON = join(DATA_DIR, "characters.json");
 const PERK_IDS_JSON = join(DATA_DIR, "perk-ids.json");
 const ICON_SOURCES_JSON = join(DATA_DIR, "icon-sources.json");
@@ -70,6 +72,19 @@ function loadDescriptionOverridesEn(): Record<string, string> {
   const raw = JSON.parse(readFileSync(DESCRIPTION_OVERRIDES_EN_JSON, "utf8"));
   delete raw._comment;
   return raw;
+}
+
+function loadNameOverridesEn(): Record<string, string> {
+  if (!existsSync(NAME_OVERRIDES_EN_JSON)) return {};
+  const raw = JSON.parse(readFileSync(NAME_OVERRIDES_EN_JSON, "utf8"));
+  delete raw._comment;
+  return raw;
+}
+
+function loadPinnedIcons(): Set<string> {
+  if (!existsSync(ICON_OVERRIDES_JSON)) return new Set();
+  const raw = JSON.parse(readFileSync(ICON_OVERRIDES_JSON, "utf8"));
+  return new Set(raw.pinned ?? []);
 }
 
 function loadPerkIds(): Record<string, number> {
@@ -181,10 +196,17 @@ async function downloadIcon(
   row: ScrapedRow,
   role: PerkRole,
   iconSources: Record<string, string>,
+  pinnedIcons: Set<string>,
 ): Promise<string> {
   const destRelative = `/perks/${role}/${row.slug}.webp`;
   const destAbsolute = join(PUBLIC_PERKS_DIR, role, `${row.slug}.webp`);
   const cacheKey = `perk:${role}/${row.slug}`;
+
+  if (pinnedIcons.has(`${role}/${row.slug}`) && existsSync(destAbsolute)) {
+    // A manually-sourced icon (see data/icon-overrides.json) — the wiki's
+    // own URL for this one is wrong/missing, so never re-fetch it.
+    return destRelative;
+  }
 
   if (iconSources[cacheKey] === row.iconSourceUrl && existsSync(destAbsolute)) {
     // Skip re-downloading when the source URL hasn't changed since last run.
@@ -251,6 +273,8 @@ async function main() {
   const descriptionTranslations = loadDescriptionTranslations();
   const descriptionRuRaw = loadDescriptionRuRaw();
   const descriptionOverridesEn = loadDescriptionOverridesEn();
+  const nameOverridesEn = loadNameOverridesEn();
+  const pinnedIcons = loadPinnedIcons();
   const previous = new Map(
     loadPreviousPerks().map((p) => [`${p.role}/${p.slug}`, p]),
   );
@@ -264,13 +288,22 @@ async function main() {
     console.log(`Found ${rows.length} ${role} perks`);
 
     for (const row of rows) {
-      const icon = await downloadIcon(row, role, iconSources);
+      const icon = await downloadIcon(row, role, iconSources, pinnedIcons);
       const prev = previous.get(`${role}/${row.slug}`);
+      const nameEn = nameOverridesEn[row.slug] ?? row.name;
+      // A name override implies the wiki's own spelling of that name is
+      // unwanted (see data/name-overrides.en.json) — scrub any literal
+      // mention of it out of the description too, or a perk's own body
+      // text would keep citing the un-overridden spelling (e.g. Deja Vu's
+      // description name-drops itself as "Déjà Vu").
+      const rawDescription = descriptionOverridesEn[row.slug] ?? row.description;
+      const description =
+        nameEn === row.name ? rawDescription : rawDescription.replaceAll(row.name, nameEn);
       perks.push({
         slug: row.slug,
         role,
-        name: { en: row.name, ru: translations[row.slug] ?? row.name },
-        description: descriptionOverridesEn[row.slug] ?? row.description,
+        name: { en: nameEn, ru: translations[row.slug] ?? nameEn },
+        description,
         descriptionRu: descriptionTranslations[row.slug],
         descriptionRuRaw: descriptionRuRaw[row.slug],
         character: row.character,

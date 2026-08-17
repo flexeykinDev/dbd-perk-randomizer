@@ -1,0 +1,5 @@
+{
+  "_comment": "Perk icons pinned against re-download, keyed \"role/slug\" — used when the official wiki's own icon for that perk is missing/wrong and a correct one was sourced elsewhere (e.g. the RU wiki) and placed by hand in public/perks/. Without this, downloadIcon() in scrape-perks.ts treats any wiki-side URL change as a reason to re-fetch and silently overwrites the manually-placed file on the next scheduled scrape. A pinned slug is never re-downloaded — the file already on disk is treated as authoritative for good.",
+
+  "pinned": ["killer/hex-fortune-s-fool"]
+}

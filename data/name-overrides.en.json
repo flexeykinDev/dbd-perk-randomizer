@@ -1,0 +1,5 @@
+{
+  "_comment": "EN name overrides, keyed by perk slug — used when the official EN wiki's own name differs from what we deliberately want shown (e.g. dropping special characters the rest of the app's fonts/URLs don't handle well). Not a general translation mechanism; RU names come from translations.ru.json. The slug itself is still derived from the wiki's raw scraped name, so an override here never changes which perk this points at.",
+
+  "deja-vu": "Deja Vu"
+}
