@@ -11,10 +11,9 @@
 
 A **Dead by Daylight** perk and loadout randomizer that never goes
 stale — the full list of perks, items, add-ons, and offerings is
-scraped straight from the official wiki, not hardcoded by hand. It used
-to live as a section of [Vortex
-Hub](https://github.com/flexeykinDev/Vortex-Hub), now it's its own
-project.
+scraped straight from the official wiki. It used to live as a section
+of [Vortex Hub](https://github.com/flexeykinDev/Vortex-Hub), now it's
+its own project.
 
 **🔗 Live site:** https://flexeykindev.github.io/dbd-perk-randomizer/
 
@@ -119,32 +118,26 @@ npm run scrape:loadout
 [Add-ons](https://deadbydaylight.fandom.com/wiki/Add-ons), and
 [Offerings](https://deadbydaylight.fandom.com/wiki/Offerings) pages via
 the MediaWiki API, resolves which killer each Power add-on group
-belongs to via the wiki's own redirects (not a hardcoded list — so a
-new killer gets picked up automatically, no script changes needed),
-and separately visits each killer's own character page for their Power
-icon (the "Power:" heading on that page).
+belongs to via the wiki's own redirects, and visits each killer's own
+character page for their Power icon.
 
-Items in the "map/event-only" category (Eye of Vecna, Lament
-Configuration, Keycard, etc. — flagged "Limited Item" on the wiki)
-never make it into the pool: a player never picks these themselves,
-they spawn in a trial per that chapter's own game scenario, so the
-randomizer can't honestly offer them as a loadout choice.
+Map/event-only items (Eye of Vecna, Lament Configuration, Keycard,
+etc. — flagged "Limited Item" on the wiki) are excluded: they spawn in
+a trial per that chapter's scenario, not something a player picks
+themselves, so offering them as a loadout choice wouldn't be honest.
 
-Scraped data isn't always the final word: when a specific
-item's/add-on's own Fandom wiki page is temporarily broken (e.g.
-Fandom's own description template errored out right after a patch
-shipped) or its icon hasn't been uploaded yet,
-`scripts/scrape-loadout.ts` can patch in a fix from another source
-(e.g. [deadbydaylight.wiki.gg](https://deadbydaylight.wiki.gg)) via a
-small map of known exceptions in the script itself — instead of
-silently showing a broken image or the template's own error text.
+When a specific item's/add-on's own wiki page is temporarily broken or
+missing its icon, `scripts/scrape-loadout.ts` patches in a fix from
+another source (e.g. [deadbydaylight.wiki.gg](https://deadbydaylight.wiki.gg))
+via a small map of known exceptions, instead of showing a broken image
+or the wiki's own error text.
 
 ## Loadout localization (items, add-ons, offerings)
 
-Same as perks, Russian names and descriptions are pulled from the
-[Russian wiki](https://dead-by-daylight.fandom.com/ru/) instead of
-being translated by hand — but that took three scripts instead of one,
-because the wiki lays these three categories out differently:
+Same as perks, Russian names and descriptions come from the
+[Russian wiki](https://dead-by-daylight.fandom.com/ru/) — three scripts
+instead of one, since the wiki lays out items/offerings/add-ons
+differently:
 
 ```bash
 npm run sync:loadout-localization   # RU names for items and offerings
@@ -153,41 +146,30 @@ npm run sync:loadout-addons         # RU names and descriptions for add-ons (all
 npm run scrape:loadout              # bakes it all into data/*.json
 ```
 
-- **Items and offerings** — each has its own wiki page, like perks:
-  `sync-loadout-localization.ts` looks up the RU name via
-  `action=opensearch` and checks the match against a category
-  ("Категория:Предметы" / "Категория:Подношения…"),
-  `sync-loadout-descriptions.ts` then pulls the description from that
-  same page. Items and offerings use different page markup (a
-  "Особенности" section on items, "Использование" on offerings, and
-  some items have no dedicated section at all — the description sits
-  right after the infobox) — the script tries both shapes instead of
-  assuming one layout fits everyone.
-- **Add-ons** — there's no per-add-on page: the wiki groups them by
-  item/killer power onto one combined page (e.g. "Медвежий капкан
-  (улучшения)" — every Trapper add-on at once), the same way the
-  English Add-ons page is laid out. So `sync-loadout-addons.ts` doesn't
-  look each add-on up individually — it reads all ~50 combined pages
-  (the list itself comes from "Категория:Улучшения", no hardcoded
-  killer list) and matches each table row to the right add-on by the
-  English name the wiki writes right next to the Russian one
-  ("Кровавая пружина(англ. Bloody Coil)") — not by row order or any
-  other guess that could silently mix up one killer's add-on with
-  another's.
+- **Items and offerings** each have their own wiki page, like perks:
+  `sync-loadout-localization.ts` finds the RU name via
+  `action=opensearch`, verified against a category
+  ("Категория:Предметы" / "Категория:Подношения…"), then
+  `sync-loadout-descriptions.ts` pulls the description from that same
+  page (trying both the "Особенности" and "Использование" markup
+  shapes, since items and offerings use different ones).
+- **Add-ons** have no per-add-on page — the wiki groups them onto ~50
+  combined pages by item/killer power (e.g. "Медвежий капкан
+  (улучшения)" covers every Trapper add-on). `sync-loadout-addons.ts`
+  reads all of them and matches each table row to the right add-on by
+  the English name the wiki prints next to the Russian one ("Кровавая
+  пружина(англ. Bloody Coil)"), not by row order.
 
-Add-on matching currently covers ~91% (mostly the newest killers, whose
-wiki page group doesn't exist yet, account for the rest) — the missing
-ones show English text with an honest note on the card instead of
-breaking.
+Add-on matching currently covers ~91% — the newest killers, whose page
+group doesn't exist yet, account for the rest and show English text
+with an honest note on the card instead of breaking.
 
 ## Random Character
 
 The **Choose Character** button (next to the theme filter/loadout slot
 toggles) opens a modal with search and a portrait grid of every
 character for the current role — pick a specific one, hit **Random**
-right inside the modal, or clear the selection. The character list
-comes from the same data perks themselves use (`Perk.character`), no
-separate hardcoded list.
+right inside the modal, or clear the selection.
 
 - **In Perks mode:** the **Guarantee teachables** toggle, which shows
   up next to the portrait, guarantees the selected character's own
@@ -206,16 +188,14 @@ separate hardcoded list.
 ## OBS Overlay
 
 The **OBS Overlay** button opens a modal with a transparent link like
-`.../#/obs` — add it as a **Browser** source in OBS, and it'll show
-the same cards (perks or loadout, depending on the main tab's current
-mode) in real time as whatever's on the main site (synced via
-`BroadcastChannel` + localStorage locally, and via Firebase Realtime
-Database across different browser profiles — see `lib/obs-sync.ts` and
-the [Firebase](#firebase-for-syncing-the-obs-overlay-across-browser-profiles)
-section below). The modal shows a live preview right above the
-settings — you can drag each icon anywhere on the canvas (positions
-save right into the URL) — and it's configured entirely through the
-link's own query params, so everything's encoded in the URL itself:
+`.../#/obs` — add it as a **Browser** source in OBS, and it mirrors
+whatever's on the main site in real time (synced via `BroadcastChannel`
++ localStorage locally, and Firebase Realtime Database across
+different browser profiles — see `lib/obs-sync.ts` and the
+[Firebase](#firebase-for-syncing-the-obs-overlay-across-browser-profiles)
+section below). The modal shows a live preview above the settings —
+drag each icon anywhere on the canvas, positions save right into the
+URL — and everything's configured through the link's own query params:
 
 | Param | Values | Default | What it does |
 |---|---|---|---|
@@ -246,24 +226,23 @@ time.
 
 ## Perks — no hardcoding
 
-Perks live in `data/perks.json` — a file the scraper generates:
+Perks live in `data/perks.json`, a file the scraper generates rather
+than a hand-typed list, so a new patch's perks show up without a code
+change:
 
 ```bash
 npm run scrape:perks
 ```
 
 The script (`scripts/scrape-perks.ts`) fetches the current perk list,
-their descriptions, and character portraits from the [official Dead by
+descriptions, and character portraits from the [official Dead by
 Daylight wiki](https://deadbydaylight.fandom.com/wiki/Perks) via the
-MediaWiki API, downloads and converts icons/portraits into
-`public/perks/` and `public/characters/`, and bakes in the Russian
-names/descriptions from `data/translations.ru.json` and
-`data/description-translations.ru.json`. Downloaded icons are cached
-by the actual source URL on the wiki (`data/icon-sources.json` /
-`data/loadout-icon-sources.json`) — not just "a file already exists,"
-but specifically "the source hasn't changed" — so an icon redesign on
-the wiki gets picked up on the next run instead of going unnoticed
-forever.
+MediaWiki API, downloads icons/portraits into `public/perks/` and
+`public/characters/`, and bakes in Russian names/descriptions from
+`data/translations.ru.json` and `data/description-translations.ru.json`.
+Icons are cached by their source URL on the wiki
+(`data/icon-sources.json`), so an icon redesign gets picked up on the
+next run instead of the local copy going stale silently.
 
 ### Auto-updating when new perks ship (DLC/patch)
 
@@ -302,13 +281,11 @@ npm run sync:localization   # updates data/translations.ru.json
 npm run scrape:perks        # bakes them into data/perks.json
 ```
 
-The script (`scripts/sync-localization.ts`) looks each perk up by its
-English name via `action=opensearch` — the wiki resolves it to the
-right Russian article on its own — and checks the result against the
-official categories (`Категория:Умения Выживших` /
-`Категория:Умения Убийц`) before trusting the match. A perk that isn't
-found or fails that check keeps its previous translation — the script
-never overwrites data with an English fallback unless it has to.
+`scripts/sync-localization.ts` looks each perk up by its English name
+via `action=opensearch`, then verifies the match against the official
+categories (`Категория:Умения Выживших` / `Категория:Умения Убийц`)
+before trusting it. A perk that fails that check keeps its previous
+translation rather than falling back to English.
 
 ### Refreshing Russian character names and perk descriptions
 
@@ -321,26 +298,21 @@ npm run sync:descriptions   # updates data/description-ru-raw.json
 npm run scrape:perks        # bakes it all into data/perks.json
 ```
 
-- `scripts/sync-characters.ts` — Russian character names. For
-  Survivors, the name gets trimmed to the found article's first word
-  (pages are titled "First Last"); for Killers, the article's full
-  title is used as-is. Wiki service pages (DLC chapter pages, the
-  "Survivors"/"Killer" hub pages) get filtered out separately — they
-  land in the same category as real character pages but aren't perks
-  themselves.
-- `scripts/sync-descriptions.ts` — a raw Russian perk description from
-  the perk's own wiki page (the "Описание" section). Some descriptions
-  on the wiki are built from a template with a placeholder
-  (`{процентов}`, `{метров}`, …) and a separate table of per-tier
-  values — the script substitutes the computed value itself
-  (`20/28/36 метров`). A perk whose page doesn't fit that template
-  (several independent stats, non-standard markup) is simply skipped
-  and keeps showing its English description — a silently wrong
-  translation is worse than an honest fallback.
+- `scripts/sync-characters.ts` — Russian character names. Survivor
+  names get trimmed to the article's first word (pages are titled
+  "First Last"); killer names use the full title. Wiki service pages
+  (DLC chapter hubs, the "Survivors"/"Killer" landing pages) are
+  filtered out — they share a category with real character pages but
+  aren't characters themselves.
+- `scripts/sync-descriptions.ts` — a raw Russian description from the
+  perk's own wiki page. Some wiki descriptions are built from a
+  template with placeholders (`{процентов}`, `{метров}`, …) plus a
+  per-tier value table — the script substitutes the real value
+  (`20/28/36 метров`). A perk whose page doesn't fit that template is
+  skipped and keeps its English description instead of guessing wrong.
 
-Both scripts, like `sync-localization.ts`, never overwrite an already
-saved translation with a result they aren't confident in — they only
-add.
+Both scripts, like `sync-localization.ts`, never overwrite an existing
+translation with a result they aren't confident in.
 
 ## Development
 
@@ -356,19 +328,17 @@ npm run test:e2e   # Playwright smoke tests
 
 OBS Studio renders a Browser Source in its own isolated Chromium
 profile — no cookies, localStorage, or `BroadcastChannel` shared with
-the streamer's real browser. So the overlay (`#/obs`) has a second,
-network transport on top of the local one: Firebase Realtime Database,
-which the main tab publishes the current build to under a random
-8-character room code (`?room=XXXXXXXX` in the overlay's own link),
-and the overlay reads from — see `lib/obs-sync.ts` and
-`lib/firebase.ts`.
+the streamer's real browser. So the overlay (`#/obs`) has a second
+transport on top of the local one: Firebase Realtime Database, which
+the main tab publishes the current build to under a random
+8-character room code (`?room=XXXXXXXX`) that the overlay reads from —
+see `lib/obs-sync.ts` and `lib/firebase.ts`.
 
 **Nothing to configure for ordinary local development** —
 `lib/firebase.ts` already ships a working config for the live project,
-and `getObsDatabase()` is built so any initialization error (no
-network, blocked by an extension, etc.) just returns `null` — the
-overlay falls back to the local transport in that case, which already
-works fine if you open `#/obs` in a second tab in the same browser.
+and any initialization error (no network, blocked by an extension,
+etc.) just falls back to the local transport, which already works fine
+via a second tab in the same browser.
 
 If you fork the repo and want cross-profile sync to work on your own
 deploy (instead of writing into someone else's database):

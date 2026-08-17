@@ -7,7 +7,7 @@ import { RandomizerContent } from "./randomizer-content";
 // (the browser then uses whichever comes first in the DOM, which isn't ours).
 export const metadata: Metadata = {
   description:
-    "Рандомайзер перков Dead by Daylight с актуальным списком прямо с официальной wiki — без хардкода и без устаревших перков.",
+    "Рандомайзер перков Dead by Daylight с актуальным списком прямо с официальной wiki — обновляется автоматически после каждого патча, без устаревших перков.",
 };
 
 export default function Home() {

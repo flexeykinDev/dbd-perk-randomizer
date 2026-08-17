@@ -20,7 +20,7 @@ const basePath = process.env.NEXT_BASE_PATH || "";
 
 const SITE_TITLE = "DBD Perk Randomizer";
 const SITE_DESCRIPTION =
-  "Рандомайзер перков Dead by Daylight с актуальным списком прямо с официальной wiki — без хардкода и без устаревших перков.";
+  "Рандомайзер перков Dead by Daylight с актуальным списком прямо с официальной wiki — обновляется автоматически после каждого патча, без устаревших перков.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(`https://flexeykindev.github.io${basePath}/`),
