@@ -1,7 +1,6 @@
 "use client";
 
-// Purely cosmetic — a signature for anyone poking around devtools, same
-// spirit as the site's own hidden "secret ghost" easter egg button.
+// Purely cosmetic — a signature for anyone poking around devtools.
 const ASCII_LOGO = String.raw`
  ██████╗ ██████╗ ██████╗
  ██╔══██╗██╔══██╗██╔══██╗

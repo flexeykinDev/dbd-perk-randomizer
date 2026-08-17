@@ -3,7 +3,6 @@
 import { useEffect } from "react";
 import { VideoEmbed } from "@/components/video-embed";
 import { RandomizerBoard } from "@/components/dbd/randomizer-board";
-import { EasterEgg } from "@/components/dbd/easter-egg";
 import { ObsOverlay } from "@/components/dbd/obs-overlay";
 import { perksMeta } from "@/lib/perks";
 import { useLanguage, useT } from "@/lib/i18n";
@@ -30,7 +29,6 @@ export function RandomizerContent() {
 
   return (
     <div className="flex flex-col items-center gap-3 text-center">
-      <EasterEgg />
       <div>
         <h1 className="text-[clamp(1.5rem,3vw+1rem,2.25rem)] font-semibold tracking-tight">
           {t({
