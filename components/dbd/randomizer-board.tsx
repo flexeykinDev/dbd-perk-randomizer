@@ -1494,24 +1494,30 @@ export function RandomizerBoard() {
 
       {/* Contextual filters — kept in a bordered, divided panel (rather than
           loose in the row above) so they read as one "roll settings" group
-          distinct from the role/mode identity controls, and stay legible
-          even on wide viewports where flex-wrap never breaks the row.
-          w-full below `sm`: its content (esp. a wrapped "Слоты:" row) is
-          often narrower than the trailer/utility-bar boxes above and below
-          it, so without an explicit width its border sat visibly indented
-          from theirs on a phone — full width there lines its edges up with
-          the rest of the page's boxed elements; reverts to its own
-          content width from `sm` up, where that mismatch isn't visible.
-          justify-start (not -center): once w-full, the 3 rows stack at very
-          different widths (a short "Перков:" row vs. a much wider "Слоты:"
-          row) — centering each independently left a jagged block of
-          inconsistent empty space on both sides; left-aligning them all
-          reads as one tidy list instead. Meaningless once `sm:w-auto` takes
-          over and the panel hugs its content, so no responsive variant
-          needed here. */}
-      <div className="flex w-full flex-wrap items-center justify-start divide-x divide-border rounded-2xl border border-border bg-surface/40 sm:w-auto">
+          distinct from the role/mode identity controls.
+
+          Deliberately NOT `flex-wrap` + `divide-x` together: a divider is
+          just a border on one side of each non-first child, so it has no
+          idea which *visual line* that child landed on once the browser
+          starts wrapping — at whatever width leaves an odd 2-then-1 (or
+          1-then-2) split, the wrapped-away child's divider renders as an
+          orphan line with nothing beside it on that row. This is a known
+          divide-x/flex-wrap incompatibility, not something fixable by
+          tweaking spacing.
+
+          Fixed by making the layout binary instead of letting the browser
+          decide a wrap point: `flex-col` (one child per row, `divide-y` for
+          horizontal rules between them — always exactly as many dividers as
+          row boundaries, no ambiguity) below `sm`, `flex-row` with NO wrap
+          at all (`divide-x` for vertical rules — likewise unambiguous,
+          every divider sits between two real same-row neighbors) from `sm`
+          up. `overflow-x-auto` is the safety net for the rare width where
+          all 3 groups' combined content doesn't quite fit unwrapped — the
+          *panel* scrolls internally rather than either wrapping (bringing
+          the bug back) or blowing out the page's own width. */}
+      <div className="flex w-full max-w-full flex-col items-start divide-y divide-border overflow-x-auto rounded-2xl border border-border bg-surface/40 sm:w-auto sm:flex-row sm:items-center sm:divide-x sm:divide-y-0">
         {mode !== "loadout" && (
-          <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 px-4 py-2 text-sm">
+          <div className="flex shrink-0 flex-wrap items-center justify-center gap-x-2 gap-y-1.5 px-4 py-2 text-sm">
             <span className="text-muted">
               {t({ ru: "Перков:", en: "Perks:" })}
             </span>
@@ -1536,7 +1542,7 @@ export function RandomizerBoard() {
         )}
 
         {mode !== "loadout" && mounted && getTagsForRole(role).length > 0 && (
-          <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 px-4 py-2 text-sm">
+          <div className="flex shrink-0 flex-wrap items-center justify-center gap-x-2 gap-y-1.5 px-4 py-2 text-sm">
             <span className="text-muted">
               {t({ ru: "Тема:", en: "Theme:" })}
             </span>
@@ -1556,7 +1562,7 @@ export function RandomizerBoard() {
         )}
 
         {mode !== "perks" && (
-          <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 px-4 py-2 text-sm">
+          <div className="flex shrink-0 flex-wrap items-center justify-center gap-x-2 gap-y-1.5 px-4 py-2 text-sm">
             <span className="text-muted">
               {t({ ru: "Слоты:", en: "Slots:" })}
             </span>
