@@ -559,7 +559,7 @@
     },
     "description": "You can take a beating. After being unhooked or unhooking yourself, Dead Hard activates whenever you are injured and running, and allows you to tap into your adrenaline bank to avoid taking further damage: Press the Active Ability button to trigger the Endurance Status Effect for 0.5 seconds. Dead Hard deactivates after use. Dead Hard causes the Exhausted Status Effect for 60/50/40 seconds.Dead Hard cannot be used when Exhausted. \"We were walkin' through t'ginnel one night when a beer bottle flew past me, then another, and another.I thought to myself \"Gonna 'ave some fun 'ere lads, let's get stuck in!\".It were a right dust up, I swear down!\" — David King",
     "descriptionRuRaw": "Покидая крюк, имея ранение и бегая, нажмите Е: вы получаете эффект \"Стойкость\" на 0.5 сек.; вы получаете эффект \"Усталость\" на 60/50/40 сек.. Стойких выживших нельзя смертельно ранить одним ударом, вместо этого они получают глубокую рану. Усталые выжившие не могут использовать навыки, которые вызывают \"Усталость\"",
-    "character": "David",
+    "character": "David King",
     "icon": "/perks/survivor/dead-hard.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
@@ -650,7 +650,7 @@
     },
     "description": "Unlocks potential in your Aura-reading ability. Each time a Generator is completed, the Auras of any Generators, Chests, and Totemswithin 32/48/64 metres are revealed to you for 10 seconds. If you are holding a Map, any objects revealed by Detective's Hunch will automatically be tracked by it. \"Are you able to tell us where you were last night?\" — Detective David Tapp",
     "descriptionRuRaw": "Когда завершается ремонт генератора, вы в течение 20 сек. на расстоянии в 32/48/64 м.: видите ауры сундуков; видите в течение ауры генераторов; видите ауры тотемов.",
-    "character": "David",
+    "character": "David Tapp",
     "icon": "/perks/survivor/detective-s-hunch.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
@@ -1182,7 +1182,7 @@
     },
     "description": "Go on out, kid, it is just a scratch.Your thick blood coagulates practically instantly. The following effects apply permanently during the Trial: Suffer from the Broken Status Effect. Suppresses the creation of Pools of Blood. Reduces the volume of Grunts of Pain while either in the Injured or the Dying State by 25/50/75 %. Increases your Recovery speed by 15/20/25 %. Unlocks the Self-Recovery ability, allowing you to fully recover from the Dying State. \"I lost it. Just lamped him one. They went and banned me didn't they. Went t'pub afterwards, had a few pints and moved on to the next chapter. I couldn't be mithered with it all anyway, you know what I mean? Can't be arsed.\" — David King",
     "descriptionRuRaw": "В начале матча вы получаете ранение, а затем: вы получаете эффект \"Ослабление\"; ваши стоны от боли звучат на 100% тише; вы не оставляете лужи крови; Вы восстанавливаетесь на 15/20/25% быстрее; вы можете полностью восстановиться. Ослабленных выживших нельзя вылечить",
-    "character": "David",
+    "character": "David King",
     "icon": "/perks/survivor/no-mither.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
@@ -1751,7 +1751,7 @@
     },
     "description": "Getting close to the Killer fills you with determination. Every 15 seconds you are within the Killer's Terror Radius, while not being chased, Stake Out gains 1 Token, up to a maximum of 2/3/4 Tokens. When Stake Out has at least 1 Token, Good Skill Checks consume 1 Token and are considered Great Skill Checks, granting an additional Progression bonus of +1 %. Great Skill Checks do not consume any Tokens. \"I had you, I had you on your knees. You're runnin' scared because we had you. We're gonna close this case!\" — Detective David Tapp",
     "descriptionRuRaw": "Если вы прячетесь в радиусе террора убийцы в течение 15 сек., то получаете жетоны (1, максимум - 2/3/4 шт.). Когда вы хорошо проходите базовую проверку реакции, тратятся жетоны (1): хорошая проверка становится отличной; вы получаете на 1% больше прогресса.",
-    "character": "David",
+    "character": "David Tapp",
     "icon": "/perks/survivor/stake-out.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
@@ -1842,7 +1842,7 @@
     },
     "description": "There is nothing stopping you. Your ferocious tenacity in dire situations allow you to benefit from the following effects: Increases your Crawling speed by 30/40/50 %. Grants the ability to crawl and recover at the same time. Reduces the volume of Grunts of Pain while in the Dying State by -75 %. \"What the hell is this? I'm taking this bastard down!\" — Detective David Tapp",
     "descriptionRuRaw": "Когда смертельно ранены: вы получаете 30/40/50% эффекта \"Спешка\"; вы можете одновременно ползти и восстанавливаться; ваши стоны от боли звучат на 75% тише. \"Спешка\" ускоряет движение убийц и выживших.",
-    "character": "David",
+    "character": "David Tapp",
     "icon": "/perks/survivor/tenacity.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
@@ -1980,7 +1980,7 @@
     },
     "description": "Your few friends deserve the best protection. You benefit from the following effect when healing a dying Survivor: Increases your Healing speed by +100 %. Any dying Survivor you heal back to the Injured State benefits from the following effect: Grants the Endurance Status Effect for 6/8/10 seconds. This effect can only be triggered once every 30 seconds. \"Come on then, let's ave' it! I don't give a shit pal.\" — David King",
     "descriptionRuRaw": "Вы лечите смертельно раненых выживших на 100% быстрее. Когда лечение смертельно раненного заканчивается, он получает эффект \"Стойкость\" на 6/8/10 сек.. Перезарядка: 30 сек. Стойких выживших нельзя смертельно ранить одним ударом, вместо этого они получают глубокую рану.",
-    "character": "David",
+    "character": "David King",
     "icon": "/perks/survivor/we-re-gonna-live-forever.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
@@ -2022,6 +2022,300 @@
     "character": "Ada",
     "icon": "/perks/survivor/wiretap.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
+  },
+  {
+    "slug": "do-no-harm",
+    "role": "survivor",
+    "name": {
+      "en": "Do No Harm",
+      "ru": "Do No Harm"
+    },
+    "description": "\"Helping those in need comes easily, no matter how dire things get.\" When healing another Survivor, depending on their accumulated Hook Stages, you benefit from the following effects: Increases your Altruistic Healing speed by 30/40/50 % per Hook Stage, up to a maximum of 60/80/100 %. Increases the Progression bonus of Great Healing Skill Checks by +3 % per Hook Stage, up to a maximum of +6 %. \"Look at me. My name's Orela, and I'm gonna make sure you're all right.\" — Orela Rose",
+    "character": "Orela",
+    "icon": "/perks/survivor/do-no-harm.webp",
+    "addedAt": "2026-08-17T19:11:57.577Z"
+  },
+  {
+    "slug": "duty-of-care",
+    "role": "survivor",
+    "name": {
+      "en": "Duty of Care",
+      "ru": "Duty of Care"
+    },
+    "description": "\"You live by a code of conduct every day of your life, and are all the better for it.\" While healthy, taking a Protection Hit causes all other Survivors within 12 metres of your location to benefit from the following effect: Grants them a +25 % Haste Status Effect for 4/5/6 seconds. \"Don't worry about me. I've got a knack for bouncing back.\" — Orela Rose",
+    "character": "Orela",
+    "icon": "/perks/survivor/duty-of-care.webp",
+    "addedAt": "2026-08-17T19:11:57.577Z"
+  },
+  {
+    "slug": "rapid-response",
+    "role": "survivor",
+    "name": {
+      "en": "Rapid Response",
+      "ru": "Rapid Response"
+    },
+    "description": "\"When the moment comes, you give it your all. Your survival depends on it.\" Whenever you become afflicted by the Exhausted Status Effect, Rapid Response triggers its effect: The Aura of the Killer is revealed to you for 2 seconds. Perform a Rushed action to exit a Locker to voluntarily trigger the Status Effect for 30/25/20 seconds. Rapid Response cannot be used to override an existing Exhausted Status Effect. \"All right. You got this. 3... 2... 1... go!\" — Orela Rose",
+    "character": "Orela",
+    "icon": "/perks/survivor/rapid-response.webp",
+    "addedAt": "2026-08-17T19:11:57.577Z"
+  },
+  {
+    "slug": "apocalyptic-ingenuity",
+    "role": "survivor",
+    "name": {
+      "en": "Apocalyptic Ingenuity",
+      "ru": "Apocalyptic Ingenuity"
+    },
+    "description": "\"You salvage what little there is to defend your team.\" Unlocks potential in your Aura-reading ability: The Auras of broken Pallets are revealed to you within 24/28/32 metres. After unlocking or rummaging through 1 Chest, Apocalyptic Ingenuity gains a special ability. While standing next to the location of a broken Pallet, press and hold the Active Ability button for 3 seconds to use it: Rebuilds it as a Fragile Pallet. Fragile Pallets instantly break when dropped. \"Without the fences, this place is worthless.\" — Rick Grimes",
+    "character": "Rick",
+    "icon": "/perks/survivor/apocalyptic-ingenuity.webp",
+    "addedAt": "2026-08-17T19:11:57.577Z"
+  },
+  {
+    "slug": "come-and-get-me",
+    "role": "survivor",
+    "name": {
+      "en": "Come and Get Me!",
+      "ru": "Come and Get Me!"
+    },
+    "description": "\"You'll risk your life to save others.\" After unhooking a Survivor, while crouched and stationary, press the Active Ability button to trigger the following effects: Suppresses the creation of Grunts of Pain, Pools of Blood, and Scratch Marks for all injured or dying Survivors within 24 metres of your location for the next 10/12.5/15 seconds. Causes you to scream and reveal your Aura to the Killer for 5 seconds. \"We're the ones who live.\" — Rick Grimes",
+    "character": "Rick",
+    "icon": "/perks/survivor/come-and-get-me.webp",
+    "addedAt": "2026-08-17T19:11:57.577Z"
+  },
+  {
+    "slug": "teamwork-toughen-up",
+    "role": "survivor",
+    "name": {
+      "en": "Teamwork: Toughen Up",
+      "ru": "Teamwork: Toughen Up"
+    },
+    "description": "\"You maintain your composure under immense amounts of pain.\" While injured, whenever another Survivor within 24 metres of your location blinds the Killer by any means or stuns them using a Pallet, Teamwork: Toughen Up triggers its effect: Suppresses your Grunts of Pain, and the creation of Pools of Blood and Scratch Marks for 20/25/30 seconds. \"They're messing with the wrong people.\" — Rick Grimes",
+    "character": "Rick",
+    "icon": "/perks/survivor/teamwork-toughen-up.webp",
+    "addedAt": "2026-08-17T19:11:57.577Z"
+  },
+  {
+    "slug": "conviction",
+    "role": "survivor",
+    "name": {
+      "en": "Conviction",
+      "ru": "Conviction"
+    },
+    "description": "\"Sometimes one last push means the difference between death and survival.\" After having completed a Healing action on another Survivor, whenever you are in the Dying State, Conviction activates. While active, press the Active Ability button after reaching at least 25 % Recovery progress to trigger the following effects: Unlocks the Self-Recovery ability, allowing you to fully recover from the Dying State. Inflicts the Broken Status Effect. Causes you to automatically re-enter the Dying State after 20/25/30 seconds. \"It's enough to keep going. Keep trying. Keep fighting. Keep dreaming.\" — Michonne Grimes",
+    "character": "Michonne",
+    "icon": "/perks/survivor/conviction.webp",
+    "addedAt": "2026-08-17T19:11:57.577Z"
+  },
+  {
+    "slug": "last-stand",
+    "role": "survivor",
+    "name": {
+      "en": "Last Stand",
+      "ru": "Last Stand"
+    },
+    "description": "\"Even when things are at their worst, your spirit is indomitable.\" After staying in the Terror Radius without being chased for 120/105/90 seconds, Last Stand activates. While active, perform a Rushed Vault action to trigger its effect: Stuns the Killer for 3 seconds, if they are within 2.5 metres of that Vault location. Last Stand is disabled for the remainder of the Trial after use. \"Some bullies, you can live with. Others, you gotta fight.\" — Michonne Grimes",
+    "character": "Michonne",
+    "icon": "/perks/survivor/last-stand.webp",
+    "addedAt": "2026-08-17T19:11:57.577Z"
+  },
+  {
+    "slug": "teamwork-throw-down",
+    "role": "survivor",
+    "name": {
+      "en": "Teamwork: Throw Down",
+      "ru": "Teamwork: Throw Down"
+    },
+    "description": "\"You know the best way to even the odds is to empower those around you.\" Whenever you blind the Killer by any means or stun them using a Pallet, Teamwork: Throw Down triggers its effect: Grants the Endurance Status Effect to all other injured Survivors within 24 metres of your location for 6/8/10 seconds. \"Facing evil brings good people together.\" — Michonne Grimes",
+    "character": "Michonne",
+    "icon": "/perks/survivor/teamwork-throw-down.webp",
+    "addedAt": "2026-08-17T19:11:57.577Z"
+  },
+  {
+    "slug": "ghost-notes",
+    "role": "survivor",
+    "name": {
+      "en": "Ghost Notes",
+      "ru": "Ghost Notes"
+    },
+    "description": "\"You know that the best breakdowns precede the biggest build-ups.\" While suffering from the Exhausted Status Effect, you benefit from the following effects: Causes your Scratch Marks to disappear +50 % faster. Increases your Recovery rate from that Status Effect by 5/7.5/10 %. Ghost Notes does not cause the Exhausted Status Effect. \"Let's take it to the bridge!\" — Vee Boonyasak",
+    "character": "Vee",
+    "icon": "/perks/survivor/ghost-notes.webp",
+    "addedAt": "2026-08-17T19:11:57.577Z"
+  },
+  {
+    "slug": "one-two-three-four",
+    "role": "survivor",
+    "name": {
+      "en": "One-Two-Three-Four!",
+      "ru": "One-Two-Three-Four!"
+    },
+    "description": "\"A steady beat makes for steady work.\" While standing and idle, press the Active Ability button to start a Performance: Lasts for up to 15 seconds. Empowers Survivors within 16 metres of your location. Triggers continuous Skill Checks. After successfully completing the Performance, empowered Survivors performing Healing or Repairing actions benefit from the following effect for 90 seconds: Increases the chances of triggering Skill Checks by +20 %. One-Two-Three-Four! has a cool-down of 110/100/90 seconds after cancelling or completing the Performance. \"We are loud! We are heavy! WE ARE AXEKICK!\" — Vee Boonyasak",
+    "character": "Vee",
+    "icon": "/perks/survivor/one-two-three-four.webp",
+    "addedAt": "2026-08-17T19:11:57.577Z"
+  },
+  {
+    "slug": "road-life",
+    "role": "survivor",
+    "name": {
+      "en": "Road Life",
+      "ru": "Road Life"
+    },
+    "description": "\"Faulty amps, sweaty dives, broken-down vans... nothing makes you feel more alive.\" While injured and repairing a Generator, regular Skill Checks have the following effects: Gain +1 Token for Great Repair Skill Checks. Gain 0 Tokens for Good Repair Skill Checks. Lose -1 Token for Failed Repair Skill Checks. Once you accumulate 6/5/4 Tokens, consume all Tokens to benefit from the following effect: Increases your Healing speed by +100 % until you stop healing. Road Life deactivates after use and does not activate while suffering from the Broken Status Effect. Road Life does not interact with special Skill Checks triggered by outside effects. \"Remind me to teach you how to patch your own pedals, Krit.\" — Vee Boonyasak",
+    "character": "Vee",
+    "icon": "/perks/survivor/road-life.webp",
+    "addedAt": "2026-08-17T19:11:57.577Z"
+  },
+  {
+    "slug": "bada-bada-boom",
+    "role": "survivor",
+    "name": {
+      "en": "Bada Bada Boom",
+      "ru": "Бада-бада-бум"
+    },
+    "description": "\"You may not be a fighter, but you have clever ways of striking back.\" After completing 20 % worth of Generator repairs, Bada Bada Boom activates: While active, press the Active Ability button next to a window to install a Trap, which stays active for up to 40/50/60 seconds. The Trap triggers when the Killer performs a vault through the window, causing the Killer to suffer from a -50 % Hindered Status Effect for 6 seconds. Bada Bada Boom deactivates after triggering successfully or once the timer runs out. The Auras of Trapped Windows are revealed to all Survivors in yellow. \"Never tell me the odds.\" — Dustin Henderson",
+    "descriptionRuRaw": "После починки 20% генераторов, нажмите F возле окна, чтобы установить ловушку, действующую 40/50/60 сек.. В течение этого времени все выжившие видят ауру этого окна. Если убийца выпрыгнет в это окно, ловушка взорвется и наложит на него 50% эффекта \"Замедление\" на 4 сек. Замедленные убийцы и выжившие двигаются медленнее.",
+    "character": "Dustin",
+    "icon": "/perks/survivor/bada-bada-boom.webp",
+    "addedAt": "2026-08-17T19:11:57.577Z"
+  },
+  {
+    "slug": "change-of-plan",
+    "role": "survivor",
+    "name": {
+      "en": "Change of Plan",
+      "ru": "Изменение плана"
+    },
+    "description": "\"Rather than give in to danger, you recalculate and adjust your strategy.\" You start the Trial with 2 Tokens. While hiding inside a Locker and holding a non-event Toolbox, press the Active Ability button to spend 1 Token and transform your Toolbox into a Med-Kit of the same rarity with a random add-on of the same rarity. The new Med-Kit has 80/90/100 % of its charges. \"Oh my god, oh my god, oh my god, oh my god.\" — Dustin Henderson",
+    "descriptionRuRaw": "В начале матча вы получаете жетоны (2шт.). Пока вы прячетесь в шкафчике и держите в руках ящик с инструментами, не относящийся к событию, нажмите F, чтобы потратить 1 жетон и превратить ящик с инструментами и улучшения в аптечку той же редкости с 80/90/100% зарядов и случайными улучшениями той же редкости.",
+    "character": "Dustin",
+    "icon": "/perks/survivor/change-of-plan.webp",
+    "addedAt": "2026-08-17T19:11:57.577Z"
+  },
+  {
+    "slug": "teamwork-full-circuit",
+    "role": "survivor",
+    "name": {
+      "en": "Teamwork: Full Circuit",
+      "ru": "Командная работа: полная схема"
+    },
+    "description": "\"You've dabbled with mechanical engineering and show off your abilities to others.\" For each Survivor repairing a generator with you, the size of the good Skill Check zone is increased by 15/20/25 %. While repairing with at least 1 other Survivor, you repair 5 % faster. \"How many times do I have to be right on the money before you guys just trust me?\" — Dustin Henderson",
+    "descriptionRuRaw": "За каждого выжившего, ремонтирующего генератор вместе с вами, размер зоны хорошей базовой проверки реакции увеличивается на 15/20/25%. Если вы чините генератор с выжившим, прогресс идет на 5% быстрее.",
+    "character": "Dustin",
+    "icon": "/perks/survivor/teamwork-full-circuit.webp",
+    "addedAt": "2026-08-17T19:11:57.577Z"
+  },
+  {
+    "slug": "extrasensory-perception",
+    "role": "survivor",
+    "name": {
+      "en": "Extrasensory Perception",
+      "ru": "Восприятие экстрасенса"
+    },
+    "description": "\"By slowing down and focusing, you can sense both ally and enemy.\" Crouch for 4 seconds to activate this perk. While active: You see the Auras of Survivors, the Killer, and a variety of objects, revealed in an expanding 44 metre radius. Revealed objects include Chests, Exit Gates, Generators, the Hatch, Items, Pallets, Totems, and Windows. You gain the Elusive and Oblivious Status Effects. When you stop crouching, or after 11 seconds, all effects of this perk end and it enters a 60/50/40 second cool-down. \"What is friend?\" — Eleven",
+    "descriptionRuRaw": "Проведя 4 сек. в приседе: вы можете видеть ауры в области, расширяющейся до 44м; вы получаете эффект \"Ускользание\"; вы получаете эффект \"Забывчивость\". Когда вы перестаете сидеть или спустя 11 сек., начинается перезарядка: 60/50/40 сек.. Ускользающие выжившие: ауры скрыты; не оставляют следы-трещины, лужи крови; не стонут от боли. Забывчивые выжившие не слышат радиус террора убийцы.",
+    "character": "Eleven",
+    "icon": "/perks/survivor/extrasensory-perception.webp",
+    "addedAt": "2026-08-17T19:11:57.577Z"
+  },
+  {
+    "slug": "teamwork-soft-spoken",
+    "role": "survivor",
+    "name": {
+      "en": "Teamwork: Soft-Spoken",
+      "ru": "Командная работа: приглушение"
+    },
+    "description": "\"You look out for your friends, using your abilities to protect them.\" For each other Survivor repairing a Generator with you, the range at which the Generator's repair noise is heard is reduced by 15/20/25 %. While repairing with at least 1 other Survivor, you repair 5 % faster. \"I make my own rules.\" — Eleven",
+    "descriptionRuRaw": "За каждого выжившего, ремонтирующего генератор вместе с вами, радиус слышимости шума от починки уменьшается на 15/20/25%. Если вы чините генератор с выжившим, прогресс идет на 5% быстрее.",
+    "character": "Eleven",
+    "icon": "/perks/survivor/teamwork-soft-spoken.webp",
+    "addedAt": "2026-08-17T19:11:57.577Z"
+  },
+  {
+    "slug": "we-see-you",
+    "role": "survivor",
+    "name": {
+      "en": "We See You",
+      "ru": "Мы тебя видим"
+    },
+    "description": "\"You've honed your powers and can turn the tables on those who try to find you.\" Gain a token when the Killer reveals your Aura. When you have 4 tokens, they are all consumed, and the Killer's Aura is revealed to you and all other Survivors for 10/12.5/15 seconds. This perk has a 10-second cool-down when gaining a token. \"It is not me. It is you. You are the monster.\" — Eleven",
+    "descriptionRuRaw": "Если убийца видит вашу ауру, вы получаете жетон (1). Перезарядка 10 сек. Когда вы накопите жетоны (4шт.), то сможете потратить их все, чтобы дать себе и другим выжившим возможность видеть ауру убийцы в течение 10/12.5/15 сек..",
+    "character": "Eleven",
+    "icon": "/perks/survivor/we-see-you.webp",
+    "addedAt": "2026-08-17T19:11:57.577Z"
+  },
+  {
+    "slug": "a-place-for-us",
+    "role": "survivor",
+    "name": {
+      "en": "A Place For Us",
+      "ru": "A Place For Us"
+    },
+    "description": "While healing another Survivor, both you and the healed Survivor gain the Elusive Status Effect. When you finish healing the Obsession, both you and the Obsession gain the Elusive Status Effect for 20/25/30 seconds. Reduces your chance of becoming the initial Obsession by reducing the default value by -100 %. The Killer can only be obsessed with one Survivor at a time. \"I understand computers… systems. Problems. But this… I wonder if I'll ever understand.\" — Kwon Tae-young",
+    "character": "Kwon",
+    "icon": "/perks/survivor/a-place-for-us.webp",
+    "addedAt": "2026-08-17T19:11:57.577Z"
+  },
+  {
+    "slug": "five-moves-ahead",
+    "role": "survivor",
+    "name": {
+      "en": "Five Moves Ahead",
+      "ru": "Five Moves Ahead"
+    },
+    "description": "This perk activates while you are being chased by the Killer or are inside the Killer's Terror Radius: After you drop a Pallet, you start moving 50 % earlier. See the Auras of the 5 closest Pallets and Windows. This perk goes on a 40/35/30 second cool-down when you drop a Pallet. \"Every problem has a solution. It's only a question of complexity.\" — Kwon Tae-young",
+    "character": "Kwon",
+    "icon": "/perks/survivor/five-moves-ahead.webp",
+    "addedAt": "2026-08-17T19:11:57.577Z"
+  },
+  {
+    "slug": "flow-state",
+    "role": "survivor",
+    "name": {
+      "en": "Flow State",
+      "ru": "Flow State"
+    },
+    "description": "Whenever a Generator is completed, gain a token, up to 5. For each token: Bless and cleanse Totems 8/9/10 % faster. Heal 8/9/10 % faster. Unhook Survivors 8/9/10 % faster. \"I'm sorry… I didn't realize I was working so late.\" — Kwon Tae-young",
+    "character": "Kwon",
+    "icon": "/perks/survivor/flow-state.webp",
+    "addedAt": "2026-08-17T19:11:57.577Z"
+  },
+  {
+    "slug": "cross-examination",
+    "role": "survivor",
+    "name": {
+      "en": "Cross-Examination",
+      "ru": "Cross-Examination"
+    },
+    "description": "While inside the Killer's Terror Radius and not being chased, you can see Light Marks the Killer leaves behind while moving. Light Marks have a duration of 10 seconds. While standing on a Light Mark, gain the Elusive Status Effect. This lingers for 3/4/5 seconds. \"The witness has said enough, Your Honor. No further questions.\" — Shane Wiigwaas",
+    "character": "Shane",
+    "icon": "/perks/survivor/cross-examination.webp",
+    "addedAt": "2026-08-17T19:11:57.577Z"
+  },
+  {
+    "slug": "lend-a-hand",
+    "role": "survivor",
+    "name": {
+      "en": "Lend a Hand",
+      "ru": "Lend a Hand"
+    },
+    "description": "Cleansing or Blessing a Totem activates this perk: Once per Survivor, while healing a Survivor, press the Active Ability 2 button to give the healed Survivor 2/3/4 permanent healing charges. \"Walk it off, will you? We still have work to do.\" — Shane Wiigwaas",
+    "character": "Shane",
+    "icon": "/perks/survivor/lend-a-hand.webp",
+    "addedAt": "2026-08-17T19:11:57.577Z"
+  },
+  {
+    "slug": "wide-open-throttle",
+    "role": "survivor",
+    "name": {
+      "en": "Wide Open Throttle",
+      "ru": "Wide Open Throttle"
+    },
+    "description": "Fast-vaulting a Pallet triggers the following effects: Gain 10/12.5/15 % Haste Status Effect for 3 seconds. The Pallet is immediately reset, blocked by The Entity, and revealed to all Survivors for 60 seconds. This perk then goes on a 60 second cool-down. \"Nothing but the open road. Just the way I like it.\" — Shane Wiigwaas",
+    "character": "Shane",
+    "icon": "/perks/survivor/wide-open-throttle.webp",
+    "addedAt": "2026-08-17T19:11:57.577Z"
   },
   {
     "slug": "a-nurse-s-calling",
@@ -3781,5 +4075,122 @@
     "character": "Oni",
     "icon": "/perks/killer/zanshin-tactics.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
+  },
+  {
+    "slug": "hex-overture-of-doom",
+    "role": "killer",
+    "name": {
+      "en": "Hex: Overture of Doom",
+      "ru": "Порча: предвестие рока"
+    },
+    "description": "\"A hex that plays on the paranoia of others.\" Creates a Hex Totem that curses the farthest Generator from its location: The Aura of the Cursed Generator is highlighted in yellow. When a Survivor repairs the Cursed Generator for at least 5 seconds, Hex: Overture of Doom triggers the following effects for 20/25/30 seconds: Transfers your Terror Radius to the Cursed Generator. This Terror Radius is set to 32 metres. Grants the Undetectable Status Effect. Once the Cursed Generator is repaired, the next farthest Generator becomes cursed. The Hex Effects persist until the Hex Totem is either blessed or cleansed by a Survivor, disabling it for the remainder of the Trial. \"From salvation's ruin, be warned/death comes from all around.\" — Giovanni Serrata's \"Fog Hill\"",
+    "descriptionRuRaw": "В начале матча тусклый тотем зажигается и накладывает порчу на самый дальний от себя генератор. Если выживший чинит оскверненный генератор в течение 5 сек.: вы получаете эффект \"Незаметность\" на 20/25/30 сек; в течение этого времени ваш радиус террора накладывается на этот генератор. Когда проклятый генератор полностью восстанавливают, порча переносится на следующий самый дальний от него генератор. Незаметные убийцы: не имеют радиуса террора и красного свечения; выжившие не видят их ауры.",
+    "character": "Krasue",
+    "icon": "/perks/killer/hex-overture-of-doom.webp",
+    "addedAt": "2026-08-17T19:11:57.577Z"
+  },
+  {
+    "slug": "ravenous",
+    "role": "killer",
+    "name": {
+      "en": "Ravenous",
+      "ru": "Голод"
+    },
+    "description": "\"The scent of blood is in the air. Time to feast.\" Whenever you hook a Survivor for the first time, Ravenous gains +1 Token, up to a maximum of 4 Tokens. Once you accumulate 4 Tokens, all Survivors suffer from the following effects: Causes them to scream. Inflicts the Exposed Status Effect for 40/50/60 seconds. \"Weeping Ginevra's blood streams/The devil smells the weak.\" — Fabbro Barone's \"Ginevra\"",
+    "descriptionRuRaw": "Впервые вешая выжившего на крюк, вы получаете жетоны (1шт.). Когда вы накопите достаточно жетонов (4 шт.), все выжившие: кричат; получат эффект \"Уязвимость\" на 40/50/60 сек. Уязвимые выжившие получают смертельные ранения от базовых атак, даже если полностью здоровы.",
+    "character": "Krasue",
+    "icon": "/perks/killer/ravenous.webp",
+    "addedAt": "2026-08-17T19:11:57.577Z"
+  },
+  {
+    "slug": "wandering-eye",
+    "role": "killer",
+    "name": {
+      "en": "Wandering Eye",
+      "ru": "Блуждающий взгляд"
+    },
+    "description": "\"Bloodied prey surrounds you, vying for your attention.\" Whenever you start chasing a Survivor, Wandering Eye triggers the following effect: The Auras of all other injured Survivors within 20 metres of your location are revealed to you for 5 seconds. Wandering Eye has a cool-down of 40/35/30 seconds. \"A drop does not satiate/when a river is needed.\" — Elliot Campbell's \"Grandeur of Samuel\"",
+    "descriptionRuRaw": "Каждый раз устремляясь в погоню за выжившим, вы видите ауры всех раненых выживших в пределах 20м в течение 5 сек. Перезарядка: 40/35/30 сек.",
+    "character": "Krasue",
+    "icon": "/perks/killer/wandering-eye.webp",
+    "addedAt": "2026-08-17T19:11:57.577Z"
+  },
+  {
+    "slug": "hex-hive-mind",
+    "role": "killer",
+    "name": {
+      "en": "Hex: Hive Mind",
+      "ru": "Порча: разум улья"
+    },
+    "description": "\"You found yourself connected to something dark and unknowable... and you embraced it.\" The first time you hook any Survivor, a random Dull Totem becomes a Hex Totem, provided that a Dull Totem remains in the Trial Grounds. Generators are highlighted; the intensity of the generator's Auras reveals their repair progress. As soon as a total of 4 generators have been completed in the Trial: All remaining generators explode, lose 6/8/10 % progress, and start regressing. The associated Hex Totem becomes dull, and this perk becomes disabled for the remainder of the trial. The Hex Effects persist until the Hex Totem is either blessed or cleansed by a Survivor, disabling it for the remainder of the Trial. \"You... let us in. And now, you are going to have to let us stay\" — Henry Creel",
+    "descriptionRuRaw": "Когда вы впервые вешаете выжившего на крюк, зажигается тусклый тотем. Ауры генераторов показывают прогресс их починки. Когда остается 1шт. генераторов: все генераторы взрываются, теряя 6/8/10% прогресса починки и начиная ломаться; проклятый тотем гаснет.",
+    "character": "First",
+    "icon": "/perks/killer/hex-hive-mind.webp",
+    "addedAt": "2026-08-17T19:11:57.577Z"
+  },
+  {
+    "slug": "secret-project",
+    "role": "killer",
+    "name": {
+      "en": "Secret Project",
+      "ru": "Секретный проект"
+    },
+    "description": "\"Raised to be a weapon, you broke free with the very skills your captors honed within you.\" Whenever a Totem is blessed or cleansed, a random unblocked generator becomes blocked for 20/25/30 seconds. Whenever any number of Generators become blocked, you gain the Undetectable Status Effect for 30 seconds. \"You are a prisoner here, just like me\" — Henry Creel",
+    "descriptionRuRaw": "При благословении или очистке тотема один случайный незаблокированный генератор блокируется на 20/25/30 сек.. Каждый раз, когда блокируется 1 или более генераторов, вы получаете эффект \"Незаметность\" на 30 сек. Незаметные убийцы: не имеют радиуса террора и красного свечения; выжившие не видят их ауры.",
+    "character": "First",
+    "icon": "/perks/killer/secret-project.webp",
+    "addedAt": "2026-08-17T19:11:57.577Z"
+  },
+  {
+    "slug": "turn-back-the-clock",
+    "role": "killer",
+    "name": {
+      "en": "Turn Back the Clock",
+      "ru": "Перевести часы назад"
+    },
+    "description": "\"Resist as they might, time marches on, and your master plan comes closer to fruition.\" After hooking a Survivor, for 40/50/60 seconds, press the Active Ability button to make a target generator within 20 metres explode, lose -10 % progress, and start regressing. \"Nothing will happen to you... Nothing that you don't deserve!\" — Henry Creel",
+    "descriptionRuRaw": "Когда вы подвешиваете выжившего на крюк, нажмите Е в течение 40/50/60 сек., чтобы взорвать видимый вами генератор в радиусе 20м. Он потеряет 10% прогресса и начнет разрушаться.",
+    "character": "First",
+    "icon": "/perks/killer/turn-back-the-clock.webp",
+    "addedAt": "2026-08-17T19:11:57.577Z"
+  },
+  {
+    "slug": "hex-scared-to-death",
+    "role": "killer",
+    "name": {
+      "en": "Hex: Scared to Death",
+      "ru": "Порча: смертельный испуг"
+    },
+    "description": "When you hook 3 different Survivors, Hex: Scared to Death activates on a random Dull Totem and triggers its effect: Basic-breaking a Pallet during a chase causes all Survivors within 13 metres to scream and gain 11/12/13 % Hindered Status Effect for 3 seconds. The Hex Effects persist until the Hex Totem is either blessed or cleansed by a Survivor, disabling it for the remainder of the Trial. \"There was a scream from the forest. Like someone was attacking her.\" — Mount Ormond Missing Person Report",
+    "descriptionRuRaw": "Когда вы 3 раз(а) подвесите на крюк различных выживших, зажжется тусклый тотем. Во время погони за выжившим, если вы базовым способом ломаете доски, остальные выжившие в пределах 13 м: кричат; получают 11/12/13% эффекта \"Замедление\" на 3 сек. Замедленные убийцы и выжившие двигаются медленнее.",
+    "character": "Slasher",
+    "icon": "/perks/killer/hex-scared-to-death.webp",
+    "addedAt": "2026-08-17T19:11:57.577Z"
+  },
+  {
+    "slug": "rampage",
+    "role": "killer",
+    "name": {
+      "en": "Rampage",
+      "ru": "Неистовство"
+    },
+    "description": "Whenever you basic-break a Pallet or a Breakable Wall, gain a token, up to 13. Whenever you are blinded or Pallet-stunned, you are granted 1 % Haste Status Effect for each Token this perk has, for 13 seconds. This perk has a cool-down of 30/25/20 seconds after being blinded or Pallet-stunned. \"Signs of a pursuit led deep into the woods where the victim's body was found.\" — Port Henly Herald",
+    "descriptionRuRaw": "Ломая базовым способом доски или разрушаемую стену, вы получаете жетоны (1шт., можно накопить до 13). Когда вас ослепляют или оглушают доской, на следующие 13 сек. вы получаете 1% эффекта \"Спешка\" за каждый имеющийся жетон. Перезарядка: 30/25/20 сек. \"Спешка\" ускоряет движение убийц и выживших",
+    "character": "Slasher",
+    "icon": "/perks/killer/rampage.webp",
+    "addedAt": "2026-08-17T19:11:57.577Z"
+  },
+  {
+    "slug": "silent-shadow",
+    "role": "killer",
+    "name": {
+      "en": "Silent Shadow",
+      "ru": "Безмолвная тень"
+    },
+    "description": "When you hook a Survivor, you are granted the Undetectable Status Effect for 11/12/13 seconds. When the Exit Gates are powered, you are granted Undetectable for the rest of the Trial. \"Did you see him or not? I can't put out an APB for a bad feeling.\" — Sgt. Reyes, Greenville Police",
+    "descriptionRuRaw": "Подвешивая выжившего на крюк, вы получаете эффект \"Незаметность\" на 11/12/13 сек.. Когда завершается починка всех генераторов, вы получаете эффект \"Незаметность\". Незаметные убийцы: не имеют радиуса террора и красного свечения; выжившие не видят их ауры.",
+    "character": "Slasher",
+    "icon": "/perks/killer/silent-shadow.webp",
+    "addedAt": "2026-08-17T19:11:57.577Z"
   }
 ]

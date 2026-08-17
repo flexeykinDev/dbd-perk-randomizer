@@ -29,6 +29,7 @@ const DESCRIPTION_RU_RAW_JSON = join(DATA_DIR, "description-ru-raw.json");
 const DESCRIPTION_OVERRIDES_EN_JSON = join(DATA_DIR, "description-overrides.en.json");
 const NAME_OVERRIDES_EN_JSON = join(DATA_DIR, "name-overrides.en.json");
 const ICON_OVERRIDES_JSON = join(DATA_DIR, "icon-overrides.json");
+const SUPPLEMENTAL_PERKS_EN_JSON = join(DATA_DIR, "supplemental-perks.en.json");
 const CHARACTERS_JSON = join(DATA_DIR, "characters.json");
 const PERK_IDS_JSON = join(DATA_DIR, "perk-ids.json");
 const ICON_SOURCES_JSON = join(DATA_DIR, "icon-sources.json");
@@ -44,6 +45,16 @@ interface ScrapedRow {
   slug: string;
   description: string;
   character: string;
+  // The wiki's Perks table displays only a character's first name (or, for
+  // Killers, their epithet) in the character column — almost always unique
+  // enough on its own, until two characters happen to share one (David
+  // King and David Tapp both show as bare "David"). Fandom's own markup
+  // still disambiguates them via the character link's `title` attribute
+  // even though the visible text doesn't, so that's captured here too and
+  // only substituted in for `character` when a real collision is detected
+  // (see resolveCharacterCollisions) — every non-colliding character keeps
+  // its existing short display form unchanged.
+  characterFullName: string;
   iconSourceUrl: string;
   characterPortraitUrl: string;
 }
@@ -85,6 +96,62 @@ function loadPinnedIcons(): Set<string> {
   if (!existsSync(ICON_OVERRIDES_JSON)) return new Set();
   const raw = JSON.parse(readFileSync(ICON_OVERRIDES_JSON, "utf8"));
   return new Set(raw.pinned ?? []);
+}
+
+interface SupplementalEntry {
+  role: PerkRole;
+  character: string;
+  characterPortraitUrl: string;
+  perks: { name: string; description: string; iconSourceUrl: string }[];
+}
+
+function loadSupplementalPerks(): SupplementalEntry[] {
+  if (!existsSync(SUPPLEMENTAL_PERKS_EN_JSON)) return [];
+  const raw = JSON.parse(readFileSync(SUPPLEMENTAL_PERKS_EN_JSON, "utf8"));
+  return raw.entries ?? [];
+}
+
+// See data/supplemental-perks.en.json's own comment — turns each curated
+// entry into the same ScrapedRow shape the Fandom table parser produces, so
+// everything downstream (icon/portrait download, name overrides, perk-id
+// assignment) treats a supplemental character exactly like a scraped one.
+function supplementalRows(entries: SupplementalEntry[], role: PerkRole): ScrapedRow[] {
+  return entries
+    .filter((entry) => entry.role === role)
+    .flatMap((entry) =>
+      entry.perks.map((perk) => ({
+        name: perk.name,
+        slug: slugify(perk.name),
+        description: cleanDescription(perk.description),
+        character: entry.character,
+        characterFullName: entry.character,
+        iconSourceUrl: perk.iconSourceUrl,
+        characterPortraitUrl: entry.characterPortraitUrl,
+      })),
+    );
+}
+
+// Almost every character's wiki-table display name (first name, or a
+// Killer's bare epithet) is unique on its own — until it isn't (David King
+// vs David Tapp, both shown as just "David"). Only swap in the longer,
+// disambiguated name for rows whose short display name is actually shared
+// by more than one distinct character; every other row's `character` is
+// left exactly as scraped, so this can't change any of the ~80 already-
+// correct display values sitewide.
+function resolveCharacterCollisions(rows: ScrapedRow[]): void {
+  const fullNamesByDisplay = new Map<string, Set<string>>();
+  for (const row of rows) {
+    if (!row.character) continue;
+    const set = fullNamesByDisplay.get(row.character) ?? new Set();
+    set.add(row.characterFullName);
+    fullNamesByDisplay.set(row.character, set);
+  }
+  for (const row of rows) {
+    const fullNames = fullNamesByDisplay.get(row.character);
+    if (fullNames && fullNames.size > 1) {
+      row.character = row.characterFullName;
+    }
+  }
 }
 
 function loadPerkIds(): Record<string, number> {
@@ -178,12 +245,15 @@ function parseRole($: cheerio.CheerioAPI, role: PerkRole): ScrapedRow[] {
     if (!name || !iconSourceUrl) return;
 
     const portraitSrc = characterCell.find(".charPortraitWrapper img").attr("data-src") ?? "";
+    const character = cleanText(characterCell.text());
+    const characterFullName = characterCell.find("a").first().attr("title") || character;
 
     rows.push({
       name,
       slug: slugify(name),
       description: cleanDescription(descriptionCell.text()),
-      character: cleanText(characterCell.text()),
+      character,
+      characterFullName,
       iconSourceUrl: iconSourceUrl.split("/revision/")[0], // strip cache-buster path segment
       characterPortraitUrl: portraitSrc ? portraitSrc.split("/revision/")[0] : "",
     });
@@ -275,17 +345,37 @@ async function main() {
   const descriptionOverridesEn = loadDescriptionOverridesEn();
   const nameOverridesEn = loadNameOverridesEn();
   const pinnedIcons = loadPinnedIcons();
+  const supplementalEntries = loadSupplementalPerks();
   const previous = new Map(
     loadPreviousPerks().map((p) => [`${p.role}/${p.slug}`, p]),
   );
   const iconSources = loadIconSources();
   const scrapedAt = new Date().toISOString();
 
+  const rowsByRole = new Map<PerkRole, ScrapedRow[]>();
+  for (const role of Object.keys(TABLE_INDEX_BY_ROLE) as PerkRole[]) {
+    const scraped = parseRole($, role);
+    const scrapedSlugs = new Set(scraped.map((r) => r.slug));
+    // A supplemental entry is redundant (and skipped) once Fandom's own
+    // table catches up and starts producing the same perk slug on its
+    // own — no need to hand-remove the data/supplemental-perks.en.json
+    // entry the moment that happens, just eventually for tidiness.
+    const supplemental = supplementalRows(supplementalEntries, role).filter(
+      (r) => !scrapedSlugs.has(r.slug),
+    );
+    const rows = [...scraped, ...supplemental];
+    console.log(
+      `Found ${scraped.length} ${role} perks` +
+        (supplemental.length ? ` (+${supplemental.length} supplemental)` : ""),
+    );
+    rowsByRole.set(role, rows);
+  }
+  resolveCharacterCollisions([...rowsByRole.values()].flat());
+
   const perks: Perk[] = [];
   const characterPortraitUrls = new Map<string, string>();
   for (const role of Object.keys(TABLE_INDEX_BY_ROLE) as PerkRole[]) {
-    const rows = parseRole($, role);
-    console.log(`Found ${rows.length} ${role} perks`);
+    const rows = rowsByRole.get(role)!;
 
     for (const row of rows) {
       const icon = await downloadIcon(row, role, iconSources, pinnedIcons);

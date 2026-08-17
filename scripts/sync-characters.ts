@@ -43,6 +43,15 @@ const CHARACTER_CATEGORY = "Категория:Персонажи";
 const NON_CHARACTER_PREFIXES = ["Глава:", "Глава ", "Подглава", "Событие"];
 const NON_CHARACTER_TITLES = new Set(["Выжившие", "Убийца", "Убийцы"]);
 
+// The EN wiki displays every survivor "Given Family" (Western order), which
+// is where perk.character's first-word convention comes from — but the RU
+// wiki titles a couple of pages "Family Given" instead (confirmed by hand:
+// Yun-Jin Lee's RU page is "Ли Юнчин", family name first, even though her
+// EN page is the usual "Yun-Jin Lee"). Taking the RU title's first word for
+// those specific survivors would silently grab the surname instead of the
+// given name, so they're special-cased to the *second* word instead.
+const RU_TITLE_SURNAME_FIRST = new Set(["Yun-Jin"]);
+
 const REQUEST_HEADERS = {
   "User-Agent": "dbd-perk-randomizer localization sync (personal site, contact via github)",
 };
@@ -153,7 +162,9 @@ async function main() {
       );
 
       if (found) {
-        ruName = role === "survivor" ? (found.split(" ")[0] ?? found) : found;
+        const words = found.split(" ");
+        const givenNameIndex = RU_TITLE_SURNAME_FIRST.has(character) ? 1 : 0;
+        ruName = role === "survivor" ? (words[givenNameIndex] ?? found) : found;
         if (ruName !== previous) {
           console.log(`  [${role}] ${character}: "${previous ?? "(none)"}" -> "${ruName}"`);
         }
