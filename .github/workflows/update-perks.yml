@@ -62,6 +62,14 @@ jobs:
             data/loadout-meta.json
             data/loadout-ids.json
             data/killer-power-icons.json
+            # The icon caches: both scrapers skip re-downloading an icon whose
+            # source URL is unchanged since last run, but only if the cache
+            # they compare against actually comes back. Left out of this list
+            # they'd never update in the repo, so every scheduled run would
+            # re-fetch every icon and, worse, a genuine wiki-side icon rework
+            # would look identical to a cache miss.
+            data/icon-sources.json
+            data/loadout-icon-sources.json
             public/perks/**
             public/characters/**
             public/loadout/**
