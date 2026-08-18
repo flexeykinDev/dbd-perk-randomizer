@@ -8,6 +8,7 @@ import { getLoadoutPoolForRole, ITEM_TYPE_LABEL } from "@/lib/loadout";
 import { withBasePath } from "@/lib/asset-path";
 import { cn } from "@/lib/cn";
 import { ROLE_COLOR } from "@/lib/role-color";
+import { getCharacterName } from "@/lib/character-name";
 import { useT } from "@/lib/i18n";
 
 type StatusFilter = "all" | "active" | "disabled";
@@ -16,6 +17,21 @@ const KIND_LABEL: Record<LoadoutPiece["kind"], { ru: string; en: string }> = {
   item: { ru: "Предмет", en: "Item" },
   addon: { ru: "Аддон", en: "Add-on" },
   offering: { ru: "Подношение", en: "Offering" },
+};
+
+/** Offering categories come off the wiki in English (see
+ *  OFFERING_CATEGORY_ROLE in scripts/scrape-loadout.ts) and are used
+ *  verbatim as data keys, so they'd otherwise surface untranslated in the
+ *  Russian UI. Falls through to the raw name if the wiki ever adds a
+ *  category this doesn't know — an English chip beats a missing one. */
+const OFFERING_CATEGORY_LABEL: Record<string, { ru: string; en: string }> = {
+  "Bonus Bloodpoints": { ru: "Бонусные очки крови", en: "Bonus Bloodpoints" },
+  Luck: { ru: "Удача", en: "Luck" },
+  "Map Modifications": { ru: "Изменение карты", en: "Map Modifications" },
+  "Memento Mori": { ru: "Мементо мори", en: "Memento Mori" },
+  "Realm Selection": { ru: "Выбор области", en: "Realm Selection" },
+  Shrouds: { ru: "Пелены", en: "Shrouds" },
+  Wards: { ru: "Обереги", en: "Wards" },
 };
 
 /** The category chips, derived from the pieces themselves rather than a
@@ -49,7 +65,13 @@ function categoriesFor(pool: LoadoutPiece[]): Category[] {
     } else if (piece.kind === "addon" && piece.itemType) {
       bump(`item:${piece.itemType}`, ITEM_TYPE_LABEL[piece.itemType]);
     } else if (piece.kind === "offering" && piece.category) {
-      bump(`category:${piece.category}`, { ru: piece.category, en: piece.category });
+      bump(
+        `category:${piece.category}`,
+        OFFERING_CATEGORY_LABEL[piece.category] ?? {
+          ru: piece.category,
+          en: piece.category,
+        },
+      );
     }
   }
 
@@ -318,7 +340,7 @@ export function LoadoutExcludePanel({
                       <option value="">{t({ ru: "Персонаж…", en: "Character…" })}</option>
                       {characters.map((c) => (
                         <option key={c.name} value={c.name}>
-                          {c.name} ({c.count})
+                          {getCharacterName(c.name, language)} ({c.count})
                         </option>
                       ))}
                     </select>

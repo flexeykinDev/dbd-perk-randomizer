@@ -1472,7 +1472,13 @@ export function ObsOverlayModal({
                     />
                   </div>
 
-                  <div className="grid max-h-40 grid-cols-6 gap-1 overflow-y-auto">
+                  {/* auto-fill rather than a fixed 6 columns: the modal is
+                      much wider than the old grid assumed, so 6 columns of
+                      30px icons left most of the row empty while the list
+                      scrolled inside a 10rem window. Columns now follow the
+                      available width and the icons are big enough to
+                      recognise a perk by its art. */}
+                  <div className="grid max-h-72 grid-cols-[repeat(auto-fill,minmax(48px,1fr))] gap-1.5 overflow-y-auto">
                     {constructorFiltered.map((perk) => {
                       const selected = constructorSelected.some(
                         (p) => p.slug === perk.slug,
@@ -1497,9 +1503,9 @@ export function ObsOverlayModal({
                           <img
                             src={withBasePath(perk.icon)}
                             alt={perk.name[language]}
-                            width={30}
-                            height={30}
-                            className="size-[30px] rounded icon-art object-cover"
+                            width={44}
+                            height={44}
+                            className="size-11 rounded icon-art object-cover"
                           />
                         </button>
                       );

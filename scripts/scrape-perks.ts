@@ -99,6 +99,18 @@ function loadPinnedIcons(): Set<string> {
   return new Set(raw.pinned ?? []);
 }
 
+/** Replacement icon URLs keyed "role/slug" — see data/icon-overrides.json.
+ *  Separate from `pinned`: pinning freezes whatever is already on disk,
+ *  which is useless when the file on disk is itself the wrong image. This
+ *  swaps the URL *before* download, so the corrected icon goes through the
+ *  same fetch/resize/webp path as every other one and keeps updating if
+ *  the replacement source ever changes. */
+function loadIconSourceOverrides(): Record<string, string> {
+  if (!existsSync(ICON_OVERRIDES_JSON)) return {};
+  const raw = JSON.parse(readFileSync(ICON_OVERRIDES_JSON, "utf8"));
+  return raw.sources ?? {};
+}
+
 interface SupplementalEntry {
   role: PerkRole;
   character: string;
@@ -281,6 +293,7 @@ async function downloadIcon(
   role: PerkRole,
   iconSources: Record<string, string>,
   pinnedIcons: Set<string>,
+  iconSourceOverrides: Record<string, string>,
 ): Promise<string> {
   const destRelative = `/perks/${role}/${row.slug}.webp`;
   const destAbsolute = join(PUBLIC_PERKS_DIR, role, `${row.slug}.webp`);
@@ -292,12 +305,20 @@ async function downloadIcon(
     return destRelative;
   }
 
-  if (iconSources[cacheKey] === row.iconSourceUrl && existsSync(destAbsolute)) {
+  // Fandom's Loadout template renders a literal "?" placeholder image for a
+  // perk whose data it fails to look up — the same failure that produces
+  // the "Unable to retrieve the Perk description" text handled by
+  // data/description-overrides.en.json. Nothing about that image is
+  // distinguishable from a real icon at fetch time, so the corrected
+  // source is named explicitly per slug.
+  const sourceUrl = iconSourceOverrides[`${role}/${row.slug}`] ?? row.iconSourceUrl;
+
+  if (iconSources[cacheKey] === sourceUrl && existsSync(destAbsolute)) {
     // Skip re-downloading when the source URL hasn't changed since last run.
     return destRelative;
   }
 
-  const res = await fetch(row.iconSourceUrl, { headers: REQUEST_HEADERS });
+  const res = await fetch(sourceUrl, { headers: REQUEST_HEADERS });
   if (!res.ok) {
     throw new Error(
       `Failed to download icon for ${row.name}: ${res.status} ${res.statusText}`,
@@ -311,7 +332,10 @@ async function downloadIcon(
     .webp({ quality: 90 })
     .toFile(destAbsolute);
 
-  iconSources[cacheKey] = row.iconSourceUrl;
+  // Records the URL actually fetched, override included — storing the
+  // wiki's original here would never match on the next run and would
+  // re-download the overridden icon every single time.
+  iconSources[cacheKey] = sourceUrl;
   return destRelative;
 }
 
@@ -359,6 +383,7 @@ async function main() {
   const descriptionOverridesEn = loadDescriptionOverridesEn();
   const nameOverridesEn = loadNameOverridesEn();
   const pinnedIcons = loadPinnedIcons();
+  const iconSourceOverrides = loadIconSourceOverrides();
   const supplementalEntries = loadSupplementalPerks();
   const previous = new Map(
     loadPreviousPerks().map((p) => [`${p.role}/${p.slug}`, p]),
@@ -392,7 +417,7 @@ async function main() {
     const rows = rowsByRole.get(role)!;
 
     for (const row of rows) {
-      const icon = await downloadIcon(row, role, iconSources, pinnedIcons);
+      const icon = await downloadIcon(row, role, iconSources, pinnedIcons, iconSourceOverrides);
       const prev = previous.get(`${role}/${row.slug}`);
       const nameEn = nameOverridesEn[row.slug] ?? row.name;
       // A name override implies the wiki's own spelling of that name is

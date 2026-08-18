@@ -1,5 +1,10 @@
 {
-  "_comment": "Perk icons pinned against re-download, keyed \"role/slug\" — used when the official wiki's own icon for that perk is missing/wrong and a correct one was sourced elsewhere (e.g. the RU wiki) and placed by hand in public/perks/. Without this, downloadIcon() in scrape-perks.ts treats any wiki-side URL change as a reason to re-fetch and silently overwrites the manually-placed file on the next scheduled scrape. A pinned slug is never re-downloaded — the file already on disk is treated as authoritative for good.",
+  "_comment": "Perk icons the official EN wiki gets wrong, keyed \"role/slug\". Two mechanisms, because there are two different failures. \"sources\" points a slug at a replacement image URL, which scrape-perks.ts downloads and processes exactly like any scraped icon — use it when a correct icon exists somewhere else (normally deadbydaylight.wiki.gg). \"pinned\" instead marks a slug as never-re-download, treating whatever is already on disk as authoritative forever — use it only when the icon was placed by hand and has no fetchable source, since downloadIcon() would otherwise overwrite it on the next scheduled scrape.",
+
+  "sources": {
+    "killer/no-holds-barred": "https://deadbydaylight.wiki.gg/images/IconPerks_NoHoldsBarred.png",
+    "killer/scourge-hook-weeping-wounds": "https://deadbydaylight.wiki.gg/images/IconPerks_scourgeHookWeepingWounds.png"
+  },
 
   "pinned": ["killer/hex-fortune-s-fool"]
 }
