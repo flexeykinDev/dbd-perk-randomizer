@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "tsx --test scripts/*.test.ts",
+    "test": "tsx --test scripts/*.test.ts lib/*.test.ts",
     "scrape:perks": "tsx scripts/scrape-perks.ts",
     "scrape:loadout": "tsx scripts/scrape-loadout.ts",
     "sync:localization": "tsx scripts/sync-localization.ts",

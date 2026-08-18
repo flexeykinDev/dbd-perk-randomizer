@@ -44,12 +44,97 @@ const ATTRIBUTED_QUOTE_NESTED_RE = /"(.+)"\s*[-—]\s*(.+)\s*$/;
 const BARE_QUOTE_RE = /"([^"]+)"\s*$/;
 const BARE_QUOTE_NESTED_RE = /"(.+)"\s*$/;
 
+// The RU wiki writes a lore quote to a different convention than the EN
+// one, and none of the four patterns above can see it: the sentence's
+// period sits *outside* the closing mark, and the attribution follows the
+// quote with no dash at all.
+//
+//   EN:  "We were walkin' through t'ginnel..." — David King
+//   RU:  "...нож моей любви". Песня "Сквозь тебя" группы "БЕЗ ПРИКРАС"
+//
+// The attributed patterns want `"` directly against the dash, so the
+// period defeats them; the bare patterns want `"` at the very end, so the
+// attribution defeats those. The result was that these descriptions kept
+// their whole lore quote in the body, and the sentence splitter then
+// served it up as Core Effect bullets — the exact "no lore in Core" case
+// Core Effect exists to avoid.
+//
+// Rather than another end-anchored regex, this pairs the quote marks
+// left-to-right and looks for a pair whose closing mark is followed by a
+// period — which is what the RU convention actually produces, and what
+// distinguishes the lore quote from the several other quoted spans these
+// entries carry (band names, Status Effect names, song titles). The last
+// such pair wins, since attribution trails the lore rather than preceding
+// it.
+//
+// The guards matter more than the search here, because `".` on its own is
+// far too common in RU text to act on: the RU wiki quotes Status Effect
+// names inline and they routinely land against a period mid-paragraph
+// (Adrenaline: `...навыки, которые вызывают "Усталость".`). Acting on that
+// would cut a description in half. So a candidate only counts when it
+// looks like a lore quote rather than a quoted term:
+//
+//   * the quoted span is a sentence, not a name — long, and several words;
+//   * something follows the period, i.e. there is an attribution at all;
+//   * that attribution is short and carries no percentage, so a mechanical
+//     sentence following a quoted term can't be mistaken for a credit.
+//
+// Together these also keep it off the EN flavor sentence that merely ends
+// on a quoted phrase (`A battery marked as "industrial strength".`), which
+// is body text rather than a lore quote.
+const LORE_QUOTE_MIN_LENGTH = 25;
+const LORE_QUOTE_MIN_WORDS = 4;
+const ATTRIBUTION_MAX_LENGTH = 120;
+
+function splitTrailingAttributedQuote(
+  text: string,
+): { body: string; inner: string; attribution: string } | null {
+  const marks: number[] = [];
+  for (let i = 0; i < text.length; i++) {
+    if (text[i] === '"') marks.push(i);
+  }
+  if (marks.length < 2) return null;
+
+  for (let pair = Math.floor(marks.length / 2) * 2 - 2; pair >= 0; pair -= 2) {
+    const open = marks[pair];
+    const close = marks[pair + 1];
+    if (text[close + 1] !== ".") continue;
+    const inner = text.slice(open + 1, close);
+    if (inner.length < LORE_QUOTE_MIN_LENGTH) continue;
+    if (inner.trim().split(/\s+/).length < LORE_QUOTE_MIN_WORDS) continue;
+    const attribution = text.slice(close + 2).trim();
+    if (attribution === "" || attribution.length > ATTRIBUTION_MAX_LENGTH) continue;
+    if (attribution.includes("%")) continue;
+    return {
+      body: text.slice(0, open).trim(),
+      inner,
+      // A dash is optional in this form; drop it when present so the
+      // rendered attribution doesn't end up with two.
+      attribution: attribution.replace(/^[-—]\s*/, ""),
+    };
+  }
+  return null;
+}
+
 function splitQuote(text: string, lang: Lang): { body: string; quote: string | null } {
   const attributed = text.match(ATTRIBUTED_QUOTE_RE) ?? text.match(ATTRIBUTED_QUOTE_NESTED_RE);
   if (attributed && attributed.index !== undefined) {
     const body = text.slice(0, attributed.index).trim();
     const quoted = lang === "ru" ? `«${attributed[1]}»` : `“${attributed[1]}”`;
     return { body, quote: `${quoted} — ${attributed[2].trim()}` };
+  }
+  // Ahead of the bare patterns, not after them. Those anchor on the very
+  // end of the string, and the RU credit line usually *ends* on a quoted
+  // name — a band, a song, a scripture reference — so given first refusal
+  // they walk off with that name as "the quote" and leave the actual lore
+  // sitting in the body (Cut Thru U Single ends `группы "БЕЗ ПРИКРАС"`,
+  // and that is what came out as its quote). This pattern is much more
+  // heavily guarded than they are, so letting it go first costs nothing
+  // where it doesn't apply.
+  const trailing = splitTrailingAttributedQuote(text);
+  if (trailing) {
+    const quoted = lang === "ru" ? `«${trailing.inner}»` : `“${trailing.inner}”`;
+    return { body: trailing.body, quote: `${quoted} — ${trailing.attribution}` };
   }
   const bare = text.match(BARE_QUOTE_RE) ?? text.match(BARE_QUOTE_NESTED_RE);
   if (bare && bare.index !== undefined) {
