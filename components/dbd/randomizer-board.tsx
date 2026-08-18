@@ -559,7 +559,12 @@ export function RandomizerBoard() {
   const poolExhausted =
     !activeSeed && mounted && perkCount > 0 && availableCount < perkCount;
 
-  const perks = useMemo(() => {
+  // The raw roll. Deliberately split from the `perks` the rest of the
+  // component uses (see the overlay memo below): pinning must not itself
+  // cause a reroll, and this memo rerolls whenever any of its dependencies
+  // changes. Keeping pins out of its dependency list is what makes
+  // "pin a perk" a no-op on the other three slots.
+  const basePerks = useMemo(() => {
     void nonce; // intentional cache-buster: forces a reshuffle on "regenerate"
     // Gated on mode so every effect keyed off `perks` (stats, URL sync, the
     // "perks" half of the OBS payload) naturally goes idle in loadout-only
@@ -571,15 +576,22 @@ export function RandomizerBoard() {
     if (activeSeed) return getSeededPerks(role, perkCount, activeSeed);
     if (poolExhausted) return [];
     const character = guaranteeTeachables ? selectedCharacter : null;
+    // Rolls a few spares beyond perkCount. The overlay below drops any
+    // rolled perk that a pin already placed in the build, and without
+    // slack that would leave a slot empty whenever the roll happens to
+    // land on a perk the user has pinned. Capped by what the pool can
+    // actually supply so this can never ask for more than exists.
+    const withSlack = Math.min(perkCount + MAX_PERK_COUNT, availableCount);
     return getRandomPerksWithTeachables(
       role,
-      perkCount,
+      withSlack,
       character,
       combinedExcluded,
       Math.random,
       favoriteSlugs,
     );
   }, [
+    availableCount,
     mounted,
     mode,
     role,
@@ -593,6 +605,100 @@ export function RandomizerBoard() {
     guaranteeTeachables,
     selectedCharacter,
   ]);
+
+  // Which slot holds which pinned perk, as slot index -> slug. Slot-keyed
+  // rather than a flat set of slugs because a pin means "this perk stays
+  // *here*" — a set would let a pinned perk drift to a different position
+  // on the next roll, which reads as the pin having failed.
+  //
+  // Deliberately not part of the share URL. A shared link describes a
+  // finished build, and the recipient sees exactly those four perks either
+  // way; pins only change what *their* next reroll does, which isn't
+  // something the sender was expressing. Keeping them out also means every
+  // link already in circulation keeps working untouched.
+  const [pinnedPerkSlots, setPinnedPerkSlots] = useState<Record<number, string>>({});
+
+  const pinnedSlugSet = useMemo(
+    () => new Set(Object.values(pinnedPerkSlots)),
+    [pinnedPerkSlots],
+  );
+
+  /** The build actually shown: pins held in their slots, every other slot
+   *  filled from the roll above. Pins are ignored entirely for a shared or
+   *  seeded build, where the whole point is that the build is fixed. */
+  const perks = useMemo(() => {
+    if (sharedBuild || activeSeed || basePerks.length === 0) return basePerks;
+
+    const pins = Object.entries(pinnedPerkSlots)
+      .map(([slot, slug]) => ({ slot: Number(slot), perk: getPerkBySlug(slug) }))
+      // A pin survives in state across role and count changes so it comes
+      // back if you switch away and back; it just doesn't apply while it
+      // points outside the current build.
+      .filter(
+        (p): p is { slot: number; perk: Perk } =>
+          !!p.perk &&
+          p.perk.role === role &&
+          p.slot < perkCount &&
+          // A pin can't outrank the pool. Battle Royale retires perks as
+          // they're rolled, and Manage Pool can remove one directly; in
+          // either case the perk is no longer eligible and the pin has to
+          // yield, or the build shows a perk the player just took out of it.
+          !combinedExcluded.has(p.perk.slug),
+      );
+    const out: (Perk | undefined)[] = new Array(perkCount);
+    for (const { slot, perk } of pins) out[slot] = perk;
+    const freeSlots = perkCount - pins.length;
+
+    // Everything the roll offers that a pin hasn't already placed. The roll
+    // asked for spares, so this is usually longer than freeSlots and has to
+    // be trimmed.
+    const candidates = basePerks.filter((p) => !pinnedSlugSet.has(p.slug));
+
+    // Which spares to drop is not arbitrary when "guarantee teachables" is
+    // on. getRandomPerksWithTeachables guarantees the character's perks are
+    // somewhere in what it returns, then shuffles — so trimming the tail
+    // blindly would quietly throw teachables away and break the toggle.
+    // Pick teachables first, then re-read the winners in roll order so the
+    // build still *displays* in the shuffled order rather than sorted.
+    const teachableCharacter = guaranteeTeachables ? selectedCharacter : null;
+    let chosen: Perk[];
+    if (teachableCharacter) {
+      const teachables = candidates.filter((p) => p.character === teachableCharacter);
+      const others = candidates.filter((p) => p.character !== teachableCharacter);
+      const winners = new Set(
+        [...teachables, ...others].slice(0, freeSlots).map((p) => p.slug),
+      );
+      chosen = candidates.filter((p) => winners.has(p.slug));
+    } else {
+      chosen = candidates.slice(0, freeSlots);
+    }
+
+    let next = 0;
+    for (let i = 0; i < perkCount; i++) {
+      if (!out[i]) out[i] = chosen[next++];
+    }
+    return out.filter((p): p is Perk => !!p);
+  }, [
+    basePerks,
+    pinnedPerkSlots,
+    pinnedSlugSet,
+    perkCount,
+    role,
+    sharedBuild,
+    activeSeed,
+    guaranteeTeachables,
+    selectedCharacter,
+    combinedExcluded,
+  ]);
+
+  const togglePin = useCallback((slot: number, slug: string) => {
+    setPinnedPerkSlots((prev) => {
+      const next = { ...prev };
+      if (next[slot] === slug) delete next[slot];
+      else next[slot] = slug;
+      return next;
+    });
+  }, []);
 
   // Loadout counterpart of combinedExcluded above — same Battle Royale +
   // manual-exclusion merge, just namespaced "kind:slug" keys instead of
@@ -1965,6 +2071,9 @@ export function RandomizerBoard() {
                 : undefined
             }
             onCopy={handleCopy}
+            {...(sharedBuild || activeSeed
+              ? {}
+              : { pinnedSlots: pinnedPerkSlots, onTogglePin: togglePin })}
           />
         ))}
 

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Copy, Info, X } from "lucide-react";
+import { Copy, Info, Lock, LockOpen, X } from "lucide-react";
 import type { Perk } from "@/lib/types";
 import { withBasePath } from "@/lib/asset-path";
 import { isNewPerk, getCharacterPortrait } from "@/lib/perks";
@@ -20,12 +20,18 @@ export function PerkGrid({
   loading = false,
   emptyMessage,
   onCopy,
+  pinnedSlots,
+  onTogglePin,
 }: {
   perks: Perk[];
   language: "en" | "ru";
   loading?: boolean;
   emptyMessage?: string;
   onCopy: (perk: Perk) => void;
+  /** Slot index -> pinned slug. Omitted where pinning doesn't apply (a
+   *  shared or seeded build), which also hides the padlocks. */
+  pinnedSlots?: Record<number, string>;
+  onTogglePin?: (slot: number, slug: string) => void;
 }) {
   const t = useT();
   const [detailPerk, setDetailPerk] = useState<Perk | null>(null);
@@ -73,6 +79,10 @@ export function PerkGrid({
                 transition={{ duration: 0.25, delay: index * 0.05 }}
                 role="button"
                 tabIndex={0}
+                // Marks the card itself for the e2e suite, which has to tell
+                // the live build apart from the outgoing cards AnimatePresence
+                // keeps mounted through their exit transition.
+                data-perk-card="1"
                 onClick={() => setDetailPerk(perk)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
@@ -108,6 +118,38 @@ export function PerkGrid({
                 >
                   <Info className="size-3.5" />
                 </button>
+
+                {onTogglePin && (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onTogglePin(index, perk.slug);
+                    }}
+                    aria-pressed={pinnedSlots?.[index] === perk.slug}
+                    aria-label={
+                      pinnedSlots?.[index] === perk.slug
+                        ? t({ ru: "Открепить перк", en: "Unpin perk" })
+                        : t({ ru: "Закрепить перк", en: "Pin perk" })
+                    }
+                    className={cn(
+                      // A pinned slot keeps its padlock visible at all times —
+                      // it isn't a hover affordance like the info button, it's
+                      // the only thing on screen saying why this slot stopped
+                      // changing when you rerolled.
+                      "absolute top-1.5 right-9 z-10 flex size-6 items-center justify-center rounded-full backdrop-blur-sm transition-opacity",
+                      pinnedSlots?.[index] === perk.slug
+                        ? "bg-accent text-accent-foreground opacity-100"
+                        : "bg-black/40 text-white/80 opacity-0 group-hover:opacity-100 hover:bg-black/60 hover:text-white focus-visible:opacity-100",
+                    )}
+                  >
+                    {pinnedSlots?.[index] === perk.slug ? (
+                      <Lock className="size-3.5" />
+                    ) : (
+                      <LockOpen className="size-3.5" />
+                    )}
+                  </button>
+                )}
 
                 {/* eslint-disable-next-line @next/next/no-img-element -- next/image ignores basePath for unoptimized runtime src, see lib/asset-path.ts */}
                 <img

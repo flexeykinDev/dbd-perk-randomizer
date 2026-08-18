@@ -502,3 +502,80 @@ test.describe("Build History", () => {
     ).toBeVisible();
   });
 });
+
+test.describe("Slot pinning", () => {
+  /** The four perk names currently on the board, in slot order.
+   *
+   *  Filtered to `position: relative` because AnimatePresence keeps the
+   *  outgoing cards mounted (absolutely positioned) until their exit
+   *  transition finishes — reading every card would pick up the previous
+   *  build alongside the current one. */
+  const liveBuild = (page: import("@playwright/test").Page) =>
+    page.evaluate(() =>
+      [...document.querySelectorAll('[data-perk-card="1"]')]
+        .filter((c) => getComputedStyle(c).position === "relative")
+        .map((c) => c.querySelector("img")!.alt),
+    );
+
+  test("a pinned perk survives a reroll while the other slots change", async ({
+    page,
+  }) => {
+    await page.goto("/?role=survivor");
+    const pins = page.getByRole("button", { name: /перк$/ });
+    await expect(pins).toHaveCount(4);
+
+    const before = await liveBuild(page);
+    await pins.nth(1).click();
+
+    // Pinning is not itself a reroll — the board must be untouched.
+    expect(await liveBuild(page)).toEqual(before);
+    await expect(
+      page.getByRole("button", { name: "Открепить перк" }),
+    ).toHaveCount(1);
+
+    await page
+      .getByRole("button", { name: "Сгенерировать новый билд" })
+      .click();
+    await expect
+      .poll(async () => (await liveBuild(page))[1])
+      .toBe(before[1]);
+    expect(await liveBuild(page)).toHaveLength(4);
+  });
+
+  test("pinning every slot makes a reroll a no-op", async ({ page }) => {
+    await page.goto("/?role=survivor");
+    for (let i = 0; i < 4; i++) {
+      await page.getByRole("button", { name: "Закрепить перк" }).first().click();
+    }
+    const before = await liveBuild(page);
+
+    await page
+      .getByRole("button", { name: "Сгенерировать новый билд" })
+      .click();
+    await expect.poll(() => liveBuild(page)).toEqual(before);
+  });
+
+  test("pins are inert on the other role and return when you switch back", async ({
+    page,
+  }) => {
+    await page.goto("/?role=survivor");
+    await page.getByRole("button", { name: "Закрепить перк" }).first().click();
+    const survivorBuild = await liveBuild(page);
+
+    await page.getByRole("button", { name: "Убийца" }).click();
+    await expect(
+      page.getByRole("button", { name: "Открепить перк" }),
+    ).toHaveCount(0);
+
+    await page.getByRole("button", { name: "Выживший" }).click();
+    await expect
+      .poll(async () => (await liveBuild(page))[0])
+      .toBe(survivorBuild[0]);
+  });
+
+  test("a seeded build has no padlocks at all", async ({ page }) => {
+    await page.goto("/?role=survivor&seed=pin-test");
+    await expect(page.locator("main img[alt]").first()).toBeVisible();
+    await expect(page.getByRole("button", { name: /перк$/ })).toHaveCount(0);
+  });
+});
