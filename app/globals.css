@@ -14,9 +14,23 @@
   /* Muted bronze-gold instead of a saturated safety-orange — reads as
      "Dead by Daylight prestige gold" rather than a warning color, and
      stays clear of the killer role's rose-red so the two never collide. */
-  --accent: #c87d2a;
-  --accent-strong: #d4a359;
-  --accent-foreground: #1a1206;
+  /* Chrome is deliberately colourless. The page already carries two
+     colours that *mean* something — sky for Survivor, rose for Killer
+     (lib/role-color.ts) — and the old bronze accent sat at 32°, between
+     the two, so a primary button and a Killer label competed instead of
+     ranking. Making the chrome a neutral leaves colour to the roles, and
+     the Killer red finally reads as danger rather than decoration. */
+  --accent: #e8e6e1;
+  --accent-strong: #ffffff;
+  --accent-foreground: #16181c;
+  /* The one place colour is still earned: the numbers and Status Effect
+     names inside a perk's text (see lib/perk-description.ts and the
+     Highlighted component). Those carry real information, so they keep a
+     hue — and now that nothing else on the page is gold, they read as the
+     game's own Bloodpoint/Iridescent callout instead of one warm thing
+     among several. Kept off --accent so chrome and data can never drift
+     into the same colour again. */
+  --highlight: #d9a441;
 }
 
 :root[data-theme="light"] {
@@ -29,9 +43,17 @@
   --muted: #62697a;
   /* Darker than the dark theme's accent — same hue, tuned down so white
      button text keeps solid contrast against a light page. */
-  --accent: #a8651e;
-  --accent-strong: #8b5417;
-  --accent-foreground: #ffffff;
+  /* Same neutral role as the dark theme, flipped: a near-white accent is
+     invisible on a white page, so on light the "maximum contrast neutral"
+     is ink. This is also why the neutral is easier to live with than the
+     old bronze, which needed a separate, darker shade here to stay
+     legible on white. */
+  --accent: #1d1b18;
+  --accent-strong: #000000;
+  --accent-foreground: #f7f6f3;
+  /* Darkened well past the dark theme's gold — the light value would drop
+     to roughly 2:1 against white and stop reading as emphasis at all. */
+  --highlight: #8a5a12;
 }
 
 @theme inline {
@@ -44,6 +66,7 @@
   --color-accent: var(--accent);
   --color-accent-strong: var(--accent-strong);
   --color-accent-foreground: var(--accent-foreground);
+  --color-highlight: var(--highlight);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
