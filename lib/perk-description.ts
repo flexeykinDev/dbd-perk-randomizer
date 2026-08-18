@@ -93,9 +93,34 @@ function stripBoilerplate(text: string): string {
 // allow a zero-width boundary here: a decimal point is never immediately
 // followed by a capital letter (it's followed by another digit), so this
 // can't misfire on a value like "4.73".
+//
+// `"?` in the lookbehind (found by hand auditing the newest wiki.gg-sourced
+// perks, e.g. Do No Harm: `"Helping...get." When healing...`): a bare,
+// unattributed flavor quote with no space before its closing mark sits
+// directly against the period it shares with the *next* sentence — without
+// this, the closing `"` would otherwise be readable as the *next*
+// sentence's opening quote and get glued onto the wrong side, leaking a
+// stray `"` onto the front of the kept sentence. Bundling an optional
+// trailing quote into the lookbehind keeps it attached to the sentence it
+// actually closes instead.
+//
+// The lookahead is now two branches instead of one shared `\s*` — a plain
+// letter can still follow with zero spaces (the Disfigured Ear typo case
+// above), but a quote character may only start a new sentence when at
+// least one real space precedes it (`\s+`, not `\s*`). Without that split,
+// the closing-quote case above produces *two* boundaries a single
+// character apart — one right before the closing quote (lookahead sees the
+// quote itself and treats it as a fresh quoted sentence starting) and one
+// right after it (lookbehind's own `"?` branch) — leaving the lone quote
+// mark stranded as its own empty "sentence" between two real ones (found
+// on Queen's Sceptre: `"...demands blood." Successfully hitting...` came
+// out as three pieces, not two, with `"` alone in the middle). Requiring a
+// real space before a quote can open a new sentence means a quote sitting
+// directly against the preceding period is only ever read as that
+// sentence's own closing mark, never as a second, competing boundary.
 function splitSentences(text: string): string[] {
   return text
-    .split(/(?<=[.!)])\s*(?=[A-ZА-ЯЁ"«„“])/)
+    .split(/(?<=[.!)]"?)(?:\s*(?=[A-ZА-ЯЁ])|\s+(?=["«„“]))/)
     .map((sentence) => sentence.trim())
     .filter(Boolean);
 }
@@ -132,6 +157,22 @@ const NAMED_TERM_REPLACE_RE = new RegExp(NAMED_TERM_SOURCE, "g");
 const MECHANICAL_VERB_RE =
   /^(?:Increases|Reduces|Grants|Causes|Extends|Modifies|Unlocks|Suppresses|Disables|Switches)\b/;
 
+// Purely wiki-editorial connective tissue introducing an effect list — same
+// spirit as CALLS_UPON_ENTITY_RE below, just recognized here instead of
+// stripped outright, since (unlike that phrase) this one carries the
+// sentence it's embedded in rather than gluing onto the front of one.
+// Never appears in flavor text (confirmed by hand across all 1200+ scraped
+// entries) — it exists specifically to introduce mechanical text — so it's
+// a safe signal even for an effect sentence that happens to have no number,
+// %, or named term of its own (found on Queen's Sceptre: "Successfully
+// hitting a Survivor ... triggers the following effect: Causes a Leeching
+// Gland to spatter..." has none of those, so without this the sentence
+// couldn't be confirmed mechanical, and stripLoreIntro's own safety net —
+// "only drop the lore intro if something after it still looks
+// mechanical" — left the flavor sentence in Core right alongside it rather
+// than risk dropping real content).
+const TRIGGERS_EFFECT_RE = /triggers? (?:its|the following) (?:primary |secondary )?effects?/i;
+
 // A sentence that mentions a number, a percentage, a named Status
 // Effect/state, or opens with a known effect verb reads as actual
 // game-mechanic text; one that doesn't is very likely flavor — several
@@ -145,7 +186,12 @@ const MECHANICAL_VERB_RE =
 // Heavy Duty Battery: `A battery marked as "industrial strength".`),
 // misclassifying it as mechanical and leaking it into Core.
 function isMechanical(sentence: string): boolean {
-  return /\d|%/.test(sentence) || NAMED_TERM_TEST_RE.test(sentence) || MECHANICAL_VERB_RE.test(sentence);
+  return (
+    /\d|%/.test(sentence) ||
+    NAMED_TERM_TEST_RE.test(sentence) ||
+    MECHANICAL_VERB_RE.test(sentence) ||
+    TRIGGERS_EFFECT_RE.test(sentence)
+  );
 }
 
 /** Drops a leading run of non-mechanical (flavor) sentences from the Core
@@ -166,9 +212,14 @@ function stripLoreIntro(sentences: string[]): string[] {
 }
 
 // Tiered values (6/7/8) before bare numbers so "6/7/8 seconds" highlights as
-// one span instead of three separate digits.
+// one span instead of three separate digits. Each tier can itself carry a
+// decimal (found by hand on the newest wiki.gg-sourced perks, e.g. "Come
+// and Get Me!"'s "10/12.5/15 seconds") — without `(?:[.,]\d+)?` on every
+// tier, the ".5" stops the tiered match early and starts a second one,
+// leaving a stray unhighlighted "." stranded between two separate bold
+// spans instead of one clean "10/12.5/15 seconds".
 const VALUE_RE =
-  /\d+(?:\/\d+)+(?:\s?(?:metres?|meters?|m|seconds?|sec|s|%))?|\d+(?:[.,]\d+)?\s?(?:metres?|meters?|m\b|seconds?|sec\b|секунд[а-я]*|метр[а-я]*|%)|\d+(?:[.,]\d+)?%/gi;
+  /\d+(?:[.,]\d+)?(?:\/\d+(?:[.,]\d+)?)+(?:\s?(?:metres?|meters?|m|seconds?|sec|s|%))?|\d+(?:[.,]\d+)?\s?(?:metres?|meters?|m\b|seconds?|sec\b|секунд[а-я]*|метр[а-я]*|%)|\d+(?:[.,]\d+)?%/gi;
 
 function autoHighlight(text: string): string {
   return text
