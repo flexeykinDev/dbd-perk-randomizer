@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Copy, Info, Lock, LockOpen, X } from "lucide-react";
+import { Copy, Dices, Info, Lock, LockOpen, X } from "lucide-react";
 import type { Perk } from "@/lib/types";
 import { withBasePath } from "@/lib/asset-path";
 import { isNewPerk, getCharacterPortrait } from "@/lib/perks";
@@ -14,6 +14,17 @@ import { getPerkDescription } from "@/lib/perk-description";
 import { useBodyScrollLock } from "@/lib/use-body-scroll-lock";
 import { Highlighted } from "./highlighted-text";
 
+/* The small circular controls in a perk card's top-right corner. Split into
+   base/idle so the padlock can reuse the shape while supplying its own
+   always-visible pinned colours. The dark plate is deliberate and doesn't
+   follow the theme: these sit on top of the perk artwork, which is light
+   line-art in both themes, so a themed plate would vanish on one of them. */
+const CORNER_BUTTON_BASE =
+  "flex size-6 items-center justify-center rounded-full backdrop-blur-sm transition-opacity disabled:pointer-events-none disabled:opacity-30";
+const CORNER_BUTTON_IDLE =
+  "bg-black/40 text-white/80 opacity-0 group-hover:opacity-100 hover:bg-black/60 hover:text-white focus-visible:opacity-100";
+const CORNER_BUTTON = cn(CORNER_BUTTON_BASE, CORNER_BUTTON_IDLE);
+
 export function PerkGrid({
   perks,
   language,
@@ -22,6 +33,7 @@ export function PerkGrid({
   onCopy,
   pinnedSlots,
   onTogglePin,
+  onRerollSlot,
 }: {
   perks: Perk[];
   language: "en" | "ru";
@@ -32,6 +44,7 @@ export function PerkGrid({
    *  shared or seeded build), which also hides the padlocks. */
   pinnedSlots?: Record<number, string>;
   onTogglePin?: (slot: number, slug: string) => void;
+  onRerollSlot?: (slot: number) => void;
 }) {
   const t = useT();
   const [detailPerk, setDetailPerk] = useState<Perk | null>(null);
@@ -70,6 +83,7 @@ export function PerkGrid({
         <AnimatePresence mode="popLayout">
           {perks.map((perk, index) => {
             const roleColor = ROLE_COLOR[perk.role];
+            const isPinned = pinnedSlots?.[index] === perk.slug;
             return (
               <motion.div
                 key={perk.slug}
@@ -107,49 +121,81 @@ export function PerkGrid({
                   </span>
                 )}
 
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setDetailPerk(perk);
-                  }}
-                  aria-label={t({ ru: "Описание:", en: "Description:" }) + " " + perk.name[language]}
-                  className="absolute top-1.5 right-1.5 z-10 flex size-6 items-center justify-center rounded-full bg-black/40 text-white/80 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100 hover:bg-black/60 hover:text-white"
-                >
-                  <Info className="size-3.5" />
-                </button>
+                {/* Per-card controls, grouped in one row rather than three
+                    separately-positioned buttons so they can't drift into
+                    each other as the card resizes. */}
+                <div className="absolute top-1.5 right-1.5 z-10 flex items-center gap-1">
+                  {onRerollSlot && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onRerollSlot(index);
+                      }}
+                      disabled={isPinned}
+                      // Names the keyboard shortcut in the tooltip — the
+                      // digit hotkeys are otherwise invisible, and this is
+                      // the button they correspond to.
+                      title={t({
+                        ru: `Перебросить этот перк (${index + 1})`,
+                        en: `Reroll this perk (${index + 1})`,
+                      })}
+                      aria-label={t({
+                        ru: "Перебросить этот перк",
+                        en: "Reroll this perk",
+                      })}
+                      className={CORNER_BUTTON}
+                    >
+                      <Dices className="size-3.5" />
+                    </button>
+                  )}
 
-                {onTogglePin && (
+                  {onTogglePin && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onTogglePin(index, perk.slug);
+                      }}
+                      aria-pressed={isPinned}
+                      aria-label={
+                        isPinned
+                          ? t({ ru: "Открепить перк", en: "Unpin perk" })
+                          : t({ ru: "Закрепить перк", en: "Pin perk" })
+                      }
+                      className={cn(
+                        CORNER_BUTTON_BASE,
+                        // A pinned slot keeps its padlock visible at all
+                        // times — it isn't a hover affordance like the info
+                        // button, it's the only thing on screen saying why
+                        // this slot stopped changing when you rerolled.
+                        isPinned
+                          ? "bg-accent text-accent-foreground opacity-100"
+                          : CORNER_BUTTON_IDLE,
+                      )}
+                    >
+                      {isPinned ? (
+                        <Lock className="size-3.5" />
+                      ) : (
+                        <LockOpen className="size-3.5" />
+                      )}
+                    </button>
+                  )}
+
                   <button
                     type="button"
                     onClick={(e) => {
                       e.stopPropagation();
-                      onTogglePin(index, perk.slug);
+                      setDetailPerk(perk);
                     }}
-                    aria-pressed={pinnedSlots?.[index] === perk.slug}
                     aria-label={
-                      pinnedSlots?.[index] === perk.slug
-                        ? t({ ru: "Открепить перк", en: "Unpin perk" })
-                        : t({ ru: "Закрепить перк", en: "Pin perk" })
+                      t({ ru: "Описание:", en: "Description:" }) + " " + perk.name[language]
                     }
-                    className={cn(
-                      // A pinned slot keeps its padlock visible at all times —
-                      // it isn't a hover affordance like the info button, it's
-                      // the only thing on screen saying why this slot stopped
-                      // changing when you rerolled.
-                      "absolute top-1.5 right-9 z-10 flex size-6 items-center justify-center rounded-full backdrop-blur-sm transition-opacity",
-                      pinnedSlots?.[index] === perk.slug
-                        ? "bg-accent text-accent-foreground opacity-100"
-                        : "bg-black/40 text-white/80 opacity-0 group-hover:opacity-100 hover:bg-black/60 hover:text-white focus-visible:opacity-100",
-                    )}
+                    className={CORNER_BUTTON}
                   >
-                    {pinnedSlots?.[index] === perk.slug ? (
-                      <Lock className="size-3.5" />
-                    ) : (
-                      <LockOpen className="size-3.5" />
-                    )}
+                    <Info className="size-3.5" />
                   </button>
-                )}
+                </div>
 
                 {/* eslint-disable-next-line @next/next/no-img-element -- next/image ignores basePath for unoptimized runtime src, see lib/asset-path.ts */}
                 <img

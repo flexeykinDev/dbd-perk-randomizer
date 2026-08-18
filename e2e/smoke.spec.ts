@@ -503,28 +503,35 @@ test.describe("Build History", () => {
   });
 });
 
-test.describe("Slot pinning", () => {
-  /** The four perk names currently on the board, in slot order.
-   *
-   *  Filtered to `position: relative` because AnimatePresence keeps the
-   *  outgoing cards mounted (absolutely positioned) until their exit
-   *  transition finishes — reading every card would pick up the previous
-   *  build alongside the current one. */
-  const liveBuild = (page: import("@playwright/test").Page) =>
-    page.evaluate(() =>
-      [...document.querySelectorAll('[data-perk-card="1"]')]
-        .filter((c) => getComputedStyle(c).position === "relative")
-        .map((c) => c.querySelector("img")!.alt),
-    );
+/** The perk names currently on the board, in slot order.
+ *
+ *  Filtered to `position: relative` because AnimatePresence keeps the
+ *  outgoing cards mounted (absolutely positioned) until their exit
+ *  transition finishes — reading every card would pick up the previous
+ *  build alongside the current one. */
+const liveBuild = (page: import("@playwright/test").Page) =>
+  page.evaluate(() =>
+    [...document.querySelectorAll('[data-perk-card="1"]')]
+      .filter((c) => getComputedStyle(c).position === "relative")
+      .map((c) => c.querySelector("img")!.alt),
+  );
 
+/** Loads the board and waits for a full four-perk build before returning it.
+ *  Reading the build straight after goto() races hydration and yields []. */
+async function openBoard(page: import("@playwright/test").Page) {
+  await page.goto("/?role=survivor");
+  await expect.poll(async () => (await liveBuild(page)).length).toBe(4);
+  return liveBuild(page);
+}
+
+test.describe("Slot pinning", () => {
   test("a pinned perk survives a reroll while the other slots change", async ({
     page,
   }) => {
-    await page.goto("/?role=survivor");
-    const pins = page.getByRole("button", { name: /перк$/ });
+    const before = await openBoard(page);
+    const pins = page.getByRole("button", { name: /^(За|От)крепить перк$/ });
     await expect(pins).toHaveCount(4);
 
-    const before = await liveBuild(page);
     await pins.nth(1).click();
 
     // Pinning is not itself a reroll — the board must be untouched.
@@ -543,7 +550,7 @@ test.describe("Slot pinning", () => {
   });
 
   test("pinning every slot makes a reroll a no-op", async ({ page }) => {
-    await page.goto("/?role=survivor");
+    await openBoard(page);
     for (let i = 0; i < 4; i++) {
       await page.getByRole("button", { name: "Закрепить перк" }).first().click();
     }
@@ -558,7 +565,7 @@ test.describe("Slot pinning", () => {
   test("pins are inert on the other role and return when you switch back", async ({
     page,
   }) => {
-    await page.goto("/?role=survivor");
+    await openBoard(page);
     await page.getByRole("button", { name: "Закрепить перк" }).first().click();
     const survivorBuild = await liveBuild(page);
 
@@ -576,6 +583,86 @@ test.describe("Slot pinning", () => {
   test("a seeded build has no padlocks at all", async ({ page }) => {
     await page.goto("/?role=survivor&seed=pin-test");
     await expect(page.locator("main img[alt]").first()).toBeVisible();
-    await expect(page.getByRole("button", { name: /перк$/ })).toHaveCount(0);
+    await expect(
+      page.getByRole("button", { name: /^(За|От)крепить перк$/ }),
+    ).toHaveCount(0);
+    await expect(
+      page.getByRole("button", { name: "Перебросить этот перк" }),
+    ).toHaveCount(0);
+  });
+
+  test("unpinning leaves the build exactly as it was", async ({ page }) => {
+    await openBoard(page);
+    await page.getByRole("button", { name: "Закрепить перк" }).first().click();
+    await page
+      .getByRole("button", { name: "Сгенерировать новый билд" })
+      .click();
+    await expect
+      .poll(async () => (await liveBuild(page)).length)
+      .toBe(4);
+
+    // A pin masks whatever the roll put in that slot, so dropping it must
+    // not uncover a different perk — "this may change from now on", not
+    // "this changes right now".
+    const before = await liveBuild(page);
+    await page.getByRole("button", { name: "Открепить перк" }).click();
+    await expect.poll(() => liveBuild(page)).toEqual(before);
+  });
+});
+
+test.describe("Single-slot reroll", () => {
+  test("the dice button changes only its own slot", async ({ page }) => {
+    const before = await openBoard(page);
+
+    await page.getByRole("button", { name: "Перебросить этот перк" }).nth(2).click();
+    await expect.poll(async () => (await liveBuild(page))[2]).not.toBe(before[2]);
+
+    const after = await liveBuild(page);
+    expect([after[0], after[1], after[3]]).toEqual([
+      before[0],
+      before[1],
+      before[3],
+    ]);
+    // Rerolling must never hand back a perk the build already holds.
+    expect(new Set(after).size).toBe(4);
+  });
+
+  test("the 1-4 keys reroll the matching slot", async ({ page }) => {
+    const before = await openBoard(page);
+
+    await page.locator("body").press("1");
+    await expect.poll(async () => (await liveBuild(page))[0]).not.toBe(before[0]);
+    expect((await liveBuild(page)).slice(1)).toEqual(before.slice(1));
+  });
+
+  test("a pinned slot refuses to reroll", async ({ page }) => {
+    await openBoard(page);
+    await page.getByRole("button", { name: "Закрепить перк" }).first().click();
+    const before = await liveBuild(page);
+
+    await expect(
+      page.getByRole("button", { name: "Перебросить этот перк" }).first(),
+    ).toBeDisabled();
+    await page.locator("body").press("1");
+    await expect.poll(() => liveBuild(page)).toEqual(before);
+  });
+
+  test("a full regenerate supersedes single-slot rerolls", async ({ page }) => {
+    await openBoard(page);
+    await page.getByRole("button", { name: "Перебросить этот перк" }).first().click();
+    const rerolled = (await liveBuild(page))[0];
+
+    await page
+      .getByRole("button", { name: "Сгенерировать новый билд" })
+      .click();
+    // Not a strict "must differ" — the fresh roll could legitimately land on
+    // the same perk. What matters is that the override was dropped, so
+    // rerolling again from the new build still moves only slot 1.
+    await expect.poll(async () => (await liveBuild(page)).length).toBe(4);
+    const fresh = await liveBuild(page);
+    await page.getByRole("button", { name: "Перебросить этот перк" }).first().click();
+    await expect.poll(async () => (await liveBuild(page))[0]).not.toBe(fresh[0]);
+    expect((await liveBuild(page)).slice(1)).toEqual(fresh.slice(1));
+    expect(rerolled).toBeTruthy();
   });
 });

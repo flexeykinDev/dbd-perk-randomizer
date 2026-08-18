@@ -21,6 +21,7 @@ its own project.
 
 - [Screenshots](#screenshots)
 - [Features](#features)
+- [Pinning and single-slot rerolls](#pinning-and-single-slot-rerolls)
 - [Battle Royale](#battle-royale)
 - [Full Loadout](#full-loadout)
 - [Loadout localization](#loadout-localization-items-add-ons-offerings)
@@ -52,6 +53,8 @@ its own project.
 
 - 🎲 A random build of 0–4 survivor/killer perks + a separate **Full
   Loadout** mode (item/Power, add-ons, offering)
+- 📌 **Pin** a perk to keep it through the next roll, or reroll a
+  single slot without disturbing the other three
 - 🧑 Pick a specific character — guarantees their teachables (Perks
   mode) or decides whose Power gets rolled (Loadout mode, killer)
 - 🌍 EN/RU language switch — every name and description is pulled from
@@ -75,6 +78,34 @@ its own project.
 If you exclude more perks than a build needs, the site honestly says
 there aren't enough perks rather than silently mixing excluded ones
 back in.
+
+## Pinning and single-slot rerolls
+
+Every perk card has a padlock and a dice, both also reachable from the
+keyboard.
+
+| Key             | Action                 |
+| --------------- | ---------------------- |
+| `Space`/`Enter` | Roll a whole new build |
+| `1`–`4`         | Reroll just that slot  |
+| `C`             | Copy the build         |
+| `S`             | Copy a share link      |
+
+A **pin** holds one perk in its slot: `Space` then rerolls everything
+around it, which is what you want when three of four perks are right.
+A **single-slot reroll** is the mirror image — it replaces exactly one
+perk and never touches the rest. Pinned slots refuse to reroll, and
+unpinning leaves the build as-is rather than uncovering a different
+perk; a full roll clears single-slot rerolls but keeps pins.
+
+Pins are session state and deliberately stay out of the share link —
+the link already describes a finished build, and the recipient sees
+the same four perks either way.
+
+Shortcuts stay out of the way while you're typing in a field or a
+modal is open, and never override a browser shortcut (`Ctrl`/`Cmd`/
+`Alt` combinations pass straight through). Seeded and shared builds
+hide both controls, since those builds are fixed by definition.
 
 ## Battle Royale
 
@@ -175,7 +206,7 @@ right inside the modal, or clear the selection.
   up next to the portrait, guarantees the selected character's own
   perks make it into the build (as long as they're not excluded from
   the pool) — the rest of the slots fill in randomly as usual.
-- **In Loadout mode, for killers:** the character choice itself *is*
+- **In Loadout mode, for killers:** the character choice itself _is_
   the result — it decides whose Power add-ons get rolled, instead of
   an internal random pick. The portrait and Power in the HUD always
   match (the portrait rides along as a small badge on the Power icon).
@@ -190,20 +221,21 @@ right inside the modal, or clear the selection.
 The **OBS Overlay** button opens a modal with a transparent link like
 `.../#/obs` — add it as a **Browser** source in OBS, and it mirrors
 whatever's on the main site in real time (synced via `BroadcastChannel`
-+ localStorage locally, and Firebase Realtime Database across
-different browser profiles — see `lib/obs-sync.ts` and the
-[Firebase](#firebase-for-syncing-the-obs-overlay-across-browser-profiles)
-section below). The modal shows a live preview above the settings —
-drag each icon anywhere on the canvas, positions save right into the
-URL — and everything's configured through the link's own query params:
 
-| Param | Values | Default | What it does |
-|---|---|---|---|
-| `scale` | `50`–`200` | `135` | Card size, % (dragged via the slider in the modal) |
-| `nameScale` | `100`–`300` | `170` | Extra width for the name label box, % |
-| `names` | `1` / `0` | `1` | Show the card's name under the icon |
-| `bg` | `transparent` / `dark` | `transparent` | Background — transparent (for OBS) or a dark backdrop (for previewing outside OBS) |
-| `pos` | `x1,y1,x2,y2,…` (% of canvas) | — (default centered row) | Icon positions, set by dragging in the preview |
+- localStorage locally, and Firebase Realtime Database across
+  different browser profiles — see `lib/obs-sync.ts` and the
+  [Firebase](#firebase-for-syncing-the-obs-overlay-across-browser-profiles)
+  section below). The modal shows a live preview above the settings —
+  drag each icon anywhere on the canvas, positions save right into the
+  URL — and everything's configured through the link's own query params:
+
+| Param       | Values                        | Default                  | What it does                                                                       |
+| ----------- | ----------------------------- | ------------------------ | ---------------------------------------------------------------------------------- |
+| `scale`     | `50`–`200`                    | `135`                    | Card size, % (dragged via the slider in the modal)                                 |
+| `nameScale` | `100`–`300`                   | `170`                    | Extra width for the name label box, %                                              |
+| `names`     | `1` / `0`                     | `1`                      | Show the card's name under the icon                                                |
+| `bg`        | `transparent` / `dark`        | `transparent`            | Background — transparent (for OBS) or a dark backdrop (for previewing outside OBS) |
+| `pos`       | `x1,y1,x2,y2,…` (% of canvas) | — (default centered row) | Icon positions, set by dragging in the preview                                     |
 
 The modal builds the link itself from whatever you've picked — no need
 to hand-edit the URL. Three ready-made style presets (Compact/
@@ -386,10 +418,10 @@ PRs and issues are welcome.
   `data/description-translations.ru.json` are the source of truth for
   hand-authored translations — edit them directly (that's expected).
   `data/description-ru-raw.json` is also generated (`npm run
-  sync:descriptions`), but as a lower-priority fallback than
+sync:descriptions`), but as a lower-priority fallback than
   `description-translations.ru.json`.
 - Changed the UI — refresh `docs/screenshots/*.png` too: `npm run
-  capture:screenshots` (needs `npm run dev` running on port 3000)
+capture:screenshots` (needs `npm run dev` running on port 3000)
   regenerates all of them automatically via Playwright.
 - One PR, one topic — makes it much easier to review a screenshot/
   translation diff when it isn't tangled up with unrelated refactoring.
