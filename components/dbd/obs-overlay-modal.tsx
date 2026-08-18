@@ -1499,7 +1499,7 @@ export function ObsOverlayModal({
                             alt={perk.name[language]}
                             width={30}
                             height={30}
-                            className="size-[30px] rounded bg-icon-plate object-cover"
+                            className="size-[30px] rounded icon-art object-cover"
                           />
                         </button>
                       );

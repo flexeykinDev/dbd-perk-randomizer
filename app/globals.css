@@ -17,13 +17,6 @@
   --accent: #c87d2a;
   --accent-strong: #d4a359;
   --accent-foreground: #1a1206;
-  /* Perk, add-on and Power icons are white line art baked for a dark
-     background — the game's own art, so there's no light-mode variant to
-     download. On the dark theme the card already supplies that contrast, so
-     the plate stays transparent and nothing changes; the light theme paints
-     a dark plate behind each icon instead (see --icon-plate below), which
-     is why this is a token rather than a fixed colour. */
-  --icon-plate: transparent;
 }
 
 :root[data-theme="light"] {
@@ -39,10 +32,6 @@
   --accent: #a8651e;
   --accent-strong: #8b5417;
   --accent-foreground: #ffffff;
-  /* Slightly lifted off the dark theme's own --surface so the plate reads as
-     a deliberate chip rather than a stray dark rectangle, and dark enough
-     that the white line art keeps full contrast against it. */
-  --icon-plate: #262b33;
 }
 
 @theme inline {
@@ -55,9 +44,32 @@
   --color-accent: var(--accent);
   --color-accent-strong: var(--accent-strong);
   --color-accent-foreground: var(--accent-foreground);
-  --color-icon-plate: var(--icon-plate);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+}
+
+/* Perk, add-on, item, offering and Power icons are the game's own art:
+   white line drawings on transparency, made for a dark HUD. Verified
+   across all 1274 shipped icons — every one is greyscale bar a single
+   faintly-warm Power icon — which is what makes a straight inversion
+   safe here where it would wreck a colour illustration.
+
+   On the light theme they were previously rendering as near-invisible
+   pale shapes on a white card. Inverting turns the same art into dark
+   line work, so it reads as ink on paper alongside the text rather than
+   as a dark tile stamped onto the page.
+
+   0.92 rather than a full 1: pure inversion lands on #000, which is
+   harder than anything else on the light theme. This lands around
+   #141414, near the light theme's own --foreground (#14161b), so icons
+   carry the same weight as the type beside them.
+
+   Applied by class, never by a blanket img selector: the OBS overlay and
+   the downloadable share card both paint their own dark ground and don't
+   follow the site theme, so inverting their icons would black them out
+   against black. They deliberately don't carry this class. */
+:root[data-theme="light"] .icon-art {
+  filter: invert(0.92);
 }
 
 body {

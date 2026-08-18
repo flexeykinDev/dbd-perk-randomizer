@@ -256,7 +256,7 @@ function PieceSlot({
               <img
                 src={withBasePath(piece.icon)}
                 alt={piece.name[language]}
-                className="size-full bg-icon-plate object-cover"
+                className="size-full icon-art object-cover"
               />
             </motion.div>
           ) : (
@@ -341,7 +341,7 @@ function PowerSlot({
           <img
             src={withBasePath(icon)}
             alt={getCharacterName(character, language)}
-            className="size-24 rounded-xl border border-border bg-icon-plate object-cover sm:size-28 lg:size-32"
+            className="size-24 rounded-xl border border-border icon-art object-cover sm:size-28 lg:size-32"
           />
         ) : (
           <div
@@ -444,7 +444,7 @@ function LoadoutDetailModal({
                     alt={piece.name[language]}
                     width={56}
                     height={56}
-                    className="size-14 rounded-xl bg-icon-plate object-cover"
+                    className="size-14 rounded-xl icon-art object-cover"
                   />
                 </span>
                 <div>
