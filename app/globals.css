@@ -79,6 +79,33 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* Modal sizing and scrolling.
+   Written as plain CSS rather than utility classes because both rules
+   depend on declaration *order*, which the class attribute doesn't
+   guarantee: the browser has to see the vh value first and only override
+   it with dvh where dvh is understood.
+
+   dvh over vh matters specifically on phones. `100vh` is the viewport with
+   the browser's URL bar hidden, so a modal sized against it is taller than
+   what you can actually see while the bar is showing — the bottom of the
+   card, which is where the action button sits, ends up under it. `dvh`
+   tracks the live viewport instead. */
+.modal-card {
+  max-height: calc(100vh - 2rem);
+  max-height: calc(100dvh - 2rem);
+}
+
+/* The scrolling region inside a modal. `overscroll-contain` stops a scroll
+   that reaches the end of this element from continuing into the page
+   behind the backdrop. -webkit-overflow-scrolling is a no-op on current
+   iOS (momentum has been the default since iOS 13) and is kept only for
+   older WebKit builds. */
+.modal-scroll {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
 /* Perk, add-on, item, offering and Power icons are the game's own art:
    white line drawings on transparency, made for a dark HUD. Verified
    across all 1274 shipped icons — every one is greyscale bar a single

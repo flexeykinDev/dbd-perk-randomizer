@@ -9,6 +9,7 @@ import { getKillerPowerIcon, isNewLoadoutPiece, ITEM_TYPE_LABEL } from "@/lib/lo
 import { getCharacterPortrait } from "@/lib/perks";
 import { getCharacterName } from "@/lib/character-name";
 import { getLoadoutPieceDescription } from "@/lib/perk-description";
+import { useBodyScrollLock } from "@/lib/use-body-scroll-lock";
 import { ROLE_COLOR } from "@/lib/role-color";
 import { cn } from "@/lib/cn";
 import { useT } from "@/lib/i18n";
@@ -379,6 +380,7 @@ function LoadoutDetailModal({
   onClose: () => void;
 }) {
   const t = useT();
+  useBodyScrollLock(piece !== null);
   const roleColor = ROLE_COLOR[role];
   const character =
     piece?.kind === "addon" && piece.character !== ".All"
@@ -403,7 +405,9 @@ function LoadoutDetailModal({
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
             transition={{ type: "spring", stiffness: 400, damping: 32 }}
             onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-sm overflow-hidden rounded-2xl border border-border bg-gradient-to-b from-surface to-background text-left shadow-2xl"
+            /* Same fixed-header / scrolling-body / fixed-action shape as
+               PerkDetailModal — see its comment. */
+            className="modal-card relative flex w-full max-w-sm flex-col overflow-hidden rounded-2xl border border-border bg-gradient-to-b from-surface to-background text-left shadow-2xl"
           >
             <div
               aria-hidden
@@ -413,17 +417,17 @@ function LoadoutDetailModal({
               )}
             />
 
-            <div className="relative p-6">
+            <div className="relative shrink-0 px-6 pt-6 pb-4">
               <button
                 type="button"
                 onClick={onClose}
                 aria-label={t({ ru: "Закрыть", en: "Close" })}
-                className="absolute top-0 right-0 flex size-7 items-center justify-center rounded-full text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+                className="absolute top-4 right-4 flex size-7 items-center justify-center rounded-full text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
               >
                 <X className="size-4" />
               </button>
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 pr-8">
                 <span
                   className={cn(
                     "relative shrink-0 rounded-xl ring-2 ring-offset-2 ring-offset-surface",
@@ -464,9 +468,13 @@ function LoadoutDetailModal({
                   </p>
                 </div>
               </div>
+            </div>
 
+            {/* min-h-0 is what lets this actually scroll instead of
+                stretching the card — see PerkDetailModal. */}
+            <div className="modal-scroll relative min-h-0 flex-1 px-6">
               {character && (
-                <div className="mt-4 flex items-center gap-3 rounded-xl border border-border bg-surface/60 p-3">
+                <div className="flex items-center gap-3 rounded-xl border border-border bg-surface/60 p-3">
                   <span
                     className={cn(
                       "relative shrink-0 overflow-hidden rounded-full ring-2 ring-offset-2 ring-offset-surface",
@@ -516,10 +524,14 @@ function LoadoutDetailModal({
                   </p>
                 )}
 
+              <div className="h-6" aria-hidden />
+            </div>
+
+            <div className="relative shrink-0 border-t border-border/60 bg-background/80 px-6 py-4 backdrop-blur-sm">
               <button
                 type="button"
                 onClick={() => onCopy(piece)}
-                className="mt-4 flex w-full items-center justify-center gap-1.5 rounded-lg border border-border py-2 text-sm font-medium text-muted transition-colors hover:border-accent/50 hover:bg-accent/10 hover:text-accent"
+                className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-border py-2 text-sm font-medium text-muted transition-colors hover:border-accent/50 hover:bg-accent/10 hover:text-accent"
               >
                 <Copy className="size-3.5" />
                 {t({ ru: "Копировать", en: "Copy" })}
