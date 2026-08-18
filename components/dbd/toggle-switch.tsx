@@ -45,10 +45,17 @@ export function ToggleSwitch({
             : "border-border bg-surface-hover",
         )}
       >
+        {/* The knob takes whichever token contrasts with the track it's
+            sitting on, instead of being permanently white. Since the accent
+            became a neutral, an always-white knob on an "on" track meant
+            bone-on-bone in the dark theme (the knob simply vanished) and
+            white-on-white in the light one. --accent-foreground is already
+            defined as the colour that reads against --accent, so the two
+            states can't drift apart. */}
         <span
           className={cn(
-            "absolute top-0.5 left-0.5 size-5 rounded-full bg-white shadow transition-transform",
-            checked && "translate-x-5",
+            "absolute top-0.5 left-0.5 size-5 rounded-full shadow transition-transform",
+            checked ? "translate-x-5 bg-accent-foreground" : "bg-foreground",
           )}
         />
       </button>

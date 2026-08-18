@@ -502,6 +502,7 @@ function LoadoutDetailModal({
               <LoadoutDescriptionPanel
                 key={`${piece.kind}:${piece.slug}`}
                 piece={piece}
+                role={role}
                 language={language}
               />
               {language === "ru" &&
@@ -541,9 +542,12 @@ type DescriptionTab = "core" | "full";
  *  resets the tab. */
 function LoadoutDescriptionPanel({
   piece,
+  role,
   language,
 }: {
   piece: LoadoutPiece;
+  /** Tints the highlighted values — see the Highlighted component. */
+  role: PerkRole;
   language: "en" | "ru";
 }) {
   const t = useT();
@@ -581,7 +585,7 @@ function LoadoutDescriptionPanel({
                 aria-hidden
               />
               <span>
-                <Highlighted text={bullet} />
+                <Highlighted text={bullet} role={role} />
               </span>
             </li>
           ))}
@@ -589,7 +593,7 @@ function LoadoutDescriptionPanel({
       ) : (
         <div className="mt-3 space-y-3">
           <p className="text-sm leading-relaxed text-muted">
-            <Highlighted text={description.full} />
+            <Highlighted text={description.full} role={role} />
           </p>
           {description.quote && (
             <p className="border-l-2 border-accent/40 pl-3 text-xs italic leading-relaxed text-muted/80">

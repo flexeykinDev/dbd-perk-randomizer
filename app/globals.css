@@ -23,14 +23,20 @@
   --accent: #e8e6e1;
   --accent-strong: #ffffff;
   --accent-foreground: #16181c;
-  /* The one place colour is still earned: the numbers and Status Effect
-     names inside a perk's text (see lib/perk-description.ts and the
-     Highlighted component). Those carry real information, so they keep a
-     hue — and now that nothing else on the page is gold, they read as the
-     game's own Bloodpoint/Iridescent callout instead of one warm thing
-     among several. Kept off --accent so chrome and data can never drift
-     into the same colour again. */
-  --highlight: #d9a441;
+  /* The numbers and Status Effect names inside a perk's text (see
+     lib/perk-description.ts and the Highlighted component). These take the
+     colour of the role the perk belongs to rather than a hue of their own:
+     a gold worked, but it put a third colour on a page that already has
+     exactly two meaningful ones, and it read as the orange we just spent
+     the accent change removing. Tinting by role adds nothing new — the
+     Survivor label above the text is already this blue — and it ties a
+     value to the side it belongs to.
+
+     Lighter than lib/role-color.ts's own sky-400/rose-400: those sit on a
+     dark card and would drop to about 2:1 against the light theme's white
+     surface, so each theme gets a shade tuned for its own ground. */
+  --highlight-survivor: #7dd3fc;
+  --highlight-killer: #fda4af;
 }
 
 :root[data-theme="light"] {
@@ -51,9 +57,10 @@
   --accent: #1d1b18;
   --accent-strong: #000000;
   --accent-foreground: #f7f6f3;
-  /* Darkened well past the dark theme's gold — the light value would drop
-     to roughly 2:1 against white and stop reading as emphasis at all. */
-  --highlight: #8a5a12;
+  /* Darkened well past the dark theme's tints — those are chosen to glow
+     on near-black and would sit at roughly 2:1 on white. */
+  --highlight-survivor: #0369a1;
+  --highlight-killer: #be123c;
 }
 
 @theme inline {
@@ -66,7 +73,8 @@
   --color-accent: var(--accent);
   --color-accent-strong: var(--accent-strong);
   --color-accent-foreground: var(--accent-foreground);
-  --color-highlight: var(--highlight);
+  --color-highlight-survivor: var(--highlight-survivor);
+  --color-highlight-killer: var(--highlight-killer);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
