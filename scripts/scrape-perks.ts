@@ -6,10 +6,10 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import * as cheerio from "cheerio";
 import sharp from "sharp";
 import { slugify } from "../lib/slugify";
 import { partitionByRelease } from "./release-gate";
+import { cleanText, parsePerkTables, type ScrapedRow } from "./wiki-perk-table";
 import type { LocalizedDescription, Perk, PerkRole, PerksMeta } from "../lib/types";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -36,29 +36,10 @@ const PERK_IDS_JSON = join(DATA_DIR, "perk-ids.json");
 const ICON_SOURCES_JSON = join(DATA_DIR, "icon-sources.json");
 
 const ICON_SIZE = 128;
-const TABLE_INDEX_BY_ROLE: Record<PerkRole, number> = {
-  survivor: 0,
-  killer: 1,
-};
-
-interface ScrapedRow {
-  name: string;
-  slug: string;
-  description: string;
-  character: string;
-  // The wiki's Perks table displays only a character's first name (or, for
-  // Killers, their epithet) in the character column — almost always unique
-  // enough on its own, until two characters happen to share one (David
-  // King and David Tapp both show as bare "David"). Fandom's own markup
-  // still disambiguates them via the character link's `title` attribute
-  // even though the visible text doesn't, so that's captured here too and
-  // only substituted in for `character` when a real collision is detected
-  // (see resolveCharacterCollisions) — every non-colliding character keeps
-  // its existing short display form unchanged.
-  characterFullName: string;
-  iconSourceUrl: string;
-  characterPortraitUrl: string;
-}
+/** Scheme + host of the wiki SOURCE_URL points at, for absolutising any
+ *  root-relative image URL the page returns. */
+const WIKI_ORIGIN = "https://deadbydaylight.fandom.com";
+const ROLES: PerkRole[] = ["survivor", "killer"];
 
 function loadTranslations(): Record<string, string> {
   if (!existsSync(TRANSLATIONS_JSON)) return {};
@@ -148,11 +129,16 @@ function supplementalRows(entries: SupplementalEntry[], role: PerkRole): Scraped
       entry.perks.map((perk) => ({
         name: perk.name,
         slug: slugify(perk.name),
-        description: cleanDescription(perk.description),
+        description: cleanText(perk.description),
         character: entry.character,
         characterFullName: entry.character,
         iconSourceUrl: perk.iconSourceUrl,
         characterPortraitUrl: entry.characterPortraitUrl,
+        // Hand-curated entries are gated on their own releasedAt (see
+        // loadSupplementalPerks), so by the time one gets here it is live
+        // by definition — the wiki's own "upcoming patch" marker has no
+        // say over it either way.
+        upcoming: false,
       })),
     );
 }
@@ -235,57 +221,6 @@ async function fetchWikiPageHtml(): Promise<string> {
     );
   }
   return html;
-}
-
-// The wiki prepends this notice, with no separating whitespace, to any perk
-// whose numbers are previewed for an upcoming patch — e.g. "...Patch
-// 7.7.0You are fuelled by...". Strip it; it's wiki-editorial metadata, not
-// part of the perk's actual description.
-const UPCOMING_PATCH_NOTICE =
-  /^This description is based on the changes announced for or featured in the upcoming Patch [\d.]+\s*/;
-
-function cleanText(text: string): string {
-  return text.replace(/\s+/g, " ").trim();
-}
-
-function cleanDescription(text: string): string {
-  return cleanText(text).replace(UPCOMING_PATCH_NOTICE, "");
-}
-
-function parseRole($: cheerio.CheerioAPI, role: PerkRole): ScrapedRow[] {
-  const table = $("table.wikitable").eq(TABLE_INDEX_BY_ROLE[role]);
-  const rows: ScrapedRow[] = [];
-
-  table.find("tr").each((i, tr) => {
-    if (i === 0) return; // header row
-    const cells = $(tr).find("th, td");
-    if (cells.length < 4) return;
-
-    const iconCell = cells.eq(0);
-    const nameCell = cells.eq(1);
-    const descriptionCell = cells.eq(2);
-    const characterCell = cells.eq(3);
-
-    const name = cleanText(nameCell.text());
-    const iconSourceUrl = iconCell.find("img").attr("data-src") ?? "";
-    if (!name || !iconSourceUrl) return;
-
-    const portraitSrc = characterCell.find(".charPortraitWrapper img").attr("data-src") ?? "";
-    const character = cleanText(characterCell.text());
-    const characterFullName = characterCell.find("a").first().attr("title") || character;
-
-    rows.push({
-      name,
-      slug: slugify(name),
-      description: cleanDescription(descriptionCell.text()),
-      character,
-      characterFullName,
-      iconSourceUrl: iconSourceUrl.split("/revision/")[0], // strip cache-buster path segment
-      characterPortraitUrl: portraitSrc ? portraitSrc.split("/revision/")[0] : "",
-    });
-  });
-
-  return rows;
 }
 
 async function downloadIcon(
@@ -375,7 +310,7 @@ async function downloadPortrait(
 async function main() {
   console.log(`Fetching ${WIKI_PAGE_URL} via MediaWiki API ...`);
   const html = await fetchWikiPageHtml();
-  const $ = cheerio.load(html);
+  const scrapedByRole = parsePerkTables(html, WIKI_ORIGIN);
 
   const translations = loadTranslations();
   const descriptionTranslations = loadDescriptionTranslations();
@@ -392,8 +327,8 @@ async function main() {
   const scrapedAt = new Date().toISOString();
 
   const rowsByRole = new Map<PerkRole, ScrapedRow[]>();
-  for (const role of Object.keys(TABLE_INDEX_BY_ROLE) as PerkRole[]) {
-    const scraped = parseRole($, role);
+  for (const role of ROLES) {
+    const scraped = scrapedByRole[role];
     const scrapedSlugs = new Set(scraped.map((r) => r.slug));
     // A supplemental entry is redundant (and skipped) once Fandom's own
     // table catches up and starts producing the same perk slug on its
@@ -413,7 +348,7 @@ async function main() {
 
   const perks: Perk[] = [];
   const characterPortraitUrls = new Map<string, string>();
-  for (const role of Object.keys(TABLE_INDEX_BY_ROLE) as PerkRole[]) {
+  for (const role of ROLES) {
     const rows = rowsByRole.get(role)!;
 
     for (const row of rows) {
