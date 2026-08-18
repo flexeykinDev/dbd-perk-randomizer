@@ -69,6 +69,44 @@ function splitTieredCell(cellText: string): { num: string; unit: string } | null
   return { num: match[1], unit: match[2].trim() };
 }
 
+/**
+ * Picks the unit to print after a combined "64/96/128" value, or null when
+ * the tiers disagree in a way that can't be reconciled.
+ *
+ * Russian unit words decline with the number in front of them, so a
+ * perfectly well-formed tier table routinely spells the same unit three
+ * different ways — "64 метра / 96 метров / 128 метров", "1 выживший /
+ * 2 выживших / 3 выживших", "1 жетон / 2 жетона / 3 жетона". Requiring all
+ * three to match exactly rejected six real perks (Empathy, Aftercare,
+ * Corrective Action, Head On, Open-Handed, Sole Survivor) whose data was
+ * never actually ambiguous.
+ *
+ * The last tier's form is the one to keep: Russian agreement follows the
+ * final numeral that's read aloud, so "64/96/128" takes 128's form
+ * ("метров") and the descending "20/22/24" takes 24's ("метра"). Both
+ * directions were checked against the real tables.
+ *
+ * A shared stem is what makes this safe — genuinely different units
+ * ("метров" vs "секунд") share no prefix and still return null rather than
+ * silently printing one stat's number with another stat's unit. Trailing
+ * periods are ignored first so "сек" and "сек." count as the same word.
+ */
+function resolveTierUnit(units: string[]): string | null {
+  const last = units[units.length - 1];
+  if (new Set(units).size === 1) return last;
+
+  const bare = units.map((u) => u.replace(/\.+$/, ""));
+  let stem = bare[0];
+  for (const u of bare.slice(1)) {
+    let i = 0;
+    while (i < stem.length && i < u.length && stem[i] === u[i]) i++;
+    stem = stem.slice(0, i);
+  }
+  // Three characters is enough to separate declensions of one word from two
+  // different words, and short enough to keep "сек"/"сек." together.
+  return stem.length >= 3 ? last : null;
+}
+
 /** Extracts the "Описание" section's text and, if it uses the
  *  placeholder+tier-table template, substitutes the real values in. Returns
  *  null if the page/section is missing or the structure doesn't cleanly
@@ -130,9 +168,8 @@ function extractDescription(html: string): string | null {
   if (parsed.some((v) => v === null)) return null;
   const cells = parsed as { num: string; unit: string }[];
 
-  const units = new Set(cells.map((c) => c.unit));
-  if (units.size !== 1) return null; // inconsistent unit across tiers — don't guess
-  const unit = cells[0].unit;
+  const unit = resolveTierUnit(cells.map((c) => c.unit));
+  if (unit === null) return null; // genuinely different units — don't guess
   const combined = cells.map((c) => c.num).join("/") + (unit ? (unit === "%" ? "%" : ` ${unit}`) : "");
 
   text = text.replace(PLACEHOLDER_RE, combined);
