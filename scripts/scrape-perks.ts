@@ -9,6 +9,7 @@ import { fileURLToPath } from "node:url";
 import * as cheerio from "cheerio";
 import sharp from "sharp";
 import { slugify } from "../lib/slugify";
+import { partitionByRelease } from "./release-gate";
 import type { LocalizedDescription, Perk, PerkRole, PerksMeta } from "../lib/types";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -102,13 +103,26 @@ interface SupplementalEntry {
   role: PerkRole;
   character: string;
   characterPortraitUrl: string;
+  releasedAt?: string;
   perks: { name: string; description: string; iconSourceUrl: string }[];
 }
 
+/** Loads the supplemental entries that are actually live, and reports any
+ *  held back — see scripts/release-gate.ts for why wiki.gg-sourced data
+ *  needs gating at all. */
 function loadSupplementalPerks(): SupplementalEntry[] {
   if (!existsSync(SUPPLEMENTAL_PERKS_EN_JSON)) return [];
   const raw = JSON.parse(readFileSync(SUPPLEMENTAL_PERKS_EN_JSON, "utf8"));
-  return raw.entries ?? [];
+  const entries: SupplementalEntry[] = raw.entries ?? [];
+  const { live, pending } = partitionByRelease(
+    entries,
+    (e) => e.releasedAt,
+    (e) => `Supplemental ${e.role} "${e.character}"`,
+  );
+  for (const { entry, releasedAt } of pending) {
+    console.log(`  Holding back ${entry.character} — releases ${releasedAt}`);
+  }
+  return live;
 }
 
 // See data/supplemental-perks.en.json's own comment — turns each curated

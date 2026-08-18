@@ -16,6 +16,7 @@ import type { Cheerio } from "cheerio";
 import type { AnyNode } from "domhandler";
 import sharp from "sharp";
 import { slugify } from "../lib/slugify";
+import { partitionByRelease } from "./release-gate";
 import type { Addon, Item, ItemType, LoadoutMeta, Offering, PerkRole } from "../lib/types";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -694,16 +695,29 @@ function loadDescriptionRuRaw(): Record<string, string> {
 
 interface SupplementalAddonEntry {
   character: string;
+  releasedAt?: string;
   addons: { name: string; description: string; iconSourceUrl: string }[];
 }
 
 // See data/supplemental-addons.en.json's own comment — same "Fandom hasn't
 // caught up yet" pattern as data/supplemental-perks.en.json, just for a
-// killer's Power add-ons instead of teachable perks.
+// killer's Power add-ons instead of teachable perks. Gated on releasedAt
+// for the same reason scrape-perks.ts gates its own supplemental entries:
+// the wiki.gg pages these come from go up before the Chapter ships (see
+// scripts/release-gate.ts).
 function loadSupplementalAddons(): SupplementalAddonEntry[] {
   if (!existsSync(SUPPLEMENTAL_ADDONS_EN_JSON)) return [];
   const raw = JSON.parse(readFileSync(SUPPLEMENTAL_ADDONS_EN_JSON, "utf8"));
-  return raw.entries ?? [];
+  const entries: SupplementalAddonEntry[] = raw.entries ?? [];
+  const { live, pending } = partitionByRelease(
+    entries,
+    (e) => e.releasedAt,
+    (e) => `Supplemental add-ons for "${e.character}"`,
+  );
+  for (const { entry, releasedAt } of pending) {
+    console.log(`  Holding back ${entry.character}'s add-ons — releases ${releasedAt}`);
+  }
+  return live;
 }
 
 async function main() {

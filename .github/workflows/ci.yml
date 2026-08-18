@@ -16,6 +16,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run lint
+      - name: Unit tests (release gate)
+        run: npm test
       - name: Build (static export, includes typecheck)
         run: npm run build
       - name: Install Playwright browsers
