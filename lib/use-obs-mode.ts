@@ -1,7 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { getOrCreateRoomCode } from "./obs-sync";
+import { useEffect, useState, useSyncExternalStore } from "react";
+import {
+  getOrCreateRoomCode,
+  getPublishStatus,
+  subscribeToPublishStatus,
+  type ObsPublishState,
+  type ObsPublishStatus,
+} from "./obs-sync";
+
+// Re-exported so the OBS modal can import its status types from the same
+// place it imports the hook, rather than reaching into obs-sync directly.
+export type { ObsPublishState, ObsPublishStatus };
 
 const OBS_HASH = "#/obs";
 
@@ -234,6 +244,27 @@ export function useIsObsMode(): boolean {
  *  how it finds the right Firebase Realtime Database path to subscribe to
  *  (see lib/obs-sync.ts) without sharing cookies or localStorage with
  *  whatever browser generated the link — OBS's Browser Source never does. */
+/** Firebase publish health, for the OBS modal's status row.
+ *
+ *  Reads the current value on mount rather than starting from a default:
+ *  publishObsState runs on every generate, so by the time the modal is
+ *  opened there is usually already a real status to show, and starting
+ *  from "off" would flash "not syncing" at a streamer whose sync is fine. */
+export function useObsPublishStatus(): ObsPublishStatus {
+  // useSyncExternalStore rather than useState+useEffect: the status lives
+  // in a module-level store that publishObsState writes to on every
+  // generate, including before this component ever mounts. Seeding state
+  // and then re-reading it in an effect would both trigger a cascading
+  // render and still leave a window where a write between render and
+  // effect is missed. getPublishStatus returns the same object identity
+  // until something actually changes, which is what keeps this stable.
+  return useSyncExternalStore(
+    subscribeToPublishStatus,
+    getPublishStatus,
+    getPublishStatus,
+  );
+}
+
 export function useObsRoomCode(): string | null {
   const [room, setRoom] = useState<string | null>(null);
 

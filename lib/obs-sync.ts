@@ -48,6 +48,50 @@ export interface ObsSyncPayload {
   character?: string;
 }
 
+/** How the last Firebase write went.
+ *
+ *  - `off`     — no room exists, so nothing is being written at all. This
+ *                is the normal state for anyone who has never opened the
+ *                OBS Overlay modal, and is not a problem to report.
+ *  - `syncing` — a write is in flight.
+ *  - `synced`  — the last write landed.
+ *  - `error`   — the last write was rejected (offline, blocked by an
+ *                extension, or database rules misconfigured).
+ *
+ *  Worth surfacing because the failure is otherwise completely silent: the
+ *  BroadcastChannel path keeps working, so the streamer's own preview looks
+ *  healthy while the Browser Source in OBS — the thing on stream — quietly
+ *  stops updating. */
+export type ObsPublishState = "off" | "syncing" | "synced" | "error";
+
+export interface ObsPublishStatus {
+  state: ObsPublishState;
+  /** When the last write succeeded, so the UI can say how stale it is. */
+  lastSyncedAt: number | null;
+}
+
+let publishStatus: ObsPublishStatus = { state: "off", lastSyncedAt: null };
+const publishListeners = new Set<(status: ObsPublishStatus) => void>();
+
+function setPublishStatus(next: Partial<ObsPublishStatus>): void {
+  publishStatus = { ...publishStatus, ...next };
+  for (const listener of publishListeners) listener(publishStatus);
+}
+
+export function getPublishStatus(): ObsPublishStatus {
+  return publishStatus;
+}
+
+/** Subscribes to Firebase publish health; returns an unsubscribe. */
+export function subscribeToPublishStatus(
+  listener: (status: ObsPublishStatus) => void,
+): () => void {
+  publishListeners.add(listener);
+  return () => {
+    publishListeners.delete(listener);
+  };
+}
+
 let channel: BroadcastChannel | null | undefined;
 
 function getChannel(): BroadcastChannel | null {
@@ -106,7 +150,13 @@ export function publishObsState(
   const room = peekRoomCode();
   if (!room) return;
   const db = getObsDatabase();
-  if (!db) return;
+  if (!db) {
+    // A room exists but Firebase isn't configured — the cross-profile
+    // bridge silently can't work, which is exactly the case worth naming
+    // rather than leaving to look like "connected".
+    setPublishStatus({ state: "error" });
+    return;
+  }
   const roomRef = ref(db, `obs-rooms/${room}`);
   // Firebase's set() rejects a value tree containing a literal `undefined`
   // *synchronously* — it throws before ever returning the promise the
@@ -116,12 +166,20 @@ export function publishObsState(
   // JSON round-tripping drops `undefined`-valued keys the same way
   // JSON.stringify always has, which is exactly what Firebase needs here.
   const firebaseSafe = JSON.parse(JSON.stringify(full)) as ObsSyncPayload;
-  set(roomRef, firebaseSafe).catch(() => {
-    // Best-effort — same-profile sync above already covers the case where
-    // this tab and the overlay share a browser, so a Firebase hiccup
-    // (offline, blocked, rules misconfigured) just means the OBS overlay
-    // running in a *different* profile doesn't update, not a crash.
-  });
+  setPublishStatus({ state: "syncing" });
+  set(roomRef, firebaseSafe)
+    .then(() => {
+      setPublishStatus({ state: "synced", lastSyncedAt: Date.now() });
+    })
+    .catch(() => {
+      // Still best-effort — a failure here is not a crash, because the
+      // same-profile BroadcastChannel path above already covers an overlay
+      // sharing this browser. But it is no longer silent: this is exactly
+      // the case where the overlay running in OBS's own profile stops
+      // updating while everything on the streamer's screen still looks
+      // fine, so the status is surfaced rather than swallowed.
+      setPublishStatus({ state: "error" });
+    });
   // Deliberately no onDisconnect(...).remove() here: Firebase fires that on
   // *any* dropped connection — a laptop sleeping, a brief wifi hiccup, even
   // just backgrounding the tab — not just an intentionally closed session,

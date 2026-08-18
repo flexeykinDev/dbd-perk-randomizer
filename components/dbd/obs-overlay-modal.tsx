@@ -35,7 +35,9 @@ import {
   MIN_OBS_NAME_SCALE,
   MIN_OBS_SCALE,
   obsOverlayUrl,
+  useObsPublishStatus,
   type ObsIconPosition,
+  type ObsPublishState,
 } from "@/lib/use-obs-mode";
 
 const TWITCH_STATE_LABEL: Record<
@@ -54,6 +56,38 @@ const TWITCH_STATE_DOT: Record<TwitchConnectionState, string> = {
   connected: "bg-emerald-400",
   error: "bg-red-500",
 };
+
+/** Same dot vocabulary as Twitch above, for the Firebase link that feeds
+ *  OBS's own browser profile. Semantic colours (amber = working on it,
+ *  green = fine, red = broken) rather than the site accent — these say
+ *  something about state, not about brand. */
+const PUBLISH_STATE_DOT: Record<ObsPublishState, string> = {
+  off: "bg-muted",
+  syncing: "bg-amber-400 animate-pulse",
+  synced: "bg-emerald-400",
+  error: "bg-red-500",
+};
+
+const PUBLISH_STATE_LABEL: Record<ObsPublishState, { ru: string; en: string }> = {
+  off: { ru: "Ожидание первого билда", en: "Waiting for the first build" },
+  syncing: { ru: "Отправка…", en: "Sending…" },
+  synced: { ru: "Оверлей получает билды", en: "Overlay is receiving builds" },
+  error: {
+    ru: "Не доходит до оверлея в OBS",
+    en: "Not reaching the overlay in OBS",
+  },
+};
+
+/** "5 s ago" / "2 min ago" — deliberately coarse. The exact second doesn't
+ *  matter; what matters mid-stream is whether this says seconds or minutes. */
+function formatAgo(timestamp: number, lang: "en" | "ru"): string {
+  const seconds = Math.max(0, Math.round((Date.now() - timestamp) / 1000));
+  if (seconds < 60) return lang === "ru" ? `${seconds} с назад` : `${seconds}s ago`;
+  const minutes = Math.round(seconds / 60);
+  if (minutes < 60) return lang === "ru" ? `${minutes} мин назад` : `${minutes}m ago`;
+  const hours = Math.round(minutes / 60);
+  return lang === "ru" ? `${hours} ч назад` : `${hours}h ago`;
+}
 
 const PERMISSION_LABEL: Record<TwitchPermission, { ru: string; en: string }> = {
   everyone: { ru: "Все в чате", en: "Everyone in chat" },
@@ -277,6 +311,7 @@ export function ObsOverlayModal({
   onTwitchPastePermissionChange: (permission: TwitchPermission) => void;
 }) {
   const t = useT();
+  const publishStatus = useObsPublishStatus();
   const titleId = useId();
   const descId = useId();
   const cardSizeSliderId = useId();
@@ -645,7 +680,36 @@ export function ObsOverlayModal({
 
             {panelTab === "overlay" && (
               <>
-                <div className="mt-4 flex items-center gap-2">
+                {/* Sits directly under the link a streamer just pasted into
+                    OBS, because that's the moment they need to know whether
+                    it's actually working. Until this existed, a failed write
+                    was invisible: the preview here keeps updating over
+                    BroadcastChannel regardless, so everything looked fine
+                    while the Browser Source on stream sat frozen. */}
+                <p className="mt-4 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[11px] text-muted">
+                  <span
+                    className={cn(
+                      "size-1.5 shrink-0 rounded-full",
+                      PUBLISH_STATE_DOT[publishStatus.state],
+                    )}
+                  />
+                  {t(PUBLISH_STATE_LABEL[publishStatus.state])}
+                  {publishStatus.lastSyncedAt !== null && (
+                    <span className="opacity-70">
+                      · {formatAgo(publishStatus.lastSyncedAt, language)}
+                    </span>
+                  )}
+                </p>
+                {publishStatus.state === "error" && (
+                  <p className="mt-1 text-[11px] text-red-400">
+                    {t({
+                      ru: "Проверьте интернет и блокировщики. Оверлей в той же вкладке браузера продолжит работать.",
+                      en: "Check your connection and any blockers. An overlay in this same browser keeps working.",
+                    })}
+                  </p>
+                )}
+
+                <div className="mt-3 flex items-center gap-2">
                   <code className="min-w-0 flex-1 truncate rounded-lg border border-border bg-background px-3 py-2 text-xs text-foreground">
                     {url}
                   </code>
