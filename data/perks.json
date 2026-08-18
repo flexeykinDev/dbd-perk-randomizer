@@ -2028,9 +2028,10 @@
     "role": "survivor",
     "name": {
       "en": "Do No Harm",
-      "ru": "Do No Harm"
+      "ru": "Не навреди"
     },
     "description": "\"Helping those in need comes easily, no matter how dire things get.\" When healing another Survivor, depending on their accumulated Hook Stages, you benefit from the following effects: Increases your Altruistic Healing speed by 30/40/50 % per Hook Stage, up to a maximum of 60/80/100 %. Increases the Progression bonus of Great Healing Skill Checks by +3 % per Hook Stage, up to a maximum of +6 %. \"Look at me. My name's Orela, and I'm gonna make sure you're all right.\" — Orela Rose",
+    "descriptionRuRaw": "Во время лечения другого выжившего: за каждую его стадию крюка ваша скорость исцеления возрастает на 30/40/50%; за отличную базовую проверку реакции вы получаете на 3% больше прогресса.",
     "character": "Orela",
     "icon": "/perks/survivor/do-no-harm.webp",
     "addedAt": "2026-08-17T19:11:57.577Z"
@@ -2040,9 +2041,10 @@
     "role": "survivor",
     "name": {
       "en": "Duty of Care",
-      "ru": "Duty of Care"
+      "ru": "Врачебный долг"
     },
     "description": "\"You live by a code of conduct every day of your life, and are all the better for it.\" While healthy, taking a Protection Hit causes all other Survivors within 12 metres of your location to benefit from the following effect: Grants them a +25 % Haste Status Effect for 4/5/6 seconds. \"Don't worry about me. I've got a knack for bouncing back.\" — Orela Rose",
+    "descriptionRuRaw": "Если вы здоровы и берете удар на себя, другие выжившие в радиусе 12м получают 25% эффекта \"Спешка\" на 4/5/6 сек.. \"Спешка\" ускоряет движение убийц и выживших.",
     "character": "Orela",
     "icon": "/perks/survivor/duty-of-care.webp",
     "addedAt": "2026-08-17T19:11:57.577Z"
@@ -2052,9 +2054,10 @@
     "role": "survivor",
     "name": {
       "en": "Rapid Response",
-      "ru": "Rapid Response"
+      "ru": "Быстрое реагирование"
     },
     "description": "\"When the moment comes, you give it your all. Your survival depends on it.\" Whenever you become afflicted by the Exhausted Status Effect, Rapid Response triggers its effect: The Aura of the Killer is revealed to you for 2 seconds. Perform a Rushed action to exit a Locker to voluntarily trigger the Status Effect for 30/25/20 seconds. Rapid Response cannot be used to override an existing Exhausted Status Effect. \"All right. You got this. 3... 2... 1... go!\" — Orela Rose",
+    "descriptionRuRaw": "За быстрый выход из шкафчика вы получаете эффект \"Усталость\" на 30/25/20 сек.. Получая эффект \"Усталость\", вы видите ауру убийцы в течение 2 секунд. Усталые выжившие не могут использовать навыки, которые вызывают \"Усталость\".",
     "character": "Orela",
     "icon": "/perks/survivor/rapid-response.webp",
     "addedAt": "2026-08-17T19:11:57.577Z"
@@ -2064,9 +2067,10 @@
     "role": "survivor",
     "name": {
       "en": "Apocalyptic Ingenuity",
-      "ru": "Apocalyptic Ingenuity"
+      "ru": "Апокалиптическая смекалка"
     },
     "description": "\"You salvage what little there is to defend your team.\" Unlocks potential in your Aura-reading ability: The Auras of broken Pallets are revealed to you within 24/28/32 metres. After unlocking or rummaging through 1 Chest, Apocalyptic Ingenuity gains a special ability. While standing next to the location of a broken Pallet, press and hold the Active Ability button for 3 seconds to use it: Rebuilds it as a Fragile Pallet. Fragile Pallets instantly break when dropped. \"Without the fences, this place is worthless.\" — Rick Grimes",
+    "descriptionRuRaw": "Обыскав или открыв сундуки 2 раз(а), вы можете встать рядом со сломанной доской и удерживать Е в течение 4 сек., чтобы создать хрупкую доску. Вы видите ауры сломанных досок в радиусе 24/28/32 м.",
     "character": "Rick",
     "icon": "/perks/survivor/apocalyptic-ingenuity.webp",
     "addedAt": "2026-08-17T19:11:57.577Z"
@@ -2076,9 +2080,10 @@
     "role": "survivor",
     "name": {
       "en": "Come and Get Me!",
-      "ru": "Come and Get Me!"
+      "ru": "Эй, я здесь!"
     },
     "description": "\"You'll risk your life to save others.\" After unhooking a Survivor, while crouched and stationary, press the Active Ability button to trigger the following effects: Suppresses the creation of Grunts of Pain, Pools of Blood, and Scratch Marks for all injured or dying Survivors within 24 metres of your location for the next 10/12.5/15 seconds. Causes you to scream and reveal your Aura to the Killer for 5 seconds. \"We're the ones who live.\" — Rick Grimes",
+    "descriptionRuRaw": "Если вы снимаете выжившего с крюка, пригнувшись и бездействуя, нажмите Е, чтобы раненые и смертельно раненые выжившие в радиусе 24м не оставляли: лужи крови в течение 10/12.5/15 сек.; следы-трещины в течение 10/12.5/15 сек.. Вы кричите, и убийца видит вашу ауру в течение 5 сек.",
     "character": "Rick",
     "icon": "/perks/survivor/come-and-get-me.webp",
     "addedAt": "2026-08-17T19:11:57.577Z"
@@ -2088,9 +2093,10 @@
     "role": "survivor",
     "name": {
       "en": "Teamwork: Toughen Up",
-      "ru": "Teamwork: Toughen Up"
+      "ru": "Командная работа: собраться с силами"
     },
     "description": "\"You maintain your composure under immense amounts of pain.\" While injured, whenever another Survivor within 24 metres of your location blinds the Killer by any means or stuns them using a Pallet, Teamwork: Toughen Up triggers its effect: Suppresses your Grunts of Pain, and the creation of Pools of Blood and Scratch Marks for 20/25/30 seconds. \"They're messing with the wrong people.\" — Rick Grimes",
+    "descriptionRuRaw": "Когда другой выживший ослепляет или оглушает доской убийцу в пределах 24м от вас, в течение 20/25/30 сек. вы: не стонете от боли; не оставляете лужи крови; не оставляете следы-трещины.",
     "character": "Rick",
     "icon": "/perks/survivor/teamwork-toughen-up.webp",
     "addedAt": "2026-08-17T19:11:57.577Z"
@@ -2100,9 +2106,10 @@
     "role": "survivor",
     "name": {
       "en": "Conviction",
-      "ru": "Conviction"
+      "ru": "Убежденность"
     },
     "description": "\"Sometimes one last push means the difference between death and survival.\" After having completed a Healing action on another Survivor, whenever you are in the Dying State, Conviction activates. While active, press the Active Ability button after reaching at least 25 % Recovery progress to trigger the following effects: Unlocks the Self-Recovery ability, allowing you to fully recover from the Dying State. Inflicts the Broken Status Effect. Causes you to automatically re-enter the Dying State after 20/25/30 seconds. \"It's enough to keep going. Keep trying. Keep fighting. Keep dreaming.\" — Michonne Grimes",
+    "descriptionRuRaw": "После 1-го исцеления других выживших, если вы смертельно ранены и прогресс восстановления достиг 25%, нажмите Е, чтобы восстановиться мгновенно. Вы получите эффект \"Ослабление\", а через 20/25/30 сек. снова будете смертельно ранены. Ослабленных выживших нельзя вылечить.",
     "character": "Michonne",
     "icon": "/perks/survivor/conviction.webp",
     "addedAt": "2026-08-17T19:11:57.577Z"
@@ -2112,9 +2119,10 @@
     "role": "survivor",
     "name": {
       "en": "Last Stand",
-      "ru": "Last Stand"
+      "ru": "Последний рубеж"
     },
     "description": "\"Even when things are at their worst, your spirit is indomitable.\" After staying in the Terror Radius without being chased for 120/105/90 seconds, Last Stand activates. While active, perform a Rushed Vault action to trigger its effect: Stuns the Killer for 3 seconds, if they are within 2.5 metres of that Vault location. Last Stand is disabled for the remainder of the Trial after use. \"Some bullies, you can live with. Others, you gotta fight.\" — Michonne Grimes",
+    "descriptionRuRaw": "Если вы прячетесь в радиусе террора убийцы в течение 120/105/90 сек., то один раз за матч можете оглушить убийцу быстрым прыжком на 3 сек., если он окажется в радиусе 2.5м.",
     "character": "Michonne",
     "icon": "/perks/survivor/last-stand.webp",
     "addedAt": "2026-08-17T19:11:57.577Z"
@@ -2124,9 +2132,10 @@
     "role": "survivor",
     "name": {
       "en": "Teamwork: Throw Down",
-      "ru": "Teamwork: Throw Down"
+      "ru": "Командная работа: скромная победа"
     },
     "description": "\"You know the best way to even the odds is to empower those around you.\" Whenever you blind the Killer by any means or stun them using a Pallet, Teamwork: Throw Down triggers its effect: Grants the Endurance Status Effect to all other injured Survivors within 24 metres of your location for 6/8/10 seconds. \"Facing evil brings good people together.\" — Michonne Grimes",
+    "descriptionRuRaw": "Когда вы ослепляете убийцу или оглушаете его доской, то в течение 6/8/10 сек. остальные раненые выжившие в радиусе 24м: получают эффект \"Стойкость\"; видят ауру убийцы. Стойких выживших нельзя смертельно ранить одним ударом, вместо этого они получают глубокую рану",
     "character": "Michonne",
     "icon": "/perks/survivor/teamwork-throw-down.webp",
     "addedAt": "2026-08-17T19:11:57.577Z"
@@ -2136,9 +2145,10 @@
     "role": "survivor",
     "name": {
       "en": "Ghost Notes",
-      "ru": "Ghost Notes"
+      "ru": "Записки о призраке"
     },
     "description": "\"You know that the best breakdowns precede the biggest build-ups.\" While suffering from the Exhausted Status Effect, you benefit from the following effects: Causes your Scratch Marks to disappear +50 % faster. Increases your Recovery rate from that Status Effect by 5/7.5/10 %. Ghost Notes does not cause the Exhausted Status Effect. \"Let's take it to the bridge!\" — Vee Boonyasak",
+    "descriptionRuRaw": "Пока на вас воздействует эффект \"Усталость\", ваши следы-трещины исчезают на 50% быстрее. Эффект \"Усталость\" спадает на 5/7.5/10% быстрее. Усталые выжившие не могут использовать навыки, которые вызывают \"Усталость\"",
     "character": "Vee",
     "icon": "/perks/survivor/ghost-notes.webp",
     "addedAt": "2026-08-17T19:11:57.577Z"
@@ -2148,9 +2158,10 @@
     "role": "survivor",
     "name": {
       "en": "One-Two-Three-Four!",
-      "ru": "One-Two-Three-Four!"
+      "ru": "Раз, два, три, четыре!"
     },
     "description": "\"A steady beat makes for steady work.\" While standing and idle, press the Active Ability button to start a Performance: Lasts for up to 15 seconds. Empowers Survivors within 16 metres of your location. Triggers continuous Skill Checks. After successfully completing the Performance, empowered Survivors performing Healing or Repairing actions benefit from the following effect for 90 seconds: Increases the chances of triggering Skill Checks by +20 %. One-Two-Three-Four! has a cool-down of 110/100/90 seconds after cancelling or completing the Performance. \"We are loud! We are heavy! WE ARE AXEKICK!\" — Vee Boonyasak",
+    "descriptionRuRaw": "При бездействии нажмите F, чтобы начать представление и приободрить всех выживших в радиусе 16м на 15 сек. Пока вы выступаете, остальные выжившие видят вашу ауру. В это время вы проходите особые проверки реакции. При лечении или починке базовые проверки реакции появляются на 20% чаще. Если вы успешно завершите представление, его эффект сохранится на 90 сек. Перезарядка: 110/100/90 сек..",
     "character": "Vee",
     "icon": "/perks/survivor/one-two-three-four.webp",
     "addedAt": "2026-08-17T19:11:57.577Z"
@@ -2160,9 +2171,10 @@
     "role": "survivor",
     "name": {
       "en": "Road Life",
-      "ru": "Road Life"
+      "ru": "Жизнь в дороге"
     },
     "description": "\"Faulty amps, sweaty dives, broken-down vans... nothing makes you feel more alive.\" While injured and repairing a Generator, regular Skill Checks have the following effects: Gain +1 Token for Great Repair Skill Checks. Gain 0 Tokens for Good Repair Skill Checks. Lose -1 Token for Failed Repair Skill Checks. Once you accumulate 6/5/4 Tokens, consume all Tokens to benefit from the following effect: Increases your Healing speed by +100 % until you stop healing. Road Life deactivates after use and does not activate while suffering from the Broken Status Effect. Road Life does not interact with special Skill Checks triggered by outside effects. \"Remind me to teach you how to patch your own pedals, Krit.\" — Vee Boonyasak",
+    "descriptionRuRaw": "Пока ранены, не ослаблены и чините генератор: за отличную проверку реакции вы получите жетоны (1шт.); провалив базовую проверку реакции, вы теряете 1шт. жетонов. Если у вас есть 6/5/4 шт жетонов, вы можете потратить их все, чтобы лечиться на 100% быстрее, пока не прервете лечение.",
     "character": "Vee",
     "icon": "/perks/survivor/road-life.webp",
     "addedAt": "2026-08-17T19:11:57.577Z"
@@ -2250,9 +2262,10 @@
     "role": "survivor",
     "name": {
       "en": "A Place For Us",
-      "ru": "A Place For Us"
+      "ru": "Место для нас"
     },
     "description": "While healing another Survivor, both you and the healed Survivor gain the Elusive Status Effect. When you finish healing the Obsession, both you and the Obsession gain the Elusive Status Effect for 20/25/30 seconds. Reduces your chance of becoming the initial Obsession by reducing the default value by -100 %. The Killer can only be obsessed with one Survivor at a time. \"I understand computers… systems. Problems. But this… I wonder if I'll ever understand.\" — Kwon Tae-young",
+    "descriptionRuRaw": "Если лечите другого выжившего, вы оба получаете эффект \"Ускользание\". Когда завершаете лечение объекта одержимости, вы оба получаете эффект \"Ускользание\" на 20/25/30 сек.. В начале матча шанс, что убийца будет одержим вами, уменьшается. Ускользающие выжившие: ауры скрыты; не оставляют следы-трещины; не оставляют лужи крови; не стонут от боли",
     "character": "Kwon",
     "icon": "/perks/survivor/a-place-for-us.webp",
     "addedAt": "2026-08-17T19:11:57.577Z"
@@ -2262,9 +2275,10 @@
     "role": "survivor",
     "name": {
       "en": "Five Moves Ahead",
-      "ru": "Five Moves Ahead"
+      "ru": "На пять шагов впереди"
     },
     "description": "This perk activates while you are being chased by the Killer or are inside the Killer's Terror Radius: After you drop a Pallet, you start moving 50 % earlier. See the Auras of the 5 closest Pallets and Windows. This perk goes on a 40/35/30 second cool-down when you drop a Pallet. \"Every problem has a solution. It's only a question of complexity.\" — Kwon Tae-young",
+    "descriptionRuRaw": "Если вы находитесь в радиусе террора убийцы или он преследует вас: вы видите ауры ближайших досок и окон (5); после опрокидывания доски вы начинаете двигаться на 50% раньше; после опрокидывания доски начинается перезарядка: 40/35/30 сек..",
     "character": "Kwon",
     "icon": "/perks/survivor/five-moves-ahead.webp",
     "addedAt": "2026-08-17T19:11:57.577Z"
@@ -2274,9 +2288,10 @@
     "role": "survivor",
     "name": {
       "en": "Flow State",
-      "ru": "Flow State"
+      "ru": "Состояние потока"
     },
     "description": "Whenever a Generator is completed, gain a token, up to 5. For each token: Bless and cleanse Totems 8/9/10 % faster. Heal 8/9/10 % faster. Unhook Survivors 8/9/10 % faster. \"I'm sorry… I didn't realize I was working so late.\" — Kwon Tae-young",
+    "descriptionRuRaw": "При завершении починки генератора вы получаете жетоны (1, максимум - 5). Каждый жетон ускоряет: благословение и очистку на 8/9/10%. Лечение на 8/9/10%. Снятие выживших с крюка на 8/9/10%.",
     "character": "Kwon",
     "icon": "/perks/survivor/flow-state.webp",
     "addedAt": "2026-08-17T19:11:57.577Z"
@@ -2286,9 +2301,10 @@
     "role": "survivor",
     "name": {
       "en": "Cross-Examination",
-      "ru": "Cross-Examination"
+      "ru": "Перекрестный допрос"
     },
     "description": "While inside the Killer's Terror Radius and not being chased, you can see Light Marks the Killer leaves behind while moving. Light Marks have a duration of 10 seconds. While standing on a Light Mark, gain the Elusive Status Effect. This lingers for 3/4/5 seconds. \"The witness has said enough, Your Honor. No further questions.\" — Shane Wiigwaas",
+    "descriptionRuRaw": "Пока вы находитесь в пределах радиуса террора убийцы, он оставляет следы света, сохраняющиеся на 10 сек. Вы можете видеть эти следы. Находясь на следах света убийцы, вы получаете эффект \"Ускользание\", действующий в течение 3/4/5 сек.. Ускользающие выжившие: ауры скрыты; не оставляют следы-трещины, лужи крови; не стонут от боли.",
     "character": "Shane",
     "icon": "/perks/survivor/cross-examination.webp",
     "addedAt": "2026-08-17T19:11:57.577Z"
@@ -2298,9 +2314,10 @@
     "role": "survivor",
     "name": {
       "en": "Lend a Hand",
-      "ru": "Lend a Hand"
+      "ru": "Оказание помощи"
     },
     "description": "Cleansing or Blessing a Totem activates this perk: Once per Survivor, while healing a Survivor, press the Active Ability 2 button to give the healed Survivor 2/3/4 permanent healing charges. \"Walk it off, will you? We still have work to do.\" — Shane Wiigwaas",
+    "descriptionRuRaw": "Благословив или очистив 1 тотем, при исцелении другого выжившего (один раз за выжившего) вы используете F, чтобы дать ему постоянные лечащие заряды (2/3/4 заряда).",
     "character": "Shane",
     "icon": "/perks/survivor/lend-a-hand.webp",
     "addedAt": "2026-08-17T19:11:57.577Z"
@@ -2310,9 +2327,10 @@
     "role": "survivor",
     "name": {
       "en": "Wide Open Throttle",
-      "ru": "Wide Open Throttle"
+      "ru": "Полный газ!"
     },
     "description": "Fast-vaulting a Pallet triggers the following effects: Gain 10/12.5/15 % Haste Status Effect for 3 seconds. The Pallet is immediately reset, blocked by The Entity, and revealed to all Survivors for 60 seconds. This perk then goes on a 60 second cool-down. \"Nothing but the open road. Just the way I like it.\" — Shane Wiigwaas",
+    "descriptionRuRaw": "Когда быстро перепрыгиваете через доски: вы получаете 10/12.5/15% эффекта \"Спешка\" на 3 сек.; доски обновляются и блокируются на 60 сек., а все выжившие в это время видят их ауру. Перезарядка: 60 сек. \"Спешка\" ускоряет движение убийц и выживших.",
     "character": "Shane",
     "icon": "/perks/survivor/wide-open-throttle.webp",
     "addedAt": "2026-08-17T19:11:57.577Z"
@@ -2808,7 +2826,7 @@
       "en": "Forever Entwined",
       "ru": "Переплетенные навсегда"
     },
-    "description": "Unable to retrieve the Perk description or unable to display it. It can be added to the Datatable/Loadout. Otherwise Please contact Jouki",
+    "description": "\"The greater the struggle, the more difficult the escape.\" Whenever a Survivor takes damage, Forever Entwined gains +1 Token, up to a maximum of 6/7/8 Tokens: Increases the Action speeds for Dropping, Hooking, and Picking up a Survivor by a stack-able +4 % per Token, up to a maximum of 24/28/32 %. \"You tried to devour me so you have no room to complain if I eat you, do you?\" — Ken Kaneki",
     "descriptionRuRaw": "Когда выживший получает урон, вы получаете жетоны (1 шт., максимум - 6/7/8 шт.). За каждый жетон вы: вешаете выживших на 4% быстрее; роняете и поднимаете выживших на 4% быстрее.",
     "character": "Ghoul",
     "icon": "/perks/killer/forever-entwined.webp",
@@ -2912,7 +2930,7 @@
       "en": "Haywire",
       "ru": "Неполадки"
     },
-    "description": "Unable to retrieve the Perk description or unable to display it. It can be added to the Datatable/Loadout. Otherwise Please contact Jouki",
+    "description": "\"For some reason, machinery has a habit of failing when you are near.\" Whenever a Survivor stops opening an Exit Gate after accumulating at least 80 % Progression towards being opened, Haywire causes it to regress: Regresses at a rate of 80/90/100 % of the normal Gate-Opening speed. Causes Survivors to see the lights atop the switch flickering randomly while it regresses. \"There will be no redemption for you.\" — Springtrap",
     "descriptionRuRaw": "Рубильники ворот с прогрессом не менее 80% теряют его со скоростью 80/90/100%. Во время потери их прогресса выжившие видят, как лампочки ворот хаотично моргают.",
     "character": "Animatronic",
     "icon": "/perks/killer/haywire.webp",
@@ -2925,7 +2943,7 @@
       "en": "Help Wanted",
       "ru": "Требуются работники"
     },
-    "description": "Unable to retrieve the Perk description or unable to display it. It can be added to the Datatable/Loadout. Otherwise Please contact Jouki",
+    "description": "\"Try as they might, you know how to stay one step ahead of your guests.\" After performing the Damage Generator action, Help Wanted activates: Causes that Generator to become a Compromised Generator. Once the Compromised Generator is completed, you benefit from the following effect for 40/50/60 seconds: Increases the Recovery speed of successful Basic Attacks by +25 %. \"You only think you are in control...\" — Springtrap",
     "descriptionRuRaw": "Когда вы повреждаете генератор, он становится дефектным. Когда выжившие завершают ремонт этого генератора, ваши базовые атаки перезаряжаются на 25% быстрее в течение 40/50/60 сек.. Одновременно в матче может существовать только один дефектный генератор.",
     "character": "Animatronic",
     "icon": "/perks/killer/help-wanted.webp",
@@ -3042,7 +3060,7 @@
       "en": "Hex: Nothing But Misery",
       "ru": "Порча: только отчаяние"
     },
-    "description": "Unable to retrieve the Perk description or unable to display it. It can be added to the Datatable/Loadout. Otherwise Please contact Jouki",
+    "description": "\"You've been driven to the absolute depths of pain, and now you're ready to inflict that pain on others.\" After damaging Survivors a total of 8 times with Basic Attacks, a random Dull Totem becomes a Hex Totem, cursing all Survivors: Survivors damaged by a Basic Attack suffer from a -5 % Hindered Status Effect for 10/12.5/15 seconds. The Hex Effects persist until the Hex Totem is either blessed or cleansed by a Survivor, disabling it for the remainder of the Trial. \"All of the liabilities of this world are due to the inadequacies of the person involved.\" — Ken Kaneki",
     "descriptionRuRaw": "Когда вы попадаете по выжившему базовой атакой 8 раз(а), загорается тусклый тотем. Когда вы попадает по выжившему базовой атакой, он получает 5% эффекта \"Замедление\" на 10/12/15 сек.. Замедленные убийцы и выжившие двигаются медленнее.",
     "character": "Ghoul",
     "icon": "/perks/killer/hex-nothing-but-misery.webp",
@@ -3439,7 +3457,7 @@
       "en": "No Holds Barred",
       "ru": "Все средства хороши"
     },
-    "description": "Unable to retrieve the Perk description or unable to display it. It can be added to the Datatable/Loadout. Otherwise Please contact Jouki",
+    "description": "\"You induce mental suffering by crushing any hope of escape.\" Each time a Generator is completed, No Holds Barred calls upon The Entity for the following effects: Blocks the Generator with the most Progression for 15/20/25 seconds. The Aura of the Blocked Generator is highlighted to you in white.",
     "descriptionRuRaw": "По завершении ремонта генератора, генератор с наибольшим прогрессом блокируется на 15/20/25 сек..",
     "character": "Cenobite",
     "icon": "/perks/killer/no-holds-barred.webp",
@@ -3478,7 +3496,7 @@
       "en": "None Are Free",
       "ru": "Все несвободны"
     },
-    "description": "Unable to retrieve the Perk description or unable to display it. It can be added to the Datatable/Loadout. Otherwise Please contact Jouki",
+    "description": "\"You know better than anyone that the light at the end of the tunnel is only an illusion.\" Whenever you hook a Survivor for the first time, None Are Free gains +1 Token, up to a maximum of 4 Tokens. Once all Generators are completed, None Are Free calls upon The Entity to trigger the following effect: Blocks all Windows and upright Pallets for a stack-able 12/14/16 seconds per Token, up to a maximum of 48/56/64 seconds. \"I'm not wrong. What's wrong is this messed-up world!\" — Ken Kaneki",
     "descriptionRuRaw": "Впервые вешая выжившего на крюк, вы получаете жетоны (1). По окончании ремонта всех генераторов, за каждый жетон: стоящие доски блокируются на 12/14/16 сек.; прыжки в окна блокируются на 12/14/16 сек..",
     "character": "Ghoul",
     "icon": "/perks/killer/none-are-free.webp",
@@ -3543,7 +3561,7 @@
       "en": "Phantom Fear",
       "ru": "Фантомный страх"
     },
-    "description": "Unable to retrieve the Perk description or unable to display it. It can be added to the Datatable/Loadout. Otherwise Please contact Jouki",
+    "description": "\"You have always had a reputation for startling unsuspecting guests.\" Whenever a Survivor within your Terror Radius looks at you, they suffer from the following effects: Causes them to scream and reveal their Aura to you for 2 seconds. Phantom Fear has a cool-down of 80/70/60 seconds. \"Excellent. Your screams please me.\" — Springtrap",
     "descriptionRuRaw": "Когда выживший в радиусе вашего террора смотрит на вас: он кричит, а вы видите его ауру в течение 2 сек. Перезарядка: 80/70/60 сек..",
     "character": "Animatronic",
     "icon": "/perks/killer/phantom-fear.webp",
@@ -3712,7 +3730,7 @@
       "en": "Scourge Hook: Weeping Wounds",
       "ru": "Секущий крюк: сочащиеся раны"
     },
-    "description": "Unable to retrieve the Perk description or unable to display it. It can be added to the Datatable/Loadout. Otherwise Please contact Jouki",
+    "description": "\"You are the bringer of sweet pain.\" At the start of the Trial, 4 Hooks in the environment are changed into Scourge Hooks: The Auras of these Scourge Hooks are highlighted in white. Each time a Survivor is unhooked from a Scourge Hook, the following effects apply: Causes that Survivor to suffer from the Haemorrhage Status Effect for 90 seconds. After the first time that Survivor is healed back to full health, they suffer from the following effect until they are injured again by any means: Reduces their Action speeds for Healing and Repairing by 10/13/16 %.",
     "descriptionRuRaw": "В начале матча 4 случайных крюка становятся секущими. Когда выжившего снимают с секущего крюка: он получает эффект \"Кровотечение\" на 90 сек.; он получает эффект \"Травма\" на 90 сек. когда этого выжившего лечат, до следующего получения урона лечение и ремонт замедляются на 10/13/16%. Кровоточащие выжившие: теряют прогресс лечения, если их не лечат; оставляют больше луж крови. Травмированные выжившие лечатся медленнее.",
     "character": "Cenobite",
     "icon": "/perks/killer/scourge-hook-weeping-wounds.webp",

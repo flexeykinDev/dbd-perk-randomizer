@@ -48,9 +48,21 @@ const RU_WIKI_API = "https://dead-by-daylight.fandom.com/ru/api.php";
 // none of which transliterate "Perks" either). Verified via
 // `action=query&list=allcategories&acprefix=Перк`, which returned nothing,
 // then by checking a known perk page's own `prop=categories`.
-const RU_CATEGORY: Record<Perk["role"], string> = {
-  survivor: "Категория:Умения Выживших",
-  killer: "Категория:Умения Убийц",
+//
+// Survivor perks list two variants: MediaWiki category titles are
+// case-sensitive past the first letter, and it turns out both
+// "...Выживших" and "...выживших" are real, independently-populated
+// categories on this wiki — different eras/editors of the RU wiki tagged
+// pages with different capitalization, not something on our end to
+// normalize. Found by hand when Orela Rose's whole batch of newly-added RU
+// perk pages (tagged with the lowercase variant) came back as "not a
+// categorized perk page" and silently kept their English fallback despite
+// genuinely existing. Querying both and merging the results is cheap
+// (one extra category dump) and makes this resilient to the next editor's
+// capitalization choice too, whichever way it goes.
+const RU_CATEGORY: Record<Perk["role"], string[]> = {
+  survivor: ["Категория:Умения Выживших", "Категория:Умения выживших"],
+  killer: ["Категория:Умения Убийц"],
 };
 
 const REQUEST_HEADERS = {
@@ -145,9 +157,13 @@ async function main() {
   const { _comment, ...translations } = rawTranslations;
 
   console.log("Fetching perk categories from the RU wiki...");
+  async function fetchAllCategoryVariants(categories: string[]): Promise<Set<string>> {
+    const sets = await Promise.all(categories.map(fetchCategoryTitles));
+    return new Set(sets.flatMap((s) => [...s]));
+  }
   const [survivorTitles, killerTitles] = await Promise.all([
-    fetchCategoryTitles(RU_CATEGORY.survivor),
-    fetchCategoryTitles(RU_CATEGORY.killer),
+    fetchAllCategoryVariants(RU_CATEGORY.survivor),
+    fetchAllCategoryVariants(RU_CATEGORY.killer),
   ]);
   console.log(
     `  ${survivorTitles.size} survivor / ${killerTitles.size} killer titles categorized on the wiki`,

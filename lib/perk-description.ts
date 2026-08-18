@@ -194,6 +194,51 @@ function isMechanical(sentence: string): boolean {
   );
 }
 
+// The RU wiki appends generic glossary definitions of the Status Effects a
+// perk references — "Haste speeds up the movement of Killers and
+// Survivors", "Exposed Survivors take lethal damage from Basic Attacks
+// even at full health", and so on. They explain what a status effect *is*
+// rather than what this perk does, which is exactly the glossary noise a
+// one-glance Core Effect summary should leave out (the Full Text tab still
+// carries them — see the contract note below).
+//
+// These survive isMechanical above by design: they name a status effect
+// and describe its behaviour, so no general heuristic can separate them
+// from a real effect sentence. Matched instead as known sentence openings,
+// the same exact-phrase approach CALLS_UPON_ENTITY_RE takes for the
+// equivalent EN boilerplate. Every entry below was derived from the real
+// dataset rather than guessed — by finding which Core sentences repeat
+// verbatim across many unrelated perks (a sentence appearing identically
+// on 13 different perks is boilerplate by definition), then keeping only
+// the ones that are genuinely definitions. Deliberately excludes other
+// frequently-repeated-but-real lines that scan turned up, e.g.
+// "Перезарядка: 60 сек" (a real cooldown) and the Scourge Hook setup
+// sentence, both of which are this perk's own mechanics.
+//
+// Dropped from Core only, never from Full Text — same contract as
+// stripLoreIntro below: the detail view still shows the wiki's text
+// verbatim, so nothing is lost, it just stays out of the summary.
+const RU_GLOSSARY_ASIDE_RE = new RegExp(
+  "^(?:" +
+    [
+      '[«"]Спешка[»"]\\s+ускоряет', // Haste
+      "Уязвимые выжившие получают", // Exposed
+      "Усталые выжившие не могут", // Exhausted
+      "Ослабленных выживших нельзя", // Broken
+      "Незаметные убийцы", // Undetectable
+      "Забывчивые выжившие не слышат", // Oblivious
+      "Стойких выживших нельзя", // Endurance
+      "Замедленные убийцы и выжившие", // Hindered
+      "Ослепшие убийцы и выжившие", // Blindness
+      "Кровоточащие выжившие", // Haemorrhage
+    ].join("|") +
+    ")",
+);
+
+function isGlossaryAside(sentence: string): boolean {
+  return RU_GLOSSARY_ASIDE_RE.test(sentence.trim());
+}
+
 /** Drops a leading run of non-mechanical (flavor) sentences from the Core
  *  Effect bullets — the Full Text tab still shows everything verbatim, so
  *  nothing is actually lost, just kept out of the short summary. Only
@@ -254,7 +299,13 @@ function describe(entity: DescribableEntity, lang: Lang): PerkDescriptionView {
   const source = lang === "ru" && entity.descriptionRuRaw ? entity.descriptionRuRaw : entity.description;
   const isSecret = SECRET_OFFERING_RE.test(source);
   const { body, quote } = splitQuote(stripBoilerplate(source), lang);
-  const core = stripLoreIntro(splitSentences(body)).map(autoHighlight);
+  const sentences = stripLoreIntro(splitSentences(body));
+  // Guarded the same way stripLoreIntro guards its own drop: only actually
+  // remove the glossary asides when something real is left behind, so a
+  // hypothetical entry that somehow consists *only* of one still renders
+  // something rather than an empty Core.
+  const withoutGlossary = sentences.filter((s) => !isGlossaryAside(s));
+  const core = (withoutGlossary.length > 0 ? withoutGlossary : sentences).map(autoHighlight);
   // Added rather than left to the sentence-level lore heuristic above (which
   // already drops the verbose original wording from Core on its own, since
   // it has no number or named term) — the disclaimer itself carries a real,
