@@ -114,7 +114,7 @@ export function PerkGrid({
                   alt={perk.name[language]}
                   width={112}
                   height={112}
-                  className="size-24 rounded-xl object-cover transition-transform group-hover:scale-105 sm:size-28 lg:size-32"
+                  className="size-24 rounded-xl bg-icon-plate object-cover transition-transform group-hover:scale-105 sm:size-28 lg:size-32"
                 />
                 <span className="text-xs font-medium text-foreground">{perk.name[language]}</span>
 
@@ -211,7 +211,7 @@ function PerkDetailModal({
                     alt={perk.name[language]}
                     width={56}
                     height={56}
-                    className="size-14 rounded-xl object-cover"
+                    className="size-14 rounded-xl bg-icon-plate object-cover"
                   />
                 </span>
                 <div>

@@ -229,7 +229,7 @@ export function LoadoutExcludePanel({
                           alt={piece.name[language]}
                           width={48}
                           height={48}
-                          className="mt-2 size-12 rounded-lg object-cover"
+                          className="mt-2 size-12 rounded-lg bg-icon-plate object-cover"
                         />
                         <span className="text-[10px] leading-tight text-foreground">
                           {piece.name[language]}

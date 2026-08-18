@@ -155,7 +155,7 @@ export function HistoryModal({
                                 aria-hidden
                                 width={32}
                                 height={32}
-                                className="size-8 rounded-lg border-2 border-surface object-cover"
+                                className="size-8 rounded-lg border-2 border-surface bg-icon-plate object-cover"
                                 style={{ zIndex: 4 - i }}
                               />
                             ))}

@@ -17,6 +17,13 @@
   --accent: #c87d2a;
   --accent-strong: #d4a359;
   --accent-foreground: #1a1206;
+  /* Perk, add-on and Power icons are white line art baked for a dark
+     background — the game's own art, so there's no light-mode variant to
+     download. On the dark theme the card already supplies that contrast, so
+     the plate stays transparent and nothing changes; the light theme paints
+     a dark plate behind each icon instead (see --icon-plate below), which
+     is why this is a token rather than a fixed colour. */
+  --icon-plate: transparent;
 }
 
 :root[data-theme="light"] {
@@ -32,6 +39,10 @@
   --accent: #a8651e;
   --accent-strong: #8b5417;
   --accent-foreground: #ffffff;
+  /* Slightly lifted off the dark theme's own --surface so the plate reads as
+     a deliberate chip rather than a stray dark rectangle, and dark enough
+     that the white line art keeps full contrast against it. */
+  --icon-plate: #262b33;
 }
 
 @theme inline {
@@ -44,6 +55,7 @@
   --color-accent: var(--accent);
   --color-accent-strong: var(--accent-strong);
   --color-accent-foreground: var(--accent-foreground);
+  --color-icon-plate: var(--icon-plate);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
