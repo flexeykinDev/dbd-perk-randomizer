@@ -17,6 +17,17 @@ import type {
 } from "./types";
 import { createSeededRandom, shuffle } from "./seeded-random";
 
+/** Display names for the survivor item types, shared by the loadout HUD and
+ *  the pool manager's category filter so the two can't drift apart. */
+export const ITEM_TYPE_LABEL: Record<ItemType, { ru: string; en: string }> = {
+  firecracker: { ru: "Петарда", en: "Firecracker" },
+  flashlight: { ru: "Фонарик", en: "Flashlight" },
+  key: { ru: "Ключ", en: "Key" },
+  map: { ru: "Карта", en: "Map" },
+  medkit: { ru: "Аптечка", en: "Med-Kit" },
+  toolbox: { ru: "Набор инструментов", en: "Toolbox" },
+};
+
 export const items: Item[] = itemsData as Item[];
 export const addons: Addon[] = addonsData as Addon[];
 export const offerings: Offering[] = offeringsData as Offering[];

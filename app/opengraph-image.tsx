@@ -23,12 +23,12 @@ export default function OpengraphImage() {
       >
         <svg width="140" height="140" viewBox="0 0 64 64">
           <rect width="64" height="64" rx="14" fill="#1e2228" />
-          <rect x="14" y="14" width="36" height="36" rx="8" fill="none" stroke="#c87d2a" strokeWidth="4" />
-          <circle cx="24" cy="24" r="3.4" fill="#c87d2a" />
-          <circle cx="40" cy="24" r="3.4" fill="#c87d2a" />
-          <circle cx="32" cy="32" r="3.4" fill="#c87d2a" />
-          <circle cx="24" cy="40" r="3.4" fill="#c87d2a" />
-          <circle cx="40" cy="40" r="3.4" fill="#c87d2a" />
+          <rect x="14" y="14" width="36" height="36" rx="8" fill="none" stroke="#e8e6e1" strokeWidth="4" />
+          <circle cx="24" cy="24" r="3.4" fill="#e8e6e1" />
+          <circle cx="40" cy="24" r="3.4" fill="#e8e6e1" />
+          <circle cx="32" cy="32" r="3.4" fill="#e8e6e1" />
+          <circle cx="24" cy="40" r="3.4" fill="#e8e6e1" />
+          <circle cx="40" cy="40" r="3.4" fill="#e8e6e1" />
         </svg>
         <div style={{ fontSize: 68, fontWeight: 700 }}>DBD Perk Randomizer</div>
         <div style={{ fontSize: 32, color: "#9096a3" }}>

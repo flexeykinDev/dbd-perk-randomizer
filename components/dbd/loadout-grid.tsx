@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Copy, X } from "lucide-react";
 import type { Addon, LoadoutPiece, PerkRole } from "@/lib/types";
 import { withBasePath } from "@/lib/asset-path";
-import { getKillerPowerIcon, isNewLoadoutPiece } from "@/lib/loadout";
+import { getKillerPowerIcon, isNewLoadoutPiece, ITEM_TYPE_LABEL } from "@/lib/loadout";
 import { getCharacterPortrait } from "@/lib/perks";
 import { getCharacterName } from "@/lib/character-name";
 import { getLoadoutPieceDescription } from "@/lib/perk-description";
@@ -20,14 +20,6 @@ const KIND_LABEL: Record<LoadoutPiece["kind"], { ru: string; en: string }> = {
   offering: { ru: "Подношение", en: "Offering" },
 };
 
-const ITEM_TYPE_LABEL: Record<string, { ru: string; en: string }> = {
-  firecracker: { ru: "Петарда", en: "Firecracker" },
-  flashlight: { ru: "Фонарик", en: "Flashlight" },
-  key: { ru: "Ключ", en: "Key" },
-  map: { ru: "Карта", en: "Map" },
-  medkit: { ru: "Аптечка", en: "Med-Kit" },
-  toolbox: { ru: "Набор инструментов", en: "Toolbox" },
-};
 
 /** Lays pieces out like DBD's own loadout HUD — Item (or, for killer, the
  *  Power the rolled add-ons belong to) on the left, 2 Add-on slots in the

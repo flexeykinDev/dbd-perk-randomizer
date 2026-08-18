@@ -3,8 +3,8 @@
 import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, RotateCcw, Search, Lock, CheckCheck, Ban } from "lucide-react";
-import type { LoadoutPiece, PerkRole } from "@/lib/types";
-import { getLoadoutPoolForRole } from "@/lib/loadout";
+import type { ItemType, LoadoutPiece, PerkRole } from "@/lib/types";
+import { getLoadoutPoolForRole, ITEM_TYPE_LABEL } from "@/lib/loadout";
 import { withBasePath } from "@/lib/asset-path";
 import { cn } from "@/lib/cn";
 import { ROLE_COLOR } from "@/lib/role-color";
@@ -18,10 +18,92 @@ const KIND_LABEL: Record<LoadoutPiece["kind"], { ru: string; en: string }> = {
   offering: { ru: "Подношение", en: "Offering" },
 };
 
+/** The category chips, derived from the pieces themselves rather than a
+ *  hand-kept list: "kind:*" for the three piece kinds, then a finer pass —
+ *  survivor add-ons split by the item they attach to (Med-Kit add-ons and
+ *  Toolbox add-ons have nothing to do with each other), and offerings by
+ *  the wiki's own category. Without this the pool is one undifferentiated
+ *  grid of ~100 survivor or ~800 killer entries and the only way through
+ *  it is the search box.
+ *
+ *  Killers are deliberately NOT chips. Every other grouping here is a
+ *  small closed set (3 kinds, 5 item types, 7 offering categories — 15
+ *  chips at the very most), but there are 40 killers and the roster grows
+ *  every Chapter, so as chips they'd bury the useful filters in a strip
+ *  nobody can scan. They get a dropdown instead (see charactersFor), which
+ *  writes into this same category state so the filtering stays one path. */
+type Category = { id: string; label: { ru: string; en: string }; count: number };
+
+function categoriesFor(pool: LoadoutPiece[]): Category[] {
+  const counts = new Map<string, { label: { ru: string; en: string }; count: number }>();
+  const bump = (id: string, label: { ru: string; en: string }) => {
+    const prev = counts.get(id);
+    if (prev) prev.count++;
+    else counts.set(id, { label, count: 1 });
+  };
+
+  for (const piece of pool) {
+    bump(`kind:${piece.kind}`, KIND_LABEL[piece.kind]);
+    if (piece.kind === "item") {
+      bump(`item:${piece.itemType}`, ITEM_TYPE_LABEL[piece.itemType]);
+    } else if (piece.kind === "addon" && piece.itemType) {
+      bump(`item:${piece.itemType}`, ITEM_TYPE_LABEL[piece.itemType]);
+    } else if (piece.kind === "offering" && piece.category) {
+      bump(`category:${piece.category}`, { ru: piece.category, en: piece.category });
+    }
+  }
+
+  // Kinds first in their natural loadout order, then everything else by
+  // size — the biggest groups are the ones worth a click.
+  const kindOrder = ["kind:item", "kind:addon", "kind:offering"];
+  return [...counts.entries()]
+    .map(([id, v]) => ({ id, ...v }))
+    .sort((a, b) => {
+      const ai = kindOrder.indexOf(a.id);
+      const bi = kindOrder.indexOf(b.id);
+      if (ai !== -1 || bi !== -1) {
+        if (ai === -1) return 1;
+        if (bi === -1) return -1;
+        return ai - bi;
+      }
+      return b.count - a.count || a.id.localeCompare(b.id);
+    });
+}
+
+/** Killers that actually own add-ons in this pool, for the dropdown. */
+function charactersFor(pool: LoadoutPiece[]): { name: string; count: number }[] {
+  const counts = new Map<string, number>();
+  for (const piece of pool) {
+    if (piece.kind !== "addon") continue;
+    if (!piece.character || piece.character === ".All") continue;
+    counts.set(piece.character, (counts.get(piece.character) ?? 0) + 1);
+  }
+  return [...counts.entries()]
+    .map(([name, count]) => ({ name, count }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+}
+
+function matchesCategory(piece: LoadoutPiece, category: string): boolean {
+  // Split on the FIRST colon only — a killer's name can contain one
+  // ("Aestri Yazar & Baermar Uraz" doesn't, but an offering category may),
+  // and a plain split() would truncate it.
+  const separator = category.indexOf(":");
+  const scope = category.slice(0, separator);
+  const value = category.slice(separator + 1);
+  if (scope === "kind") return piece.kind === value;
+  if (scope === "item") {
+    return (
+      (piece.kind === "item" || piece.kind === "addon") &&
+      (piece as { itemType?: ItemType }).itemType === value
+    );
+  }
+  if (scope === "character") return piece.kind === "addon" && piece.character === value;
+  if (scope === "category") return piece.kind === "offering" && piece.category === value;
+  return true;
+}
+
 /** Manage-the-loadout-pool panel — same job as ExcludePanel but for the 3
- *  Full Loadout piece kinds at once, keyed "kind:slug" (see lib/loadout.ts).
- *  Deliberately simpler than ExcludePanel (search + status filter only, no
- *  tags/sort) since loadout pieces don't have a tag taxonomy yet. */
+ *  Full Loadout piece kinds at once, keyed "kind:slug" (see lib/loadout.ts). */
 export function LoadoutExcludePanel({
   open,
   role,
@@ -52,9 +134,26 @@ export function LoadoutExcludePanel({
   const t = useT();
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<StatusFilter>("all");
+  const [category, setCategory] = useState<string>("all");
 
   const poolForRole = useMemo(() => getLoadoutPoolForRole(role, character), [role, character]);
   const roleColor = ROLE_COLOR[role];
+  const categories = useMemo(() => categoriesFor(poolForRole), [poolForRole]);
+  const characters = useMemo(() => charactersFor(poolForRole), [poolForRole]);
+  // Switching role, or picking a killer, rebuilds the pool and can retire
+  // the chip that was selected (a Med-Kit filter means nothing on the
+  // killer side). Falling back to "all" when the selection no longer
+  // exists self-heals that without an effect that could flash the old
+  // filter for a frame first.
+  const activeCategory =
+    category !== "all" &&
+    (categories.some((c) => c.id === category) ||
+      characters.some((c) => `character:${c.name}` === category))
+      ? category
+      : "all";
+  const selectedCharacter = activeCategory.startsWith("character:")
+    ? activeCategory.slice("character:".length)
+    : "";
 
   const keyOf = (piece: LoadoutPiece) => `${piece.kind}:${piece.slug}`;
   const activeCount = poolForRole.filter((p) => !excludedKeys.has(keyOf(p))).length;
@@ -65,13 +164,14 @@ export function LoadoutExcludePanel({
       const key = keyOf(piece);
       if (status === "active" && excludedKeys.has(key)) return false;
       if (status === "disabled" && !excludedKeys.has(key)) return false;
+      if (activeCategory !== "all" && !matchesCategory(piece, activeCategory)) return false;
       if (query) {
         const haystack = `${piece.name.en} ${piece.name.ru}`.toLowerCase();
         if (!haystack.includes(query)) return false;
       }
       return true;
     });
-  }, [poolForRole, status, search, excludedKeys]);
+  }, [poolForRole, status, activeCategory, search, excludedKeys]);
 
   const filteredKeys = filtered.map(keyOf);
 
@@ -161,6 +261,68 @@ export function LoadoutExcludePanel({
                           : t({ ru: "Отключённые", en: "Disabled" })}
                     </button>
                   ))}
+                </div>
+
+                {/* Bounded chips only — 15 at the very most, so they wrap
+                    cleanly. The 40-strong killer roster lives in the
+                    dropdown below instead. */}
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => setCategory("all")}
+                    className={cn(
+                      "rounded-full border px-3 py-1 text-[11px] font-medium transition-colors",
+                      activeCategory === "all"
+                        ? cn(roleColor.border, roleColor.bg, roleColor.text)
+                        : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
+                    )}
+                  >
+                    {t({ ru: "Все", en: "All" })}
+                    <span className="ml-1.5 opacity-60">{poolForRole.length}</span>
+                  </button>
+                  {categories.map((c) => (
+                    <button
+                      key={c.id}
+                      type="button"
+                      onClick={() => setCategory(c.id)}
+                      className={cn(
+                        "rounded-full border px-3 py-1 text-[11px] font-medium transition-colors",
+                        activeCategory === c.id
+                          ? cn(roleColor.border, roleColor.bg, roleColor.text)
+                          : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
+                      )}
+                    >
+                      {t(c.label)}
+                      <span className="ml-1.5 opacity-60">{c.count}</span>
+                    </button>
+                  ))}
+
+                  {/* The killer roster — a dropdown rather than 40 more
+                      chips. Writes the same "character:<name>" id the chips
+                      use, so there's still exactly one selected filter and
+                      one filtering path. */}
+                  {characters.length > 0 && (
+                    <select
+                      value={selectedCharacter}
+                      onChange={(e) =>
+                        setCategory(e.target.value ? `character:${e.target.value}` : "all")
+                      }
+                      aria-label={t({ ru: "Фильтр по персонажу", en: "Filter by character" })}
+                      className={cn(
+                        "rounded-full border px-3 py-1 text-[11px] font-medium transition-colors focus:ring-2 focus:ring-accent/40 focus:outline-none",
+                        selectedCharacter
+                          ? cn(roleColor.border, roleColor.bg, roleColor.text)
+                          : "border-border bg-transparent text-muted hover:bg-surface-hover hover:text-foreground",
+                      )}
+                    >
+                      <option value="">{t({ ru: "Персонаж…", en: "Character…" })}</option>
+                      {characters.map((c) => (
+                        <option key={c.name} value={c.name}>
+                          {c.name} ({c.count})
+                        </option>
+                      ))}
+                    </select>
+                  )}
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2">
