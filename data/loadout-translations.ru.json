@@ -936,5 +936,15 @@
   "addon:greasy-paper-plate": "Жирная одноразовая тарелка",
   "addon:help-wanted-ad": "Объявление о найме работников",
   "addon:restaurant-menu": "Меню ресторана",
-  "addon:rotten-pizza": "Гнилая пицца"
+  "addon:rotten-pizza": "Гнилая пицца",
+  "addon:akito-s-crutch": "Костыль Акито",
+  "addon:child-s-wooden-sword": "Детский деревянный меч",
+  "addon:mews-guts": "Кишки мяуса",
+  "addon:bayshore-s-cigar": "Сигара Бейшора",
+  "addon:bayshore-s-gold-tooth": "Золотой зуб Бейшора",
+  "addon:warden-s-keys": "Ключи начальника тюрьмы",
+  "addon:marshal-s-badge": "Значок шерифа",
+  "addon:driver-s-license": "Водительские права",
+  "addon:victim-s-detailed-routine": "Распорядок дня жертвы",
+  "addon:philly": "\"Филадельфия\""
 }

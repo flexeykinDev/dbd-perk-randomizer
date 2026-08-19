@@ -146,6 +146,24 @@ function loadJson<T>(path: string, fallback: T): T {
   }
 }
 
+/** A form of the English name that both wikis agree on.
+ *
+ *  Matching used to be a plain lowercase compare, which quietly lost every
+ *  add-on whose name carries punctuation — The Wraith's are written
+ *  `"The Beast" - Soot` on one wiki and turn up with different quote marks
+ *  and a different dash on the other, so eighteen of his nineteen add-ons
+ *  never matched at all. Stripping quotes, folding every dash to one
+ *  character and collapsing spaces leaves the part both sides actually
+ *  spell the same way. */
+function normalizeName(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/[«»""''`]/g, "")
+    .replace(/[‐-―−-]+/g, "-")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 async function main() {
   const addons: Addon[] = loadJson(ADDONS_JSON, []);
   if (addons.length === 0) {
@@ -161,7 +179,7 @@ async function main() {
   // the first run of this script.
   const bySlugForName = new Map<string, Addon[]>();
   for (const addon of addons) {
-    const key = addon.name.en.toLowerCase();
+    const key = normalizeName(addon.name.en);
     const list = bySlugForName.get(key) ?? [];
     list.push(addon);
     bySlugForName.set(key, list);
@@ -190,7 +208,7 @@ async function main() {
           const rows = extractRowsFromTable($, table);
           rowsSeen += rows.length;
           for (const row of rows) {
-            const matches = bySlugForName.get(row.nameEn.toLowerCase());
+            const matches = bySlugForName.get(normalizeName(row.nameEn));
             if (!matches) continue;
             for (const addon of matches) {
               const key = `addon:${addon.slug}`;

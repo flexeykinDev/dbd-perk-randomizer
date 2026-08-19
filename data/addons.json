@@ -6014,9 +6014,10 @@
     "slug": "philly",
     "name": {
       "en": "\"Philly\"",
-      "ru": "\"Philly\""
+      "ru": "\"Филадельфия\""
     },
     "description": "A stolen camera from a victim of Olsen in Philadelphia, where he worked before.The film inside captured his last night in the city. Reduces the Time to mark Survivors by -10 %. \"Gotta love Philly: keeps giving and giving and I do not wanna forget any of it.\" — The Ghost Face",
+    "descriptionRuRaw": "Камера, которую Олсен украл у своей жертвы в Филадельфии, где он когда-то работал. На пленке запечатлена его последняя ночь в городе. Снижает время на отметку выжившего на 10%. \"Люблю Филадельфию. Она умеет преподносить незабываемые подарки\" (Гоуст Фейс).",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -6207,9 +6208,10 @@
     "slug": "driver-s-license",
     "name": {
       "en": "Driver's License",
-      "ru": "Driver's License"
+      "ru": "Водительские права"
     },
     "description": "A driver's license revealing Olsen's true identity: Danny Johnson. Causes Generators to explode and lose -20 % of its maximum possible Progression, when marking a Survivor repairing it, and blocks it for 15 seconds. This penalty is only once if multiple repairing Survivors are marked. \"They all want to know who Ghost Face is. But what they should ask is: who is next?\" — The Ghost Face",
+    "descriptionRuRaw": "Водительские права, выдающие истинное имя Олсена: Дэнни Джонсон. Когда вы ставите метку на выжившего, занятого ремонтом генератора, генератор взрывается и теряет 20% прогресса Взорванный генератор блокируется на 15 сек. Когда метка ставится на нескольких выживших одновременно, прогресс теряется только один раз \"Все хотят знать, кто Гоуст Фейс на самом деле. Пусть лучше гадают, кто будет следующим\" (Гоуст Фейс).",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -6246,9 +6248,10 @@
     "slug": "victim-s-detailed-routine",
     "name": {
       "en": "Victim's Detailed Routine",
-      "ru": "Victim's Detailed Routine"
+      "ru": "Распорядок дня жертвы"
     },
     "description": "A ripped page outlining the weekly routine of Olsen's first victim in Roseville.Compiling your victim's habits allows you to anticipate their movements. Survivors suffer from the Exhausted Status Effect for 5 seconds after marking them. \"I have been watching you for a while. I wanted this to be special; the kind of headlines that people do not forget.\" — The Ghost Face",
+    "descriptionRuRaw": "Вырванная страница с недельным распорядком дня первой жертвы Олсена в Розвилле. Зная привычки добычи, вы можете предсказать и пресечь ее следующее действие. После получения метки выжившие испытывают \"Усталость\" на протяжении 5 сек. \"Усталость\" не дает выжившим активировать утомляющие навыки. \"Я наблюдал за тобой. Я хотел, чтобы наша встреча была особенной, чтобы этот заголовок запомнили навсегда\" (Гоуст Фейс).",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -6356,9 +6359,10 @@
     "slug": "mews-guts",
     "name": {
       "en": "Mews' Guts",
-      "ru": "Mews' Guts"
+      "ru": "Кишки мяуса"
     },
     "description": "The tasty guts of an unfortunate victim. Reduces the Attack cool-down of missed Shred Attacks by -11 %. Increases the number of available Portals by +1.",
+    "descriptionRuRaw": "Вкусные внутренности случайной жертвы. Увеличивают общее число доступных порталов на 1. Ускоряют восстановление \"Разрыва\" после промаха на 11%.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -11646,9 +11650,10 @@
     "slug": "child-s-wooden-sword",
     "name": {
       "en": "Child's Wooden Sword",
-      "ru": "Child's Wooden Sword"
+      "ru": "Детский деревянный меч"
     },
     "description": "Akito's practice sword.The child had little use for it after his injury. Increases the Aura-reading range on Blood Orbs in the environment by +3 metres.",
+    "descriptionRuRaw": "Тренировочный меч Акито. Почти не использовался с тех пор, как мальчик получил травму. Увеличивает расстояние, с которого можно заметить ауры шариков крови, на 3 м.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -11770,9 +11775,10 @@
     "slug": "akito-s-crutch",
     "name": {
       "en": "Akito's Crutch",
-      "ru": "Akito's Crutch"
+      "ru": "Костыль Акито"
     },
     "description": "The crutch used by Kazan's son after falling from a tree.Akito's playmate and her family were punished for the boy's injury. Increases your Movement speed during a Demon Dash by +1 m/s.",
+    "descriptionRuRaw": "Сын Казана пользовался этим костылем после падения с дерева. За тот несчастный случай наказали девочку, с которой играл Акито, и всю ее семью. Увеличивает скорость \"Рывка демона\" на 13%.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -11935,9 +11941,10 @@
     "slug": "marshal-s-badge",
     "name": {
       "en": "Marshal's Badge",
-      "ru": "Marshal's Badge"
+      "ru": "Значок шерифа"
     },
     "description": "A silver badge taken from the corpse of a lawman in Arizona Territory who interfered with the Hellshire Gang's bounties. Reduces your Terror Radius by -4 metres during Aim Down Sights. \"Get your prayers in, you'll be swinging by noon.\" — Caleb Quinn",
+    "descriptionRuRaw": "Серебряный значок, снятый с трупа законника на Территории Аризоны. Зря он мешал Хелширской банде преследовать жертв. Уменьшает радиус террора во время прицеливания из Искупителя на 4 м. \"Начинай молиться: к полудню ты будешь болтаться в петле\" - Калеб Куинн",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -11976,9 +11983,10 @@
     "slug": "bayshore-s-gold-tooth",
     "name": {
       "en": "Bayshore's Gold Tooth",
-      "ru": "Bayshore's Gold Tooth"
+      "ru": "Золотой зуб Бейшора"
     },
     "description": "A golden tooth torn from Henry Bayshore as he screamed for mercy, hours before he was finished off. Increases the Reeling speed of The Redeemer by +5 %. \"Know your place, boy. Know you damn place.\" — Henry Bayshore",
+    "descriptionRuRaw": "Золотой зуб, вырванный у Генри Бейшора. Тот не один час молил о пощаде, прежде чем его прикончили. Увеличивает скорость притягивания Искупителя на 5%. \"Знай свое место, пацан. Знай свое чертово место\" - Генри Бейшор",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -12030,9 +12038,10 @@
     "slug": "warden-s-keys",
     "name": {
       "en": "Warden's Keys",
-      "ru": "Warden's Keys"
+      "ru": "Ключи начальника тюрьмы"
     },
     "description": "The dull jangle of the keys evokes a furious memory within Caleb. Reduces the Reload time of The Redeemer by -0.35 seconds.",
+    "descriptionRuRaw": "Приглушенное позвякивание ключей пробуждает ярость и воспоминания. Ускоряет перезарядку Искупителя на 0.35 сек.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -12057,9 +12066,10 @@
     "slug": "bayshore-s-cigar",
     "name": {
       "en": "Bayshore's Cigar",
-      "ru": "Bayshore's Cigar"
+      "ru": "Сигара Бейшора"
     },
     "description": "A quality cigar, plucked from the jacket of Caleb's boss while he wailed over the spear lodged in his abdomen. Reduces the Stun duration when Survivors break free from The Redeemer by -0.75 seconds. \"Do not point that thing at me, you slack-jawed imbecile.\" — Henry Bayshore",
+    "descriptionRuRaw": "Хорошая сигара. Калеб вытащил ее из жилета начальника, пока тот выл, пронзенный гарпуном. Уменьшает продолжительность оглушения, когда выживший срывается с гарпуна, на 0.75 сек. \"Не тыкай в меня этой штуковиной, тупомордый болван!\" - Генри Бейшор",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
