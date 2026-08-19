@@ -160,3 +160,23 @@ test("the shipped release dates would hold back today's unreleased chapters", ()
   );
   assert.deepEqual(live, [], "an unreleased chapter would have shipped");
 });
+
+test("content with no owning character skips the character rule", () => {
+  // Items and offerings belong to everybody, so there is no release date
+  // that could gate them — only "brand new and flagged for an unreleased
+  // patch" applies.
+  const nullChar = (rows: Row[]) =>
+    gateScrapedRows(rows, {
+      getCharacter: () => null,
+      getSlug: (r) => r.slug,
+      isUpcoming: (r) => r.upcoming,
+      knownCharacters: new Set<string>(),
+      knownSlugs: new Set(["flashlight"]),
+      releaseDates: {},
+      now: NOW,
+    });
+
+  assert.equal(nullChar([row("brand-new-item", "")]).live.length, 1);
+  assert.equal(nullChar([row("flashlight", "", true)]).live.length, 1);
+  assert.equal(nullChar([row("brand-new-item", "", true)]).held.length, 1);
+});

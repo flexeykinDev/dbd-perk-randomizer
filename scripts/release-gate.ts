@@ -96,7 +96,11 @@ export function gateScrapedRows<T>(
     releaseDates,
     now = new Date(),
   }: {
-    getCharacter: (row: T) => string;
+    /** The row's character, or `null` for content that doesn't belong to
+     *  one — items and offerings are shared by everybody, so there is no
+     *  character whose release date could gate them, and only the
+     *  new-and-upcoming rule below applies. */
+    getCharacter: (row: T) => string | null;
     getSlug: (row: T) => string;
     isUpcoming: (row: T) => boolean;
     /** Characters already in the shipped data — the vetted set. */
@@ -113,7 +117,7 @@ export function gateScrapedRows<T>(
 
   for (const row of rows) {
     const character = getCharacter(row);
-    if (!knownCharacters.has(character)) {
+    if (character !== null && !knownCharacters.has(character)) {
       const releasedAt = releaseDates[character];
       if (!releasedAt) {
         held.push({

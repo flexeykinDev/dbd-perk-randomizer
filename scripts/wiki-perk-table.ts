@@ -22,7 +22,9 @@
 // either image attribute costs nothing on Fandom and is what a second
 // source needs.
 import * as cheerio from "cheerio";
+import type { AnyNode } from "domhandler";
 import { slugify } from "../lib/slugify";
+import { resolveImageUrl } from "./wiki-source";
 import type { PerkRole } from "../lib/types";
 
 export interface ScrapedRow {
@@ -59,19 +61,13 @@ export function cleanText(text: string): string {
   return text.replace(/\s+/g, " ").trim();
 }
 
-/** The image URL a wiki cell points at, as an absolute URL.
- *
- *  `data-src` first: where a wiki lazy-loads images, `src` is a placeholder
- *  and only `data-src` holds the real file. Where it doesn't, `src` is the
- *  real thing and `data-src` is absent. */
-function imageUrl(img: cheerio.Cheerio<never>, origin: string): string {
-  const raw = img.attr("data-src") ?? img.attr("src") ?? "";
-  if (!raw) return "";
-  // Fandom appends a `/revision/latest?cb=...` cache-buster path segment;
-  // the file itself is everything before it.
-  const url = raw.split("/revision/")[0];
-  return url.startsWith("//") ? `https:${url}` : url.startsWith("/") ? `${origin}${url}` : url;
+/** The attribute actually holding an image's URL. Fandom lazy-loads and
+ *  puts the real file on `data-src`, leaving `src` as a placeholder;
+ *  wiki.gg puts it straight on `src`. See resolveImageUrl. */
+function imageSrc(img: cheerio.Cheerio<AnyNode>): string | undefined {
+  return img.attr("data-src") ?? img.attr("src");
 }
+
 
 /**
  * Parses both perk tables off a rendered Perks page.
@@ -110,16 +106,13 @@ export function parsePerkTables(
         const cells = $(tr).find("th, td");
         if (cells.length < 4) return;
 
-        const iconCell = cells.eq(0) as unknown as cheerio.Cheerio<never>;
-        const nameCell = cells.eq(1) as unknown as cheerio.Cheerio<never>;
+        const iconCell = cells.eq(0);
+        const nameCell = cells.eq(1);
         const descriptionCell = cells.eq(2);
-        const characterCell = cells.eq(3) as unknown as cheerio.Cheerio<never>;
+        const characterCell = cells.eq(3);
 
         const name = cleanText(nameCell.text());
-        const iconSourceUrl = imageUrl(
-          iconCell.find("img").first() as unknown as cheerio.Cheerio<never>,
-          origin,
-        );
+        const iconSourceUrl = resolveImageUrl(imageSrc(iconCell.find("img").first()), origin);
         if (!name || !iconSourceUrl) return;
 
         const rawDescription = cleanText(descriptionCell.text());
@@ -144,8 +137,8 @@ export function parsePerkTables(
           character,
           characterFullName: characterCell.find("a").first().attr("title") || character,
           iconSourceUrl,
-          characterPortraitUrl: imageUrl(
-            characterCell.find(".charPortraitWrapper img").first() as unknown as cheerio.Cheerio<never>,
+          characterPortraitUrl: resolveImageUrl(
+            imageSrc(characterCell.find(".charPortraitWrapper img").first()),
             origin,
           ),
           upcoming,

@@ -16,7 +16,8 @@ import type { Cheerio } from "cheerio";
 import type { AnyNode } from "domhandler";
 import sharp from "sharp";
 import { slugify } from "../lib/slugify";
-import { partitionByRelease } from "./release-gate";
+import { gateScrapedRows, partitionByRelease } from "./release-gate";
+import { FANDOM, resolveImageUrl } from "./wiki-source";
 import type { Addon, Item, ItemType, LoadoutMeta, Offering, PerkRole } from "../lib/types";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -42,8 +43,69 @@ const ITEMS_PAGE = "Items";
 const ADDONS_PAGE = "Add-ons";
 const OFFERINGS_PAGE = "Offerings";
 
+/** Which wiki the loadout data comes from. Must stay in step with the
+ *  same constant in scripts/scrape-perks.ts — the two halves of the site
+ *  reading different wikis would show a killer's perks from one and their
+ *  add-ons from the other. See scripts/wiki-source.ts. */
+const SOURCE = FANDOM;
+
+/** Everything already in the shipped loadout data, plus the characters it
+ *  covers — the vetted set the release gate trusts. Read once, lazily,
+ *  because it is only consulted on a source that needs gating. */
+function loadKnownLoadout(): { characters: Set<string>; slugs: Set<string> } {
+  const read = (file: string): { slug: string; character?: string }[] =>
+    existsSync(file) ? JSON.parse(readFileSync(file, "utf8")) : [];
+  const all = [...read(ADDONS_JSON), ...read(ITEMS_JSON), ...read(OFFERINGS_JSON)];
+  return {
+    characters: new Set(all.map((p) => p.character).filter((c): c is string => !!c)),
+    slugs: new Set(all.map((p) => p.slug)),
+  };
+}
+
+function loadJsonMap(file: string, key: string): Record<string, string> {
+  if (!existsSync(file)) return {};
+  return JSON.parse(readFileSync(file, "utf8"))[key] ?? {};
+}
+
+const characterAliases = loadJsonMap(
+  join(DATA_DIR, "character-aliases.json"),
+  "aliases",
+);
+const characterReleaseDates = loadJsonMap(
+  join(DATA_DIR, "character-release-dates.json"),
+  "characters",
+);
+
+/**
+ * Applies the release gate to loadout rows, and reports what it withheld.
+ *
+ * A no-op on a source that only documents released content, which is why
+ * Fandom's behaviour is untouched — including picking up a brand-new
+ * Killer's add-ons on its own, which gating would otherwise prevent.
+ */
+function gateLoadoutRows<T>(
+  rows: T[],
+  getCharacter: (row: T) => string | null,
+  getPiece: (row: T) => ScrapedPiece,
+): T[] {
+  if (!SOURCE.publishesPreRelease) return rows;
+  const known = loadKnownLoadout();
+  const { live, held } = gateScrapedRows(rows, {
+    getCharacter,
+    getSlug: (row) => getPiece(row).slug,
+    isUpcoming: (row) => getPiece(row).upcoming,
+    knownCharacters: known.characters,
+    knownSlugs: known.slugs,
+    releaseDates: characterReleaseDates,
+  });
+  for (const { row, reason } of held) {
+    console.log(`  Holding back ${getPiece(row).slug} — ${reason}`);
+  }
+  return live;
+}
+
 function apiUrl(page: string): string {
-  return `https://deadbydaylight.fandom.com/api.php?action=parse&page=${encodeURIComponent(page)}&format=json&prop=text`;
+  return `${SOURCE.apiBase}?action=parse&page=${encodeURIComponent(page)}&format=json&prop=text`;
 }
 
 interface MediaWikiParseResponse {
@@ -135,7 +197,12 @@ const NAME_OVERRIDES: Record<string, string> = {
 // above, just at the scale of a whole item type instead of one add-on —
 // these two categories are pinned here instead of scraped from Fandom.
 // Remove this once Fandom's Keys/Map pages catch up.
-const KEY_MAP_ADDON_OVERRIDES: (ScrapedPiece & { itemType: "key" | "map" })[] = [
+// `upcoming` is omitted rather than written out on all ten: these are
+// hand-pinned entries, so the wiki's own upcoming-patch marker has no say
+// over them either way, and it is supplied at the point of use.
+const KEY_MAP_ADDON_OVERRIDES: (Omit<ScrapedPiece, "upcoming"> & {
+  itemType: "key" | "map";
+})[] = [
   // Keys — https://deadbydaylight.wiki.gg/wiki/Keys
   {
     itemType: "key",
@@ -225,6 +292,10 @@ interface ScrapedPiece {
   slug: string;
   description: string;
   iconSourceUrl: string;
+  /** True when the wiki is describing a patch that hasn't shipped yet.
+   *  Kept rather than just stripped, because on a source that publishes
+   *  pre-release content it's the signal that a row may not be live. */
+  upcoming: boolean;
 }
 
 // Reads a 3-column [icon, name, description] wikitable — the same row
@@ -246,13 +317,22 @@ function parsePieceTable($: cheerio.CheerioAPI, table: Cheerio<AnyNode>): Scrape
     const rawName = cleanText(nameCell.text());
     const slug = slugify(rawName);
     const name = NAME_OVERRIDES[slug] ?? rawName;
+    const rawDescription = cleanText(descriptionCell.text());
     const description = DESCRIPTION_OVERRIDES[slug] ?? cleanDescription(descriptionCell.text());
-    const rawIconSourceUrl = iconCell.find("img").attr("data-src") ?? "";
-    const iconSourceUrl = ICON_SOURCE_OVERRIDES[slug] ?? rawIconSourceUrl.split("/revision/")[0];
+    const icon = iconCell.find("img").first();
+    const iconSourceUrl =
+      ICON_SOURCE_OVERRIDES[slug] ??
+      resolveImageUrl(icon.attr("data-src") ?? icon.attr("src"), SOURCE.origin);
     if (!name || !iconSourceUrl || !description) return;
     if (UNAVAILABLE_MARKERS.test(description)) return;
 
-    rows.push({ name, slug, description, iconSourceUrl });
+    rows.push({
+      name,
+      slug,
+      description,
+      iconSourceUrl,
+      upcoming: UPCOMING_PATCH_NOTICE.test(rawDescription),
+    });
   });
   return rows;
 }
@@ -449,7 +529,7 @@ async function resolvePowerToCharacter(headings: string[]): Promise<Record<strin
   const BATCH_SIZE = 40; // comfortably under MediaWiki's multi-title query limits
   for (let i = 0; i < unresolved.length; i += BATCH_SIZE) {
     const batch = unresolved.slice(i, i + BATCH_SIZE);
-    const url = `https://deadbydaylight.fandom.com/api.php?action=query&titles=${encodeURIComponent(batch.join("|"))}&redirects=1&format=json`;
+    const url = `${SOURCE.apiBase}?action=query&titles=${encodeURIComponent(batch.join("|"))}&redirects=1&format=json`;
     const res = await fetch(url, { headers: REQUEST_HEADERS });
     if (!res.ok) throw new Error(`Failed to resolve power headings: ${res.status} ${res.statusText}`);
     const json = (await res.json()) as {
@@ -528,7 +608,7 @@ async function downloadIcon(
 // so resolveOfferingRole below uses this too rather than the plain
 // fetchWikiPageHtml.
 async function fetchWikiPageHtmlFollowingRedirects(page: string): Promise<string> {
-  const url = `https://deadbydaylight.fandom.com/api.php?action=parse&page=${encodeURIComponent(page)}&redirects=1&format=json&prop=text`;
+  const url = `${SOURCE.apiBase}?action=parse&page=${encodeURIComponent(page)}&redirects=1&format=json&prop=text`;
   const res = await fetch(url, { headers: REQUEST_HEADERS });
   if (!res.ok) throw new Error(`Failed to fetch ${page}: ${res.status} ${res.statusText}`);
   const json = (await res.json()) as MediaWikiParseResponse;
@@ -602,7 +682,7 @@ function findFirstImageAfterHeading($: cheerio.CheerioAPI, pattern: RegExp): str
     for (let steps = 0; steps < 8 && node.length && !found; steps++) {
       const img = node.is("img") ? node : node.find("img").first();
       const src = img.attr("data-src") ?? img.attr("src");
-      if (img.length && src) found = src.split("/revision/")[0];
+      if (img.length && src) found = resolveImageUrl(src, SOURCE.origin);
       node = node.next();
     }
   });
@@ -770,7 +850,14 @@ async function main() {
   itemTables.each((i, t) => {
     const itemType = ITEM_TABLE_TYPES[i];
     if (!itemType) return;
-    const pieces = parsePieceTable($items, $items(t));
+    // Items belong to nobody, so there is no character release date to
+    // gate them on — only the "brand new and documented against a patch
+    // that hasn't shipped" rule applies.
+    const pieces = gateLoadoutRows(
+      parsePieceTable($items, $items(t)),
+      () => null,
+      (piece) => piece,
+    );
     for (const piece of pieces) {
       items.push({ kind: "item", itemType, icon: "", ...toLocalized("item", piece) });
     }
@@ -805,17 +892,30 @@ async function main() {
     }
   }
   for (const { itemType, ...piece } of KEY_MAP_ADDON_OVERRIDES) {
-    addonRows.push({ role: "survivor", character: ".All", itemType, piece });
+    // Hand-pinned, so the wiki's own upcoming-patch marker has no say.
+    addonRows.push({ role: "survivor", character: ".All", itemType, piece: { ...piece, upcoming: false } });
   }
 
   const killerAddonSections = findHeadingTables($addons, "Killer Power Add-ons");
   const powerToCharacter = await resolvePowerToCharacter(killerAddonSections.map((s) => s.heading));
+  const scrapedKillerRows: AddonRow[] = [];
   for (const { heading, table } of killerAddonSections) {
     const character = powerToCharacter[heading];
     for (const piece of parsePieceTable($addons, table)) {
-      addonRows.push({ role: "killer", character, piece });
+      scrapedKillerRows.push({ role: "killer", character, piece });
     }
   }
+  // Killer add-ons are the loadout's equivalent of a perk row: they belong
+  // to a named character, and an announced-but-unreleased Killer is exactly
+  // what a source like wiki.gg publishes early. Same gate, same files, same
+  // aliases-then-collisions ordering rationale as scrape-perks.ts — except
+  // there is no collision step here, because the character comes from the
+  // resolved Power page rather than a first-name column.
+  for (const row of scrapedKillerRows) {
+    const alias = characterAliases[row.character];
+    if (alias) row.character = alias;
+  }
+  addonRows.push(...gateLoadoutRows(scrapedKillerRows, (r) => r.character, (r) => r.piece));
   const scrapedKillerCharacters = new Set(
     addonRows.filter((r) => r.role === "killer").map((r) => r.character),
   );
@@ -830,6 +930,9 @@ async function main() {
           slug: slugify(addon.name),
           description: cleanDescription(addon.description),
           iconSourceUrl: addon.iconSourceUrl,
+          // Gated on its own releasedAt (see loadSupplementalAddons), so
+          // by the time it gets here it is live by definition.
+          upcoming: false,
         },
       });
     }
@@ -877,7 +980,14 @@ async function main() {
   for (const { heading, table } of offeringSections) {
     const fallbackRole = OFFERING_CATEGORY_ROLE[heading];
     if (!fallbackRole) continue; // "Events" and any unrecognized category — see OFFERING_CATEGORY_ROLE comment
-    const pieces = parsePieceTable($offerings, table);
+    // Same as items: no owning character, so only the new-and-upcoming
+    // rule can apply. Gated before the per-offering role lookup so a held
+    // row doesn't cost a wiki round trip.
+    const pieces = gateLoadoutRows(
+      parsePieceTable($offerings, table),
+      () => null,
+      (piece) => piece,
+    );
     for (const piece of pieces) {
       const role = await resolveOfferingRole(piece.name, fallbackRole);
       offerings.push({ kind: "offering", role, category: heading, icon: "", ...toLocalized("offering", piece) });
@@ -950,9 +1060,9 @@ async function main() {
   const meta: LoadoutMeta = {
     scrapedAt,
     sourceUrls: {
-      items: `https://deadbydaylight.fandom.com/wiki/${ITEMS_PAGE}`,
-      addons: `https://deadbydaylight.fandom.com/wiki/${ADDONS_PAGE}`,
-      offerings: `https://deadbydaylight.fandom.com/wiki/${OFFERINGS_PAGE}`,
+      items: `${SOURCE.wikiBase}/${ITEMS_PAGE}`,
+      addons: `${SOURCE.wikiBase}/${ADDONS_PAGE}`,
+      offerings: `${SOURCE.wikiBase}/${OFFERINGS_PAGE}`,
     },
     itemCount: items.length,
     addonCount: addons.length,
