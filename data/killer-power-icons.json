@@ -1,4 +1,5 @@
 {
+  "Animatronic": "/loadout/power/animatronic.webp",
   "Artist": "/loadout/power/artist.webp",
   "Blight": "/loadout/power/blight.webp",
   "Cannibal": "/loadout/power/cannibal.webp",
@@ -12,9 +13,11 @@
   "Executioner": "/loadout/power/executioner.webp",
   "First": "/loadout/power/first.webp",
   "Ghost Face": "/loadout/power/ghost-face.webp",
+  "Ghoul": "/loadout/power/ghoul.webp",
   "Good Guy": "/loadout/power/good-guy.webp",
   "Hag": "/loadout/power/hag.webp",
   "Hillbilly": "/loadout/power/hillbilly.webp",
+  "Houndmaster": "/loadout/power/houndmaster.webp",
   "Huntress": "/loadout/power/huntress.webp",
   "Knight": "/loadout/power/knight.webp",
   "Krasue": "/loadout/power/krasue.webp",

@@ -9,6 +9,7 @@ import { fileURLToPath } from "node:url";
 import sharp from "sharp";
 import { slugify } from "../lib/slugify";
 import { gateScrapedRows, partitionByRelease } from "./release-gate";
+import { WIKI_GG } from "./wiki-source";
 import {
   cleanText,
   parsePerkTables,
@@ -19,36 +20,15 @@ import type { LocalizedDescription, Perk, PerkRole, PerksMeta } from "../lib/typ
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-/** Which wiki the EN perk data comes from.
- *
- *  Kept as one object rather than loose constants because moving to
- *  wiki.gg is a live question (run `npm run compare:sources` for what it
- *  would change) and the parts that have to move together are exactly
- *  these: the page URL, the API URL, the origin used to absolutise
- *  relative image URLs, and — most importantly — whether the source can be
- *  trusted to only document released content.
- *
- *  `publishesPreRelease` is the safety switch. Fandom documents a
- *  character once it is live, so a new one can flow straight in, as it
- *  always has. wiki.gg publishes a full Chapter page as soon as it is
- *  announced, weeks early, so on that source every unrecognised character
- *  is held until someone writes down its release date (see
- *  gateScrapedRows in scripts/release-gate.ts). Flipping the source
- *  without flipping this would publish an unreleased Chapter on the next
- *  scheduled run, with nobody watching. */
-const SOURCE = {
-  pageUrl: "https://deadbydaylight.fandom.com/wiki/Perks",
-  // The plain page URL sits behind a Cloudflare JS challenge that blocks
-  // non-browser HTTP clients. The MediaWiki parse API returns the same
-  // rendered HTML (same tables, same icon URLs) without it.
-  apiUrl:
-    "https://deadbydaylight.fandom.com/api.php?action=parse&page=Perks&format=json&prop=text",
-  origin: "https://deadbydaylight.fandom.com",
-  publishesPreRelease: false,
-} as const;
+/** Which wiki the EN perk data comes from. Must stay in step with the
+ *  same constant in scripts/scrape-loadout.ts — the two halves of the site
+ *  reading different wikis would show a killer's perks from one and their
+ *  add-ons from the other. See scripts/wiki-source.ts, which explains what
+ *  actually differs between them and why the choice is not just a URL. */
+const SOURCE = WIKI_GG;
 
-const WIKI_PAGE_URL = SOURCE.pageUrl;
-const SOURCE_URL = SOURCE.apiUrl;
+const WIKI_PAGE_URL = `${SOURCE.wikiBase}/Perks`;
+const SOURCE_URL = `${SOURCE.apiBase}?action=parse&page=Perks&format=json&prop=text`;
 const DATA_DIR = join(__dirname, "../data");
 const PUBLIC_PERKS_DIR = join(__dirname, "../public/perks");
 const PUBLIC_CHARACTERS_DIR = join(__dirname, "../public/characters");
@@ -63,6 +43,7 @@ const ICON_OVERRIDES_JSON = join(DATA_DIR, "icon-overrides.json");
 const SUPPLEMENTAL_PERKS_EN_JSON = join(DATA_DIR, "supplemental-perks.en.json");
 const CHARACTER_RELEASE_DATES_JSON = join(DATA_DIR, "character-release-dates.json");
 const CHARACTER_ALIASES_JSON = join(DATA_DIR, "character-aliases.json");
+const PERK_SLUG_ALIASES_JSON = join(DATA_DIR, "perk-slug-aliases.json");
 const CHARACTERS_JSON = join(DATA_DIR, "characters.json");
 const PERK_IDS_JSON = join(DATA_DIR, "perk-ids.json");
 const ICON_SOURCES_JSON = join(DATA_DIR, "icon-sources.json");
@@ -127,6 +108,33 @@ interface SupplementalEntry {
   characterPortraitUrl: string;
   releasedAt?: string;
   perks: { name: string; description: string; iconSourceUrl: string }[];
+}
+
+/** Records retired perk slugs so old share links keep working.
+ *
+ *  A share URL encodes perk IDs, which map to slugs; when a perk is
+ *  renamed its slug changes and every link already sent to someone would
+ *  otherwise resolve to nothing. Merged rather than overwritten, so an
+ *  alias survives once the retired row stops appearing on the wiki
+ *  altogether — the links it exists for do not expire. */
+function writeSlugAliases(discovered: Record<string, string>): void {
+  const existing = existsSync(PERK_SLUG_ALIASES_JSON)
+    ? JSON.parse(readFileSync(PERK_SLUG_ALIASES_JSON, "utf8"))
+    : {};
+  const merged = { ...(existing.aliases ?? {}), ...discovered };
+  if (Object.keys(merged).length === 0) return;
+  writeFileSync(
+    PERK_SLUG_ALIASES_JSON,
+    JSON.stringify(
+      {
+        _comment:
+          "Retired perk slug -> its current one, written by scripts/scrape-perks.ts when the wiki reports a rename. Keeps share links and saved pools working across a rename: lib/perks.ts's getPerkBySlug falls back through this. Entries are kept forever, since the links they exist for do not expire.",
+        aliases: Object.fromEntries(Object.entries(merged).sort(([a], [b]) => a.localeCompare(b))),
+      },
+      null,
+      2,
+    ) + "\n",
+  );
 }
 
 /** A source's spelling of a character -> the one the data already uses.
@@ -364,6 +372,7 @@ async function main() {
   }
   resolveCharacterCollisions([scrapedByRole.survivor, scrapedByRole.killer].flat());
 
+
   // The vetted set: everything already in data/perks.json, whether a
   // previous scrape found it or a person added it by hand. A character
   // stays trusted once it has shipped.
@@ -371,13 +380,14 @@ async function main() {
   const knownCharacters = new Set(previousPerks.map((p) => p.character));
   const knownSlugs = new Set(previousPerks.map((p) => p.slug));
 
-  const rowsByRole = new Map<PerkRole, ScrapedRow[]>();
-  for (const role of ROLES) {
-    let scraped = scrapedByRole[role];
-    // Only a source that documents unreleased Chapters needs this; on one
-    // that doesn't, gating would just block new characters from arriving.
-    if (SOURCE.publishesPreRelease) {
-      const { live, held } = gateScrapedRows(scraped, {
+  // Only a source that documents unreleased Chapters needs this; on one
+  // that doesn't, gating would just block new characters from arriving.
+  // Runs before the rename handling below, which asks whether a perk's
+  // replacement is actually live — a replacement the gate is about to
+  // withhold is not.
+  if (SOURCE.publishesPreRelease) {
+    for (const role of ROLES) {
+      const { live, held } = gateScrapedRows(scrapedByRole[role], {
         getCharacter: (row) => row.character,
         getSlug: (row) => row.slug,
         isUpcoming: (row) => row.upcoming,
@@ -388,8 +398,59 @@ async function main() {
       for (const { row, reason } of held) {
         console.log(`  Holding back ${role}/${row.slug} — ${reason}`);
       }
-      scraped = live;
+      scrapedByRole[role] = live;
     }
+  }
+
+  // Retired names (see RENAMED_PERK_NOTICE) carry no description, so they
+  // can never ship as-is. What to do with them depends on whether the
+  // rename has actually landed in the game:
+  //
+  //   * replacement present  -> the perk genuinely goes by the new name
+  //     now, so drop the old row and let the new one stand. Old share
+  //     links still resolve, via data/perk-slug-aliases.json.
+  //   * replacement absent   -> the rename is announced but not live, and
+  //     the release gate has just held the new name back. Dropping the old
+  //     row too would remove the perk from the site entirely, so keep the
+  //     description already shipped for it.
+  //
+  // Save the Best for Last is the second case as of writing: its
+  // replacement, Keep Them Waiting, is flagged for an unreleased patch.
+  const liveSlugs = new Set(
+    [scrapedByRole.survivor, scrapedByRole.killer]
+      .flat()
+      .filter((row) => !row.renamedTo)
+      .map((row) => row.slug),
+  );
+  const slugAliases: Record<string, string> = {};
+  for (const role of ROLES) {
+    scrapedByRole[role] = scrapedByRole[role].filter((row) => {
+      if (!row.renamedTo) return true;
+      if (liveSlugs.has(row.renamedTo)) {
+        console.log(`  "${row.name}" is now "${row.renamedTo}" — dropping the retired name`);
+        slugAliases[row.slug] = row.renamedTo;
+        return false;
+      }
+      const previousPerk = previous.get(`${role}/${row.slug}`);
+      if (previousPerk) {
+        console.log(
+          `  "${row.name}" is being renamed to "${row.renamedTo}", which isn't live yet — keeping its current text`,
+        );
+        row.description = previousPerk.description;
+        row.renamedTo = undefined;
+        return true;
+      }
+      // Neither a replacement nor anything already shipped: nothing to
+      // show, so shipping "Identical to …" would be the only alternative.
+      console.log(`  Dropping "${row.name}" — a pointer to "${row.renamedTo}", which isn't present`);
+      return false;
+    });
+  }
+  writeSlugAliases(slugAliases);
+
+  const rowsByRole = new Map<PerkRole, ScrapedRow[]>();
+  for (const role of ROLES) {
+    const scraped = scrapedByRole[role];
     const scrapedSlugs = new Set(scraped.map((r) => r.slug));
     // A supplemental entry is redundant (and skipped) once Fandom's own
     // table catches up and starts producing the same perk slug on its
@@ -445,7 +506,18 @@ async function main() {
     }
   }
 
-  const characters: Record<string, string> = {};
+  // Merged onto whatever was already there rather than rebuilt from
+  // scratch. This map is keyed by character, but it is populated from the
+  // *perk* table, and a character can stop appearing there while still
+  // very much existing — when a licence lapses its perks become general,
+  // so The Cenobite dropped out of the perk table while keeping 20 add-ons
+  // and a Power icon, and the loadout UI badges this portrait onto that
+  // icon. Rebuilding would have left it with none. An entry for a
+  // character nobody references any more is harmless; a missing one is a
+  // broken image.
+  const characters: Record<string, string> = existsSync(CHARACTERS_JSON)
+    ? JSON.parse(readFileSync(CHARACTERS_JSON, "utf8"))
+    : {};
   for (const [characterName, sourceUrl] of characterPortraitUrls) {
     characters[characterName] = await downloadPortrait(characterName, sourceUrl, iconSources);
   }

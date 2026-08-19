@@ -127,6 +127,62 @@
   },
   {
     "kind": "offering",
+    "role": "survivor",
+    "category": "Bonus Bloodpoints",
+    "icon": "/loadout/offering/fresh-bog-laurel.webp",
+    "slug": "fresh-bog-laurel",
+    "name": {
+      "en": "Fresh Bog Laurel",
+      "ru": "Свежий вереск"
+    },
+    "description": "Grants +75 % bonus Bloodpoints in the Objectives Scoring Category. The bonus Bloodpoints are applied after exiting the Trial. \"A beautiful purple flower that grows in the midst of the tainted swamp.Releases a mild tea-like aroma.\"",
+    "descriptionRuRaw": "Даёт 75% бонусных очков крови в категории \"Цели\". Личное подношение.",
+    "addedAt": "2026-08-16T15:09:41.923Z"
+  },
+  {
+    "kind": "offering",
+    "role": "survivor",
+    "category": "Bonus Bloodpoints",
+    "icon": "/loadout/offering/fragrant-bog-laurel.webp",
+    "slug": "fragrant-bog-laurel",
+    "name": {
+      "en": "Fragrant Bog Laurel",
+      "ru": "Душистый вереск"
+    },
+    "description": "Grants +100 % bonus Bloodpoints in the Objectives Scoring Category. The bonus Bloodpoints are applied after exiting the Trial. \"A beautiful purple flower that grows in the midst of the tainted swamp.Releases a strong tea-like aroma.\"",
+    "descriptionRuRaw": "Даёт 100% бонусных очков крови в категории \"Цели\". Личное подношение.",
+    "addedAt": "2026-08-16T15:09:41.923Z"
+  },
+  {
+    "kind": "offering",
+    "role": "survivor",
+    "category": "Bonus Bloodpoints",
+    "icon": "/loadout/offering/fresh-crispleaf-amaranth.webp",
+    "slug": "fresh-crispleaf-amaranth",
+    "name": {
+      "en": "Fresh Crispleaf Amaranth",
+      "ru": "Свежая ширица"
+    },
+    "description": "Grants +75 % bonus Bloodpoints in the Survival Scoring Category. The bonus Bloodpoints are applied after exiting the Trial. \"The pale green leaves are highlighted with peculiar crimson veins.Amaranth is said to be everlasting.\"",
+    "descriptionRuRaw": "Даёт 75% бонусных очков крови в категории \"Выживание\". Личное подношение.",
+    "addedAt": "2026-08-16T15:09:41.923Z"
+  },
+  {
+    "kind": "offering",
+    "role": "survivor",
+    "category": "Bonus Bloodpoints",
+    "icon": "/loadout/offering/fragrant-crispleaf-amaranth.webp",
+    "slug": "fragrant-crispleaf-amaranth",
+    "name": {
+      "en": "Fragrant Crispleaf Amaranth",
+      "ru": "Душистый лист ширицы"
+    },
+    "description": "Grants +100 % bonus Bloodpoints in the Survival Scoring Category. The bonus Bloodpoints are applied after exiting the Trial. \"The pale green leaves are highlighted with peculiar crimson veins.Amaranth is said to be everlasting.\"",
+    "descriptionRuRaw": "Даёт 100% бонусных очков крови в категории \"Выживание\". Личное подношение.",
+    "addedAt": "2026-08-16T15:09:41.923Z"
+  },
+  {
+    "kind": "offering",
     "role": "killer",
     "category": "Bonus Bloodpoints",
     "icon": "/loadout/offering/devout-tanager-wreath.webp",
@@ -211,34 +267,6 @@
   },
   {
     "kind": "offering",
-    "role": "survivor",
-    "category": "Bonus Bloodpoints",
-    "icon": "/loadout/offering/fresh-bog-laurel.webp",
-    "slug": "fresh-bog-laurel",
-    "name": {
-      "en": "Fresh Bog Laurel",
-      "ru": "Свежий вереск"
-    },
-    "description": "Grants +75 % bonus Bloodpoints in the Objectives Scoring Category. The bonus Bloodpoints are applied after exiting the Trial. \"A beautiful purple flower that grows in the midst of the tainted swamp.Releases a mild tea-like aroma.\"",
-    "descriptionRuRaw": "Даёт 75% бонусных очков крови в категории \"Цели\". Личное подношение.",
-    "addedAt": "2026-08-16T15:09:41.923Z"
-  },
-  {
-    "kind": "offering",
-    "role": "survivor",
-    "category": "Bonus Bloodpoints",
-    "icon": "/loadout/offering/fragrant-bog-laurel.webp",
-    "slug": "fragrant-bog-laurel",
-    "name": {
-      "en": "Fragrant Bog Laurel",
-      "ru": "Душистый вереск"
-    },
-    "description": "Grants +100 % bonus Bloodpoints in the Objectives Scoring Category. The bonus Bloodpoints are applied after exiting the Trial. \"A beautiful purple flower that grows in the midst of the tainted swamp.Releases a strong tea-like aroma.\"",
-    "descriptionRuRaw": "Даёт 100% бонусных очков крови в категории \"Цели\". Личное подношение.",
-    "addedAt": "2026-08-16T15:09:41.923Z"
-  },
-  {
-    "kind": "offering",
     "role": "killer",
     "category": "Bonus Bloodpoints",
     "icon": "/loadout/offering/devout-shrike-wreath.webp",
@@ -268,34 +296,6 @@
   {
     "kind": "offering",
     "role": "survivor",
-    "category": "Bonus Bloodpoints",
-    "icon": "/loadout/offering/fresh-crispleaf-amaranth.webp",
-    "slug": "fresh-crispleaf-amaranth",
-    "name": {
-      "en": "Fresh Crispleaf Amaranth",
-      "ru": "Свежая ширица"
-    },
-    "description": "Grants +75 % bonus Bloodpoints in the Survival Scoring Category. The bonus Bloodpoints are applied after exiting the Trial. \"The pale green leaves are highlighted with peculiar crimson veins.Amaranth is said to be everlasting.\"",
-    "descriptionRuRaw": "Даёт 75% бонусных очков крови в категории \"Выживание\". Личное подношение.",
-    "addedAt": "2026-08-16T15:09:41.923Z"
-  },
-  {
-    "kind": "offering",
-    "role": "survivor",
-    "category": "Bonus Bloodpoints",
-    "icon": "/loadout/offering/fragrant-crispleaf-amaranth.webp",
-    "slug": "fragrant-crispleaf-amaranth",
-    "name": {
-      "en": "Fragrant Crispleaf Amaranth",
-      "ru": "Душистый лист ширицы"
-    },
-    "description": "Grants +100 % bonus Bloodpoints in the Survival Scoring Category. The bonus Bloodpoints are applied after exiting the Trial. \"The pale green leaves are highlighted with peculiar crimson veins.Amaranth is said to be everlasting.\"",
-    "descriptionRuRaw": "Даёт 100% бонусных очков крови в категории \"Выживание\". Личное подношение.",
-    "addedAt": "2026-08-16T15:09:41.923Z"
-  },
-  {
-    "kind": "offering",
-    "role": "survivor",
     "category": "Luck",
     "icon": "/loadout/offering/cream-chalk-pouch.webp",
     "slug": "cream-chalk-pouch",
@@ -303,7 +303,7 @@
       "en": "Cream Chalk Pouch",
       "ru": "Мешок с мелом кремового цвета"
     },
-    "description": "Increases your personal chance of succeeding a Self-Unhook by +2 %. \"A small cotton pouch half-filled with a cream coloured chalky powder of unknown origin.Releases a faint herbal aroma. Some believe it brings good fortune.\"",
+    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Unlocks the ability to attempt Self-Unhooks during the first Hook Stage: Increases your personal Luck at succeeding them by +2 %. \"A small cotton pouch half-filled with a cream coloured chalky powder of unknown origin.Releases a faint herbal aroma. Some believe it brings good fortune.\"",
     "descriptionRuRaw": "Дает возможность попытаться слезть с крюка. Повышает вашу удачу на 2%. Тайна.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
@@ -317,7 +317,7 @@
       "en": "Ivory Chalk Pouch",
       "ru": "Мешок с мелом из слоновой кости"
     },
-    "description": "Increases your personal chance of succeeding a Self-Unhook by +3 %. \"A small leather pouch displaying a straight white line hand-sewn on one of its sides.The bag is filled with an ivory chalky powder that shines under the moonlight.Some believe it brings good fortune.\"",
+    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Unlocks the ability to attempt Self-Unhooks during the first Hook Stage: Increases your personal Luck at succeeding them by +3 %. \"A small leather pouch displaying a straight white line hand-sewn on one of its sides.The bag is filled with an ivory chalky powder that shines under the moonlight.Some believe it brings good fortune.\"",
     "descriptionRuRaw": "Дает возможность попытаться слезть с крюка. Повышает вашу удачу на 3%. Тайна.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
@@ -331,7 +331,7 @@
       "en": "Black Salt Statuette",
       "ru": "Статуэтка из черной соли"
     },
-    "description": "Increases every Survivor's chance of succeeding a Self-Unhook by +2 %. \"A friable miniature statuette made of black salt representing a woman in a kneeling position offering a gift.Some believe it brings good fortune.\"",
+    "description": "Unlocks the ability to attempt Self-Unhooks during the first Hook Stage for all Survivors: Increases the Luck at succeeding them by +2 % for all Survivors. \"A friable miniature statuette made of black salt representing a woman in a kneeling position offering a gift.Some believe it brings good fortune.\"",
     "descriptionRuRaw": "Все выжившие получают возможность попытаться слезть с крюка. Повышает удачу всех выживших на 2%.",
     "addedAt": "2026-08-16T15:09:41.923Z"
   },
@@ -345,7 +345,7 @@
       "en": "Vigo's Jar of Salty Lips",
       "ru": "Банка Виго с засоленными губами"
     },
-    "description": "Increases every Survivor's chance of succeeding a Self-Unhook by +3 %. \"A tightly sealed glass jar containing torn human lips floating in a murky brine.Some believe it brings good fortune.\"",
+    "description": "Unlocks the ability to attempt Self-Unhooks during the first Hook Stage for all Survivors: Increases the Luck at succeeding them by +3 % for all Survivors. \"A tightly sealed glass jar containing torn human lips floating in a murky brine.Some believe it brings good fortune.\"",
     "descriptionRuRaw": "Все выжившие получают возможность попытаться слезть с крюка. Увеличивает удачу всех выживших на 3%.",
     "addedAt": "2026-08-16T15:09:41.923Z"
   },
@@ -359,7 +359,7 @@
       "en": "Torn Blueprint",
       "ru": "Порванный чертеж"
     },
-    "description": "Grants the following effects at the start of the Trial: Increases the likelihood of the Basement spawning in the Landmark Building by +100 %, if it is available. The Auras of the Basement Hooks are revealed to you for 20 seconds. \"Though brittle and torn, the design is mostly legible.\"",
+    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Grants the following effects at the start of the Trial: Increases the likelihood of the Basement spawning in the Landmark Building by +100 %, if it is available. The Auras of the Basement Hooks are revealed to you for 20 seconds. \"Though brittle and torn, the design is mostly legible.\"",
     "descriptionRuRaw": "Показывает вам ауру крюков в подвале на 20 сек. в начале матча. Чрезвычайно повышает шанс появления подвала в основном здании, если оно есть на карте. Тайна.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
@@ -373,7 +373,7 @@
       "en": "Tarnished Coin",
       "ru": "Потускневшая монета"
     },
-    "description": "Calls upon The Entity for the following effect: Increases the number of Chests in the environment by +1. \"A round piece of metal which has lost all sheen.\"",
+    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Increases the number of Chests in the environment by +1. \"A round piece of metal which has lost all sheen.\"",
     "descriptionRuRaw": "Призывает Сущность создать на 1 сундук больше. Тайна.",
     "addedAt": "2026-08-16T15:09:41.923Z"
   },
@@ -387,7 +387,7 @@
       "en": "Cut Coin",
       "ru": "Разрезанная монета"
     },
-    "description": "Calls upon The Entity for the following effect: Reduces the number of Chests in the environment by -2. \"Two halves of a thick metallic coin.\"",
+    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Reduces the number of Chests in the environment by -2. \"Two halves of a thick metallic coin.\"",
     "descriptionRuRaw": "Призывает Сущность предотвратить появление 2 сундуков. Тайна.",
     "addedAt": "2026-08-16T15:09:41.923Z"
   },
@@ -401,7 +401,7 @@
       "en": "Shiny Coin",
       "ru": "Блестящая монета"
     },
-    "description": "Calls upon The Entity for the following effect: Increases the number of Chests in the environment by +2. \"A clean and polished piece of gold.\"",
+    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Increases the number of Chests in the environment by +2. \"A clean and polished piece of gold.\"",
     "descriptionRuRaw": "Призывает Сущность создать еще 2 сундука. Тайна.",
     "addedAt": "2026-08-16T15:09:41.923Z"
   },
@@ -415,7 +415,7 @@
       "en": "Faint Reagent",
       "ru": "Слабый реагент"
     },
-    "description": "Calls upon The Entity for the following effect: Increases the thickness of the Dark Mist by +25 %. \"Paralysed, I stand in the cold as death lingers.\"",
+    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Increases the thickness of the Dark Mist by +25 %. \"Paralysed, I stand in the cold as death lingers.\"",
     "descriptionRuRaw": "Слегка сгущает Темный туман. Тайна.",
     "addedAt": "2026-08-16T15:09:41.923Z"
   },
@@ -429,7 +429,7 @@
       "en": "Hazy Reagent",
       "ru": "Туманный реагент"
     },
-    "description": "Calls upon The Entity for the following effect: Increases the thickness of the Dark Mist by +50 %. \"The Mist is alluring, hypnotising.I love it and fear it at the same time.\" — Donna's Sketchbook",
+    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Increases the thickness of the Dark Mist by +50 %. \"The Mist is alluring, hypnotising.I love it and fear it at the same time.\" — Donna's Sketchbook",
     "descriptionRuRaw": "Умеренно сгущает Темный туман. Тайна.",
     "addedAt": "2026-08-16T15:09:41.923Z"
   },
@@ -443,7 +443,7 @@
       "en": "Murky Reagent",
       "ru": "Мутный реагент"
     },
-    "description": "Calls upon The Entity for the following effect: Increases the thickness of the Dark Mist by +75 %. \"The Mist seems to protect us from the beast, but it is a poison, a cancer, filling us with darkness and insanity.\" — Unknown, Notebook",
+    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Increases the thickness of the Dark Mist by +75 %. \"The Mist seems to protect us from the beast, but it is a poison, a cancer, filling us with darkness and insanity.\" — Unknown, Notebook",
     "descriptionRuRaw": "Сильно сгущает Темный туман. Тайна.",
     "addedAt": "2026-08-16T15:09:41.923Z"
   },
@@ -457,7 +457,7 @@
       "en": "Vigo's Blueprint",
       "ru": "Чертеж Виго"
     },
-    "description": "Grants the following effect at the start of the Trial: Increases the likelihood of the Hatch spawning by the Landmark Building by +100 %, if it is available. \"A clever design that has the letter 'V' etched on the bottom.\"",
+    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Grants the following effect at the start of the Trial: Increases the likelihood of the Hatch spawning by the Landmark Building by +100 %, if it is available. \"A clever design that has the letter 'V' etched on the bottom.\"",
     "descriptionRuRaw": "Чрезвычайно повышает шанс появления люка в основном здании, если оно есть на карте. Тайна.",
     "addedAt": "2026-08-16T15:09:41.923Z"
   },
@@ -471,7 +471,7 @@
       "en": "Rotten Oak",
       "ru": "Гнилой дуб"
     },
-    "description": "Calls upon The Entity for the following effect: Reduces the minimum distance between Spawn locations for Hooks by -2.5 metres. \"A decomposing piece of oak in which strange markings have been etched.\"",
+    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Reduces the minimum distance between Spawn locations for Hooks by -2.5 metres. \"A decomposing piece of oak in which strange markings have been etched.\"",
     "descriptionRuRaw": "Призывает Сущность умеренно уменьшить расстояние между крюками для жертвоприношений. Тайна.",
     "addedAt": "2026-08-16T15:09:41.923Z"
   },
@@ -485,7 +485,7 @@
       "en": "Petrified Oak",
       "ru": "Окаменевший дуб"
     },
-    "description": "Calls upon The Entity for the following effect: Increases the minimum distance between Spawn locations for Hooks by +1 metre. \"A deteriorating piece of petrified wood.\"",
+    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Increases the minimum distance between Spawn locations for Hooks by +1 metre. \"A deteriorating piece of petrified wood.\"",
     "descriptionRuRaw": "Успокаивает Сущность и слегка увеличивает расстояние между крюками для жертвоприношений. Тайна.",
     "addedAt": "2026-08-16T15:09:41.923Z"
   },
@@ -499,23 +499,9 @@
       "en": "Putrid Oak",
       "ru": "Разложившийся дуб"
     },
-    "description": "Calls upon The Entity for the following effect: Reduces the minimum distance between Spawn locations for Hooks by -3.5 metres. \"A ruined piece of oak oozing with a black putrescent liquid.\"",
+    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Reduces the minimum distance between Spawn locations for Hooks by -3.5 metres. \"A ruined piece of oak oozing with a black putrescent liquid.\"",
     "descriptionRuRaw": "Призывает Сущность значительно уменьшить расстояние между крюками для жертвоприношений. Тайна.",
     "addedAt": "2026-08-16T15:09:41.923Z"
-  },
-  {
-    "kind": "offering",
-    "role": "killer",
-    "category": "Memento Mori",
-    "icon": "/loadout/offering/ivory-memento-mori.webp",
-    "slug": "ivory-memento-mori",
-    "name": {
-      "en": "Ivory Memento Mori",
-      "ru": "Костяное Memento Mori"
-    },
-    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Grants the ability to kill one Survivor with 2 Hook Stages once they are in the Dying State. \"Grant me the favour of killing one.\"",
-    "descriptionRuRaw": "Дарует возможность убить одного из выживших, которого вы перед этим повесили на крюк, и который достиг на нем второй стадии, в следующем матче. Секретное.",
-    "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
     "kind": "offering",
@@ -535,140 +521,29 @@
     "kind": "offering",
     "role": "both",
     "category": "Realm Selection",
-    "icon": "/loadout/offering/azarov-s-key.webp",
-    "slug": "azarov-s-key",
-    "name": {
-      "en": "Azarov's Key",
-      "ru": "Ключ Азарова"
-    },
-    "description": "Increases the likelihood of being sent to a Map in the Autohaven Wreckers Realm. Modifies the Realm Selector Logic by a value of 9999. \"A broken key pertaining to a vehicle of unknown brand.A key-chain attached to it identifies the owner as a certain 'A. Azarov'\"",
-    "descriptionRuRaw": "Чрезвычайно увеличивает шансы отправиться на карту \"Свалка Автохевен\" после сожжения. Тайна. Эффект не суммируется.",
-    "addedAt": "2026-08-16T07:16:30.038Z"
-  },
-  {
-    "kind": "offering",
-    "role": "both",
-    "category": "Realm Selection",
-    "icon": "/loadout/offering/grandma-s-cookbook.webp",
-    "slug": "grandma-s-cookbook",
-    "name": {
-      "en": "Grandma's Cookbook",
-      "ru": "Grandma's Cookbook"
-    },
-    "description": "Increases the likelihood of being sent to a Map in the Backwater Swamp Realm. Modifies the Realm Selector Logic by a value of 9999. \"A leather-bound book containing horrible human meat recipes such as the granny-slapping good chilli.\"",
-    "addedAt": "2026-08-16T15:09:41.923Z"
-  },
-  {
-    "kind": "offering",
-    "role": "both",
-    "category": "Realm Selection",
-    "icon": "/loadout/offering/heart-locket.webp",
-    "slug": "heart-locket",
-    "name": {
-      "en": "Heart Locket",
-      "ru": "Медальон в форме сердца"
-    },
-    "description": "Increases the likelihood of being sent to a Map in the Coldwind Farm Realm. Modifies the Realm Selector Logic by a value of 9999. \"A silver heart locket necklace.The simple interior is engraved with the following: 'E+M'.\"",
-    "descriptionRuRaw": "Чрезвычайно увеличивает шансы отправиться на карту \"Ферма Колдвинд\" после сожжения. Тайна. Эффект не суммируется.",
-    "addedAt": "2026-08-16T15:09:41.923Z"
-  },
-  {
-    "kind": "offering",
-    "role": "both",
-    "category": "Realm Selection",
-    "icon": "/loadout/offering/charred-wedding-photograph.webp",
-    "slug": "charred-wedding-photograph",
-    "name": {
-      "en": "Charred Wedding Photograph",
-      "ru": "Обугленная свадебная фотография"
-    },
-    "description": "Increases the likelihood of being sent to a Map in the Crotus Prenn Asylum Realm. Modifies the Realm Selector Logic by a value of 9999. \"A burned portrait of a couple on their wedding day, the faces are completely charred and unidentifiable.\"",
-    "descriptionRuRaw": "Чрезвычайно увеличивает шансы отправиться в психлечебницу Кротус Пренн после сожжения. Тайна. Эффект не суммируется.",
-    "addedAt": "2026-08-16T15:09:41.923Z"
-  },
-  {
-    "kind": "offering",
-    "role": "both",
-    "category": "Realm Selection",
     "icon": "/loadout/offering/alien-flora.webp",
     "slug": "alien-flora",
     "name": {
       "en": "Alien Flora",
       "ru": "Инопланетная флора"
     },
-    "description": "Increases the likelihood of being sent to the Toba Landing Map in the Dvarka Deepwood Realm. Modifies the Realm Selector Logic by a value of 9999. \"Our arrival will change the face of this planet as we know it.\" — Sarah, Science Officer",
+    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Increases the chances to be sent to the Toba Landing Map in the Dvarka Deepwood Realm to 20 %. \"Our arrival will change the face of this planet as we know it.\" — Sarah, Science Officer",
     "descriptionRuRaw": "При сожжении чрезвычайно увеличивает вероятность попасть на карту \"Площадка Тоба\". Тайна. Эффект не суммируется.",
     "addedAt": "2026-08-16T15:09:41.923Z"
   },
   {
     "kind": "offering",
-    "role": "both",
-    "category": "Realm Selection",
-    "icon": "/loadout/offering/strode-realty-key.webp",
-    "slug": "strode-realty-key",
-    "name": {
-      "en": "Strode Realty Key",
-      "ru": "Ключ риелторского агентства Строуд"
-    },
-    "description": "Increases the likelihood of being sent to a Map in the Haddonfield Realm. Modifies the Realm Selector Logic by a value of 9999. \"A house key, mundane in appearance.A cardboard key-tag attached to it reads 'Strode Real Estate', followed by a handwritten address:'45 Lampkin Lane'.\"",
-    "descriptionRuRaw": "Чрезвычайно увеличивает шансы отправиться на карту \"Хэддонфилд\" после сожжения. Тайна. Эффект не суммируется.",
-    "addedAt": "2026-08-16T15:09:41.923Z"
-  },
-  {
-    "kind": "offering",
-    "role": "both",
-    "category": "Realm Selection",
-    "icon": "/loadout/offering/shattered-glasses.webp",
-    "slug": "shattered-glasses",
-    "name": {
-      "en": "Shattered Glasses",
-      "ru": "Сломанные очки"
-    },
-    "description": "Increases the likelihood of being sent to a Map in the Léry's Memorial Institute Realm. Modifies the Realm Selector Logic by a value of 9999. \"Bent reading glasses.Speckles of dried blood can be seen on the shattered lenses.\"",
-    "descriptionRuRaw": "Чрезвычайно увеличивает шансы отправиться на карту \"Мемориальный институт Лэри\" после сожжения. Тайна. Эффект не суммируется.",
-    "addedAt": "2026-08-16T15:09:41.923Z"
-  },
-  {
-    "kind": "offering",
-    "role": "both",
-    "category": "Realm Selection",
-    "icon": "/loadout/offering/macmillan-s-phalanx-bone.webp",
-    "slug": "macmillan-s-phalanx-bone",
-    "name": {
-      "en": "MacMillan's Phalanx Bone",
-      "ru": "Кость фаланги МакМиллана"
-    },
-    "description": "Increases the likelihood of being sent to a Map in the The MacMillan Estate Realm. Modifies the Realm Selector Logic by a value of 9999. \"MacMillan's skeletal remains were found in the basement of the mine's storehouse.His leg bones shattered into pieces and a mining hammer lying in his lap.\"",
-    "descriptionRuRaw": "Чрезвычайно увеличивает шансы отправиться на карту \"Поместье МакМиллан\" после сожжения. Тайна. Эффект не суммируется.",
-    "addedAt": "2026-08-16T15:09:41.923Z"
-  },
-  {
-    "kind": "offering",
-    "role": "both",
-    "category": "Realm Selection",
-    "icon": "/loadout/offering/the-last-mask.webp",
-    "slug": "the-last-mask",
-    "name": {
-      "en": "The Last Mask",
-      "ru": "Последняя маска"
-    },
-    "description": "Increases the likelihood of being sent to a Map in the Red Forest Realm. Modifies the Realm Selector Logic by a value of 9999. \"A beautifully crafted tiger mask that would fit snug on a child's face.A faded note in the Cyrillic alphabet can be found scripted on the back.\"",
-    "descriptionRuRaw": "Чрезвычайно увеличивает шансы отправиться на карту \"Красный лес\" после сожжения. Тайна. Эффект не суммируется.",
-    "addedAt": "2026-08-16T15:09:41.923Z"
-  },
-  {
-    "kind": "offering",
-    "role": "survivor",
+    "role": "killer",
     "category": "Shrouds",
-    "icon": "/loadout/offering/shroud-of-union.webp",
-    "slug": "shroud-of-union",
+    "icon": "/loadout/offering/shroud-of-vanishing.webp",
+    "slug": "shroud-of-vanishing",
     "name": {
-      "en": "Shroud of Union",
-      "ru": "Пелена союза"
+      "en": "Shroud of Vanishing",
+      "ru": "Покров исчезновения"
     },
-    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Causes all Survivors to spawn together in pairs in two different locations. \"A knotted piece of fabric.\"",
-    "descriptionRuRaw": "Матч начинается рядом с союзником. Секретное подношение.",
-    "addedAt": "2026-08-16T07:16:30.038Z"
+    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Nullifies any Offerings that would change the starting locations of Survivors. \"In an instant, their power was lost.\"",
+    "descriptionRuRaw": "Призывает сущность отменить все подношения, которые меняют места появления выживших. Тайна.",
+    "addedAt": "2026-08-19T08:56:36.678Z"
   },
   {
     "kind": "offering",
@@ -688,15 +563,15 @@
     "kind": "offering",
     "role": "survivor",
     "category": "Shrouds",
-    "icon": "/loadout/offering/shroud-of-binding.webp",
-    "slug": "shroud-of-binding",
+    "icon": "/loadout/offering/shroud-of-separation.webp",
+    "slug": "shroud-of-separation",
     "name": {
-      "en": "Shroud of Binding",
-      "ru": "Пелена единства"
+      "en": "Shroud of Separation",
+      "ru": "Пелена разлуки"
     },
-    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Causes all Survivors to spawn together in the same location. \"A square and washed out piece of fabric with small knots on each end.\"",
-    "descriptionRuRaw": "Все выжившие начинают матч вместе. Секретное подношение.",
-    "addedAt": "2026-08-16T07:16:30.038Z"
+    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: All Survivors start the Trial separated from one another. \"A square and washed out piece of fabric with small knots on each end.\"",
+    "descriptionRuRaw": "Все выжившие начинают матч порознь. Секретное подношение.",
+    "addedAt": "2026-08-19T08:56:36.678Z"
   },
   {
     "kind": "offering",
@@ -708,7 +583,7 @@
       "en": "Black Ward",
       "ru": "Черный защитник"
     },
-    "description": "Calls upon The Entity for the following effect: Causes your Add-ons to not be consumed after ending the Trial. \"Hear my voice, spare my ways, protect me from the void.\"",
+    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Causes your Add-ons to not be consumed after ending the Trial. \"Hear my voice, spare my ways, protect me from the void.\"",
     "descriptionRuRaw": "Сжигание данного подношения дает Вам защиту от потери улучшений по окончании матча.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
@@ -722,7 +597,7 @@
       "en": "White Ward",
       "ru": "Белый защитник"
     },
-    "description": "Calls upon The Entity for the following effect: Causes your held Item to be protected from loss upon death. Causes any attached Add-ons to not be consumed upon death or escaping the Trial. \"Keep me from evil, defend me, and pass away.\"",
+    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Causes your held Item to be protected from loss upon death. Causes any attached Add-ons to not be consumed upon death or escaping the Trial. \"Keep me from evil, defend me, and pass away.\"",
     "descriptionRuRaw": "Сжигание этого подношения дает вам защиту от потери your item and[1] улучшений.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   }

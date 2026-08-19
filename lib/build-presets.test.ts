@@ -67,6 +67,17 @@ test("every preset is a full build of distinct perks", () => {
   }
 });
 
+test("no preset still names a perk the game has renamed", () => {
+  // getPerkBySlug follows renames, so a stale slug here would keep working
+  // and stay invisible — while quietly showing the perk under a name the
+  // set was not written for. Decisive Strike became Will to Live this way.
+  const aliases = read<{ aliases?: Record<string, string> }>("perk-slug-aliases.json").aliases ?? {};
+  const stale = presets.flatMap((preset) =>
+    preset.perks.filter((slug) => aliases[slug]).map((slug) => `${preset.id}: ${slug} -> ${aliases[slug]}`),
+  );
+  assert.deepEqual(stale, [], "a preset names a retired slug");
+});
+
 test("preset ids are unique", () => {
   const ids = presets.map((preset) => preset.id);
   assert.deepEqual(

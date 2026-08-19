@@ -1,6 +1,7 @@
 import perksData from "@/data/perks.json";
 import metaData from "@/data/meta.json";
 import charactersData from "@/data/characters.json";
+import slugAliasData from "@/data/perk-slug-aliases.json";
 import type { Perk, PerkRole, PerksMeta } from "./types";
 import { createSeededRandom, shuffle } from "./seeded-random";
 
@@ -14,14 +15,32 @@ export function getCharacterPortrait(character: string): string | undefined {
 
 const perksBySlug = new Map(perks.map((perk) => [perk.slug, perk]));
 
+/** Retired slug -> current one, for perks the game has renamed. See
+ *  data/perk-slug-aliases.json, which the scraper maintains. */
+const slugAliases: Record<string, string> = (
+  slugAliasData as { aliases?: Record<string, string> }
+).aliases ?? {};
+
 const NEW_WINDOW_MS = 30 * 24 * 60 * 60 * 1000;
 
 export function getPerksByRole(role: PerkRole): Perk[] {
   return perks.filter((perk) => perk.role === role);
 }
 
+/** Looks a perk up by slug, following a rename if the game has since given
+ *  it a different name.
+ *
+ *  The fallback exists because slugs are durable identifiers here: they sit
+ *  in share links (via perk IDs), in the saved pool and favourites in
+ *  localStorage, and in build history. When a licence lapses the game
+ *  renames the perk — Decisive Strike is now Will to Live — and without
+ *  this every link and saved pool naming the old one would silently lose
+ *  that perk. */
 export function getPerkBySlug(slug: string): Perk | undefined {
-  return perksBySlug.get(slug);
+  const perk = perksBySlug.get(slug);
+  if (perk) return perk;
+  const renamed = slugAliases[slug];
+  return renamed ? perksBySlug.get(renamed) : undefined;
 }
 
 /** Every character with at least one teachable perk for `role` — ".All"

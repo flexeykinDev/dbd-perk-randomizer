@@ -1,0 +1,13 @@
+{
+  "_comment": "Retired perk slug -> its current one, written by scripts/scrape-perks.ts when the wiki reports a rename. Keeps share links and saved pools working across a rename: lib/perks.ts's getPerkBySlug falls back through this. Entries are kept forever, since the links they exist for do not expire.",
+  "aliases": {
+    "deadlock": "no-holds-barred",
+    "decisive-strike": "will-to-live",
+    "dying-light": "cull-the-weak",
+    "hex-plaything": "hex-fortune-s-fool",
+    "object-of-obsession": "bound-by-obsession",
+    "play-with-your-food": "see-how-they-run",
+    "scourge-hook-gift-of-pain": "scourge-hook-weeping-wounds",
+    "sole-survivor": "down-to-the-last"
+  }
+}

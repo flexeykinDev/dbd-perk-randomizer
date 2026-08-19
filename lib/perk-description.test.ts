@@ -60,6 +60,17 @@ const bySlug = (slug: string): Entry => {
 
 const LANGS: Lang[] = ["en", "ru"];
 
+/** The contents of each `**…**` span, using the fact that splitting on the
+ *  marker puts highlighted runs at odd indices and plain text at even ones.
+ *  An odd total count means a marker was left unclosed. */
+function highlightSpans(text: string): { spans: string[]; balanced: boolean } {
+  const parts = text.split("**");
+  return {
+    spans: parts.filter((_, i) => i % 2 === 1),
+    balanced: parts.length % 2 === 1,
+  };
+}
+
 /* ------------------------------------------------------------------ */
 /* Behaviour, pinned to real entries                                    */
 /* ------------------------------------------------------------------ */
@@ -72,14 +83,22 @@ test("the dataset the fixtures below rely on is actually loaded", () => {
 });
 
 test("an attributed lore quote is split off and never left in the body", () => {
-  const view = getPerkDescription(bySlug("ace-in-the-hole"), "en");
-  assert.ok(view.quote, "expected Ace in the Hole's quote to be extracted");
-  assert.match(view.quote!, /— Ace Visconti$/);
-  assert.ok(
-    !view.full.includes("Ace Visconti"),
-    "the speaker attribution leaked back into the full text",
-  );
-  assert.ok(!view.full.includes('"'), `a raw quote mark survived: ${view.full}`);
+  // Picked from the data rather than named, because which perk carries an
+  // attributed quote is the wiki's choice, not ours: Ace in the Hole was
+  // this fixture until wiki.gg turned out to word it without a speaker.
+  // The property is what matters, so the example is found, not pinned.
+  const withSpeaker = perks.filter((p) => /"\s*[-—]\s*\S+/.test(p.description));
+  assert.ok(withSpeaker.length > 0, "no perk carries an attributed quote any more");
+
+  for (const perk of withSpeaker.slice(0, 25)) {
+    const view = getPerkDescription(perk, "en");
+    assert.ok(view.quote, `${perk.slug}: expected a quote to be extracted`);
+    const speaker = view.quote!.split("—").pop()!.trim();
+    assert.ok(
+      !view.full.includes(speaker),
+      `${perk.slug}: the speaker attribution leaked back into the full text`,
+    );
+  }
 });
 
 test("quotes use the typographic marks of the language being rendered", () => {
@@ -122,11 +141,30 @@ test("a secret offering keeps its one real fact as the first bullet", () => {
 });
 
 test("tiered and decimal values highlight as one span, not several", () => {
-  const view = getPerkDescription(bySlug("ace-in-the-hole"), "en");
-  const joined = view.core.join(" ");
-  // "10/25/50 %" is one tiered value; splitting it would produce adjacent
-  // bold runs with bare digits stranded between them.
-  assert.match(joined, /\*\*10\/25\/50\s?%\*\*/);
+  // A tiered value like "50/75/100 %" must come out as a single bold run.
+  // Splitting it strands bare digits between adjacent bold spans, which is
+  // what happens the moment the regex stops covering the whole construct.
+  // Found in the data rather than named for the same reason as above — the
+  // wiki both rewords perks and rebalances their numbers.
+  // Just the numeric run — the highlighter deliberately extends the span
+  // over the trailing unit too ("**20/25/30 seconds**"), so the assertion
+  // is that the run sits *inside* one span, not that it is the whole span.
+  const tiered = /\d+(?:\.\d+)?(?:\/\d+(?:\.\d+)?)+/;
+  const withTiers = everything.filter((e) => tiered.test(e.description));
+  assert.ok(withTiers.length > 20, `only ${withTiers.length} entries carry a tiered value`);
+
+  const failures: string[] = [];
+  for (const entry of withTiers) {
+    const match = tiered.exec(entry.description);
+    if (!match) continue;
+    // A split would render "**20**/**25**/**30**", where no single span
+    // contains the run — which is exactly what this catches.
+    const spans = highlightSpans(getPerkDescription(entry, "en").full).spans;
+    if (!spans.some((span) => span.includes(match[0]))) {
+      failures.push(`${entry.slug}: ${JSON.stringify(match[0])}`);
+    }
+  }
+  assert.deepEqual(failures.slice(0, 10), [], `${failures.length} tiered values were split`);
 });
 
 test("a lore intro is dropped from Core but kept in the full text", () => {
@@ -271,16 +309,6 @@ forEveryEntry("the split never leaves a stray quote mark behind", (view, entry, 
   return stray === undefined ? null : `unbalanced quote mark in ${JSON.stringify(stray)}`;
 });
 
-/** The contents of each `**…**` span, using the fact that splitting on the
- *  marker puts highlighted runs at odd indices and plain text at even ones.
- *  An odd total count means a marker was left unclosed. */
-function highlightSpans(text: string): { spans: string[]; balanced: boolean } {
-  const parts = text.split("**");
-  return {
-    spans: parts.filter((_, i) => i % 2 === 1),
-    balanced: parts.length % 2 === 1,
-  };
-}
 
 forEveryEntry("highlight markers are balanced", (view) => {
   const bad = [view.full, ...view.core].find((text) => !highlightSpans(text).balanced);

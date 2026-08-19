@@ -1,11 +1,11 @@
 {
-  "scrapedAt": "2026-08-17T20:14:21.028Z",
+  "scrapedAt": "2026-08-19T09:05:20.003Z",
   "sourceUrls": {
-    "items": "https://deadbydaylight.fandom.com/wiki/Items",
-    "addons": "https://deadbydaylight.fandom.com/wiki/Add-ons",
-    "offerings": "https://deadbydaylight.fandom.com/wiki/Offerings"
+    "items": "https://deadbydaylight.wiki.gg/wiki/Items",
+    "addons": "https://deadbydaylight.wiki.gg/wiki/Add-ons",
+    "offerings": "https://deadbydaylight.wiki.gg/wiki/Offerings"
   },
-  "itemCount": 20,
-  "addonCount": 847,
-  "offeringCount": 52
+  "itemCount": 24,
+  "addonCount": 907,
+  "offeringCount": 43
 }

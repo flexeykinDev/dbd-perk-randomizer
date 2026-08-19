@@ -39,7 +39,7 @@
         "en": "Four separate ways to undo one mistake. The classic answer to being caught.",
         "ru": "Четыре разных способа отыграть одну ошибку. Классический ответ на «поймали»."
       },
-      "perks": ["dead-hard", "decisive-strike", "unbreakable", "adrenaline"]
+      "perks": ["dead-hard", "will-to-live", "unbreakable", "adrenaline"]
     },
     {
       "id": "gen-regression",

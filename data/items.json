@@ -1,7 +1,7 @@
 [
   {
     "kind": "item",
-    "itemType": "flashlight",
+    "itemType": "firecracker",
     "icon": "/loadout/item/flashlight.webp",
     "slug": "flashlight",
     "name": {
@@ -14,7 +14,7 @@
   },
   {
     "kind": "item",
-    "itemType": "flashlight",
+    "itemType": "firecracker",
     "icon": "/loadout/item/sport-flashlight.webp",
     "slug": "sport-flashlight",
     "name": {
@@ -27,7 +27,7 @@
   },
   {
     "kind": "item",
-    "itemType": "flashlight",
+    "itemType": "firecracker",
     "icon": "/loadout/item/utility-flashlight.webp",
     "slug": "utility-flashlight",
     "name": {
@@ -40,6 +40,45 @@
   },
   {
     "kind": "item",
+    "itemType": "flashlight",
+    "icon": "/loadout/item/apprentice-s-fog-vial.webp",
+    "slug": "apprentice-s-fog-vial",
+    "name": {
+      "en": "Apprentice's Fog Vial",
+      "ru": "Флакон подмастерья с туманом"
+    },
+    "description": "\"Made by the hands of a diligent but timid novice.\" Start the Trial with 4 Charges.Press the Use Item button to release a concentrated Fog Cloud: Expands to a maximum size of 8 metres over 2 seconds. Lasts for 8 seconds. Obscures visibility and sounds within its Area of Effect: Has an opacity of 33 %. Suppresses Auras and Scratch Marks. Apprentice's Fog Vial takes 70 seconds to recharge after use.",
+    "descriptionRuRaw": "В радиусе действия уменьшает видимость на 33%. После использования всех зарядов предмет не выбрасывается.",
+    "addedAt": "2026-08-19T08:56:36.678Z"
+  },
+  {
+    "kind": "item",
+    "itemType": "flashlight",
+    "icon": "/loadout/item/artisan-s-fog-vial.webp",
+    "slug": "artisan-s-fog-vial",
+    "name": {
+      "en": "Artisan's Fog Vial",
+      "ru": "Флакон мастерового с туманом"
+    },
+    "description": "\"Crafted by an experienced glazier with a love for her craft.\" Start the Trial with 4 Charges.Press the Use Item button to release a concentrated Fog Cloud: Expands to a maximum size of 8 metres over 1.5 seconds. Lasts for 10 seconds. Obscures visibility and sounds within its Area of Effect: Has an opacity of 33 %. Suppresses Auras and Scratch Marks. Artisan's Fog Vial takes 65 seconds to recharge after use.",
+    "descriptionRuRaw": "В радиусе действия уменьшает видимость на 33%. После использования всех зарядов предмет не выбрасывается.",
+    "addedAt": "2026-08-19T08:56:36.678Z"
+  },
+  {
+    "kind": "item",
+    "itemType": "flashlight",
+    "icon": "/loadout/item/vigo-s-fog-vial.webp",
+    "slug": "vigo-s-fog-vial",
+    "name": {
+      "en": "Vigo's Fog Vial",
+      "ru": "Флакон Виго с туманом"
+    },
+    "description": "\"From the man's own collection. Impeccable. Unparalleled.\" Start the Trial with 4 Charges.Press the Use Item button to release a concentrated Fog Cloud: Expands to a maximum size of 8 metres over 1.2 seconds. Lasts for 12 seconds. Obscures visibility and sounds within its Area of Effect: Has an opacity of 33 %. Suppresses Auras and Scratch Marks. Vigo's Fog Vial takes 60 seconds to recharge after use.",
+    "descriptionRuRaw": "В радиусе действия уменьшает видимость на 33%. После использования всех зарядов предмет не выбрасывается.",
+    "addedAt": "2026-08-19T08:56:36.678Z"
+  },
+  {
+    "kind": "item",
     "itemType": "key",
     "icon": "/loadout/item/broken-key.webp",
     "slug": "broken-key",
@@ -47,7 +86,7 @@
       "en": "Broken Key",
       "ru": "Сломанный ключ"
     },
-    "description": "The bow and shank of a key, vibrating with remnant power.The Broken Key's power cannot be triggered by itself.Various objects can be attached to its jump ring, which channels the Key's power into various effects. Press the Use Item button to trigger the Mind Channel ability for up to 10 seconds. Mind Channel reveals various Auras, depending on the Add-ons the Key is equipped with.",
+    "description": "\"The bow and shank of a key, vibrating with power.\" Start the Trial with 6 Charges.Press and hold the Use Item button to channel the Broken Key: The Auras of other Survivors within 48 metres of your location are revealed to you for 8 seconds. The Broken Key consumes -1 Charge per use of its ability.",
     "descriptionRuRaw": "Сломанный ключ (англ. \"Broken Key\") — обычный предмет для выживших в игре Dead by Daylight, используемый для раскрытия ауры игроков. Головка и трубка ключа, которые прямо-таки дрожат от распирающей энергии. При расходе заряда: Удерживайте кнопку использования предмета, чтобы сделать ауры выживших в радиусе 48м видимыми на 8 сек. Начинает матч с 6 зарядами",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
@@ -60,7 +99,7 @@
       "en": "Dull Key",
       "ru": "Потертый ключ"
     },
-    "description": "A bent and dull Key that once held great power.The Dull Key's power cannot be triggered by itself.Various objects can be attached to its jump ring, which channels the Key's power into various effects. Press the Use Item button to trigger the Mind Channel ability for up to 5 seconds. Mind Channel reveals various Auras, depending on the Add-ons the Key is equipped with. Press the Use Item button while standing over the closed Hatch to open it. This action will consume the Key and is only available if it is not depleted.",
+    "description": "\"A bent and dull key that once held great power.\" Start the Trial with 5 Charges.Press and hold the Use Item button to channel the Dull Key: The Auras of other Survivors within 56 metres of your location are revealed to you for 9 seconds. While standing next to a locked Chest, press the Use Item button to quickly open it: Guarantees an Item of Rare Rarity or higher. The Aura of the Chest is revealed to other Survivors within 42 metres and highlighted in yellow: Grants the ability for 1 other Survivor to Rummage through that Chest once. Guarantees an Item of Rare Rarity or higher. While performing the Rummage action, the Aura of that Survivor is revealed to the Key holder. While standing next to the closed Hatch, press the Use Item button to re-open it: Takes 2.5 seconds to open. The Dull Key consumes -1 Charge per use of any one of its abilities.",
     "descriptionRuRaw": "Потертый ключ (англ. \"Dull Key\") — необычный предмет для выживших в игре Dead by Daylight, используемый для взаимодействия с люком, сундуком или раскрытия ауры игроков. Тусклый гнутый ключ, который когда-то был наделен великой силой. При расходе заряда: Удерживайте кнопку использования предмета, чтобы сделать ауры выживших в радиусе 56м видимыми на 9 сек. Сундуки открываются быстрее. Аура открытого этим ключом сундука видна на расстоянии 42м, и другой выживший может обыскать его один раз. Внутри будут предметы качества не ниже редкого. Отпирается люк. Начинает матч с 5 зарядами",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
@@ -73,35 +112,48 @@
       "en": "Skeleton Key",
       "ru": "Ключ скелета"
     },
-    "description": "A tarnished and crooked Key, vibrating with ominous power.The Skeleton Key's power cannot be triggered by itself.Various objects can be attached to its jump ring, which channels the Key's power into various effects. Press the Use Item button to trigger the Mind Channel ability for up to 30 seconds. Mind Channel reveals various Auras, depending on the Add-ons the Key is equipped with. Press the Use Item button while standing over the closed Hatch to open it. This action will consume the Key and is only available if it is not depleted.",
+    "description": "\"A tarnished and crooked key, vibrating with ominous power.\" Start the Trial with 6 Charges.Press and hold the Use Item button to channel the Skeleton Key: The Auras of other Survivors within 64 metres of your location are revealed to you for 10 seconds. While standing next to a locked Chest, press the Use Item button to quickly open it: Guarantees an Item of Rare Rarity or higher. The Aura of the Chest is revealed to other Survivors within 42 metres and highlighted in yellow: Grants the ability for 1 other Survivor to Rummage through that Chest once. Guarantees an Item of Rare Rarity or higher. While performing the Rummage action, the Aura of that Survivor is revealed to the Key holder. While standing next to the closed Hatch, press the Use Item button to re-open it: Takes 2.5 seconds to open. The Skeleton Key consumes -1 Charge per use of any one of its abilities.",
     "descriptionRuRaw": "Во время моего последнего испытания я нашел ключ. Я никогда не находил что-то подобное. Этот ключ почти выжег мою руку. Я чувствую большую мощь. Я подозреваю, что ключ используется, чтобы открывать что-то. Но у меня не было времени, чтобы полностью разобраться в этом. Но мое сердце шепчет мне, что где-то я найду замочную скважину[1]. — Из наблюдений Бенедикта. Ключ скелета (англ. \"Skeleton Key\") — редкий предмет для выживших в игре Dead by Daylight, используемый для взаимодействия с люком, сундуком или раскрытия ауры игроков. Потускневший и искривленный ключ, содрогающийся от заключенной внутри зловещей силы. При расходе заряда: Удерживайте кнопку использования предмета, чтобы сделать ауры выживших в радиусе 64м видимыми на 10 сек. Сундуки открываются быстрее. Аура открытого этим ключом сундука видна на расстоянии 42м, и другой выживший может обыскать его один раз. Внутри будут предметы качества не ниже редкого. Отпирается люк. Начинает матч с 6 зарядами",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
     "kind": "item",
     "itemType": "map",
-    "icon": "/loadout/item/map.webp",
-    "slug": "map",
+    "icon": "/loadout/item/cryptic-map.webp",
+    "slug": "cryptic-map",
     "name": {
-      "en": "Map",
-      "ru": "Карта"
+      "en": "Cryptic Map",
+      "ru": "Загадочная карта"
     },
-    "description": "An old piece of parchment made out of a skin-like material that is rolled and sealed with an uncoloured leather string. Holding and channelling the Map unlocks great potential in your Aura-reading abilities, revealing the Auras of all tracked objects at the cost of slowly burning it. Automatically tracks 1 Generator at the start of the Trial. Tracks any other Generator when coming within 8 metres. Tracks Chests, Generators and Totems that were revealed by Detective's Hunch. The Map has 20 Charges.",
-    "descriptionRuRaw": "Длительность использования карты можно увеличить с помощью различных улучшений. При нахождении нового генератора в любом из состояний игрок получает дополнительные очки крови \"Разведка карты\" в категории цели Нанесенный на карту объект не может быть заново добавлен на нее при передаче данной карты от одного игрока другому. Нанесенный на карту объект не может быть заново добавлен на нее при передаче данной карты от одного игрока другому. Карту нельзя использовать в состоянии \"при смерти\" (например для поиска люка), но можно при ходьбе, беге или перемещении по локации \"пригнувшись\". Есть небольшая вероятность найти карту в сундуке в рамках текущего испытания или приобрести в паутине стоимостью 5000 очков крови. На время проведения специальных мероприятий, данный предмет можно было использовать для раскрытия ауры специальных объектов локации: Лунных генераторов и генераторов с коктейлями (аура синего цвета) Живых язвенников (аура желтого цвета). Лунных генераторов и генераторов с коктейлями (аура синего цвета). Живых язвенников (аура желтого цвета). Активации силы карты предшествует небольшой прогресс, при этом \"прочность\" карты не снижается.",
-    "addedAt": "2026-08-16T07:16:30.038Z"
+    "description": "\"Looking at it, the directions make no sense.But merely holding it grants you an uncanny intuition.\" Start the Trial with 4 Charges.Press the Use Item button to channel the Cryptic Map: The Auras of Pallets and Windows within 24 metres of your location are revealed to you for 10 seconds. While channelling the Map, press the Secondary Action button at any point before the timer elapses for the following additional effect: Creates a Beam of Light at your current location that lasts for 16 seconds. The Auras of Generators within 32 metres of it are revealed to all Survivors and highlighted in red. The Cryptic Map consumes -1 Charge per use.",
+    "descriptionRuRaw": "Загадочная карта (англ. \"Cryptic Map\") — обычный предмет для выживших в игре Dead by Daylight, используемый для обнаружения досок и мест для прыжков, раскрывая их ауры. Вы не понимаете, куда ведут эти пути, но само ощущение карты в руках предельно обостряет вашу интуицию. Нажмите кнопку использования предмета, чтобы в течение 10 сек. видеть ауры досок и мест для прыжков в радиусе 24м. При вторичном взаимодействии у выжившего появляется столп света. Генераторы в радиусе 32 м от столпа подсвечиваются красными аурами. 4 заряда.",
+    "addedAt": "2026-08-19T08:56:36.678Z"
   },
   {
     "kind": "item",
     "itemType": "map",
-    "icon": "/loadout/item/rainbow-map.webp",
-    "slug": "rainbow-map",
+    "icon": "/loadout/item/scribbled-map.webp",
+    "slug": "scribbled-map",
     "name": {
-      "en": "Rainbow Map",
-      "ru": "Радужная карта"
+      "en": "Scribbled Map",
+      "ru": "Небрежная карта"
     },
-    "description": "An piece of parchment made out of oddly fresh skin with blood on its edge that has yet to dry, and that is rolled and sealed with multiple coloured ropes and cords. Holding and channelling the Rainbow Map unlocks great potential in your Aura-reading abilities, revealing the Auras of all tracked objects at the cost of slowly burning it. Automatically tracks 3 random objects at the start of the Trial. Tracks the following objects when coming within 8 metres: Exit Gate Switches Generators Hatch Hooks Tracks Chests, Generators and Totems that were revealed by Detective's Hunch. The Rainbow Map has 20 Charges. \"It disheartens me. All this unspeakable knowledge and gruelling effort and yet nothing tangible, nothing usable to get out of this nightmare.\" — Vigo's Journal",
-    "descriptionRuRaw": "Длительность использования карты можно увеличить с помощью различных улучшений. Отслеживаемые объекты выбираются случайным образом. При нахождении нового генератора в любом из состояний игрок получает дополнительные очки крови \"Разведка карты\" в категории цели. Карту нельзя использовать в состоянии \"при смерти\" (например для поиска люка), но можно при ходьбе, беге или перемещении по локации \"пригнувшись\". Активации силы карты предшествует небольшой прогресс, при этом \"прочность\" карты не снижается. Есть небольшая вероятность найти в сундуке или приобрести в паутине стоимостью 7000 очков крови. На время проведения специальных мероприятий, данный предмет можно было использовать для раскрытия ауры специальных объектов локации: Лунных генераторов и генераторов с коктейлями (аура синего цвета) Живых язвенников (аура желтого цвета). Лунных генераторов и генераторов с коктейлями (аура синего цвета). Живых язвенников (аура желтого цвета). Отслеживает сундуки, силуэт которых был подсвечен с помощью навыков. Эффективна для отслеживания ловушек-фантомов при игре против Ведьмы.",
-    "addedAt": "2026-08-16T07:16:30.038Z"
+    "description": "\"Peering at the parchment, a path appears in your mind.Moments later, you feel lost again.\" Start the Trial with 5 Charges.Press the Use Item button to channel the Scribbled Map: The Auras of Pallets and Windows within 32 metres of your location are revealed to you for 12 seconds. While channelling the Map, press the Secondary Action button at any point before the timer elapses for the following additional effect: Creates a Beam of Light at your current location that lasts for 16 seconds. The Auras of Generators within 32 metres of it are revealed to all Survivors and highlighted in red. The Scribbled Map consumes -1 Charge per use.",
+    "descriptionRuRaw": "Небрежная карта (англ. \"Scribbled Map\") — необычный предмет для выживших в игре Dead by Daylight, используемый для обнаружения досок и мест для прыжков, раскрывая их ауры. Вы смотрите на пергамент, и перед мысленным взором появляется путь. Через мгновение вы снова чувствуете, что потерялись. Нажмите кнопку использования предмета, чтобы в течение 12 сек. видеть ауры досок и мест для прыжков в радиусе 32м. При вторичном взаимодействии у выжившего появляется столп света. Генераторы в радиусе 32 м от столпа подсвечиваются красными аурами. 5 зарядов.",
+    "addedAt": "2026-08-19T08:56:36.678Z"
+  },
+  {
+    "kind": "item",
+    "itemType": "map",
+    "icon": "/loadout/item/annotated-map.webp",
+    "slug": "annotated-map",
+    "name": {
+      "en": "Annotated Map",
+      "ru": "Карта с подписями"
+    },
+    "description": "\"The sketch is clear and detailed.Strange knowledge flows into you, followed by dread uncertainty.\" Start the Trial with 6 Charges.Press the Use Item button to channel the Annotated Map: The Auras of Pallets and Windows within 40 metres of your location are revealed to you for 14 seconds. While channelling the Map, press the Secondary Action button at any point before the timer elapses for the following additional effect: Creates a Beam of Light at your current location that lasts for 16 seconds. The Auras of Generators within 32 metres of it are revealed to all Survivors and highlighted in red. The Annotated Map consumes -1 Charge per use.",
+    "descriptionRuRaw": "Карта с подписями (англ. \"Annotated Map\") — редкий предмет для выживших в игре Dead by Daylight, используемый для обнаружения досок и мест для прыжков, раскрывая их ауры. Подробный и четкий набросок. Вы чувствуете, как в голове появляются знания, но это вызывает тревогу и ужас. Нажмите кнопку использования предмета, чтобы в течение 14 сек. видеть ауры досок и мест для прыжков в радиусе 40м. При вторичном взаимодействии у выжившего появляется столп света. Генераторы в радиусе 32 м от столпа подсвечиваются красными аурами. 6 зарядов.",
+    "addedAt": "2026-08-19T08:56:36.678Z"
   },
   {
     "kind": "item",
@@ -112,7 +164,7 @@
       "en": "Bloodsense Map",
       "ru": "Карта кровавого чувства"
     },
-    "description": "A bloodstained piece of parchment, hastily rolled and burning with a strange power. Holding and channelling the Bloodsense Map unlocks great potential in your Aura-reading abilities, revealing the Auras of all tracked objects at the cost of slowly burning it. Automatically tracks 3 random objects at the start of the Trial. Tracks the following objects when coming within 8 metres: Exit Gate Switches Generators Hatch Hooks Tracks Chests, Generators and Totems that were revealed by Detective's Hunch. Grants the ability to reveal the Auras of injured Survivors exclusively to yourself.. Causes Pools of Blood to spawn beneath you while being used. The Bloodsense Map has 20 Charges.",
+    "description": "\"A bloodstained piece of parchment, hastily rolled and burning with a strange power.\" Start the Trial with 8 Charges.Press the Use Item button to channel the Bloodsense Map: The Auras of injured Survivors, Pallets, and Windows within 48 metres of your location are revealed to you for 14 seconds. Causes Pools of Blood to spawn beneath you while being used. While channelling the Map, press the Secondary Action button at any point before the timer elapses for the following additional effect: Creates a Beam of Light at your current location that lasts for 16 seconds. The Auras of Generators within 32 metres of it are revealed to all Survivors and highlighted in red. The Bloodsense Map consumes -1 Charge per use.",
     "descriptionRuRaw": "Карта кровавого чувства (англ. \"Bloodsense Map\") — праздничный предмет для выживших в игре Dead by Daylight, используемый для обнаружения досок, мест для прыжков и союзников, раскрывая их ауры. Наскоро скрученный окровавленный клочок пергамента, от которого так и пышет загадочной мощью. Нажмите кнопку использования предмета, чтобы в течение 14 сек. видеть ауры всех досок, мест для прыжков и раненых выживших в радиусе 48м. При вторичном взаимодействии местонахождение выжившего отмечается столпом света. Генераторы в радиусе 32 м от столпа подсвечиваются красными аурами. Во время использования под вами возникаю лужи крови. 8 заряда.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },

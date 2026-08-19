@@ -44,6 +44,10 @@ export interface ScrapedRow {
   characterFullName: string;
   iconSourceUrl: string;
   characterPortraitUrl: string;
+  /** Set when this row is only a pointer to the perk's current name (see
+   *  RENAMED_PERK_NOTICE) — the slug of whatever it now goes by. The row
+   *  carries no description of its own and must not be shipped as one. */
+  renamedTo?: string;
   /** True when the wiki is describing a patch that hasn't shipped yet.
    *  Kept rather than just stripped, because on a source that publishes
    *  pre-release content it's the signal that a row may not be live. */
@@ -56,6 +60,21 @@ const PERK_TABLE_HEADER = "Icon|Name|Description|Character";
 
 const UPCOMING_PATCH_NOTICE =
   /^This description is based on the changes announced for or featured in the upcoming Patch [\d.]+\s*/;
+
+// When a licence lapses, BHVR keeps the perk but renames it and makes it
+// general — Hellraiser and Halloween both ended, so Decisive Strike is now
+// Will to Live, Dying Light is Cull the Weak, Deadlock is No Holds Barred,
+// and so on. wiki.gg documents that by keeping the retired name as a row
+// whose entire description is a pointer:
+//
+//   Decisive Strike | "Identical to Will to Live. "There is nothing to be
+//                   |  scared of." — Laurie"
+//
+// Fandom never recorded the change, which is why the shipped data still
+// has the old names with real descriptions. Taken at face value these rows
+// would overwrite eight well-known perks with the words "Identical to …",
+// so they're recognised and handled rather than parsed as content.
+const RENAMED_PERK_NOTICE = /^Identical to (.+?)\.\s/;
 
 export function cleanText(text: string): string {
   return text.replace(/\s+/g, " ").trim();
@@ -130,10 +149,13 @@ export function parsePerkTables(
         // its own right, not a parser detail.
         const character = cleanText(characterCell.text());
 
+        const renamedMatch = RENAMED_PERK_NOTICE.exec(rawDescription);
+
         out[role].push({
           name,
           slug: slugify(name),
           description: rawDescription.replace(UPCOMING_PATCH_NOTICE, ""),
+          renamedTo: renamedMatch ? slugify(renamedMatch[1]) : undefined,
           character,
           characterFullName: characterCell.find("a").first().attr("title") || character,
           iconSourceUrl,

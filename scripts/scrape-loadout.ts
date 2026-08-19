@@ -17,7 +17,7 @@ import type { AnyNode } from "domhandler";
 import sharp from "sharp";
 import { slugify } from "../lib/slugify";
 import { gateScrapedRows, partitionByRelease } from "./release-gate";
-import { FANDOM, resolveImageUrl } from "./wiki-source";
+import { resolveImageUrl, WIKI_GG } from "./wiki-source";
 import type { Addon, Item, ItemType, LoadoutMeta, Offering, PerkRole } from "../lib/types";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -47,18 +47,43 @@ const OFFERINGS_PAGE = "Offerings";
  *  same constant in scripts/scrape-perks.ts — the two halves of the site
  *  reading different wikis would show a killer's perks from one and their
  *  add-ons from the other. See scripts/wiki-source.ts. */
-const SOURCE = FANDOM;
+const SOURCE = WIKI_GG;
 
-/** Everything already in the shipped loadout data, plus the characters it
- *  covers — the vetted set the release gate trusts. Read once, lazily,
- *  because it is only consulted on a source that needs gating. */
+/** The vetted set the release gate trusts: everything the site already
+ *  ships, across *both* halves of the data.
+ *
+ *  Reading only the loadout files would be too narrow. A character is
+ *  vetted by having shipped at all, and the two halves can disagree about
+ *  which characters they cover — Fandom carried The Houndmaster, The Ghoul
+ *  and The Animatronic on the Perks page but never wrote their add-on
+ *  tables, so all three are long-shipped killers with perks and no add-ons.
+ *  Judging add-ons against the loadout files alone treated them as unknown
+ *  and withheld 60 add-ons for killers already on the site. */
 function loadKnownLoadout(): { characters: Set<string>; slugs: Set<string> } {
   const read = (file: string): { slug: string; character?: string }[] =>
     existsSync(file) ? JSON.parse(readFileSync(file, "utf8")) : [];
-  const all = [...read(ADDONS_JSON), ...read(ITEMS_JSON), ...read(OFFERINGS_JSON)];
+  const loadout = [...read(ADDONS_JSON), ...read(ITEMS_JSON), ...read(OFFERINGS_JSON)];
+  const perks = read(join(DATA_DIR, "perks.json"));
+  // data/characters.json is the durable half of this. Every other input
+  // here is a file the scrapers overwrite, so the trust set is rebuilt
+  // from the previous run's output and can drift: The Cenobite's perks
+  // became general, which took it out of perks.json, and from then on its
+  // twenty add-ons were vouched for only by the add-on file about to be
+  // replaced. The portrait map is merged rather than rebuilt (see
+  // scrape-perks.ts), so it remembers every character that has ever
+  // shipped and stops that feedback loop.
+  const portraits = existsSync(join(DATA_DIR, "characters.json"))
+    ? Object.keys(JSON.parse(readFileSync(join(DATA_DIR, "characters.json"), "utf8")))
+    : [];
   return {
-    characters: new Set(all.map((p) => p.character).filter((c): c is string => !!c)),
-    slugs: new Set(all.map((p) => p.slug)),
+    characters: new Set([
+      ...portraits,
+      ...[...loadout, ...perks].map((p) => p.character).filter((c): c is string => !!c),
+    ]),
+    // Slugs stay loadout-only: a perk and an add-on sharing a slug are
+    // different things, and treating a perk's slug as proof an add-on has
+    // shipped would let a genuinely new add-on through on a coincidence.
+    slugs: new Set(loadout.map((p) => p.slug)),
   };
 }
 
@@ -377,6 +402,32 @@ function findHeadingTables(
       currentHeading = null; // only the table immediately after a heading is its data table
     }
   });
+
+  // wiki.gg renders each of these sections twice: as the h3 above, and as
+  // a tab in a tabber widget wrapping the same table. Almost always both,
+  // which is why the h3 pass gets nearly everything — but two powers (The
+  // Redeemer and Summons of Pain) come through with only the tab, and the
+  // h3 pass therefore dropped The Deathslinger's entire add-on set and his
+  // Power icon with it.
+  //
+  // So the panels are a fallback, not the primary: h3 order is the page's
+  // real reading order and is what Fandom provides, and a panel is only
+  // consulted for a heading the h3 pass never produced. Fandom has no
+  // tabber at all, so this contributes nothing there.
+  const seen = new Set(results.map((r) => r.heading));
+  container
+    .find("article.tabber__panel")
+    .add(container.filter("article.tabber__panel"))
+    .each((_, el) => {
+      const panel = $(el);
+      const heading = (panel.attr("id") ?? "").replace(/-\d+$/, "").replace(/_/g, " ").trim();
+      if (!heading || seen.has(heading)) return;
+      const table = panel.find("table.wikitable").first();
+      if (!table.length) return;
+      seen.add(heading);
+      results.push({ heading, table: table as Cheerio<AnyNode> });
+    });
+
   return results;
 }
 
@@ -490,6 +541,12 @@ const POWER_HEADING_OVERRIDES: Record<string, string> = {
   // <Killer>" sentence POWER_OF_PATTERN below looks for — confirmed by
   // reading the actual page text.
   "Quantum Instantiation": "The Singularity",
+  // The Hillbilly's power shares its name with the generic article title,
+  // and on wiki.gg there is no "The Chainsaw" page at all to redirect from
+  // — only The Cannibal's "Bubba's Chainsaw" exists. Without this the
+  // heading resolves to nothing and his add-ons land on ".All", where they
+  // would be offered for every killer.
+  "The Chainsaw": "The Hillbilly",
 };
 
 // Matches the wiki's own standard opening sentence for a power's article,
@@ -533,10 +590,28 @@ async function resolvePowerToCharacter(headings: string[]): Promise<Record<strin
     const res = await fetch(url, { headers: REQUEST_HEADERS });
     if (!res.ok) throw new Error(`Failed to resolve power headings: ${res.status} ${res.statusText}`);
     const json = (await res.json()) as {
-      query?: { redirects?: { from: string; to: string; tofragment?: string }[] };
+      query?: {
+        normalized?: { from: string; to: string }[];
+        redirects?: { from: string; to: string; tofragment?: string }[];
+      };
     };
+    // MediaWiki canonicalises a title before resolving it, and reports the
+    // redirect against the *canonical* form. A heading that gets rewritten
+    // on the way in therefore comes back under a name that no longer
+    // matches it — "Test Subject #001" normalises to "Test Subject", so
+    // the result was filed under a key nothing was looking for and The
+    // First's twenty add-ons fell through to ".All".
+    const originalTitle = new Map<string, string>();
+    for (const n of json.query?.normalized ?? []) originalTitle.set(n.to, n.from);
     for (const r of json.query?.redirects ?? []) {
-      if (r.tofragment) result[r.from] = r.tofragment;
+      if (!r.tofragment) continue;
+      // MediaWiki numbers a fragment when the target page carries more than
+      // one heading of the same text, so the redirect that resolves to
+      // "The Trapper" on one wiki resolves to "The Trapper-0" on another.
+      // Left in place, that reaches the release gate as a character nobody
+      // has ever shipped ("Oni-0") and withholds the killer's whole add-on
+      // set — 207 add-ons survived out of 847 on the first wiki.gg run.
+      result[originalTitle.get(r.from) ?? r.from] = r.tofragment.replace(/-\d+$/, "");
     }
   }
 
