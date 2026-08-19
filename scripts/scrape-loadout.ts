@@ -18,6 +18,7 @@ import sharp from "sharp";
 import { slugify } from "../lib/slugify";
 import { gateScrapedRows, partitionByRelease } from "./release-gate";
 import { guardAgainstShrink } from "./scrape-census";
+import { guardIdStability } from "./id-stability";
 import { splitDescriptions, type DescriptionEntry, type DescriptionLookup } from "./split-descriptions";
 import { resolveImageUrl, WIKI_GG } from "./wiki-source";
 import {
@@ -1228,6 +1229,11 @@ async function main() {
     a.role === "survivor" ? `item-type:${a.itemType}` : `killer:${a.character}`,
   ]);
   guardAgainstShrink("offerings", OFFERINGS_JSON, offerings, (o: Offering) => [`role:${o.role}`]);
+  guardIdStability("loadout piece", LOADOUT_IDS_JSON, loadoutIds, [
+    ...items.map((p) => `item:${p.slug}`),
+    ...addons.map((p) => `addon:${p.slug}`),
+    ...offerings.map((p) => `offering:${p.slug}`),
+  ]);
 
   // One lookup across all three kinds — they're opened by the same detail
   // modal, so splitting them further would only mean two more requests for

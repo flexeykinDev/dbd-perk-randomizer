@@ -18,7 +18,8 @@
     "sync:loadout-addons": "tsx scripts/sync-loadout-addons.ts",
     "test:e2e": "playwright test",
     "capture:screenshots": "node scripts/capture-screenshots.mjs",
-    "compare:sources": "tsx scripts/compare-sources.ts"
+    "compare:sources": "tsx scripts/compare-sources.ts",
+    "capture:fixture": "tsx scripts/capture-perk-fixture.ts"
   },
   "dependencies": {
     "firebase": "^12.17.1",

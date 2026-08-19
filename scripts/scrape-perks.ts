@@ -10,6 +10,7 @@ import sharp from "sharp";
 import { slugify } from "../lib/slugify";
 import { gateScrapedRows } from "./release-gate";
 import { guardAgainstShrink } from "./scrape-census";
+import { guardIdStability } from "./id-stability";
 import { splitDescriptions, type DescriptionEntry } from "./split-descriptions";
 import { classifyPerk } from "../lib/perk-tags";
 import { WIKI_GG } from "./wiki-source";
@@ -518,6 +519,12 @@ async function main() {
     `role:${p.role}`,
     `character:${p.character}`,
   ]);
+  guardIdStability(
+    "perk",
+    PERK_IDS_JSON,
+    perkIds,
+    perks.map((p) => p.slug),
+  );
 
   // The prose goes to its own file so it can be loaded when a card is
   // opened instead of on every visit — see scripts/split-descriptions.ts.
