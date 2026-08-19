@@ -1,0 +1,7 @@
+{
+  "_comment": "Release dates for characters the shipped data has not seen yet. Only consulted when the scrape source documents content before it releases (see `publishesPreRelease` in scripts/scrape-perks.ts) — on a source that only covers live content this file is never read, and a new character flows in on its own as it always has. A character already present in data/perks.json needs no entry here: it has already been vetted and stays trusted. So this is one line per announced Chapter, added once, and safe to leave behind afterwards. Dates are the in-game release day, YYYY-MM-DD, compared as UTC calendar days; a malformed one fails the scrape rather than being guessed at.",
+  "characters": {
+    "Judgment": "2026-08-25",
+    "Aurora": "2026-08-25"
+  }
+}

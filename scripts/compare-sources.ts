@@ -16,11 +16,18 @@
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { parsePerkTables, type ScrapedRow } from "./wiki-perk-table";
+import {
+  parsePerkTables,
+  resolveCharacterCollisions,
+  type ScrapedRow,
+} from "./wiki-perk-table";
+import { gateScrapedRows } from "./release-gate";
 import type { Perk, PerkRole } from "../lib/types";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PERKS_JSON = join(__dirname, "../data/perks.json");
+const RELEASE_DATES_JSON = join(__dirname, "../data/character-release-dates.json");
+const ALIASES_JSON = join(__dirname, "../data/character-aliases.json");
 
 interface Source {
   label: string;
@@ -128,6 +135,42 @@ async function main() {
   for (const [pair, keys] of [...pairs].sort((x, y) => y[1].length - x[1].length)) {
     console.log(`  ${pair} (${keys.length} perks, e.g. ${keys[0]})`);
   }
+
+  // The dry run that decides whether the switch is safe: apply the real
+  // gate to wiki.gg's real rows and see what would actually ship.
+  const releaseDates = (
+    JSON.parse(readFileSync(RELEASE_DATES_JSON, "utf8")) as {
+      characters?: Record<string, string>;
+    }
+  ).characters ?? {};
+  const shippedPerks = [...shipped.values()];
+  // Aliases first, matching the scraper's own order — the gate decides on
+  // `character`, so it has to see the canonical spelling or it withholds
+  // characters that are perfectly familiar under another name.
+  const aliases = (
+    JSON.parse(readFileSync(ALIASES_JSON, "utf8")) as { aliases?: Record<string, string> }
+  ).aliases ?? {};
+  const gateRows = [...b.values()].map((row) => ({
+    ...row,
+    character: aliases[row.character] ?? row.character,
+  }));
+  // And collisions after them, also matching the scraper: two characters
+  // sharing a first name are only told apart at this step, and until then
+  // "David" looks like a character that has never shipped.
+  resolveCharacterCollisions(gateRows);
+  const { live, held } = gateScrapedRows(gateRows, {
+    getCharacter: (row) => row.character,
+    getSlug: (row) => row.slug,
+    isUpcoming: (row) => row.upcoming,
+    knownCharacters: new Set(shippedPerks.map((p) => p.character)),
+    knownSlugs: new Set(shippedPerks.map((p) => p.slug)),
+    releaseDates,
+  });
+  heading(`If the source moved to wiki.gg today, the gate would hold ${held.length}`);
+  for (const { row, reason } of held) {
+    console.log(`  x ${row.role}/${row.slug} — ${row.name} (${row.character}): ${reason}`);
+  }
+  console.log(`\n  ${live.length} perks would ship (${b.size} on the page).`);
 
   // Descriptions are what the Core Effect derivation reads, so a wholesale
   // rewording is a bigger deal than the count alone suggests — see

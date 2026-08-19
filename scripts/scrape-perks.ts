@@ -8,17 +8,47 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
 import { slugify } from "../lib/slugify";
-import { partitionByRelease } from "./release-gate";
-import { cleanText, parsePerkTables, type ScrapedRow } from "./wiki-perk-table";
+import { gateScrapedRows, partitionByRelease } from "./release-gate";
+import {
+  cleanText,
+  parsePerkTables,
+  resolveCharacterCollisions,
+  type ScrapedRow,
+} from "./wiki-perk-table";
 import type { LocalizedDescription, Perk, PerkRole, PerksMeta } from "../lib/types";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const WIKI_PAGE_URL = "https://deadbydaylight.fandom.com/wiki/Perks";
-// The plain page URL sits behind a Cloudflare JS challenge that blocks
-// non-browser HTTP clients. The MediaWiki parse API returns the same
-// rendered HTML (same tables, same data-src icon URLs) without it.
-const SOURCE_URL =
-  "https://deadbydaylight.fandom.com/api.php?action=parse&page=Perks&format=json&prop=text";
+
+/** Which wiki the EN perk data comes from.
+ *
+ *  Kept as one object rather than loose constants because moving to
+ *  wiki.gg is a live question (run `npm run compare:sources` for what it
+ *  would change) and the parts that have to move together are exactly
+ *  these: the page URL, the API URL, the origin used to absolutise
+ *  relative image URLs, and — most importantly — whether the source can be
+ *  trusted to only document released content.
+ *
+ *  `publishesPreRelease` is the safety switch. Fandom documents a
+ *  character once it is live, so a new one can flow straight in, as it
+ *  always has. wiki.gg publishes a full Chapter page as soon as it is
+ *  announced, weeks early, so on that source every unrecognised character
+ *  is held until someone writes down its release date (see
+ *  gateScrapedRows in scripts/release-gate.ts). Flipping the source
+ *  without flipping this would publish an unreleased Chapter on the next
+ *  scheduled run, with nobody watching. */
+const SOURCE = {
+  pageUrl: "https://deadbydaylight.fandom.com/wiki/Perks",
+  // The plain page URL sits behind a Cloudflare JS challenge that blocks
+  // non-browser HTTP clients. The MediaWiki parse API returns the same
+  // rendered HTML (same tables, same icon URLs) without it.
+  apiUrl:
+    "https://deadbydaylight.fandom.com/api.php?action=parse&page=Perks&format=json&prop=text",
+  origin: "https://deadbydaylight.fandom.com",
+  publishesPreRelease: false,
+} as const;
+
+const WIKI_PAGE_URL = SOURCE.pageUrl;
+const SOURCE_URL = SOURCE.apiUrl;
 const DATA_DIR = join(__dirname, "../data");
 const PUBLIC_PERKS_DIR = join(__dirname, "../public/perks");
 const PUBLIC_CHARACTERS_DIR = join(__dirname, "../public/characters");
@@ -31,14 +61,13 @@ const DESCRIPTION_OVERRIDES_EN_JSON = join(DATA_DIR, "description-overrides.en.j
 const NAME_OVERRIDES_EN_JSON = join(DATA_DIR, "name-overrides.en.json");
 const ICON_OVERRIDES_JSON = join(DATA_DIR, "icon-overrides.json");
 const SUPPLEMENTAL_PERKS_EN_JSON = join(DATA_DIR, "supplemental-perks.en.json");
+const CHARACTER_RELEASE_DATES_JSON = join(DATA_DIR, "character-release-dates.json");
+const CHARACTER_ALIASES_JSON = join(DATA_DIR, "character-aliases.json");
 const CHARACTERS_JSON = join(DATA_DIR, "characters.json");
 const PERK_IDS_JSON = join(DATA_DIR, "perk-ids.json");
 const ICON_SOURCES_JSON = join(DATA_DIR, "icon-sources.json");
 
 const ICON_SIZE = 128;
-/** Scheme + host of the wiki SOURCE_URL points at, for absolutising any
- *  root-relative image URL the page returns. */
-const WIKI_ORIGIN = "https://deadbydaylight.fandom.com";
 const ROLES: PerkRole[] = ["survivor", "killer"];
 
 function loadTranslations(): Record<string, string> {
@@ -100,6 +129,23 @@ interface SupplementalEntry {
   perks: { name: string; description: string; iconSourceUrl: string }[];
 }
 
+/** A source's spelling of a character -> the one the data already uses.
+ *  See data/character-aliases.json; inert on a source that doesn't differ. */
+function loadCharacterAliases(): Record<string, string> {
+  if (!existsSync(CHARACTER_ALIASES_JSON)) return {};
+  const raw = JSON.parse(readFileSync(CHARACTER_ALIASES_JSON, "utf8"));
+  return raw.aliases ?? {};
+}
+
+/** character -> YYYY-MM-DD for characters not yet in the shipped data.
+ *  Empty when the file is absent, which is fine: gateScrapedRows treats a
+ *  missing date as "hold", so the safe direction is the default. */
+function loadCharacterReleaseDates(): Record<string, string> {
+  if (!existsSync(CHARACTER_RELEASE_DATES_JSON)) return {};
+  const raw = JSON.parse(readFileSync(CHARACTER_RELEASE_DATES_JSON, "utf8"));
+  return raw.characters ?? {};
+}
+
 /** Loads the supplemental entries that are actually live, and reports any
  *  held back — see scripts/release-gate.ts for why wiki.gg-sourced data
  *  needs gating at all. */
@@ -143,28 +189,6 @@ function supplementalRows(entries: SupplementalEntry[], role: PerkRole): Scraped
     );
 }
 
-// Almost every character's wiki-table display name (first name, or a
-// Killer's bare epithet) is unique on its own — until it isn't (David King
-// vs David Tapp, both shown as just "David"). Only swap in the longer,
-// disambiguated name for rows whose short display name is actually shared
-// by more than one distinct character; every other row's `character` is
-// left exactly as scraped, so this can't change any of the ~80 already-
-// correct display values sitewide.
-function resolveCharacterCollisions(rows: ScrapedRow[]): void {
-  const fullNamesByDisplay = new Map<string, Set<string>>();
-  for (const row of rows) {
-    if (!row.character) continue;
-    const set = fullNamesByDisplay.get(row.character) ?? new Set();
-    set.add(row.characterFullName);
-    fullNamesByDisplay.set(row.character, set);
-  }
-  for (const row of rows) {
-    const fullNames = fullNamesByDisplay.get(row.character);
-    if (fullNames && fullNames.size > 1) {
-      row.character = row.characterFullName;
-    }
-  }
-}
 
 function loadPerkIds(): Record<string, number> {
   if (!existsSync(PERK_IDS_JSON)) return {};
@@ -310,7 +334,7 @@ async function downloadPortrait(
 async function main() {
   console.log(`Fetching ${WIKI_PAGE_URL} via MediaWiki API ...`);
   const html = await fetchWikiPageHtml();
-  const scrapedByRole = parsePerkTables(html, WIKI_ORIGIN);
+  const scrapedByRole = parsePerkTables(html, SOURCE.origin);
 
   const translations = loadTranslations();
   const descriptionTranslations = loadDescriptionTranslations();
@@ -320,15 +344,52 @@ async function main() {
   const pinnedIcons = loadPinnedIcons();
   const iconSourceOverrides = loadIconSourceOverrides();
   const supplementalEntries = loadSupplementalPerks();
+  const characterReleaseDates = loadCharacterReleaseDates();
   const previous = new Map(
     loadPreviousPerks().map((p) => [`${p.role}/${p.slug}`, p]),
   );
   const iconSources = loadIconSources();
   const scrapedAt = new Date().toISOString();
 
+  // Both of the next two steps have to happen before the release gate,
+  // because the gate decides on `character` and would otherwise be reading
+  // a name the shipped data has never used — holding back a character that
+  // is in fact perfectly familiar. Measured on wiki.gg's live page: without
+  // this ordering the gate withheld nine perks belonging to Yun-Jin and the
+  // two Davids, all of which have shipped for years.
+  const characterAliases = loadCharacterAliases();
+  for (const row of [scrapedByRole.survivor, scrapedByRole.killer].flat()) {
+    const alias = characterAliases[row.character];
+    if (alias) row.character = alias;
+  }
+  resolveCharacterCollisions([scrapedByRole.survivor, scrapedByRole.killer].flat());
+
+  // The vetted set: everything already in data/perks.json, whether a
+  // previous scrape found it or a person added it by hand. A character
+  // stays trusted once it has shipped.
+  const previousPerks = [...previous.values()];
+  const knownCharacters = new Set(previousPerks.map((p) => p.character));
+  const knownSlugs = new Set(previousPerks.map((p) => p.slug));
+
   const rowsByRole = new Map<PerkRole, ScrapedRow[]>();
   for (const role of ROLES) {
-    const scraped = scrapedByRole[role];
+    let scraped = scrapedByRole[role];
+    // Only a source that documents unreleased Chapters needs this; on one
+    // that doesn't, gating would just block new characters from arriving.
+    if (SOURCE.publishesPreRelease) {
+      const { live, held } = gateScrapedRows(scraped, {
+        getCharacter: (row) => row.character,
+        getSlug: (row) => row.slug,
+        isUpcoming: (row) => row.upcoming,
+        knownCharacters,
+        knownSlugs,
+        releaseDates: characterReleaseDates,
+      });
+      for (const { row, reason } of held) {
+        console.log(`  Holding back ${role}/${row.slug} — ${reason}`);
+      }
+      scraped = live;
+    }
     const scrapedSlugs = new Set(scraped.map((r) => r.slug));
     // A supplemental entry is redundant (and skipped) once Fandom's own
     // table catches up and starts producing the same perk slug on its
@@ -344,6 +405,10 @@ async function main() {
     );
     rowsByRole.set(role, rows);
   }
+  // Re-run now that the supplemental rows have joined, in case one of them
+  // shares a display name with a scraped character. Idempotent: the first
+  // pass has already given any colliding row its distinct full name, so a
+  // second pass finds no collision left to resolve.
   resolveCharacterCollisions([...rowsByRole.values()].flat());
 
   const perks: Perk[] = [];

@@ -8,7 +8,12 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { isReleased, partitionByRelease, ReleaseDateError } from "./release-gate";
+import {
+  gateScrapedRows,
+  isReleased,
+  partitionByRelease,
+  ReleaseDateError,
+} from "./release-gate";
 
 const NOW = new Date("2026-08-18T12:00:00Z");
 
@@ -64,3 +69,94 @@ for (const file of ["supplemental-perks.en.json", "supplemental-addons.en.json"]
     }
   });
 }
+
+/* ------------------------------------------------------------------ */
+/* gateScrapedRows — the gate for rows read off a wiki page             */
+/* ------------------------------------------------------------------ */
+
+interface Row {
+  slug: string;
+  character: string;
+  upcoming: boolean;
+}
+const row = (slug: string, character: string, upcoming = false): Row => ({
+  slug,
+  character,
+  upcoming,
+});
+
+const gate = (rows: Row[], overrides: Partial<Parameters<typeof gateScrapedRows<Row>>[1]> = {}) =>
+  gateScrapedRows(rows, {
+    getCharacter: (r) => r.character,
+    getSlug: (r) => r.slug,
+    isUpcoming: (r) => r.upcoming,
+    knownCharacters: new Set(["Meg", "Nurse"]),
+    knownSlugs: new Set(["sprint-burst", "a-nurse-s-calling"]),
+    releaseDates: {},
+    now: NOW,
+    ...overrides,
+  });
+
+test("a character already in the data passes, new perks and all", () => {
+  const { live, held } = gate([row("new-meg-perk", "Meg")]);
+  assert.equal(held.length, 0);
+  assert.deepEqual(live.map((r) => r.slug), ["new-meg-perk"]);
+});
+
+test("an unknown character is held when nobody has dated it", () => {
+  const { live, held } = gate([row("lay-waste", "Judgment")]);
+  assert.equal(live.length, 0);
+  assert.equal(held.length, 1);
+  assert.match(held[0].reason, /never shipped/);
+});
+
+test("an unknown character with a future date is held until that day", () => {
+  const dates = { Judgment: "2026-08-25" };
+  assert.equal(gate([row("lay-waste", "Judgment")], { releaseDates: dates }).live.length, 0);
+  assert.equal(
+    gate([row("lay-waste", "Judgment")], { releaseDates: dates, now: new Date("2026-08-25T00:00:00Z") })
+      .live.length,
+    1,
+  );
+});
+
+test("a brand-new perk marked as an upcoming patch is held", () => {
+  const { live, held } = gate([row("keep-them-waiting", "Meg", true)]);
+  assert.equal(live.length, 0);
+  assert.match(held[0].reason, /unreleased patch/);
+});
+
+test("an already-shipped perk is not held by the upcoming-patch flag", () => {
+  // The flag marks a description written ahead of a patch, and sits on
+  // perks that have been live for years — on its own it must never
+  // withdraw something players already have.
+  const { live, held } = gate([row("sprint-burst", "Meg", true)]);
+  assert.equal(held.length, 0);
+  assert.deepEqual(live.map((r) => r.slug), ["sprint-burst"]);
+});
+
+test("a malformed date fails loudly rather than being guessed at", () => {
+  assert.throws(
+    () => gate([row("x", "Judgment")], { releaseDates: { Judgment: "25/08/2026" } }),
+    ReleaseDateError,
+  );
+});
+
+test("the shipped release dates would hold back today's unreleased chapters", () => {
+  // The end-to-end check: the real file, against the characters wiki.gg is
+  // currently documenting ahead of release.
+  const dates = JSON.parse(
+    readFileSync(join(dirname(fileURLToPath(import.meta.url)), "../data/character-release-dates.json"), "utf8"),
+  ).characters as Record<string, string>;
+  for (const [character, releasedAt] of Object.entries(dates)) {
+    assert.doesNotThrow(
+      () => isReleased(releasedAt, character, NOW),
+      `${character} has an unusable date`,
+    );
+  }
+  const { live } = gate(
+    [row("lay-waste", "Judgment"), row("boon-steadfast", "Aurora")],
+    { releaseDates: dates },
+  );
+  assert.deepEqual(live, [], "an unreleased chapter would have shipped");
+});

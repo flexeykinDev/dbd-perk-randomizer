@@ -56,6 +56,97 @@ export function isReleased(
 }
 
 /**
+ * Decides which freshly-scraped rows are safe to ship, for a source that
+ * documents content before it releases.
+ *
+ * The gate above only covers hand-written supplemental entries, because
+ * every one of them was typed by a person who could be asked for a date.
+ * Rows read off a wiki page have nobody to ask, and the scraper runs on a
+ * schedule with no one watching, so the rule here has to hold without
+ * anyone having noticed a Chapter was announced.
+ *
+ * Hence: trust is carried by what has already shipped. A character already
+ * present in data/perks.json has been vetted — by a previous run, or by a
+ * person adding it as a supplemental entry — and stays trusted forever. A
+ * character nobody has seen before is held until someone writes down when
+ * it releases. That's one line of JSON per Chapter, against the
+ * alternative of an unattended run publishing a Chapter early.
+ *
+ * The second rule catches what the first can't: a *new perk for an
+ * existing character*, which no character-level check would stop. Those
+ * are held only when the wiki itself marks them as an upcoming patch —
+ * that flag is unreliable on its own (it sits on Adrenaline and Sprint
+ * Burst, both live for years, because their *descriptions* were written
+ * ahead of a patch) but combined with "this perk has never shipped" it
+ * stops being ambiguous: a perk that is both brand new and documented
+ * against an unreleased patch is not something a player can own.
+ *
+ * Nothing here applies to a source that only documents released content —
+ * see `publishesPreRelease` at the call site. Fandom keeps its existing
+ * behaviour exactly, including picking up a new character on its own.
+ */
+export function gateScrapedRows<T>(
+  rows: T[],
+  {
+    getCharacter,
+    getSlug,
+    isUpcoming,
+    knownCharacters,
+    knownSlugs,
+    releaseDates,
+    now = new Date(),
+  }: {
+    getCharacter: (row: T) => string;
+    getSlug: (row: T) => string;
+    isUpcoming: (row: T) => boolean;
+    /** Characters already in the shipped data — the vetted set. */
+    knownCharacters: ReadonlySet<string>;
+    /** Perk slugs already in the shipped data. */
+    knownSlugs: ReadonlySet<string>;
+    /** character -> YYYY-MM-DD, for characters not yet in the data. */
+    releaseDates: Record<string, string>;
+    now?: Date;
+  },
+): { live: T[]; held: { row: T; reason: string }[] } {
+  const live: T[] = [];
+  const held: { row: T; reason: string }[] = [];
+
+  for (const row of rows) {
+    const character = getCharacter(row);
+    if (!knownCharacters.has(character)) {
+      const releasedAt = releaseDates[character];
+      if (!releasedAt) {
+        held.push({
+          row,
+          reason:
+            `"${character}" has never shipped and has no entry in ` +
+            `data/character-release-dates.json — add its release date to let it through`,
+        });
+        continue;
+      }
+      // A date that IS present is held to the same standard as a
+      // supplemental one: malformed throws rather than being guessed at.
+      if (!isReleased(releasedAt, `character "${character}"`, now)) {
+        held.push({ row, reason: `"${character}" releases ${releasedAt}` });
+        continue;
+      }
+    }
+
+    if (isUpcoming(row) && !knownSlugs.has(getSlug(row))) {
+      held.push({
+        row,
+        reason: `new perk documented against an unreleased patch`,
+      });
+      continue;
+    }
+
+    live.push(row);
+  }
+
+  return { live, held };
+}
+
+/**
  * Splits entries into those that count as live and those still pending,
  * so callers can log what was withheld instead of dropping it silently —
  * a scrape that quietly ships fewer perks than the wiki lists is exactly

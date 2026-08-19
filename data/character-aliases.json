@@ -1,0 +1,6 @@
+{
+  "_comment": "Maps a wiki's spelling of a character to the one the shipped data already uses. `character` is a key, not a label — it addresses the portrait in data/characters.json, the Russian name in data/character-translations.ru.json, and whatever the player picked in localStorage — so a source that spells one differently would silently orphan all three rather than simply renaming something. wiki.gg shows Yun-Jin Lee's Perks-table entry as her surname where Fandom shows her given name; both point at the same character page, but only the visible text reaches the parser. Names that differ only by a shared first name (both Davids) are NOT listed here: resolveCharacterCollisions already handles those from the character link's title attribute, and only when the short form is genuinely ambiguous. Entries are harmless on a source that doesn't use them — Fandom never emits \"Lee\", so this whole file is inert there.",
+  "aliases": {
+    "Lee": "Yun-Jin"
+  }
+}

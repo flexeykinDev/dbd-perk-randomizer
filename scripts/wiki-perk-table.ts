@@ -155,3 +155,26 @@ export function parsePerkTables(
 
   return out;
 }
+
+// Almost every character's wiki-table display name (first name, or a
+// Killer's bare epithet) is unique on its own — until it isn't (David King
+// vs David Tapp, both shown as just "David"). Only swap in the longer,
+// disambiguated name for rows whose short display name is actually shared
+// by more than one distinct character; every other row's `character` is
+// left exactly as scraped, so this can't change any of the ~80 already-
+// correct display values sitewide.
+export function resolveCharacterCollisions(rows: ScrapedRow[]): void {
+  const fullNamesByDisplay = new Map<string, Set<string>>();
+  for (const row of rows) {
+    if (!row.character) continue;
+    const set = fullNamesByDisplay.get(row.character) ?? new Set();
+    set.add(row.characterFullName);
+    fullNamesByDisplay.set(row.character, set);
+  }
+  for (const row of rows) {
+    const fullNames = fullNamesByDisplay.get(row.character);
+    if (fullNames && fullNames.size > 1) {
+      row.character = row.characterFullName;
+    }
+  }
+}
