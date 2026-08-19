@@ -43,6 +43,13 @@ const REQUEST_HEADERS = {
   "User-Agent": "dbd-perk-randomizer localization sync (personal site, contact via github)",
 };
 const REQUEST_DELAY_MS = 200; // one full page-parse per group, not per add-on — can afford to be extra polite
+
+/** How far apart two names may be, as a fraction of the name's length,
+ *  before a within-page pairing is refused. 0.34 accepts `Adi Valente
+ *  Issue 1` / `Adi Valente #1` (the widest real gap in the corpus) and
+ *  still refuses The Ghost Face's `Cinch Straps`, which has no RU row at
+ *  all and would otherwise be handed the nearest unrelated leftover. */
+const MAX_RELATIVE_DISTANCE = 0.34;
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 async function fetchJson<T>(url: string): Promise<T> {
@@ -148,20 +155,54 @@ function loadJson<T>(path: string, fallback: T): T {
 
 /** A form of the English name that both wikis agree on.
  *
- *  Matching used to be a plain lowercase compare, which quietly lost every
- *  add-on whose name carries punctuation — The Wraith's are written
- *  `"The Beast" - Soot` on one wiki and turn up with different quote marks
- *  and a different dash on the other, so eighteen of his nineteen add-ons
- *  never matched at all. Stripping quotes, folding every dash to one
- *  character and collapsing spaces leaves the part both sides actually
- *  spell the same way. */
+ *  The two wikis punctuate the same add-on differently, and the difference
+ *  is not one rule. The Wraith's are `"The Beast" - Soot` on wiki.gg and
+ *  `The Beast Soot` here, so the quotes and the dash have to *go away*;
+ *  but the possessives are `Akito's Crutch` against `Akitos Crutch`, where
+ *  the apostrophe has to go away *without leaving a gap* — turning it into
+ *  a space gives "akito s" and stops matching.
+ *
+ *  So the two kinds of punctuation are treated differently on purpose:
+ *  quotes and apostrophes are deleted, joining what they separated, and
+ *  everything else becomes a space. An earlier version folded dashes to a
+ *  literal "-" and kept it, which is why eighteen of The Wraith's twenty
+ *  add-ons never matched; deleting all punctuation instead would have
+ *  fixed those and broken the nine possessives.
+ *
+ *  The NFD pass strips diacritics for the same reason — The Spirit's
+ *  `Zōri` is written `Zori` on the RU wiki. */
 function normalizeName(name: string): string {
   return name
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
     .toLowerCase()
-    .replace(/[«»""''`]/g, "")
-    .replace(/[‐-―−-]+/g, "-")
-    .replace(/\s+/g, " ")
+    .replace(/['‘’"“”«»`]/g, "")
+    .replace(/[^a-z0-9]+/g, " ")
     .trim();
+}
+
+/** Levenshtein distance, used only to pair leftovers within one page (see
+ *  matchLeftoversByPage) — never across the whole corpus. */
+function editDistance(a: string, b: string): number {
+  const d: number[][] = Array.from({ length: a.length + 1 }, (_, i) => [i, ...(Array(b.length).fill(0) as number[])]);
+  for (let j = 0; j <= b.length; j++) d[0][j] = j;
+  for (let i = 1; i <= a.length; i++) {
+    for (let j = 1; j <= b.length; j++) {
+      d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+    }
+  }
+  return d[a.length][b.length];
+}
+
+/** True when one name is the other with words added on — how a renamed
+ *  add-on usually reads (`Caught On Tape` became `"Ghost Face Caught on
+ *  Tape"`). Both sides must be several words, so a single shared common
+ *  word can't trigger it. */
+function oneContainsTheOther(a: string, b: string): boolean {
+  const [shorter, longer] = a.length <= b.length ? [a, b] : [b, a];
+  if (shorter.split(" ").length < 2) return false;
+  return longer === shorter || longer.startsWith(`${shorter} `) || longer.endsWith(` ${shorter}`) ||
+    longer.includes(` ${shorter} `);
 }
 
 async function main() {
@@ -192,9 +233,8 @@ async function main() {
   const pageTitles = await fetchCombinedPageTitles();
   console.log(`  ${pageTitles.length} group pages found`);
 
-  const matchedSlugs = new Set<string>();
-  let rowsSeen = 0;
   let pagesFailed = 0;
+  const allRows: (ExtractedRow & { page: string })[] = [];
 
   for (const [i, title] of pageTitles.entries()) {
     try {
@@ -203,20 +243,8 @@ async function main() {
         pagesFailed++;
       } else {
         const $ = cheerio.load(html.replace(/<br\s*\/?>/gi, "\n"));
-        const tables = findAddonTables($);
-        for (const table of tables) {
-          const rows = extractRowsFromTable($, table);
-          rowsSeen += rows.length;
-          for (const row of rows) {
-            const matches = bySlugForName.get(normalizeName(row.nameEn));
-            if (!matches) continue;
-            for (const addon of matches) {
-              const key = `addon:${addon.slug}`;
-              translations[key] = row.nameRu;
-              descriptions[key] = row.descriptionRu;
-              matchedSlugs.add(addon.slug);
-            }
-          }
+        for (const table of findAddonTables($)) {
+          for (const row of extractRowsFromTable($, table)) allRows.push({ ...row, page: title });
         }
       }
     } catch (err) {
@@ -224,6 +252,91 @@ async function main() {
       console.warn(`  "${title}": fetch/parse failed (${(err as Error).message})`);
     }
     if (i < pageTitles.length - 1) await sleep(REQUEST_DELAY_MS);
+  }
+  const rowsSeen = allRows.length;
+
+  const matchedSlugs = new Set<string>();
+  const usedRows = new Set<(typeof allRows)[number]>();
+  const apply = (addon: Addon, row: ExtractedRow) => {
+    const key = `addon:${addon.slug}`;
+    translations[key] = row.nameRu;
+    descriptions[key] = row.descriptionRu;
+    matchedSlugs.add(addon.slug);
+  };
+
+  // --- pass 1: the English names agree once punctuation is set aside ---
+  // Which page belongs to which killer is recorded as a side effect, since
+  // pass 2 needs it and this is the only thing that knows it for certain.
+  const pageOwners = new Map<string, Set<string>>();
+  for (const row of allRows) {
+    const matches = bySlugForName.get(normalizeName(row.nameEn));
+    if (!matches) continue;
+    usedRows.add(row);
+    for (const addon of matches) {
+      apply(addon, row);
+      pageOwners.set(row.page, (pageOwners.get(row.page) ?? new Set()).add(addon.character));
+    }
+  }
+  console.log(`  ${matchedSlugs.size} matched on the English name`);
+
+  // --- pass 2: leftovers, paired within a single page ---
+  //
+  // The rest are the RU wiki's own typos and spelling drift, which no
+  // normalization rule can be written against: `Granma's heart`,
+  // `Infared Upgrade`, `Air Freshner`, `Pussy willow catking`, plus
+  // British/American pairs that only appeared when the data moved to
+  // wiki.gg (`Sulphuric`/`Sulfuric`, `Jewellery`/`Jewelry`, `Theatre`/
+  // `Theater`).
+  //
+  // Fuzzy matching those across all 912 add-ons would be reckless. Scoped
+  // to one page it is not: a page is one killer's power, pass 1 has
+  // already established whose, and the leftovers on both sides are a
+  // handful of names that are mutually very distinct. Assignment is
+  // strictly one-to-one and best-first, so a row can't be handed to two
+  // add-ons, and anything that stays ambiguous is left in English.
+  const fuzzy: string[] = [];
+  for (const [page, owners] of pageOwners) {
+    // A page can belong to more than one killer — The Hillbilly and The
+    // Cannibal both swing a chainsaw, so their add-ons share a page. That
+    // only widens the pool to both killers' leftovers; it doesn't weaken
+    // the scoping, because the pairing below is by name and best-first.
+    // "Tuned Carburettor" and "Carburettor Tuning Guide" sit on those very
+    // pages and both contain the same word, and each still lands on its
+    // own row because the one-character match is claimed before any
+    // looser one is considered.
+    const rowPool = allRows.filter((r) => r.page === page && !usedRows.has(r));
+    const addonPool = addons.filter((a) => owners.has(a.character) && !matchedSlugs.has(a.slug));
+    if (rowPool.length === 0 || addonPool.length === 0) continue;
+
+    const candidates = addonPool
+      .flatMap((addon) =>
+        rowPool.map((row) => {
+          const [an, rn] = [normalizeName(addon.name.en), normalizeName(row.nameEn)];
+          return { addon, row, distance: editDistance(an, rn), contained: oneContainsTheOther(an, rn) };
+        }),
+      )
+      // Best first: a containment counts as a very close match, since a
+      // renamed add-on can gain several words and still be the same thing.
+      .sort((a, b) => (a.contained ? 0 : a.distance) - (b.contained ? 0 : b.distance));
+
+    for (const c of candidates) {
+      if (matchedSlugs.has(c.addon.slug) || usedRows.has(c.row)) continue;
+      const relative = c.distance / Math.max(normalizeName(c.addon.name.en).length, 1);
+      if (!c.contained && relative > MAX_RELATIVE_DISTANCE) continue;
+      usedRows.add(c.row);
+      apply(c.addon, c.row);
+      fuzzy.push(
+        `    [${c.addon.character}] "${c.addon.name.en}" <- "${c.row.nameEn}" = "${c.row.nameRu}"` +
+          (c.contained ? " (renamed)" : ` (${c.distance} chars apart)`),
+      );
+    }
+  }
+  if (fuzzy.length > 0) {
+    // Printed in full rather than counted: every one of these is a
+    // judgement the script made on its own, and the list is short enough
+    // to actually read before committing the result.
+    console.log(`  ${fuzzy.length} more matched within a single group page:`);
+    for (const line of fuzzy) console.log(line);
   }
 
   const { _comment: transComment, ...restTranslations } = translations;

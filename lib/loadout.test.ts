@@ -17,7 +17,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import type { Addon, Item, ItemType } from "./types";
+import type { Addon, Item, ItemType, Offering } from "./types";
 
 const dataDir = join(dirname(fileURLToPath(import.meta.url)), "..", "data");
 const load = <T>(file: string): T[] =>
@@ -25,6 +25,7 @@ const load = <T>(file: string): T[] =>
 
 const items = load<Item>("items.json");
 const addons = load<Addon>("addons.json");
+const offerings = load<Offering>("offerings.json");
 const survivorAddons = addons.filter((a) => a.role === "survivor");
 
 test("the shipped data is actually loaded", () => {
@@ -76,6 +77,29 @@ test("items are recognisably of the type they claim", () => {
         `e.g. ${ofType.map((i) => i.name.en).slice(0, 3).join(", ")}`,
     );
   }
+});
+
+test("every loadout piece is actually translated into Russian", () => {
+  // The RU names come from a different wiki than the English ones, matched
+  // on the English cross-reference each RU row carries (see
+  // scripts/sync-loadout-addons.ts). That match is the fragile part: when
+  // the two wikis spell a name differently the row is silently skipped and
+  // the piece falls back to English, which looks like a translation gap
+  // rather than a bug. Sixty-two add-ons sat in that state — every one of
+  // The Wraith's among them — because the matcher folded dashes into a
+  // character it then kept, so `"The Beast" - Soot` never met `The Beast
+  // Soot`.
+  //
+  // Checking for Cyrillic rather than "ru !== en" is deliberate: a piece
+  // whose RU name is copied verbatim from the English is exactly the
+  // fallback this is meant to catch.
+  const cyrillic = /[Ѐ-ӿ]/;
+  const untranslated = [...items, ...addons, ...offerings].filter((p) => !cyrillic.test(p.name.ru));
+  assert.deepEqual(
+    untranslated.slice(0, 10).map((p) => `${p.kind}:${p.name.en}`),
+    [],
+    `${untranslated.length} loadout pieces have no Russian name`,
+  );
 });
 
 test("every killer add-on names a character, and none sit on the general sentinel", () => {

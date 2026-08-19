@@ -563,9 +563,10 @@
     "slug": "volcanic-stone",
     "name": {
       "en": "Volcanic Stone",
-      "ru": "Volcanic Stone"
+      "ru": "Вулканический камень"
     },
     "description": "\"The heat of its birthplace glows within this living rock.\" Modifies the Fog Vial with the following effect: Reduces the Recharge time of the Fog Cloud by -5 seconds.",
+    "descriptionRuRaw": "Сквозь живой камень жарко мерцает место его рождения. Ускоряет перезарядку на 5 сек.",
     "addedAt": "2026-08-19T13:33:44.362Z"
   },
   {
@@ -577,9 +578,10 @@
     "slug": "reactive-compound",
     "name": {
       "en": "Reactive Compound",
-      "ru": "Reactive Compound"
+      "ru": "Реактивное соединение"
     },
     "description": "\"Pressure builds within the vial. Its contents beg for release.\" Modifies the Fog Vial with the following effect: Reduces the Expansion time of the Fog Cloud by -1 second.",
+    "descriptionRuRaw": "Давление во флаконе растет. Его содержимое рвется на свободу. Ускоряет расширение облака Тумана на 1 сек.",
     "addedAt": "2026-08-19T13:33:44.362Z"
   },
   {
@@ -591,9 +593,10 @@
     "slug": "oily-sap",
     "name": {
       "en": "Oily Sap",
-      "ru": "Oily Sap"
+      "ru": "Маслянистый сок"
     },
     "description": "\"The emerging fog clings to the air, overwhelming the senses for even longer.\" Modifies the Fog Vial with the following effect: Increases the duration of the Fog Cloud by +2 seconds.",
+    "descriptionRuRaw": "Нарождающийся Туман еще дольше заполняет воздух и мешает ориентироваться. Облако Тумана сохраняется на 2 сек. дольше",
     "addedAt": "2026-08-19T13:33:44.362Z"
   },
   {
@@ -605,9 +608,10 @@
     "slug": "mushroom-formula",
     "name": {
       "en": "Mushroom Formula",
-      "ru": "Mushroom Formula"
+      "ru": "Грибная смесь"
     },
     "description": "\"Blooming wisps of fog grasp at the environment, reaching farther and farther out.\" Modifies the Fog Vial with the following effect: Increases the maximum size of the Fog Cloud by +2 metres.",
+    "descriptionRuRaw": "Растекающиеся клубы Тумана окутывают все вокруг, распространяясь все шире. Максимальный размер увеличивается на 2 м",
     "addedAt": "2026-08-19T13:33:44.362Z"
   },
   {
@@ -619,9 +623,10 @@
     "slug": "potent-extract",
     "name": {
       "en": "Potent Extract",
-      "ru": "Potent Extract"
+      "ru": "Мощная вытяжка"
     },
     "description": "\"One drop is enough to change the consistency of this strange elixir.\" Modifies the Fog Vial with the following effects: Increases the opacity of the Fog Cloud by +100 %. Reduces the duration of the Fog Cloud by -50 %. Reduces the size of the Fog Cloud by -25 %.",
+    "descriptionRuRaw": "Всего одной капли достаточно, чтобы изменить структуру этого странного эликсира. Увеличивает плотность облака тумана на 100% Сокращает срок его существования на 50% Уменьшает размеры облака тумана на 25%",
     "addedAt": "2026-08-19T13:33:44.362Z"
   },
   {
@@ -964,9 +969,10 @@
     "slug": "sulphuric-acid-vial",
     "name": {
       "en": "Sulphuric Acid Vial",
-      "ru": "Sulphuric Acid Vial"
+      "ru": "Пробирка с серной кислотой"
     },
     "description": "\"A thin and clear combustible liquid which numbs the mind when inhaled.\" Survivors afflicted by the Tonic suffer from the following effect: Causes the Mangled Status Effect for 70 seconds.",
+    "descriptionRuRaw": "Жидкость без цвета и запаха, по плотности напоминающая масло. Обладает сильными разъедающими свойствами. Отравленная injured[1] жертва получает эффект \"Травма\" на 70 сек. \"Травма\" увеличивает время лечения на 25% и действует в течение указанного срока или до полного исцеления.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -1019,9 +1025,10 @@
     "slug": "garish-make-up-kit",
     "name": {
       "en": "Garish Make-Up Kit",
-      "ru": "Garish Make-Up Kit"
+      "ru": "Набор яркого грима"
     },
     "description": "\"Some for the face and some for the Antidote.The unknown compound intensifies the Antidote's effect.\" Modifies the Antidote with the following effect: Increases the duration of Invigoration by +2 seconds.",
+    "descriptionRuRaw": "Что-то из этого ляжет на лицо, что-то пойдет в антидот. Это неизвестное соединение усиливает действие антидота. Продлевает \"Бодрость\" на 2 сек.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -1032,9 +1039,10 @@
     "slug": "redhead-s-pinkie-finger",
     "name": {
       "en": "Redhead's Pinkie Finger",
-      "ru": "Redhead's Pinkie Finger"
+      "ru": "Мизинец рыжей девушки"
     },
     "description": "\"The prized pinkie finger of a redhead.Faintly fragrant.Tastes of potpourri and varnish.\" Modifies the Tonic with the following effect: Survivors hit directly with its Bottle suffer from the Exposed Status Effect while Intoxicated. Redhead's Pinkie Finger limits the number of carried Bottles to 1.",
+    "descriptionRuRaw": "Трофейный мизинец рыжей девушки. Источает едва уловимый аромат. На вкус как попурри и лак. Прямое попадание бутылки добивающего тоника накладывает \"Уязвимость\", пока не пройдет отравление При себе можно носить не более 1 бутылки Выживших с эффектом \"Уязвимость\" можно смертельно ранить базовой атакой, даже если они не ранены.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -1647,9 +1655,10 @@
     "slug": "powdered-eggshell",
     "name": {
       "en": "Powdered Eggshell",
-      "ru": "Powdered Eggshell"
+      "ru": "Измельченная яичная скорлупа"
     },
     "description": "Minuscule eggshell fragments shimmering with a pale golden hue. Increases the Tripped duration of Phantasm Traps by +20 %.",
+    "descriptionRuRaw": "Крохотные кусочки яичной скорлупы, переливающейся бледно-золотистым оттенком. Продлевают действие активированной ловушки-фантома на 20%",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -1730,9 +1739,10 @@
     "slug": "pussy-willow-catkins",
     "name": {
       "en": "Pussy Willow Catkins",
-      "ru": "Pussy Willow Catkins"
+      "ru": "Сережки из ивы"
     },
     "description": "A handful of small, pristine flower clusters covered in a fine greyish fur. The Auras of Survivors tripping Phantasm Traps are revealed to you for 3 seconds.",
+    "descriptionRuRaw": "Несколько небольших стеблей, покрытых тонкой сероватой шерстью. Показывают ауру выживших в течение 3 сек., когда те активируют ловушку-фантом.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -1827,9 +1837,10 @@
     "slug": "grandma-s-heart",
     "name": {
       "en": "Grandma's Heart",
-      "ru": "Grandma's Heart"
+      "ru": "Бабушкино сердце"
     },
     "description": "The cold heart of the cannibal village elder.The trapped life essence within unlocks tremendous potential in The Hag's power. Whenever Survivors trigger Phantasm Traps, you benefit from the following effects for their tripped duration: Suppresses your Terror Radius. Increases the Fake Terror Radius of the Mud Phantasms by +16 metres. \"Bring me another slice of the girl.\" — Grandma",
+    "descriptionRuRaw": "Холодное сердце престарелого жителя деревни каннибалов. Заточенная внутри эссенция жизни открывает огромный потенциал в силе Ведьмы. Уменьшает радиус террора Ведьмы до 0 м, когда выживший активирует ловушку-фантом. Радиус террора грязевых фантомов увеличивается на 16 м. \"Притащите мне еще кусок этой девчонки.\" - Бабушка",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -2708,9 +2719,10 @@
     "slug": "carburettor-tuning-guide",
     "name": {
       "en": "Carburettor Tuning Guide",
-      "ru": "Carburettor Tuning Guide"
+      "ru": "Руководство по настройке карбюратора"
     },
     "description": "A crudely drawn guide to properly adjust and tune a Chainsaw carburettor. Starting a Chainsaw Dash automatically consumes all available Power Tokens, combining their durations: Increases the duration of the Chainsaw Dash by +0.5 seconds per Token. Reduces the Movement speed during the Chainsaw Dash by -2 %.",
+    "descriptionRuRaw": "Небрежно нацарапанная инструкция для правильной настройки и регулировки карбюратора бензопилы. Размах бензопилой автоматически расходует все заряды Продлевает размах бензопилой на 0.5 сек Уменьшает максимальную скорость передвижения во время размаха бензопилой на 2%",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -2777,9 +2789,10 @@
     "slug": "mouldy-electrode",
     "name": {
       "en": "Mouldy Electrode",
-      "ru": "Mouldy Electrode"
+      "ru": "Заплесневелый электрод"
     },
     "description": "A mouldy electrode which can nevertheless conduct a weak electrical current. Extends the Area of Effect of the Shock Therapy Attack by +2 metres.",
+    "descriptionRuRaw": "Заплесневелый электрод все еще пропускающий слабый ток. Увеличивает дальность \"Шоковой терапии\" на 2 м.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -3238,9 +3251,10 @@
     "slug": "lopro-chains",
     "name": {
       "en": "LoPro Chains",
-      "ru": "LoPro Chains"
+      "ru": "Облегченные цепи"
     },
     "description": "Light chains that decrease the weight of the Chainsaw, allowing for greater manoeuvrability. Grants the ability to continue a Chainsaw Sprint through Breakable Walls and dropped Pallets, breaking them in the process. Healthy Survivors hit with the Chainsaw within 5 seconds of triggering the primary effect are only damaged for a single Health State. Injured Survivors will suffer from the Deep Wound Status Effect instead.",
+    "descriptionRuRaw": "С новыми цепями бензопила становится легче, что позволяет лучше ее контролировать. Рывок с бензопилой продолжается, когда вы особым образом ломаете доски или разрушаемые стены с помощью бензопилы. При ранении бензопилой в течение 5 сек. после поломки доски или стены здоровые выжившие теряют одно состояние здоровья. Раненые выжившие получают эффект глубокой раны. С \"Глубокой раной\" выживший окажется при смерти, если его не подлатают, пока не истекло время",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -3279,9 +3293,10 @@
     "slug": "tuned-carburettor",
     "name": {
       "en": "Tuned Carburettor",
-      "ru": "Tuned Carburettor"
+      "ru": "Калиброванный карбюратор"
     },
     "description": "Despite being caked in dirt and oil, this carburettor has been well adjusted. Increases the Charge speed of the Chainsaw by +20 %. Permanently reduces the default Movement speed to 4.4 m/s.",
+    "descriptionRuRaw": "Хоть этот карбюратор и покрыт толстым слоем грязи и масла, он прекрасно настроен. Ускоряет завод бензопилы на 20%. Снижает базовую скорость передвижения до 4.4 м/с.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -3964,9 +3979,10 @@
     "slug": "jewellery",
     "name": {
       "en": "Jewellery",
-      "ru": "Jewellery"
+      "ru": "Бижутерия"
     },
     "description": "\"A large necklace made of beads an inexpensive metals.One of Judith's favourites.\" When Stalking stationary Survivors, you benefit from the following effect: Increases the Power speed of Stalking by +10 %.",
+    "descriptionRuRaw": "Крупное ожерелье из бисера и недорогих металлов. Одно из любимых украшений Джудит. Увеличивает скорость заполнения шкалы преследования неподвижных выживших на 10%.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -4005,9 +4021,10 @@
     "slug": "jewellery-box",
     "name": {
       "en": "Jewellery Box",
-      "ru": "Jewellery Box"
+      "ru": "Коробка с бижутерией"
     },
     "description": "\"A barren wooden box in which vanity items were once stored.\" Modifies the Stalk ability with the following effect: Increases the Power speed of Stalking by +30 %. Decreases the range of Stalking by -16 metres.",
+    "descriptionRuRaw": "Пустой деревянный ящик, в котором хранились украшения. Увеличивает скорость заполнения шкалы преследования на 30%. Уменьшает радиус преследования на 16 м.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -4130,9 +4147,10 @@
     "slug": "adi-valente-issue-1",
     "name": {
       "en": "Adi Valente Issue 1",
-      "ru": "Adi Valente Issue 1"
+      "ru": "Ади Валенте №1"
     },
     "description": "An original copy of the first issue of Adi Valente, the comic her father made while Adriana was a child. Reduces the Success Zone of Skill Checks for Claw-Trapped Survivors by -20 %.",
+    "descriptionRuRaw": "Оригинал первого выпуска \"Ади Валенте\" - комикса, который отец Адрианы нарисовал, когда она была еще ребенком. Зона проверки реакции выживших с электрозахватом уменьшается на 20%. Эффект сохраняется, пока электрозахват не будет снят.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -4143,9 +4161,10 @@
     "slug": "high-current-upgrade",
     "name": {
       "en": "High-Current Upgrade",
-      "ru": "High-Current Upgrade"
+      "ru": "Высокоамперный усилитель"
     },
     "description": "A wider cable with low resistance that allows faster recharging of batteries. Increases the Tracking duration of the Radar by +1 second.",
+    "descriptionRuRaw": "Утолщенный кабель с низким сопротивлением позволяет быстрее подзаряжать аккумуляторы. Увеличивает время показа обнаруженных выживших на радаре на 1 сек.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -4268,9 +4287,10 @@
     "slug": "infrared-upgrade",
     "name": {
       "en": "Infrared Upgrade",
-      "ru": "Infrared Upgrade"
+      "ru": "Инфракрасный модуль"
     },
     "description": "Heat-detecting cameras focus in on high-stress individuals with pinpoint accuracy. The Auras of Claw-Trapped Survivors are revealed to you for 4 seconds after they remove their Claw-Trap.",
+    "descriptionRuRaw": "Камеры с детекторами тепла с ювелирной точностью фокусируются на людях с высоким уровнем стресса. Всякий раз, когда снимается электрозахват, аура выжившего становится видимой на 4 сек.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -4365,9 +4385,10 @@
     "slug": "randomised-strobes",
     "name": {
       "en": "Randomised Strobes",
-      "ru": "Randomised Strobes"
+      "ru": "Случайные импульсы"
     },
     "description": "Lights flash randomly on the ground, making it harder to find purchase on the uneven terrain. Extends the duration of the Hindered Status Effect for Claw-Trapped Survivors when detected by Drones by +1 second.",
+    "descriptionRuRaw": "Хаотично освещает землю, затрудняя ориентирование на пересеченной местности. Увеличивает продолжительность действия эффекта \"Замедление\", который выжившие с электрозахватом получают при обнаружении коптером, на 1 сек. \"Замедление\" снижает скорость передвижения выжившего.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -5022,9 +5043,10 @@
     "slug": "battle-axe-head",
     "name": {
       "en": "Battle Axe Head",
-      "ru": "Battle Axe Head"
+      "ru": "Лезвие боевого топора"
     },
     "description": "Sander Rault was a tower of a man, terrifying in form and demeanour. Reduces the Cool-down time after summoning The Carnifex by -20 %.",
+    "descriptionRuRaw": "Сандер Ролт был настоящей глыбой в человеческом обличье. Он пугал и своим видом, и поведением. Призыв палача ускоряет перезарядку на 20%.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -5399,9 +5421,10 @@
     "slug": "moulted-skin",
     "name": {
       "en": "Moulted Skin",
-      "ru": "Moulted Skin"
+      "ru": "Растекшаяся шкурка"
     },
     "description": "The Xenomorph moulted many times as it rapidly grew on the Nostromo.Its shed skin was a constant reminder of its presence. After deploying a Remote Flame Turret, Survivors suffer from the Exhausted Status Effect for 30 seconds.",
+    "descriptionRuRaw": "Ксеноморф на \"Ностромо\" стремительно рос и неоднократно линял. Остатки сброшенной им шкуры служили напоминанием о его присутствии. После размещения турели на сделавшего это выжившего накладываются эффект \"Усталость\" на 30 сек. \"Усталость\" не дает выжившим активировать утомляющие навыки",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -6112,9 +6135,10 @@
     "slug": "headline-cut-outs",
     "name": {
       "en": "Headline Cut-Outs",
-      "ru": "Headline Cut-Outs"
+      "ru": "Вырезки из газет"
     },
     "description": "Cut-outs of articles covering unsolved murder cases from Utah to Pennsylvania.While The Ghost Face just authored some of the headlines, he committed all of the murders.Compiling your success makes you proud and boosts your confidence. Increases your Movement speed while Stalking by +40 %.",
+    "descriptionRuRaw": "Вырезанные из газет статьи о нераскрытых убийствах, совершенных в множестве мест от Юты до Пенсильвании. Гоуст Фейс написал лишь некоторые из них, но все жертвы - на его счету. Вы гордитесь своими успехами, и напоминание о них придает вам уверенности. Повышают скорость передвижения при преследовании на 40%.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -6139,9 +6163,10 @@
     "slug": "cinch-straps",
     "name": {
       "en": "Cinch Straps",
-      "ru": "Cinch Straps"
+      "ru": "Ремешки"
     },
     "description": "Black straps that keep everything in place while on the prowl. Causes Night Shroud to remain active on missed Basic Attacks.",
+    "descriptionRuRaw": "Черные ремешки для закрепления вещей на местах и спокойного рыскания в ночи. \"Ночной саван\" не прерывается после неудачной базовой атаки.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -6292,9 +6317,10 @@
     "slug": "drop-leg-knife-sheath",
     "name": {
       "en": "Drop-Leg Knife Sheath",
-      "ru": "Drop-Leg Knife Sheath"
+      "ru": "Набедренные ножны"
     },
     "description": "A sheath allowing for a full motion range: ideal to inflict quick and powerful wounds while moving freely.Stolen from a patrol officer the night Danny left Philadelphia. Grants a +10 % Haste Status Effect for 5 seconds after marking a Survivor. \"Gotta get ready like a scout — without the stupid patches. What I get is much better.\" — The Ghost Face",
+    "descriptionRuRaw": "Ножны, которые не стесняют движения. С ними очень удобно быстро наносить глубокие раны. Украдены у патрульного в ночь, когда Дэнни покинул Филадельфию. Когда Гоуст Фейс отмечает выжившего, он двигается на 10% быстрее в течение 5 сек. \"Я должен быть всегда готов, как скаут. Только дурацкие нашивки мне не нужны. Моя награда намного лучше\" (Гоуст Фейс).",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -6305,9 +6331,10 @@
     "slug": "night-vision-monocular",
     "name": {
       "en": "Night Vision Monocular",
-      "ru": "Night Vision Monocular"
+      "ru": "Монокуляр ночного видения"
     },
     "description": "Night vision lens enabling sharp photos even when shrouded in darkness.Ideal for discreet, impromptu visits late at night. Survivors suffer from the Exhausted Status Effect for 10 seconds after revealing you.",
+    "descriptionRuRaw": "Объектив с ночным видением, который позволяет делать четкие снимки даже в темноте. Самое то для неожиданных ночных визитов. Заметив Гоуст Фейса, выживший получает эффект \"Усталость\" на 10 сек. \"Усталость\" не дает выжившим активировать утомляющие навыки.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -6332,9 +6359,10 @@
     "slug": "ghost-face-caught-on-tape",
     "name": {
       "en": "\"Ghost Face Caught on Tape\"",
-      "ru": "\"Ghost Face Caught on Tape\""
+      "ru": "\"Гоуст Фейс пойман на камеру\""
     },
     "description": "A tape obtained by Olsen to write an article that terrorised Roseville. Instantly recharges Night Shroud after putting a Survivor into the Dying State with a Basic Attack. \"In this footage, a dark figure is seen entering a house late at night in Northern Roseville, Florida.The police were called the next morning to report a murder in the area.Lock your doors: a Killer is in our midst, roaming freely, like a ghost in the night.\" — The Roseville Gazette",
+    "descriptionRuRaw": "Запись, сделанная Олсеном для статьи, ужаснувшей весь Розвилль. Мгновенно перезаряжает \"Ночной саван\" после успешной базовой атаки, если после нее выживший остается при смерти. \"На записи видно, как поздно ночью некая темная фигура входит в дом с северной части Розвилля, штат Флорида. На следующее утро полиции сообщили об убийстве в этой местности. Запирайте двери: убийца прячется среди нас, он беспрепятственно бродит, словно привидение в ночи\" (\"Розвилль Газетт\").",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -6597,9 +6625,10 @@
     "slug": "vermilion-webcap",
     "name": {
       "en": "Vermilion Webcap",
-      "ru": "Vermilion Webcap"
+      "ru": "Киноварный паутинник"
     },
     "description": "A bright red poisonous mushroom from the Upside Down. After traversing the Upside Down, the following effect applies: Extends the Undetectable Status Effect gained after emerging from a Portal by +3 seconds to 8 seconds. \"Still experimenting with this specimen, so far our results are inconsistent.\" — Hawkins National Laboratory",
+    "descriptionRuRaw": "Ярко-красный ядовитый гриб с Изнанки. Продлевает время действия эффекта \"Незаметность\", накладываемого при выходе из портала, на 3 сек. \"Незаметность\" скрывает ауру, радиус террора и красное свечение убийцы. \"Эксперименты над образцом продолжаются, но результаты противоречивые\" - Национальная лаборатория Хоукинса.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -7422,9 +7451,10 @@
     "slug": "foreign-plant-fibres",
     "name": {
       "en": "Foreign Plant Fibres",
-      "ru": "Foreign Plant Fibres"
+      "ru": "Волокна неизвестных растений"
     },
     "description": "Xenobotanists would have a field day with these strange samples of alien plant life. Reduces the duration of the Movement Speed penalty after being stunned by a Pallet during Overclock Mode by -20 %.",
+    "descriptionRuRaw": "Ксеноботаники прыгали бы от радости при виде этих странных инопланетных растений. Уменьшает время действия штрафа \"Замедление\" при оглушении доской в режиме \"Разгон\" на 20% \"Замедление\" снижает скорость передвижения убийцы.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -7533,9 +7563,10 @@
     "slug": "air-freshener",
     "name": {
       "en": "Air Freshener",
-      "ru": "Air Freshener"
+      "ru": "Освежитель воздуха"
     },
     "description": "After her parents were found, this was in the bag of belongings the police returned.Haddie does not know why she keeps it. Increases the number of available Power Tokens to 4.",
+    "descriptionRuRaw": "Когда нашли ее родителей, это было в возвращенных полицией вещах. Хэдди не знает, зачем она его хранит. Добавляет 1 дополнительный жетон силы для телепорта",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -7714,9 +7745,10 @@
     "slug": "tilling-blade",
     "name": {
       "en": "Tilling Blade",
-      "ru": "Tilling Blade"
+      "ru": "Пахотный инструмент"
     },
     "description": "The island was self-sufficient, and followers tilled the tough soil to grow crops during the warm season. Survivors suffer from the Blindness, Haemorrhage, and Mangled Status Effects for 80 seconds after becoming injured during Nightfall. \"Like a predatory beast, it can smell and track blood.\"",
+    "descriptionRuRaw": "Остров был самодостаточным: адепты обрабатывали каменистую почву, выращивая скудный урожай в теплый сезон. Если Ночью был ранен здоровый выживший, он на 80 сек. получает эффекты \"Слепота\", \"Кровотечение\" и \"Травма\" \"Слепота\" не дает выжившим видеть ауры. \"Кровотечение\" уменьшает прогресс лечения, когда выжившего не лечат, и увеличивает кровавый след за ранеными выжившими. Действует в течение указанного срока или до полного исцеления. \"Травма\" увеличивает время лечения на 25% и действует в течение указанного срока или до полного исцеления. \"Подобно хищному зверю оно способно чуять запах крови и идти по нему\"",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -7979,9 +8011,10 @@
     "slug": "rust-coloured-egg",
     "name": {
       "en": "Rust-Coloured Egg",
-      "ru": "Rust-Coloured Egg"
+      "ru": "Яйцо цвета ржавчины"
     },
     "description": "\"An old-looking egg, coloured reddish orange, about the size of a quail's egg.\" Successful Punishment of the Damned attacks trigger the following effect: Recharges Rites of Judgement by +30 %. \"James... you made me happy.\" — Mary",
+    "descriptionRuRaw": "Старое на вид яйцо красновато-оранжевого цвета. Размером примерно с яйцо перепелки. Ранение выжившего \"Карой обреченных\" повышает заряд \"Обрядов осуждения\" на 30% \"Джеймс... ты сделал меня счастливой\" - Мэри",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -9154,9 +9187,10 @@
     "slug": "brian-s-intestine",
     "name": {
       "en": "Brian's Intestine",
-      "ru": "Brian's Intestine"
+      "ru": "Кишки Брайана"
     },
     "description": "The small intestine of Brian Irons, chief of the RPD.It is an appetising sight for zombies. Increases the Movement Speed of Zombies by +0.25 m/s.",
+    "descriptionRuRaw": "Тонкий кишечник Брайана Айронса, начальника полицейского управления Раккун-Сити. Лакомый кусочек для зомби. Увеличивает скорость передвижения зомби на 25%",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -9391,9 +9425,10 @@
     "slug": "ne-parasite",
     "name": {
       "en": "Ne-α Parasite",
-      "ru": "Ne-α Parasite"
+      "ru": "Паразит NE-A (NE-альфа)"
     },
     "description": "A parasite used in the development of Nemesis T-Types, it is capable of hijacking its host's brain. Survivors suffer from the Oblivious Status Effect for 60 seconds after becoming Contaminated, or until they cure themselves with a Vaccine.",
+    "descriptionRuRaw": "Паразит, использованный при разработке Немезисов Т-типов. Способен контролировать мозг носителя. На зараженных выживших действует эффект \"Забывчивость\" в течение 60 сек. или до получения вакцины \"Забывчивость\" мешает выжившим слышать или подвергаться действию радиуса террора убийцы",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -9614,9 +9649,10 @@
     "slug": "theatre-binoculars",
     "name": {
       "en": "Theatre Binoculars",
-      "ru": "Theatre Binoculars"
+      "ru": "Театральный бинокль"
     },
     "description": "\"A pair of glasses that have watched many tragedies.\" Successfully hitting a Survivor not currently afflicted with Leeched with an Intestinal Whip attack triggers the following effect: The Auras of all other Survivors within 24 metres are revealed to you for 6 seconds.",
+    "descriptionRuRaw": "Пара очков, которые видели немало трагедий. При попадании кишечным хлыстом по выжившему без эффекта \"Иссушение\", на 5 сек. становятся видимыми ауры других выживших в радиусе 24м",
     "addedAt": "2026-08-17T19:16:57.947Z"
   },
   {
@@ -9655,9 +9691,10 @@
     "slug": "queen-s-sceptre",
     "name": {
       "en": "Queen's Sceptre",
-      "ru": "Queen's Sceptre"
+      "ru": "Скипетр королевы"
     },
     "description": "\"The stage prop of a vengeful queen who demands blood.\" Successfully hitting a Survivor with an Intestinal Whip attack triggers the following effect: Causes a Leeching Gland to spatter from their location.",
+    "descriptionRuRaw": "Реквизит для сцены, изображающий мстительную и кровожадную королеву. Если удар кишечным хлыстом достигает цели, недалеко от выжившего падает высасывающая железа",
     "addedAt": "2026-08-17T19:16:57.947Z"
   },
   {
@@ -10032,9 +10069,10 @@
     "slug": "traveller-s-hat",
     "name": {
       "en": "Traveller's Hat",
-      "ru": "Traveller's Hat"
+      "ru": "Шляпа путника"
     },
     "description": "\"A wide-brimmed hat that once belonged to a well-travelled man.\" Modifies the Shapeshift ability with the following effect: Reduces the Transition time between Forms by -5 %.",
+    "descriptionRuRaw": "Широкополая шляпа, некогда принадлежавшая бывалому путешественнику Увеличивает скорость превращения на 4%",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -11109,9 +11147,10 @@
     "slug": "the-beast-soot",
     "name": {
       "en": "\"The Beast\" - Soot",
-      "ru": "\"The Beast\" - Soot"
+      "ru": "\"Зверь\" - сажа"
     },
     "description": "The Kunwulju symbol, representing the Realm of Fear, is finger-drawn out of soot on the body of the Bell. Your Terror Radius is no longer suppressed when Cloaked. Grants +100 % bonus Bloodpoints for Stalking and Surprise Attack Score Events.",
+    "descriptionRuRaw": "Символ Кунгферру, олицетворяющий мир страха, нарисован сажей на колоколе. Радиус террора Призрака больше не подавляется в режиме невидимости. Убийца получает на 100% больше очков крови за выслеживание и внезапные нападения на выживших.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -11122,9 +11161,10 @@
     "slug": "the-ghost-soot",
     "name": {
       "en": "\"The Ghost\" - Soot",
-      "ru": "\"The Ghost\" - Soot"
+      "ru": "\"Гоуст Фейс\" - сажа"
     },
     "description": "The Khugwemuu symbol, representing the Spirit World, is finger-drawn out of soot on the body of the Bell. Your Terror Radius and Red Stain are suppressed for another 6 seconds after uncloaking.",
+    "descriptionRuRaw": "Символ Кугвемуу, олицетворяющий мир духов, нарисован сажей на колоколе. После выхода из невидимости радиус террора и красное свечение Призрака остаются подавленными в течение 6 секунд.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -11135,9 +11175,10 @@
     "slug": "the-hound-soot",
     "name": {
       "en": "\"The Hound\" - Soot",
-      "ru": "\"The Hound\" - Soot"
+      "ru": "\"Ищейка\" - сажа"
     },
     "description": "The Wonnug symbol, representing a peerless tracker, is finger-drawn out of soot on the body of the Bell. When Cloaked, Pools of Blood appear to you in bright red.",
+    "descriptionRuRaw": "Символ Воннуг, олицетворяющий бесподобного следопыта, нарисован сажей на колоколе. В невидимости свежие кровавые следы становятся ярче, чем обычно.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -11148,9 +11189,10 @@
     "slug": "the-serpent-soot",
     "name": {
       "en": "\"The Serpent\" - Soot",
-      "ru": "\"The Serpent\" - Soot"
+      "ru": "\"Змей\" - сажа"
     },
     "description": "The Laokeye symbol, representing cunning, is finger-drawn out of soot on the body of the Bell. Breaking Breakable Walls or Pallets by any means, or performing the Damage Generator action on incomplete Generators, will cause you to automatically uncloak.",
+    "descriptionRuRaw": "Символ Оас-Нек, олицетворяющий коварство, нарисован сажей на колоколе. В режиме невидимости вы выходите из невидимости, когда совершаете базовую поломку досок, разрушаемых стен, ломаете или взрываете генераторы",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -11161,9 +11203,10 @@
     "slug": "blind-warrior-mud",
     "name": {
       "en": "\"Blind Warrior\" - Mud",
-      "ru": "\"Blind Warrior\" - Mud"
+      "ru": "\"Слепой воин\" - грязь"
     },
     "description": "The Baikra-Kaeug symbol, representing ferocity, is finger-drawn in mud on the body of the bell. Survivors hit with a Surprise Attack suffer from the Blindness Status Effect for 60 seconds.",
+    "descriptionRuRaw": "Символ Байкра-Кеуг, олицетворяющий свирепость, нарисован грязью на колоколе. Внезапные атаки по выжившим сразу после выхода из невидимости накладывают на них \"Слепоту\" на 60 сек. \"Слепота\" не дает выжившим читать ауры.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -11174,9 +11217,10 @@
     "slug": "blink-mud",
     "name": {
       "en": "\"Blink\" - Mud",
-      "ru": "\"Blink\" - Mud"
+      "ru": "\"Скачок\" - грязь"
     },
     "description": "The Kratin symbol, representing quick passing, is finger-drawn in mud on the body of the Bell. Reduces the Cloaking time by -40 %.",
+    "descriptionRuRaw": "Символ Кратин, олицетворяющий скорость, нарисован грязью на колоколе. Увеличивает скорость перехода в невидимость на 40%.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -11187,9 +11231,10 @@
     "slug": "swift-hunt-mud",
     "name": {
       "en": "\"Swift Hunt\" - Mud",
-      "ru": "\"Swift Hunt\" - Mud"
+      "ru": "\"Стремительная охота\" - грязь"
     },
     "description": "The Kuntin-Takkho symbol, representing a rapid descent on a prey, is finger-drawn in mud on the body of the Bell. Reduces the Uncloaking time by -8 %.",
+    "descriptionRuRaw": "Символ Кунтин-Такко, олицетворяющий быстрое выслеживание жертвы, нарисован грязью на колоколе. Увеличивает скорость выхода из невидимости на 8%.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -11200,9 +11245,10 @@
     "slug": "windstorm-mud",
     "name": {
       "en": "\"Windstorm\" - Mud",
-      "ru": "\"Windstorm\" - Mud"
+      "ru": "\"Ураган\" - грязь"
     },
     "description": "The Ohuwe-Onmnea symbol, representing a howling storm, is finger-drawn in mud on the body of the Bell. Increases your Movement Speed while Cloaked by +5 %.",
+    "descriptionRuRaw": "Символ Охувэ-Онмнеа, олицетворяющий завывающую бурю, нарисован грязью на колоколе. Увеличивает скорость передвижения Призрака в невидимости на 5%",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -11227,9 +11273,10 @@
     "slug": "blind-warrior-white",
     "name": {
       "en": "\"Blind Warrior\" - White",
-      "ru": "\"Blind Warrior\" - White"
+      "ru": "\"Слепой воин\" - белая краска"
     },
     "description": "The Baikra-Kaeug symbol, representing ferocity, is stamped in white ink on the body of the bell. Survivors hit with a Surprise Attack suffer from the Haemorrhage and Mangled Status Effects for 70 seconds.",
+    "descriptionRuRaw": "Символ Байкра-Кеуг, олицетворяющий свирепость, нарисован грязью на колоколе. Внезапные атаки по выжившим сразу после выхода из невидимости заставляют их страдать от эффектов Травма и Кровотечение на 70 сек. \"Кровотечение\" уменьшает прогресс лечения, когда выжившего не лечат, и увеличивает кровавый след за ранеными выжившими. Действует в течение указанного срока или до полного исцеления. \"Травма\" увеличивает время лечения на 25% и действует в течение указанного срока или до полного исцеления.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -11240,9 +11287,10 @@
     "slug": "blink-white",
     "name": {
       "en": "\"Blink\" - White",
-      "ru": "\"Blink\" - White"
+      "ru": "\"Скачок\" - белая краска"
     },
     "description": "The Kratin symbol, representing quick passing, is stamped in white ink on the body of the Bell. Reduces the Cloaking time by -60 %.",
+    "descriptionRuRaw": "Символ Кратин, олицетворяющий скорость, нарисован белой краской на колоколе. Увеличивает скорость перехода в невидимость на 60%.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -11253,9 +11301,10 @@
     "slug": "shadow-dance-white",
     "name": {
       "en": "\"Shadow Dance\" - White",
-      "ru": "\"Shadow Dance\" - White"
+      "ru": "\"Танец теней\" - белая краска"
     },
     "description": "The Yiwarick symbol, representing dark synergy, is stamped in white ink on the body of the Bell. Increases the Action speeds for breaking Breakable Walls and Pallets, damaging Generators, and vaulting Windows by +40 % while Cloaked.",
+    "descriptionRuRaw": "Символ Онмене-Вивуфо, олицетворяющий темную синергию, выведен белой краской на колоколе. В режиме невидимости сокращает время, необходимое для базовых прыжков через окна, поломки досок, разрушаемых стен и генераторов, на 40%.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -11266,9 +11315,10 @@
     "slug": "swift-hunt-white",
     "name": {
       "en": "\"Swift Hunt\" - White",
-      "ru": "\"Swift Hunt\" - White"
+      "ru": "\"Стремительная охота\" - белая краска"
     },
     "description": "The Kuntin-Takkho symbol, representing a rapid descent on a prey, is stamped in white ink on the body of the Bell. Reduces the Uncloaking time by -10 %.",
+    "descriptionRuRaw": "Символ Кунтин-Такко, олицетворяющий быстрое выслеживание жертвы, нарисован белой краской на колоколе. Увеличивает скорость выхода из невидимости на 10%.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -11279,9 +11329,10 @@
     "slug": "windstorm-white",
     "name": {
       "en": "\"Windstorm\" - White",
-      "ru": "\"Windstorm\" - White"
+      "ru": "\"Ураган\" - белая краска"
     },
     "description": "The Ohuwe-Onmnea symbol, representing a howling storm, is stamped in white ink on the body of the Bell. Increases your Movement Speed while Cloaked by +7 %.",
+    "descriptionRuRaw": "Символ Охувэ-Онмнеа, олицетворяющий ярость, нарисован белой краской на колоколе. Увеличивает скорость передвижения Призрака в невидимости на 7%",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -11292,9 +11343,10 @@
     "slug": "all-seeing-blood",
     "name": {
       "en": "\"All Seeing\" - Blood",
-      "ru": "\"All Seeing\" - Blood"
+      "ru": "\"Всевидящий\" - кровь"
     },
     "description": "The Kra-Frabai symbol, representing The Entity watching over us, is stamped in blood on the head of the bell. Unlocks potential in your Aura-reading ability while Cloaked: The Auras of Survivors are revealed to you within 8 metres of your location.",
+    "descriptionRuRaw": "Символ Кра-Фрабай, олицетворяющий наблюдающую за нами Сущность, отпечатан кровью на колоколе. Открывает способность чтения ауры. В режиме невидимости позволяет видеть ауры выживших в радиусе 8 м от вас.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -11305,9 +11357,10 @@
     "slug": "shadow-dance-blood",
     "name": {
       "en": "\"Shadow Dance\" - Blood",
-      "ru": "\"Shadow Dance\" - Blood"
+      "ru": "\"Танец теней\" - кровь"
     },
     "description": "The Yiwarick symbol, representing dark synergy, is stamped in blood on the body of the Bell. Increases the Action speeds for breaking Breakable Walls and Pallets, damaging Generators, and vaulting Windows by +60 % when Cloaked.",
+    "descriptionRuRaw": "Символ Онмене-Вивуфо, олицетворяющий темную синергию, отпечатан кровью на колоколе. В режиме невидимости сокращает время, необходимое для базовых прыжков через окна, поломки досок, разрушаемых стен и генераторов на 60%.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -11318,9 +11371,10 @@
     "slug": "swift-hunt-blood",
     "name": {
       "en": "\"Swift Hunt\" - Blood",
-      "ru": "\"Swift Hunt\" - Blood"
+      "ru": "\"Стремительная охота\" - кровь"
     },
     "description": "The Kuntin-Takkho symbol, representing a rapid descent on a prey, is stamped in blood on the body of the Bell. Reduces the Uncloaking time by -12 %.",
+    "descriptionRuRaw": "Символ Кунтин-Такко, олицетворяющий быстрое выслеживание жертвы, отпечатан кровью на навершии колокола. Увеличивает скорость выхода из невидимости на 12%.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -11331,9 +11385,10 @@
     "slug": "windstorm-blood",
     "name": {
       "en": "\"Windstorm\" - Blood",
-      "ru": "\"Windstorm\" - Blood"
+      "ru": "\"Ураган\" - кровь"
     },
     "description": "The Ohuwe-Onmnea symbol, representing a howling storm, is stamped in blood on the body of the Bell. Increases your Movement Speed while Cloaked by +9 %.",
+    "descriptionRuRaw": "Символ Охувэ-Онмнеа, олицетворяющий сильный шторм, отпечатан кровью на колоколе. Увеличивает скорость движения Призрака в невидимости на 9%.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -11344,9 +11399,10 @@
     "slug": "all-seeing-spirit",
     "name": {
       "en": "\"All Seeing\" - Spirit",
-      "ru": "\"All Seeing\" - Spirit"
+      "ru": "\"Всевидящий\" - дух"
     },
     "description": "The Kra-Frabai symbol, representing The Entity watching over us, ominously glows on the head of the bell. Unlocks potential in your Aura-reading ability while Cloaked: The intensity of the Generator Auras reveals their current Repair progress.",
+    "descriptionRuRaw": "Символ Кра-Фрабай, олицетворяющий наблюдающую за нами Сущность, отпечатан белой краской на колоколе. Открывает способность чтения ауры. В режиме невидимости вы можете определять степень починки генераторов по яркости их ауры.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -11413,9 +11469,10 @@
     "slug": "zori",
     "name": {
       "en": "Zōri",
-      "ru": "Zōri"
+      "ru": "Дзори"
     },
     "description": "A comfortable pair of flat sandals that can easily be slipped on and off. Increases your Movement speed during a Phase-Walk by +5 %.",
+    "descriptionRuRaw": "Удобные плоские сандали, которые можно быстро снимать и надевать. Увеличивают скорость передвижения во время Преследования Ямаоки на 5%.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -11776,9 +11833,10 @@
     "slug": "kanai-anzen-talisman",
     "name": {
       "en": "Kanai-Anzen Talisman",
-      "ru": "Kanai-Anzen Talisman"
+      "ru": "Талисман Канай Андзэн"
     },
     "description": "A trinket given to Kazan at birth, its powers are meant to protect his family from harm. Increases your Movement speed during a Demon Dash by +0.64 m/s.",
+    "descriptionRuRaw": "Этот оберег сделали при рождении Казана, чтобы защитить семью от опасностей. Увеличивает скорость \"Рывка демона\" на 8%",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -11887,9 +11945,10 @@
     "slug": "tear-soaked-tenugui",
     "name": {
       "en": "Tear-Soaked Tenugui",
-      "ru": "Tear-Soaked Tenugui"
+      "ru": "Мокрое от слез тэнугуи"
     },
     "description": "The cloth that Kazan's mother cried into when he left on his pilgrimage to cleanse the samurai. Reduces the Power Gauge penalty for downing Survivors during Blood Fury by -4 seconds.",
+    "descriptionRuRaw": "Этой тряпицей мать Казана утирала слезы, когда он отправился в паломничество, чтобы очистить самурайскую честь. Снижает расход \"Кровавой ярости\", когда вы смертельно раните выжившего, на 4 сек.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -11914,9 +11973,10 @@
     "slug": "renjiro-s-bloody-glove",
     "name": {
       "en": "Renjiro's Bloody Glove",
-      "ru": "Renjiro's Bloody Glove"
+      "ru": "Окровавленная перчатка Рендзиро"
     },
     "description": "The glove Renjiro held to his sternum following the strike dealt by his son Kazan.Whenever a Survivor comes into a contact with a Blood Orb, the following effects apply: The Blood Orb is absorbed by the Survivor. Their Aura is revealed to you for 2 seconds per absorbed Blood Orb. Renjiro's Bloody Glove grants Survivors the ability to see Blood Orbs at the same distance as you. \"When all else spills out, cling only to your honour.\" — Renjiro's Doctrine 14:12",
+    "descriptionRuRaw": "Эту перчатку Рендзиро прижимал к груди, когда сын нанес ему удар. Все выжившие могут видеть шарики крови на том же расстоянии, что и вы. Когда выживший прикасается к шарику крови, его аура подсвечивается на 2 сек. \"Когда все утекает сквозь пальцы, держись за свою честь\" - \"Учение Рендзиро\" 14:12",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -12067,9 +12127,10 @@
     "slug": "honey-locust-thorn",
     "name": {
       "en": "Honey Locust Thorn",
-      "ru": "Honey Locust Thorn"
+      "ru": "Колючки гледичии"
     },
     "description": "Angered with a bounty who fled twice before, Caleb twisted thorn branches onto a spear and let it loose. Speared Survivors breaking free from the The Redeemer suffer from the Mangled Status Effect for 70 seconds.",
+    "descriptionRuRaw": "Когда цель сбежала от него дважды, разъяренный Калеб приделал к гарпуну шипастые ветки. Выжившие, сорвавшиеся с гарпуна, получают эффект \"Травма\" на 70 сек. \"Травма\" увеличивает время лечения на 25% и действует в течение указанного срока или до полного исцеления",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -12150,9 +12211,10 @@
     "slug": "gold-creek-whiskey",
     "name": {
       "en": "Gold Creek Whiskey",
-      "ru": "Gold Creek Whiskey"
+      "ru": "Виски \"Голд Крик\""
     },
     "description": "Warm comfort in a bottle that quelled Caleb's anger and slowed his step. Reduces your Terror Radius by -8 metres during Aim Down Sights. \"A smooth taste for the rugged frontier.\" — Gold Creek Advertisement, 1876",
+    "descriptionRuRaw": "Жидкость в бутылке согревала Калеба, утешала, умаляла его гнев и замедляла шаги. Уменьшает на 8 м радиус террора во время прицеливания из Искупителя. \"Мягкий вкус в суровые времена\" - реклама \"Голд Крик\", 1876 г.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
