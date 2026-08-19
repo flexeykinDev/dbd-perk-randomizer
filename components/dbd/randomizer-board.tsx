@@ -66,12 +66,7 @@ import {
 } from "@/lib/loadout-ids";
 import { safeGet, safeGetJSON, safeSet, safeSetJSON } from "@/lib/safe-storage";
 import { publishObsState } from "@/lib/obs-sync";
-import {
-  connectTwitchChat,
-  type TwitchCommand,
-  type TwitchConnectionState,
-  type TwitchPermission,
-} from "@/lib/twitch-chat";
+import { useTwitchSettings } from "@/lib/use-twitch-settings";
 import { PerkGrid } from "./perk-grid";
 import { LoadoutGrid } from "./loadout-grid";
 import { CopyToast } from "./copy-toast";
@@ -114,17 +109,6 @@ const DEFAULT_LOADOUT_SLOTS: LoadoutSlots = {
 // visitor asking for "just show me everything" gets instead of having to
 // flip between the other two.
 const GUARANTEE_TEACHABLES_STORAGE_KEY = "dbd-randomizer:guarantee-teachables";
-const TWITCH_CHANNEL_STORAGE_KEY = "dbd-randomizer:twitch-channel";
-const TWITCH_ENABLED_STORAGE_KEY = "dbd-randomizer:twitch-enabled";
-const TWITCH_REROLL_COMMAND_STORAGE_KEY =
-  "dbd-randomizer:twitch-reroll-command";
-const TWITCH_REROLL_PERMISSION_STORAGE_KEY =
-  "dbd-randomizer:twitch-reroll-permission";
-const TWITCH_COOLDOWN_STORAGE_KEY = "dbd-randomizer:twitch-cooldown-sec";
-const TWITCH_PASTE_ENABLED_STORAGE_KEY = "dbd-randomizer:twitch-paste-enabled";
-const TWITCH_PASTE_COMMAND_STORAGE_KEY = "dbd-randomizer:twitch-paste-command";
-const TWITCH_PASTE_PERMISSION_STORAGE_KEY =
-  "dbd-randomizer:twitch-paste-permission";
 const PIECE_VISIBILITY_STORAGE_KEY = "dbd-randomizer:piece-visibility";
 const DEFAULT_PIECE_VISIBILITY: PieceVisibility = {
   perks: true,
@@ -132,11 +116,6 @@ const DEFAULT_PIECE_VISIBILITY: PieceVisibility = {
   addon: true,
   offering: true,
 };
-const DEFAULT_TWITCH_REROLL_COMMAND = "!reroll";
-const DEFAULT_TWITCH_PASTE_COMMAND = "!paste";
-const DEFAULT_TWITCH_COOLDOWN_SEC = 4;
-const MIN_TWITCH_COOLDOWN_SEC = 1;
-const MAX_TWITCH_COOLDOWN_SEC = 300;
 const ROLE_LABEL: Record<PerkRole, { ru: string; en: string }> = {
   survivor: { ru: "выжившего", en: "survivor" },
   killer: { ru: "убийцы", en: "killer" },
@@ -191,30 +170,6 @@ function loadLoadoutSlots(): LoadoutSlots {
   };
 }
 
-const VALID_TWITCH_PERMISSIONS: readonly TwitchPermission[] = [
-  "everyone",
-  "subs_vips",
-  "mods",
-];
-
-function loadTwitchPermission(
-  key: string,
-  fallback: TwitchPermission,
-): TwitchPermission {
-  const stored = safeGet("local", key);
-  return VALID_TWITCH_PERMISSIONS.includes(stored as TwitchPermission)
-    ? (stored as TwitchPermission)
-    : fallback;
-}
-
-function loadTwitchCooldownSec(): number {
-  const n = parseInt(safeGet("local", TWITCH_COOLDOWN_STORAGE_KEY) ?? "", 10);
-  return Number.isInteger(n) &&
-    n >= MIN_TWITCH_COOLDOWN_SEC &&
-    n <= MAX_TWITCH_COOLDOWN_SEC
-    ? n
-    : DEFAULT_TWITCH_COOLDOWN_SEC;
-}
 
 interface BattleRoyaleState {
   active: boolean;
@@ -420,24 +375,6 @@ export function RandomizerBoard() {
   // distinct from the pool manager's exclusions, which are a deliberate,
   // saved choice. "themeTag: null" means no filter, i.e. the full role pool.
   const [themeTag, setThemeTag] = useState<string | null>(null);
-  const [twitchChannel, setTwitchChannel] = useState("");
-  const [twitchEnabled, setTwitchEnabled] = useState(false);
-  const [twitchState, setTwitchState] =
-    useState<TwitchConnectionState>("disconnected");
-  const [twitchRerollCommand, setTwitchRerollCommand] = useState(
-    DEFAULT_TWITCH_REROLL_COMMAND,
-  );
-  const [twitchRerollPermission, setTwitchRerollPermission] =
-    useState<TwitchPermission>("everyone");
-  const [twitchCooldownSec, setTwitchCooldownSec] = useState(
-    DEFAULT_TWITCH_COOLDOWN_SEC,
-  );
-  const [twitchPasteEnabled, setTwitchPasteEnabled] = useState(false);
-  const [twitchPasteCommand, setTwitchPasteCommand] = useState(
-    DEFAULT_TWITCH_PASTE_COMMAND,
-  );
-  const [twitchPastePermission, setTwitchPastePermission] =
-    useState<TwitchPermission>("subs_vips");
   // Display-only filter for the OBS overlay and Download Image — separate
   // from `loadoutSlots` (which decides what actually gets *rolled*): a
   // streamer might still want the full loadout rolled (to copy/reference
@@ -497,32 +434,6 @@ export function RandomizerBoard() {
         setBattleRoyaleUsed(new Set(br.used));
       }
 
-      const savedChannel = safeGet("local", TWITCH_CHANNEL_STORAGE_KEY) ?? "";
-      setTwitchChannel(savedChannel);
-      if (
-        safeGet("local", TWITCH_ENABLED_STORAGE_KEY) === "1" &&
-        savedChannel
-      ) {
-        setTwitchEnabled(true);
-      }
-      setTwitchRerollCommand(
-        safeGet("local", TWITCH_REROLL_COMMAND_STORAGE_KEY) ||
-          DEFAULT_TWITCH_REROLL_COMMAND,
-      );
-      setTwitchRerollPermission(
-        loadTwitchPermission(TWITCH_REROLL_PERMISSION_STORAGE_KEY, "everyone"),
-      );
-      setTwitchCooldownSec(loadTwitchCooldownSec());
-      setTwitchPasteEnabled(
-        safeGet("local", TWITCH_PASTE_ENABLED_STORAGE_KEY) === "1",
-      );
-      setTwitchPasteCommand(
-        safeGet("local", TWITCH_PASTE_COMMAND_STORAGE_KEY) ||
-          DEFAULT_TWITCH_PASTE_COMMAND,
-      );
-      setTwitchPastePermission(
-        loadTwitchPermission(TWITCH_PASTE_PERMISSION_STORAGE_KEY, "subs_vips"),
-      );
       setPieceVisibility(
         safeGetJSON(
           "local",
@@ -918,6 +829,16 @@ export function RandomizerBoard() {
    *  every existing consequence for free — the URL updates, the OBS
    *  overlay follows, and the padlocks hide themselves because there is
    *  nothing to reroll around in a fixed build. */
+  // Chat settings, their persistence, and the connection they configure —
+  // see lib/use-twitch-settings.ts. `onReroll` goes through the ref for
+  // the reason described above: regenerate's identity changes every roll,
+  // and depending on it directly would reconnect the socket each time.
+  const twitch = useTwitchSettings({
+    mounted,
+    onReroll: useCallback(() => regenerateRef.current(), []),
+    onPaste: handleTwitchPaste,
+  });
+
   const applyPreset = useCallback((preset: BuildPreset) => {
     const perks = resolvePreset(preset);
     if (perks.length === 0) return;
@@ -928,48 +849,6 @@ export function RandomizerBoard() {
     setSharedBuild(perks);
   }, []);
 
-  useEffect(() => {
-    function markDisconnected() {
-      setTwitchState("disconnected");
-    }
-    if (!mounted || !twitchEnabled || !twitchChannel.trim()) {
-      markDisconnected();
-      return;
-    }
-    const commands: TwitchCommand[] = [
-      {
-        trigger: twitchRerollCommand.trim() || DEFAULT_TWITCH_REROLL_COMMAND,
-        permission: twitchRerollPermission,
-        cooldownMs: twitchCooldownSec * 1000,
-        onTrigger: () => regenerateRef.current(),
-      },
-    ];
-    if (twitchPasteEnabled) {
-      commands.push({
-        trigger: twitchPasteCommand.trim() || DEFAULT_TWITCH_PASTE_COMMAND,
-        permission: twitchPastePermission,
-        cooldownMs: twitchCooldownSec * 1000,
-        onTrigger: (args) => handleTwitchPaste(args),
-      });
-    }
-    const disconnect = connectTwitchChat({
-      channel: twitchChannel,
-      commands,
-      onStateChange: setTwitchState,
-    });
-    return disconnect;
-  }, [
-    mounted,
-    twitchEnabled,
-    twitchChannel,
-    twitchRerollCommand,
-    twitchRerollPermission,
-    twitchCooldownSec,
-    twitchPasteEnabled,
-    twitchPasteCommand,
-    twitchPastePermission,
-    handleTwitchPaste,
-  ]);
 
   // Page-level keyboard shortcuts — see lib/use-board-shortcuts.ts. Every
   // one of them mirrors a button that is already on screen.
@@ -1170,49 +1049,6 @@ export function RandomizerBoard() {
     });
   }
 
-  function updateTwitchChannel(channel: string) {
-    setTwitchChannel(channel);
-    safeSet("local", TWITCH_CHANNEL_STORAGE_KEY, channel);
-  }
-
-  function toggleTwitch(enabled: boolean) {
-    setTwitchEnabled(enabled);
-    safeSet("local", TWITCH_ENABLED_STORAGE_KEY, enabled ? "1" : "0");
-  }
-
-  function updateTwitchRerollCommand(command: string) {
-    setTwitchRerollCommand(command);
-    safeSet("local", TWITCH_REROLL_COMMAND_STORAGE_KEY, command);
-  }
-
-  function updateTwitchRerollPermission(permission: TwitchPermission) {
-    setTwitchRerollPermission(permission);
-    safeSet("local", TWITCH_REROLL_PERMISSION_STORAGE_KEY, permission);
-  }
-
-  function updateTwitchCooldownSec(seconds: number) {
-    const clamped = Math.min(
-      MAX_TWITCH_COOLDOWN_SEC,
-      Math.max(MIN_TWITCH_COOLDOWN_SEC, seconds),
-    );
-    setTwitchCooldownSec(clamped);
-    safeSet("local", TWITCH_COOLDOWN_STORAGE_KEY, String(clamped));
-  }
-
-  function toggleTwitchPaste(enabled: boolean) {
-    setTwitchPasteEnabled(enabled);
-    safeSet("local", TWITCH_PASTE_ENABLED_STORAGE_KEY, enabled ? "1" : "0");
-  }
-
-  function updateTwitchPasteCommand(command: string) {
-    setTwitchPasteCommand(command);
-    safeSet("local", TWITCH_PASTE_COMMAND_STORAGE_KEY, command);
-  }
-
-  function updateTwitchPastePermission(permission: TwitchPermission) {
-    setTwitchPastePermission(permission);
-    safeSet("local", TWITCH_PASTE_PERMISSION_STORAGE_KEY, permission);
-  }
 
   function updatePieceVisibility(kind: keyof PieceVisibility, value: boolean) {
     setPieceVisibility((prev) => {
@@ -2239,23 +2075,23 @@ export function RandomizerBoard() {
         character={shareCharacter}
         pieceVisibility={pieceVisibility}
         onPieceVisibilityChange={updatePieceVisibility}
-        twitchChannel={twitchChannel}
-        twitchEnabled={twitchEnabled}
-        twitchState={twitchState}
-        onTwitchChannelChange={updateTwitchChannel}
-        onTwitchToggle={toggleTwitch}
-        twitchRerollCommand={twitchRerollCommand}
-        twitchRerollPermission={twitchRerollPermission}
-        twitchCooldownSec={twitchCooldownSec}
-        twitchPasteEnabled={twitchPasteEnabled}
-        twitchPasteCommand={twitchPasteCommand}
-        twitchPastePermission={twitchPastePermission}
-        onTwitchRerollCommandChange={updateTwitchRerollCommand}
-        onTwitchRerollPermissionChange={updateTwitchRerollPermission}
-        onTwitchCooldownSecChange={updateTwitchCooldownSec}
-        onTwitchPasteToggle={toggleTwitchPaste}
-        onTwitchPasteCommandChange={updateTwitchPasteCommand}
-        onTwitchPastePermissionChange={updateTwitchPastePermission}
+        twitchChannel={twitch.channel}
+        twitchEnabled={twitch.enabled}
+        twitchState={twitch.state}
+        onTwitchChannelChange={twitch.setChannel}
+        onTwitchToggle={twitch.setEnabled}
+        twitchRerollCommand={twitch.rerollCommand}
+        twitchRerollPermission={twitch.rerollPermission}
+        twitchCooldownSec={twitch.cooldownSec}
+        twitchPasteEnabled={twitch.pasteEnabled}
+        twitchPasteCommand={twitch.pasteCommand}
+        twitchPastePermission={twitch.pastePermission}
+        onTwitchRerollCommandChange={twitch.setRerollCommand}
+        onTwitchRerollPermissionChange={twitch.setRerollPermission}
+        onTwitchCooldownSecChange={twitch.setCooldownSec}
+        onTwitchPasteToggle={twitch.setPasteEnabled}
+        onTwitchPasteCommandChange={twitch.setPasteCommand}
+        onTwitchPastePermissionChange={twitch.setPastePermission}
       />
 
       <CharacterPickerModal
