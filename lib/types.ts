@@ -47,7 +47,8 @@ export interface PerksMeta {
  *  one killer/chapter's mechanic rather than being a loadout selection, so
  *  the scraper skips them entirely (see ITEM_TABLE_TYPES in
  *  scripts/scrape-loadout.ts) instead of giving them a type here. */
-export type ItemType = "firecracker" | "flashlight" | "key" | "map" | "medkit" | "toolbox";
+export type ItemType =
+  "firecracker" | "flashlight" | "key" | "map" | "medkit" | "toolbox";
 
 export type LoadoutKind = "item" | "addon" | "offering";
 
@@ -128,3 +129,8 @@ export interface Loadout {
   addons: Addon[];
   offering: Offering | null;
 }
+
+/** Which half of the site a roll covers: perks, the full loadout, or both
+ *  at once. Lives here rather than in the board because the keyboard
+ *  shortcuts branch on it too (lib/use-board-shortcuts.ts). */
+export type BuildMode = "perks" | "loadout" | "all";

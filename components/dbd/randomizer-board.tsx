@@ -21,13 +21,13 @@ import {
   getCharactersForRole,
   getPerkBySlug,
   getPerksByRole,
-  getRandomPerks,
   getRandomPerksWithTeachables,
   getSeededPerks,
-  getTeachablePerks,
 } from "@/lib/perks";
 import { getCharacterName } from "@/lib/character-name";
 import { resolvePreset, type BuildPreset } from "@/lib/build-presets";
+import { usePerkSlots } from "@/lib/use-perk-slots";
+import { useBoardShortcuts } from "@/lib/use-board-shortcuts";
 import { getTagsForPerk, getTagsForRole } from "@/lib/perk-tags";
 import type {
   Addon,
@@ -36,6 +36,7 @@ import type {
   LoadoutSlots,
   Perk,
   PerkRole,
+  BuildMode,
 } from "@/lib/types";
 import { cn } from "@/lib/cn";
 import { useMounted } from "@/lib/use-mounted";
@@ -112,7 +113,6 @@ const DEFAULT_LOADOUT_SLOTS: LoadoutSlots = {
 // always has both equipped at once in an actual match, so this is what a
 // visitor asking for "just show me everything" gets instead of having to
 // flip between the other two.
-type BuildMode = "perks" | "loadout" | "all";
 const GUARANTEE_TEACHABLES_STORAGE_KEY = "dbd-randomizer:guarantee-teachables";
 const TWITCH_CHANNEL_STORAGE_KEY = "dbd-randomizer:twitch-channel";
 const TWITCH_ENABLED_STORAGE_KEY = "dbd-randomizer:twitch-enabled";
@@ -614,201 +614,21 @@ export function RandomizerBoard() {
     selectedCharacter,
   ]);
 
-  // Which slot holds which pinned perk, as slot index -> slug. Slot-keyed
-  // rather than a flat set of slugs because a pin means "this perk stays
-  // *here*" — a set would let a pinned perk drift to a different position
-  // on the next roll, which reads as the pin having failed.
-  //
-  // Deliberately not part of the share URL. A shared link describes a
-  // finished build, and the recipient sees exactly those four perks either
-  // way; pins only change what *their* next reroll does, which isn't
-  // something the sender was expressing. Keeping them out also means every
-  // link already in circulation keeps working untouched.
-  const [pinnedPerkSlots, setPinnedPerkSlots] = useState<Record<number, string>>({});
-
-  // Slots the player has rerolled individually, as slot index -> slug.
-  // Separate from pins because they mean opposite things: a pin says "never
-  // change this", a single-slot reroll says "change *only* this". Cleared by
-  // a full regenerate, which supersedes them.
-  const [slotOverrides, setSlotOverrides] = useState<Record<number, string>>({});
-
-  /** A slot-keyed map is only usable here if the perk it names is still
-   *  eligible. Pins and single-slot rerolls both survive in state across
-   *  role, perk-count and pool changes so they come back when you switch
-   *  away and return — they simply don't apply while they point outside the
-   *  current build. `combinedExcluded` is the important one: Battle Royale
-   *  retires perks as they're rolled and Manage Pool can remove one
-   *  directly, and neither a pin nor a reroll may outrank that, or the
-   *  build shows a perk the player just took out of it. */
-  const resolveSlotMap = useCallback(
-    (map: Record<number, string>) => {
-      const out = new Map<number, Perk>();
-      for (const [slot, slug] of Object.entries(map)) {
-        const i = Number(slot);
-        if (i >= perkCount) continue;
-        const perk = getPerkBySlug(slug);
-        if (!perk || perk.role !== role || combinedExcluded.has(perk.slug)) continue;
-        out.set(i, perk);
-      }
-      return out;
-    },
-    [perkCount, role, combinedExcluded],
-  );
-
-  /** The build actually shown: the roll from above, with pinned and
-   *  individually-rerolled slots layered over it. Shared and seeded builds
-   *  skip the whole thing — those are fixed by definition.
-   *
-   *  The one property everything here exists to protect is that touching
-   *  one slot never moves another. That rules out the obvious
-   *  implementation (drop the fixed slots, deal the rest out in order):
-   *  removing a slot from that sequence shunts every later slot along by
-   *  one, so pinning slot 1 would visibly reroll slots 2-4. Instead each
-   *  slot takes the roll's perk *at its own index* and fixed slots
-   *  overwrite in place, which is inherently position-stable. */
-  const perks = useMemo(() => {
-    if (sharedBuild || activeSeed || basePerks.length === 0) return basePerks;
-
-    // basePerks is rolled with spares (see above), so the character's
-    // teachables aren't necessarily inside the first perkCount of it —
-    // getRandomPerksWithTeachables guarantees they're somewhere in what it
-    // returns and then shuffles. Float them forward, keeping roll order
-    // among the winners so the build still *displays* shuffled rather than
-    // sorted, and leave the losers behind as the spare pool. Depends only
-    // on the roll, never on pins or rerolls, so it can't shift anything.
-    const character = guaranteeTeachables ? selectedCharacter : null;
-    let ordered = basePerks;
-    if (character) {
-      const winners = new Set(
-        [
-          ...basePerks.filter((p) => p.character === character),
-          ...basePerks.filter((p) => p.character !== character),
-        ]
-          .slice(0, perkCount)
-          .map((p) => p.slug),
-      );
-      ordered = [
-        ...basePerks.filter((p) => winners.has(p.slug)),
-        ...basePerks.filter((p) => !winners.has(p.slug)),
-      ];
-    }
-
-    const pins = resolveSlotMap(pinnedPerkSlots);
-    const rerolled = resolveSlotMap(slotOverrides);
-
-    const out: (Perk | undefined)[] = new Array(perkCount);
-    const claimed = new Set<string>();
-    for (let i = 0; i < perkCount; i++) {
-      // A pin wins over a single-slot reroll on the same slot: they can only
-      // coexist when you pin a slot you'd rerolled, and then they name the
-      // same perk anyway.
-      const fixed = pins.get(i) ?? rerolled.get(i);
-      if (fixed) {
-        out[i] = fixed;
-        claimed.add(fixed.slug);
-      }
-    }
-
-    let spare = perkCount;
-    for (let i = 0; i < perkCount; i++) {
-      if (out[i]) continue;
-      // Normally just `ordered[i]`. The loop only advances into the spares
-      // when a fixed slot has already claimed that perk, which can't happen
-      // from pinning or rerolling alone (a pin names the perk already in
-      // its slot, and rerollSlot draws from outside the roll entirely) —
-      // only from the roll itself changing underneath a pin, e.g. when
-      // Battle Royale shrinks the pool.
-      let pick = ordered[i];
-      while (pick && claimed.has(pick.slug)) pick = ordered[spare++];
-      if (!pick) break;
-      claimed.add(pick.slug);
-      out[i] = pick;
-    }
-    return out.filter((p): p is Perk => !!p);
-  }, [
-    slotOverrides,
-    basePerks,
-    pinnedPerkSlots,
-    perkCount,
-    resolveSlotMap,
-    sharedBuild,
-    activeSeed,
-    guaranteeTeachables,
-    selectedCharacter,
-  ]);
-
-  /** Rerolls a single slot, leaving the other three exactly as they are.
-   *
-   *  The replacement is drawn from outside `basePerks` entirely, not merely
-   *  outside the visible build. basePerks holds spares that the overlay
-   *  above uses to fill the unpinned slots, so a replacement taken from
-   *  that set would be removed from the fill pool and shunt every later
-   *  slot along by one — a "reroll one slot" that visibly changes three. */
-  const rerollSlot = useCallback(
-    (slot: number) => {
-      if (sharedBuild || activeSeed || slot >= perkCount) return;
-      // A pinned slot is the one thing that outranks this. Rerolling it
-      // would make the padlock a lie.
-      if (pinnedPerkSlots[slot]) return;
-
-      const blocked = new Set(combinedExcluded);
-      for (const p of basePerks) blocked.add(p.slug);
-      for (const p of perks) blocked.add(p.slug);
-      for (const slug of Object.values(slotOverrides)) blocked.add(slug);
-
-      // With "guarantee teachables" on, rerolling a slot that holds one of
-      // the character's perks should hand back another of *their* perks —
-      // otherwise the shortcut quietly erodes the guarantee one press at a
-      // time. Falls through to the general pool once they're all in the
-      // build already, which is the best the guarantee can do.
-      const character = guaranteeTeachables ? selectedCharacter : null;
-      let replacement: Perk | undefined;
-      if (character && perks[slot]?.character === character) {
-        const spare = getTeachablePerks(role, character).filter(
-          (p) => !blocked.has(p.slug),
-        );
-        replacement = spare[Math.floor(Math.random() * spare.length)];
-      }
-      replacement ??= getRandomPerks(role, 1, blocked, Math.random, favoriteSlugs)[0];
-      if (!replacement) return; // pool has nothing left to offer
-
-      const slug = replacement.slug;
-      setSlotOverrides((prev) => ({ ...prev, [slot]: slug }));
-    },
-    [
-      sharedBuild,
-      activeSeed,
-      perkCount,
-      pinnedPerkSlots,
-      combinedExcluded,
+  // Pins and single-slot rerolls, layered over the roll above. Extracted
+  // whole (see lib/use-perk-slots.ts): it was the largest self-contained
+  // mechanism in this file and none of it is presentational — it takes a
+  // roll and returns the build to render.
+  const { perks, pinnedPerkSlots, togglePin, rerollSlot, clearSlotOverrides } =
+    usePerkSlots({
       basePerks,
-      perks,
-      slotOverrides,
+      perkCount,
+      role,
+      fixedBuild: !!sharedBuild || !!activeSeed,
       guaranteeTeachables,
       selectedCharacter,
-      role,
+      combinedExcluded,
       favoriteSlugs,
-    ],
-  );
-
-  const togglePin = useCallback((slot: number, slug: string) => {
-    setPinnedPerkSlots((prev) => {
-      const next = { ...prev };
-      if (next[slot] === slug) {
-        delete next[slot];
-        // Unpinning must not change what's on screen. A pin masks whatever
-        // the roll put in that slot, so simply dropping it would uncover a
-        // different perk — turning "this may change from now on" into "this
-        // changes right now". Handing the slot to the single-slot-reroll
-        // map keeps the same perk visible until something actually rerolls
-        // it, which is the promise the padlock made.
-        setSlotOverrides((o) => ({ ...o, [slot]: slug }));
-      } else {
-        next[slot] = slug;
-      }
-      return next;
     });
-  }, []);
 
   // Loadout counterpart of combinedExcluded above — same Battle Royale +
   // manual-exclusion merge, just namespaced "kind:slug" keys instead of
@@ -1050,12 +870,9 @@ export function RandomizerBoard() {
     if (battleRoyale) eliminateCurrentBuild();
     setSharedBuild(null);
     setSharedLoadoutPieces(null);
-    // A whole-build roll supersedes any single-slot rerolls — they were
-    // adjustments to the build being replaced. Pins are the opposite and
-    // deliberately survive.
-    setSlotOverrides({});
+    clearSlotOverrides();
     setNonce((n) => n + 1);
-  }, [battleRoyale, eliminateCurrentBuild]);
+  }, [battleRoyale, eliminateCurrentBuild, clearSlotOverrides]);
 
   // `regenerate`'s identity changes on every roll (it depends on
   // eliminateCurrentBuild, which depends on `perks`) — if the Twitch effect
@@ -1154,108 +971,21 @@ export function RandomizerBoard() {
     handleTwitchPaste,
   ]);
 
-  // Spacebar/Enter triggers Generate from anywhere on the page — except
-  // while the user is typing (the seed input) or a modal is open, where
-  // those keys already mean something else (confirm a dialog, type a
-  // space, activate whatever's focused).
-  // The copy/share shortcuts need the *current* handlers, but those close
-  // over fresh state on every render, so depending on them directly would
-  // tear down and re-add the keydown listener on every single render. A
-  // ref refreshed after each render gives the listener the latest versions
-  // while letting its own dependency list stay stable.
-  const shortcutActions = useRef({ handleCopyAll, handleShare, rerollSlot });
-  useEffect(() => {
-    shortcutActions.current = { handleCopyAll, handleShare, rerollSlot };
-  });
-
-  useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      // Shared guards first, so every shortcut below is subject to the
-      // same "not typing, no modal open, nothing already focused" rules
-      // rather than each one re-deriving them.
-      const target = e.target as HTMLElement | null;
-      const tag = target?.tagName;
-      const typingOrInteractive =
-        tag === "INPUT" ||
-        tag === "TEXTAREA" ||
-        tag === "SELECT" ||
-        tag === "BUTTON" ||
-        tag === "A" ||
-        target?.isContentEditable;
-      const modalOpen = excludePanelOpen || statsModalOpen || obsModalOpen;
-      // Never swallow a real browser shortcut — Ctrl/Cmd+C in particular
-      // has to keep copying whatever the user actually selected.
-      const modified = e.ctrlKey || e.metaKey || e.altKey;
-
-      // Streamer shortcuts for the actions already sitting under the
-      // build. These mirror the buttons exactly rather than adding new
-      // behaviour, so there's nothing here that can't also be clicked.
-      if (!typingOrInteractive && !modalOpen && !modified) {
-        const hasBuild =
-          mode === "loadout"
-            ? loadoutPieces.length > 0
-            : mode === "all"
-              ? perks.length > 0 || loadoutPieces.length > 0
-              : perks.length > 0;
-        if (hasBuild) {
-          if (e.key === "c" || e.key === "C" || e.key === "с" || e.key === "С") {
-            e.preventDefault();
-            shortcutActions.current.handleCopyAll();
-            return;
-          }
-          if (e.key === "s" || e.key === "S" || e.key === "ы" || e.key === "Ы") {
-            e.preventDefault();
-            shortcutActions.current.handleShare();
-            return;
-          }
-          // 1-4 reroll that one perk slot. e.code rather than e.key so the
-          // digits work on a Cyrillic layout too (where the number row is
-          // unchanged, but so is e.key — this is really about the numpad,
-          // which reports Numpad1 while e.key is layout-dependent) and so
-          // Shift+1 doesn't arrive as "!". Only in modes that show perks;
-          // in loadout-only mode there is no slot 1 to reroll.
-          if (mode !== "loadout") {
-            const digit =
-              /^(?:Digit|Numpad)([1-4])$/.exec(e.code)?.[1] ??
-              (/^[1-4]$/.test(e.key) ? e.key : null);
-            if (digit) {
-              e.preventDefault();
-              shortcutActions.current.rerollSlot(Number(digit) - 1);
-              return;
-            }
-          }
-        }
-      }
-
-      if (e.key !== " " && e.key !== "Enter") return;
-      if (!!activeSeed) return;
-      // Only a pure Perks roll needs a non-empty pool to mean anything —
-      // matches the main Generate button's own disabled condition below,
-      // so Loadout/All mode can still reroll via keyboard even if the
-      // perk pool alone happens to be unrollable right now.
-      if (mode === "perks" && (perkCount === 0 || poolExhausted)) return;
-      // Same guards computed once at the top of this handler — a modal is
-      // open, the user is typing, or focus is already on something that
-      // treats Space/Enter as "activate me".
-      if (modalOpen || typingOrInteractive) return;
-
-      e.preventDefault();
-      regenerate();
-    }
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [
+  // Page-level keyboard shortcuts — see lib/use-board-shortcuts.ts. Every
+  // one of them mirrors a button that is already on screen.
+  useBoardShortcuts({
     mode,
     perkCount,
     activeSeed,
     poolExhausted,
-    excludePanelOpen,
-    statsModalOpen,
-    obsModalOpen,
+    modalOpen: excludePanelOpen || statsModalOpen || obsModalOpen,
+    hasPerks: perks.length > 0,
+    hasLoadout: loadoutPieces.length > 0,
     regenerate,
-    perks,
-    loadoutPieces,
-  ]);
+    handleCopyAll,
+    handleShare,
+    rerollSlot,
+  });
 
   function selectRole(next: PerkRole) {
     setSharedBuild(null);
