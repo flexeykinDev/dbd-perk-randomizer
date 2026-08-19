@@ -8,11 +8,8 @@ on:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    # Without this a hung step runs to GitHub's 6-hour default. "Install
-    # Playwright browsers" has stalled indefinitely twice while every other
-    # step passed in under two minutes, and the only way to notice was to go
-    # looking. 20 is roughly ten times a healthy run, so it can only fire on
-    # something genuinely stuck.
+    # Without this a hung step runs to GitHub's 6-hour default, and the only
+    # way to notice is to go looking. A healthy run is under two minutes.
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
@@ -29,22 +26,32 @@ jobs:
 
       # Cached against the installed Playwright version, since that is what
       # decides which browser build is needed — a lockfile change that
-      # doesn't move Playwright shouldn't cost another download. On a hit
-      # the install below is a no-op, which also means the step that has
-      # been stalling usually doesn't run at all.
+      # doesn't move Playwright shouldn't cost another download.
       - name: Resolve Playwright version
         id: playwright
         run: echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
       - name: Cache Playwright browsers
-        id: playwright-cache
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}
+
+      # Deliberately no --with-deps. That flag runs apt-get, and apt-get is
+      # what was actually hanging this job — three times, for up to six
+      # hours, while the failure looked like a slow browser download. The
+      # log is unambiguous: every library Chromium needs is already present
+      # on the runner image ("is already the newest version"), and the only
+      # new packages were nine font packages totalling 21 MB, fetched from
+      # an Ubuntu mirror that took four minutes for a single 3.5 MB file.
+      #
+      # Those fonts exist to render CJK and emoji glyphs in screenshots.
+      # These tests read the DOM, so nothing here depends on them, and
+      # skipping apt removes the failure rather than bounding it. If a
+      # genuinely missing library ever breaks Chromium's launch, the e2e
+      # step fails immediately and says so, which is a much better signal
+      # than a job that hangs.
       - name: Install Playwright browsers
-        # --with-deps needs root and installs OS packages, so it still runs
-        # on a cache hit; only the browser download is skipped.
-        run: npx playwright install --with-deps chromium
+        run: npx playwright install chromium
         timeout-minutes: 8
 
       - name: E2E smoke tests
