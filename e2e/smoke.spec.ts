@@ -811,6 +811,90 @@ test.describe("OBS Overlay modal", () => {
     await expect(picker.locator("button").nth(0)).toBeEnabled();
   });
 
+  test("holding parks the overlay and counts the rolls it withheld", async ({ page }) => {
+    // The overlay mirrors the site through an effect that fires on every
+    // change, so rolling until something looks good used to play out live.
+    // What's asserted is the count of withheld rolls, because that is the
+    // observable proof the publish was actually suppressed rather than
+    // just relabelled.
+    await openObsModal(page);
+    const dialog = page.getByRole("dialog");
+    const hold = dialog.getByRole("switch", { name: /Держать билд/ });
+
+    await expect(hold).toHaveAttribute("aria-checked", "false");
+    await expect(dialog.getByRole("button", { name: /Показать/ })).toHaveCount(0);
+
+    await hold.click();
+    await expect(hold).toHaveAttribute("aria-checked", "true");
+    const reveal = dialog.getByRole("button", { name: /Показать/ });
+    await expect(reveal).toBeVisible();
+
+    // Roll with the dialog closed — which is what a streamer does, and
+    // also the only way to reach the button, since the modal covers it.
+    // The hold lives on the board, not in the dialog, so the count carries
+    // across closing and reopening.
+    await dialog.getByRole("button", { name: "Закрыть" }).click();
+    await expect(page.getByRole("dialog")).toHaveCount(0);
+    await page.getByRole("button", { name: "Сгенерировать новый билд" }).click();
+    await page.getByRole("button", { name: "Сгенерировать новый билд" }).click();
+
+    await page.getByRole("button", { name: /Оверлей OBS/ }).click();
+    const reopened = page.getByRole("dialog");
+    await expect(reopened.getByText(/С тех пор роллов: 2/)).toBeVisible();
+
+    // Revealing clears the backlog.
+    await reopened.getByRole("button", { name: /Показать/ }).click();
+    await expect(reopened.getByText(/С тех пор роллов:/)).toHaveCount(0);
+  });
+
+  test("the hold survives a reload, since a stream does too", async ({ page }) => {
+    await openObsModal(page);
+    await page.getByRole("dialog").getByRole("switch", { name: /Держать билд/ }).click();
+
+    await page.reload();
+    await page.getByRole("button", { name: /Оверлей OBS/ }).click();
+    await expect(
+      page.getByRole("dialog").getByRole("switch", { name: /Держать билд/ }),
+    ).toHaveAttribute("aria-checked", "true");
+  });
+
+  test("a saved layout comes back after a reload and rebuilds the link", async ({ page }) => {
+    await openObsModal(page);
+    const dialog = page.getByRole("dialog");
+
+    // Make the current look distinctive, then bookmark it.
+    await dialog.getByRole("button", { name: "Компакт" }).click();
+    const compactLink = await overlayLink(page);
+    await dialog.getByRole("button", { name: /Сохранить текущую/ }).click();
+    await dialog.getByRole("textbox", { name: "Название раскладки" }).fill("Игровая");
+    await dialog.getByRole("button", { name: "Сохранить", exact: true }).click();
+    await expect(dialog.getByRole("button", { name: "Игровая", exact: true })).toBeVisible();
+
+    // Move away from it, then come back via the bookmark.
+    await dialog.getByRole("button", { name: "Просторно" }).click();
+    await expect.poll(() => overlayLink(page)).not.toBe(compactLink);
+
+    await page.reload();
+    await page.getByRole("button", { name: /Оверлей OBS/ }).click();
+    const reopened = page.getByRole("dialog");
+    await reopened.getByRole("button", { name: "Игровая", exact: true }).click();
+    // The link is regenerated from the restored settings, not stored — so
+    // matching the original is what proves the settings came back whole.
+    await expect.poll(() => overlayLink(page)).toBe(compactLink);
+  });
+
+  test("a saved layout can be deleted", async ({ page }) => {
+    await openObsModal(page);
+    const dialog = page.getByRole("dialog");
+    await dialog.getByRole("button", { name: /Сохранить текущую/ }).click();
+    await dialog.getByRole("textbox", { name: "Название раскладки" }).fill("Временная");
+    await dialog.getByRole("button", { name: "Сохранить", exact: true }).click();
+    await expect(dialog.getByRole("button", { name: "Временная", exact: true })).toBeVisible();
+
+    await dialog.getByRole("button", { name: "Удалить раскладку Временная" }).click();
+    await expect(dialog.getByRole("button", { name: "Временная", exact: true })).toHaveCount(0);
+  });
+
   test("Twitch commands stay hidden until the disclosure is opened", async ({ page }) => {
     await openObsModal(page);
     const dialog = page.getByRole("dialog");

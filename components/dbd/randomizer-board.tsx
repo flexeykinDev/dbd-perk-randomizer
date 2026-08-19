@@ -41,6 +41,7 @@ import type {
 import { cn } from "@/lib/cn";
 import { useMounted } from "@/lib/use-mounted";
 import { prefetchDescriptions } from "@/lib/descriptions";
+import { useObsHold } from "@/lib/use-obs-hold";
 import { ROLE_COLOR } from "@/lib/role-color";
 import { useLanguage, useT } from "@/lib/i18n";
 import { dailyChallengeSeed } from "@/lib/seeded-random";
@@ -717,19 +718,18 @@ export function RandomizerBoard() {
   // modal's first-ever open would never get published to that room at
   // all — the overlay would sit on "waiting for a build" until the next
   // regenerate, even though a build is already showing on the main page.
-  useEffect(() => {
-    if (!mounted) return;
-    // The overlay only ever renders slug/icon/name (see obs-overlay.tsx) —
-    // a loadout piece fits that same ObsPerk shape as-is, so no separate
-    // payload field is needed. Piece slugs are prefixed "kind:" here purely
-    // so a killer add-on and an offering that happen to share a slug can't
-    // collide as the same React key on the overlay's own list. In "all"
-    // mode both lists are simply concatenated — perk slugs never contain a
-    // colon, so they can't collide with a "kind:slug" loadout key either.
-    // Filtered by `pieceVisibility` first (see sharePieces above) — the
-    // overlay renders exactly what gets published, so hiding a kind here
-    // is what actually keeps it off stream, not a flag the overlay itself
-    // has to know about.
+  // The overlay only ever renders slug/icon/name (see obs-overlay.tsx) —
+  // a loadout piece fits that same ObsPerk shape as-is, so no separate
+  // payload field is needed. Piece slugs are prefixed "kind:" here purely
+  // so a killer add-on and an offering that happen to share a slug can't
+  // collide as the same React key on the overlay's own list. In "all"
+  // mode both lists are simply concatenated — perk slugs never contain a
+  // colon, so they can't collide with a "kind:slug" loadout key either.
+  // Filtered by `pieceVisibility` first (see sharePieces above) — the
+  // overlay renders exactly what gets published, so hiding a kind here
+  // is what actually keeps it off stream, not a flag the overlay itself
+  // has to know about.
+  const publishCurrentBuild = useCallback(() => {
     const perkPieces = visiblePerks.map((p) => ({
       slug: p.slug,
       icon: p.icon,
@@ -752,16 +752,33 @@ export function RandomizerBoard() {
       perks: displayPieces,
       character: shareCharacter ?? undefined,
     });
-  }, [
-    mounted,
-    mode,
-    role,
-    language,
-    visiblePerks,
-    visibleLoadoutPieces,
-    shareCharacter,
-    obsModalOpen,
-  ]);
+  }, [mode, role, language, visiblePerks, visibleLoadoutPieces, shareCharacter]);
+
+  const obsHold = useObsHold(publishCurrentBuild);
+  // Depends on the stable callback rather than the hook's return object,
+  // which is a fresh object every render and would re-fire this on each
+  // one.
+  const { shouldPublish } = obsHold;
+
+  // What makes one build different from another, for the withheld-roll
+  // counter. Slugs only: re-opening the OBS modal re-runs the publish
+  // effect with the same build, and that isn't a roll.
+  const buildKey = useMemo(
+    () =>
+      [
+        ...visiblePerks.map((p) => p.slug),
+        ...visibleLoadoutPieces.map((p) => `${p.kind}:${p.slug}`),
+      ].join("|"),
+    [visiblePerks, visibleLoadoutPieces],
+  );
+
+  useEffect(() => {
+    if (!mounted) return;
+    // While held, this counts the roll instead of sending it — see
+    // lib/use-obs-hold.ts.
+    if (!shouldPublish(buildKey)) return;
+    publishCurrentBuild();
+  }, [mounted, publishCurrentBuild, shouldPublish, buildKey, obsModalOpen]);
 
   const eliminateCurrentBuild = useCallback(() => {
     // "all" mode eliminates both halves together in one update, rather
@@ -2084,6 +2101,7 @@ export function RandomizerBoard() {
         pieceVisibility={pieceVisibility}
         onPieceVisibilityChange={updatePieceVisibility}
         twitch={twitch}
+        hold={obsHold}
       />
 
       <CharacterPickerModal

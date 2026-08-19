@@ -22,8 +22,11 @@ import { useCopyFeedback } from "@/lib/use-copy-feedback";
 import { useObsPublishStatus, type ObsPublishState } from "@/lib/use-obs-mode";
 import { previewPiecesFor, useObsOverlayOptions } from "@/lib/use-obs-overlay-options";
 import type { TwitchSettings } from "@/lib/use-twitch-settings";
+import type { ObsHold } from "@/lib/use-obs-hold";
 import { ObsAppearancePanel } from "./obs-appearance-panel";
 import { ObsConstructorPanel } from "./obs-constructor-panel";
+import { ObsHoldControl } from "./obs-hold-control";
+import { ObsLayoutBookmarks } from "./obs-layout-bookmarks";
 import { ObsPreviewCanvas } from "./obs-preview-canvas";
 import { ObsTwitchPanel } from "./obs-twitch-panel";
 
@@ -73,6 +76,7 @@ export function ObsOverlayModal({
   pieceVisibility,
   onPieceVisibilityChange,
   twitch,
+  hold,
 }: {
   open: boolean;
   onClose: () => void;
@@ -92,6 +96,8 @@ export function ObsOverlayModal({
   /** The whole settings object from useTwitchSettings, rather than its
    *  eighteen fields as eighteen props. */
   twitch: TwitchSettings;
+  /** Owned by the board, because the publish effect it gates lives there. */
+  hold: ObsHold;
 }) {
   const t = useT();
   const titleId = useId();
@@ -276,6 +282,8 @@ export function ObsOverlayModal({
                   </a>
                 </div>
 
+                <ObsHoldControl hold={hold} />
+
                 <ObsPreviewCanvas
                   options={options}
                   pieces={pieces}
@@ -284,6 +292,8 @@ export function ObsOverlayModal({
                   character={character}
                   characterPortrait={character ? getCharacterPortrait(character) : undefined}
                 />
+
+                <ObsLayoutBookmarks options={options} />
 
                 <ObsAppearancePanel
                   options={options}

@@ -14,6 +14,7 @@
 // only makes sense in terms of these values — a drag is a write to
 // `positions`, and the element it came from is incidental.
 import { useId, useRef, useState } from "react";
+import type { ObsLayoutSnapshot } from "./obs-layouts";
 import {
   DEFAULT_OBS_OPTIONS,
   MAX_CHARACTER_SCALE,
@@ -266,6 +267,39 @@ export function useObsOverlayOptions(open: boolean) {
             en: "Fine control over canvas, size, and name width.",
           }
         : STYLE_PRESETS.find((p) => p.id === styleMode)?.description,
+
+    /** Everything that makes the overlay look the way it looks, flat, for
+     *  saving as a named layout (see lib/obs-layouts.ts). */
+    snapshot: (): ObsLayoutSnapshot => ({
+      scale,
+      nameScale,
+      canvasWidth,
+      canvasHeight,
+      showNames,
+      showCharacter,
+      darkBg,
+      characterScale,
+      positions,
+      characterPosition,
+    }),
+
+    applySnapshot(snapshot: ObsLayoutSnapshot) {
+      setScale(snapshot.scale);
+      setNameScale(snapshot.nameScale);
+      setCanvasWidth(snapshot.canvasWidth);
+      setCanvasHeight(snapshot.canvasHeight);
+      setShowNames(snapshot.showNames);
+      setShowCharacter(snapshot.showCharacter);
+      setDarkBg(snapshot.darkBg);
+      setCharacterScale(snapshot.characterScale);
+      setPositions(snapshot.positions);
+      setCharacterPosition(snapshot.characterPosition);
+      // A saved layout is by definition a specific combination rather than
+      // one of the three named looks, so the preset row shows "Custom" —
+      // claiming "Roomy" while the sliders say otherwise would be a lie
+      // the moment anything was nudged.
+      setStyleMode("custom");
+    },
   };
 }
 
