@@ -98,6 +98,45 @@ test.describe("DBD randomizer", () => {
     // name, not the English slug — "Квентин", not "Quentin".
     await expect(page.getByText("Квентин", { exact: true })).toBeVisible();
   });
+
+  test("a perk's description text actually arrives and renders", async ({ page }) => {
+    // Description text is no longer part of the page's payload — it loads
+    // from its own chunk on demand (see lib/descriptions.ts). Nothing here
+    // asserted the text itself before, so a load that never resolved would
+    // have left every card showing a placeholder for good with the whole
+    // suite still green.
+    await page.goto("/?role=survivor&perks=pharmacy");
+    await page.getByRole("button", { name: "Описание: Аптекарь" }).first().click();
+
+    // .modal-card, not role="dialog" — the detail modals don't carry that
+    // role (only the OBS one does).
+    const modal = page.locator(".modal-card");
+    // Core Effect is the default tab; its bullets are the derived summary,
+    // and there are none at all while the placeholder is showing.
+    await expect(modal.getByRole("listitem").first()).not.toBeEmpty();
+
+    await modal.getByRole("button", { name: "Подробно" }).click();
+    // Real prose rather than a stub — this perk is about med-kits in both
+    // languages the site renders.
+    await expect(modal.getByText(/аптечк|med-?kit/i).first()).toBeVisible();
+  });
+
+  test("a loadout piece's description arrives from its own bundle", async ({ page }) => {
+    // Loadout prose is a separate chunk from perk prose, so a working perk
+    // modal says nothing about this one.
+    await page.goto("/?role=survivor&mode=loadout");
+    await expect(page.locator("[data-piece-kind]").first()).toBeVisible();
+    await page.locator("[data-piece-kind]").first().click();
+
+    const modal = page.locator(".modal-card");
+    await expect(modal.getByRole("listitem").first()).not.toBeEmpty();
+    await modal.getByRole("button", { name: "Подробно" }).click();
+    // Any real sentence will do — what's being checked is that prose
+    // reached the modal at all, not which piece happened to be rolled.
+    await expect
+      .poll(async () => (await modal.locator("p").allTextContents()).join(" ").length)
+      .toBeGreaterThan(40);
+  });
 });
 
 test.describe("Full Loadout", () => {

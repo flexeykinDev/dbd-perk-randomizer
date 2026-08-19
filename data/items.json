@@ -8,8 +8,6 @@
       "en": "Flashlight",
       "ru": "Фонарик"
     },
-    "description": "A standard Flashlight.Can be used to light your way in the darkness. Press the Use Item button to light the Flashlight for up to 8 seconds. \"Most of the battery life was wastefully used by the previous owner.\"",
-    "descriptionRuRaw": "Длительность использования фонарика можно увеличить с помощью различных улучшений. Можно очень часто встретить как в сундуках, так и в кровавой паутине стоимостью 4000 очков крови. Можно использовать сидя или при беге. Позволяет уничтожить ловушку-фантом, установленную Ведьмой на земле или полу сооружения Если направить луч фонарика в сторону ловушки Ведьмы, ее аура становится видимой для всех, кто находится поблизости. Если направить луч фонарика в сторону ловушки Ведьмы, ее аура становится видимой для всех, кто находится поблизости. Не действует на ворон и не рассеивает густой туман. Луч фонарика расширяется после удачного ослепления убийцы. Можно использовать для привлечения внимания и \"общения\" (щелчками) с другими игроками.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -21,8 +19,6 @@
       "en": "Sport Flashlight",
       "ru": "Спортивный фонарик"
     },
-    "description": "A very portable Flashlight with a good grip.Its efficient technology produces a powerful light while consuming less power. Press the Use Item button to light the Flashlight for up to 8 seconds. Has an increased Aim accuracy of +20 %. Has a reduced Depletion rate of -11 %.",
-    "descriptionRuRaw": "Длительность использования фонарика можно увеличить с помощью различных улучшений. С определенной вероятностью можно найти в сундуках (при открытии или обыске), либо купить в кровавой паутине. Можно использовать сидя или при беге. Позволяет уничтожить пару ловушек-фантомов, установленных Ведьмой на земле или полу сооружения, до полной разрядки. Если направить луч фонарика в сторону ловушки Ведьмы, ее аура становится видимой для всех, кто находится поблизости. Если направить луч фонарика в сторону ловушки Ведьмы, ее аура становится видимой для всех, кто находится поблизости. Можно использовать для ослепления убийцы без каких-либо улучшений эффективности. Не действует на ворон и не рассеивает густой туман. Луч фонарика расширяется после удачного ослепления убийцы. Можно использовать для привлечения внимания и \"общения\" (щелчками) с другими игроками.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -34,8 +30,6 @@
       "en": "Utility Flashlight",
       "ru": "Тяжелый фонарь"
     },
-    "description": "A sturdy but heavy Flashlight that packs a lot of power. Press the Use Item button to light the Flashlight for up to 12 seconds. Has an increased Beam brightness of +30 %. Has an increased Blindness duration of +15 %. Has a reduced Aim accuracy of -20 %.",
-    "descriptionRuRaw": "Длительность использования фонарика можно увеличить с помощью различных улучшений. Можно встретить как в сундуках, так и в кровавой паутине стоимостью 6000 очков крови. Можно использовать сидя или при беге. Позволяет уничтожить несколько ловушек-фантомов, установленных Ведьмой на земле или полу сооружения, до полной разрядки. Если направить луч фонарика в сторону ловушки Ведьмы, ее аура становится видимой для всех, кто находится поблизости. Если направить луч фонарика в сторону ловушки Ведьмы, ее аура становится видимой для всех, кто находится поблизости. Можно использовать для ослепления убийцы без каких-либо улучшений эффективности предмета. Не действует на ворон и не рассеивает густой туман. Луч фонарика расширяется после удачного ослепления убийцы. Можно использовать для привлечения внимания и \"общения\" (щелчками) с другими игроками.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -47,8 +41,6 @@
       "en": "Apprentice's Fog Vial",
       "ru": "Флакон подмастерья с туманом"
     },
-    "description": "\"Made by the hands of a diligent but timid novice.\" Start the Trial with 4 Charges.Press the Use Item button to release a concentrated Fog Cloud: Expands to a maximum size of 8 metres over 2 seconds. Lasts for 8 seconds. Obscures visibility and sounds within its Area of Effect: Has an opacity of 33 %. Suppresses Auras and Scratch Marks. Apprentice's Fog Vial takes 70 seconds to recharge after use.",
-    "descriptionRuRaw": "В радиусе действия уменьшает видимость на 33%. После использования всех зарядов предмет не выбрасывается.",
     "addedAt": "2026-08-19T08:56:36.678Z"
   },
   {
@@ -60,8 +52,6 @@
       "en": "Artisan's Fog Vial",
       "ru": "Флакон мастерового с туманом"
     },
-    "description": "\"Crafted by an experienced glazier with a love for her craft.\" Start the Trial with 4 Charges.Press the Use Item button to release a concentrated Fog Cloud: Expands to a maximum size of 8 metres over 1.5 seconds. Lasts for 10 seconds. Obscures visibility and sounds within its Area of Effect: Has an opacity of 33 %. Suppresses Auras and Scratch Marks. Artisan's Fog Vial takes 65 seconds to recharge after use.",
-    "descriptionRuRaw": "В радиусе действия уменьшает видимость на 33%. После использования всех зарядов предмет не выбрасывается.",
     "addedAt": "2026-08-19T08:56:36.678Z"
   },
   {
@@ -73,8 +63,6 @@
       "en": "Vigo's Fog Vial",
       "ru": "Флакон Виго с туманом"
     },
-    "description": "\"From the man's own collection. Impeccable. Unparalleled.\" Start the Trial with 4 Charges.Press the Use Item button to release a concentrated Fog Cloud: Expands to a maximum size of 8 metres over 1.2 seconds. Lasts for 12 seconds. Obscures visibility and sounds within its Area of Effect: Has an opacity of 33 %. Suppresses Auras and Scratch Marks. Vigo's Fog Vial takes 60 seconds to recharge after use.",
-    "descriptionRuRaw": "В радиусе действия уменьшает видимость на 33%. После использования всех зарядов предмет не выбрасывается.",
     "addedAt": "2026-08-19T08:56:36.678Z"
   },
   {
@@ -86,8 +74,6 @@
       "en": "Broken Key",
       "ru": "Сломанный ключ"
     },
-    "description": "\"The bow and shank of a key, vibrating with power.\" Start the Trial with 6 Charges.Press and hold the Use Item button to channel the Broken Key: The Auras of other Survivors within 48 metres of your location are revealed to you for 8 seconds. The Broken Key consumes -1 Charge per use of its ability.",
-    "descriptionRuRaw": "Сломанный ключ (англ. \"Broken Key\") — обычный предмет для выживших в игре Dead by Daylight, используемый для раскрытия ауры игроков. Головка и трубка ключа, которые прямо-таки дрожат от распирающей энергии. При расходе заряда: Удерживайте кнопку использования предмета, чтобы сделать ауры выживших в радиусе 48м видимыми на 8 сек. Начинает матч с 6 зарядами",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -99,8 +85,6 @@
       "en": "Dull Key",
       "ru": "Потертый ключ"
     },
-    "description": "\"A bent and dull key that once held great power.\" Start the Trial with 5 Charges.Press and hold the Use Item button to channel the Dull Key: The Auras of other Survivors within 56 metres of your location are revealed to you for 9 seconds. While standing next to a locked Chest, press the Use Item button to quickly open it: Guarantees an Item of Rare Rarity or higher. The Aura of the Chest is revealed to other Survivors within 42 metres and highlighted in yellow: Grants the ability for 1 other Survivor to Rummage through that Chest once. Guarantees an Item of Rare Rarity or higher. While performing the Rummage action, the Aura of that Survivor is revealed to the Key holder. While standing next to the closed Hatch, press the Use Item button to re-open it: Takes 2.5 seconds to open. The Dull Key consumes -1 Charge per use of any one of its abilities.",
-    "descriptionRuRaw": "Потертый ключ (англ. \"Dull Key\") — необычный предмет для выживших в игре Dead by Daylight, используемый для взаимодействия с люком, сундуком или раскрытия ауры игроков. Тусклый гнутый ключ, который когда-то был наделен великой силой. При расходе заряда: Удерживайте кнопку использования предмета, чтобы сделать ауры выживших в радиусе 56м видимыми на 9 сек. Сундуки открываются быстрее. Аура открытого этим ключом сундука видна на расстоянии 42м, и другой выживший может обыскать его один раз. Внутри будут предметы качества не ниже редкого. Отпирается люк. Начинает матч с 5 зарядами",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -112,8 +96,6 @@
       "en": "Skeleton Key",
       "ru": "Ключ скелета"
     },
-    "description": "\"A tarnished and crooked key, vibrating with ominous power.\" Start the Trial with 6 Charges.Press and hold the Use Item button to channel the Skeleton Key: The Auras of other Survivors within 64 metres of your location are revealed to you for 10 seconds. While standing next to a locked Chest, press the Use Item button to quickly open it: Guarantees an Item of Rare Rarity or higher. The Aura of the Chest is revealed to other Survivors within 42 metres and highlighted in yellow: Grants the ability for 1 other Survivor to Rummage through that Chest once. Guarantees an Item of Rare Rarity or higher. While performing the Rummage action, the Aura of that Survivor is revealed to the Key holder. While standing next to the closed Hatch, press the Use Item button to re-open it: Takes 2.5 seconds to open. The Skeleton Key consumes -1 Charge per use of any one of its abilities.",
-    "descriptionRuRaw": "Во время моего последнего испытания я нашел ключ. Я никогда не находил что-то подобное. Этот ключ почти выжег мою руку. Я чувствую большую мощь. Я подозреваю, что ключ используется, чтобы открывать что-то. Но у меня не было времени, чтобы полностью разобраться в этом. Но мое сердце шепчет мне, что где-то я найду замочную скважину[1]. — Из наблюдений Бенедикта. Ключ скелета (англ. \"Skeleton Key\") — редкий предмет для выживших в игре Dead by Daylight, используемый для взаимодействия с люком, сундуком или раскрытия ауры игроков. Потускневший и искривленный ключ, содрогающийся от заключенной внутри зловещей силы. При расходе заряда: Удерживайте кнопку использования предмета, чтобы сделать ауры выживших в радиусе 64м видимыми на 10 сек. Сундуки открываются быстрее. Аура открытого этим ключом сундука видна на расстоянии 42м, и другой выживший может обыскать его один раз. Внутри будут предметы качества не ниже редкого. Отпирается люк. Начинает матч с 6 зарядами",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -125,8 +107,6 @@
       "en": "Cryptic Map",
       "ru": "Загадочная карта"
     },
-    "description": "\"Looking at it, the directions make no sense.But merely holding it grants you an uncanny intuition.\" Start the Trial with 4 Charges.Press the Use Item button to channel the Cryptic Map: The Auras of Pallets and Windows within 24 metres of your location are revealed to you for 10 seconds. While channelling the Map, press the Secondary Action button at any point before the timer elapses for the following additional effect: Creates a Beam of Light at your current location that lasts for 16 seconds. The Auras of Generators within 32 metres of it are revealed to all Survivors and highlighted in red. The Cryptic Map consumes -1 Charge per use.",
-    "descriptionRuRaw": "Загадочная карта (англ. \"Cryptic Map\") — обычный предмет для выживших в игре Dead by Daylight, используемый для обнаружения досок и мест для прыжков, раскрывая их ауры. Вы не понимаете, куда ведут эти пути, но само ощущение карты в руках предельно обостряет вашу интуицию. Нажмите кнопку использования предмета, чтобы в течение 10 сек. видеть ауры досок и мест для прыжков в радиусе 24м. При вторичном взаимодействии у выжившего появляется столп света. Генераторы в радиусе 32 м от столпа подсвечиваются красными аурами. 4 заряда.",
     "addedAt": "2026-08-19T08:56:36.678Z"
   },
   {
@@ -138,8 +118,6 @@
       "en": "Scribbled Map",
       "ru": "Небрежная карта"
     },
-    "description": "\"Peering at the parchment, a path appears in your mind.Moments later, you feel lost again.\" Start the Trial with 5 Charges.Press the Use Item button to channel the Scribbled Map: The Auras of Pallets and Windows within 32 metres of your location are revealed to you for 12 seconds. While channelling the Map, press the Secondary Action button at any point before the timer elapses for the following additional effect: Creates a Beam of Light at your current location that lasts for 16 seconds. The Auras of Generators within 32 metres of it are revealed to all Survivors and highlighted in red. The Scribbled Map consumes -1 Charge per use.",
-    "descriptionRuRaw": "Небрежная карта (англ. \"Scribbled Map\") — необычный предмет для выживших в игре Dead by Daylight, используемый для обнаружения досок и мест для прыжков, раскрывая их ауры. Вы смотрите на пергамент, и перед мысленным взором появляется путь. Через мгновение вы снова чувствуете, что потерялись. Нажмите кнопку использования предмета, чтобы в течение 12 сек. видеть ауры досок и мест для прыжков в радиусе 32м. При вторичном взаимодействии у выжившего появляется столп света. Генераторы в радиусе 32 м от столпа подсвечиваются красными аурами. 5 зарядов.",
     "addedAt": "2026-08-19T08:56:36.678Z"
   },
   {
@@ -151,8 +129,6 @@
       "en": "Annotated Map",
       "ru": "Карта с подписями"
     },
-    "description": "\"The sketch is clear and detailed.Strange knowledge flows into you, followed by dread uncertainty.\" Start the Trial with 6 Charges.Press the Use Item button to channel the Annotated Map: The Auras of Pallets and Windows within 40 metres of your location are revealed to you for 14 seconds. While channelling the Map, press the Secondary Action button at any point before the timer elapses for the following additional effect: Creates a Beam of Light at your current location that lasts for 16 seconds. The Auras of Generators within 32 metres of it are revealed to all Survivors and highlighted in red. The Annotated Map consumes -1 Charge per use.",
-    "descriptionRuRaw": "Карта с подписями (англ. \"Annotated Map\") — редкий предмет для выживших в игре Dead by Daylight, используемый для обнаружения досок и мест для прыжков, раскрывая их ауры. Подробный и четкий набросок. Вы чувствуете, как в голове появляются знания, но это вызывает тревогу и ужас. Нажмите кнопку использования предмета, чтобы в течение 14 сек. видеть ауры досок и мест для прыжков в радиусе 40м. При вторичном взаимодействии у выжившего появляется столп света. Генераторы в радиусе 32 м от столпа подсвечиваются красными аурами. 6 зарядов.",
     "addedAt": "2026-08-19T08:56:36.678Z"
   },
   {
@@ -164,8 +140,6 @@
       "en": "Bloodsense Map",
       "ru": "Карта кровавого чувства"
     },
-    "description": "\"A bloodstained piece of parchment, hastily rolled and burning with a strange power.\" Start the Trial with 8 Charges.Press the Use Item button to channel the Bloodsense Map: The Auras of injured Survivors, Pallets, and Windows within 48 metres of your location are revealed to you for 14 seconds. Causes Pools of Blood to spawn beneath you while being used. While channelling the Map, press the Secondary Action button at any point before the timer elapses for the following additional effect: Creates a Beam of Light at your current location that lasts for 16 seconds. The Auras of Generators within 32 metres of it are revealed to all Survivors and highlighted in red. The Bloodsense Map consumes -1 Charge per use.",
-    "descriptionRuRaw": "Карта кровавого чувства (англ. \"Bloodsense Map\") — праздничный предмет для выживших в игре Dead by Daylight, используемый для обнаружения досок, мест для прыжков и союзников, раскрывая их ауры. Наскоро скрученный окровавленный клочок пергамента, от которого так и пышет загадочной мощью. Нажмите кнопку использования предмета, чтобы в течение 14 сек. видеть ауры всех досок, мест для прыжков и раненых выживших в радиусе 48м. При вторичном взаимодействии местонахождение выжившего отмечается столпом света. Генераторы в радиусе 32 м от столпа подсвечиваются красными аурами. Во время использования под вами возникаю лужи крови. 8 заряда.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -177,8 +151,6 @@
       "en": "Camping Aid Kit",
       "ru": "Походная аптечка"
     },
-    "description": "A rudimentary First Aid Kit which can save lives in emergencies, even if it's lacking some of its supplies.Can be used to heal other Survivors: Increased Altruistic Healing speed of +35 %. Unlocks the Self-Heal action: Reduced Personal Healing speed of -33 %. Reduced Item efficiency of -33 %. The Camping Aid Kit has a Capacity of 24 Charges. \"Barely has enough material for a decent patch-up.\"",
-    "descriptionRuRaw": "Количество зарядов аптечки можно увеличить с помощью различных улучшений. Без специальных навыков и улучшений походной аптечки хватает на: 1 полное самолечение 1 полное лечение союзника. 1 полное самолечение. 1 полное лечение союзника. При самолечении данный предмет нельзя использовать сидя или в движении. С определенной вероятностью можно найти в сундуках в рамках текущего матча, либо приобрести в кровавой паутине за 3000 очков крови. Во время использования предмета может неоднократно появляться проверка реакции.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -190,8 +162,6 @@
       "en": "First Aid Kit",
       "ru": "Аптечка"
     },
-    "description": "A standard First Aid Kit with all the necessary equipment for treating common to more serious injuries.Can be used to heal other Survivors: Increased Altruistic Healing speed of +40 %. Unlocks the Self-Heal action: Reduced Personal Healing speed of -33 %. Reduced Item efficiency of -33 %. The First Aid Kit has a Capacity of 24 Charges.",
-    "descriptionRuRaw": "Количество зарядов аптечки можно увеличить с помощью различных улучшений. При самолечении данный предмет нельзя использовать сидя или в движении. Без специальных навыков и улучшений аптечки хватает на: 1.2 полных самолечения 1.4 полных лечения союзника. 1.2 полных самолечения. 1.4 полных лечения союзника. С определенной вероятностью можно найти в сундуках в рамках текущего матча, либо приобрести в кровавой паутине стоимостью 4000 очков крови. Во время использования предмета может неоднократно появляться проверка реакции.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -203,8 +173,6 @@
       "en": "Emergency Med-Kit",
       "ru": "Аптечка первой помощи"
     },
-    "description": "A sturdy and well organised Med-Kit equipped with top condition emergency supplies.Can be used to heal other Survivors: Increased Altruistic Healing speed of +45 %. Unlocks the Self-Heal action: Reduced Personal Healing speed of -33 %. Reduced Item efficiency of -33 %. The Emergency Med-Kit has a Capacity of 24 Charges. \"There is a cure for almost everything...but not for this.\"",
-    "descriptionRuRaw": "Количество зарядов аптечки можно увеличить с помощью различных улучшений. Без специальных навыков и улучшений аптечки первой помощи хватает на: 1.9 полных самолечения 2.9 полных лечения союзника. 1.9 полных самолечения. 2.9 полных лечения союзника. При самолечении данный предмет нельзя использовать сидя или в движении. С определенной вероятностью можно найти в сундуках в рамках текущего матча, либо приобрести в кровавой паутине стоимостью 5000 очков крови. Во время использования предмета может неоднократно появляться проверка реакции.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -216,8 +184,6 @@
       "en": "Ranger Med-Kit",
       "ru": "Аптечка лесничего"
     },
-    "description": "A large metal box containing medical supplies aimed at emergency rescues in hard to reach, often isolated locations.Can be used to heal other Survivors: Increased Altruistic Healing speed of +50 %. Unlocks the Self-Heal action: Reduced Personal Healing speed of -33 %. Reduced Item efficiency of -33 %. The Ranger Med-Kit has a Capacity of 24 Charges. \"A small engraved label can be found glued to the back panel: VK.ID-3994723.\"",
-    "descriptionRuRaw": "Количество зарядов аптечки можно увеличить с помощью различных улучшений. Без специальных умений или улучшений данной аптечки хватает на 2 полных самолечения. При самолечении данный предмет нельзя использовать сидя или в движении. Очень редко встречается как в сундуках, так и в кровавой паутине стоимостью 6000 очков крови. Во время использования предмета может неоднократно появляться проверка реакции.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -229,8 +195,6 @@
       "en": "Worn-Out Tools",
       "ru": "Изношенные инструменты"
     },
-    "description": "A metal box containing out of condition tools that could break at any moment.Even without training, can be used to repair or break various mechanical components. 16 Charges. Increases the Repair speed by +50 %. Reduces the Success zone of Good Skill Checks by -10 %. Unlocks the Sabotage action. \"You call these tools? ... Really?\"",
-    "descriptionRuRaw": "Данный предмет обладает рядом особенностей: Количество зарядов инструментов можно увеличить с помощью различных улучшений. С определенной вероятностью можно найти в сундуках в рамках текущего матча, либо приобрести в кровавой паутине за 3000 очков крови. Во время использования предмета может неоднократно появляться проверка реакции.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -242,8 +206,6 @@
       "en": "Toolbox",
       "ru": "Ящик с инструментами"
     },
-    "description": "Metal box containing a set of basic tools.Even without training, can be used to repair or break various mechanical components. 20 Charges. Increases the Repair speed by +50 %. Unlocks the Sabotage action. Increases the Sabotage speed by +15 %. \"It is unclear as to where these tools come from. Were they brought in by one of us or did they belong to one of the monsters?\"",
-    "descriptionRuRaw": "Данный предмет обладает рядом особенностей: Количество зарядов инструментов можно увеличить с помощью различных улучшений. С определенной вероятностью можно найти в сундуках, в рамках текущего матча, либо приобрести в кровавой паутине стоимостью 4000 очков крови. Во время использования предмета может неоднократно появляться проверка реакции.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -255,8 +217,6 @@
       "en": "Commodious Toolbox",
       "ru": "Вместительный ящик с инструментами"
     },
-    "description": "A large metal box containing basic tool and extra mechanical parts.Even without training, can be used to repair or break various mechanical components. 32 Charges. Increases the Repair speed by +50 %. Unlocks the Sabotage action. Increases the Sabotage speed by +50 %.",
-    "descriptionRuRaw": "Данный предмет обладает рядом особенностей: Количество зарядов инструментов можно увеличить с помощью различных улучшений. С определенной вероятностью можно найти в сундуках, в рамках текущего матча, либо приобрести в кровавой паутине стоимостью 5000 очков крови. Во время использования предмета может неоднократно появляться проверка реакции.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -268,8 +228,6 @@
       "en": "Mechanic's Toolbox",
       "ru": "Инструменты механика"
     },
-    "description": "A metal box with specialised mechanics tools.Even without training, can be used to repair or break various mechanical components. 16 Charges. Increases the Repair speed by +75 %. Unlocks the Sabotage action. Increases the Sabotage speed by +25 %.",
-    "descriptionRuRaw": "Данный предмет обладает рядом особенностей: Количество зарядов инструментов можно увеличить с помощью различных улучшений. С определенной вероятностью можно найти в сундуках, в рамках текущего матча, либо приобрести в кровавой паутине стоимостью 5000 очков крови. Во время использования предмета может неоднократно появляться проверка реакции.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -281,8 +239,6 @@
       "en": "Alex's Toolbox",
       "ru": "Инструменты Алекса"
     },
-    "description": "A metal box containing mainly saws and vice grips of varying sizes but also other tools.Even though the content of this Toolbox is clearly aimed at destructive deeds, it can be used to repair various mechanical components as well. 18 Charges. Increases the Repair speed by +10 %. Unlocks the Sabotage action. Increases the Sabotage speed by +100 %. \"Most of the tools are identified as 'owned by Alex'.\"",
-    "descriptionRuRaw": "Данный предмет обладает рядом особенностей: Количество зарядов инструментов можно увеличить с помощью различных улучшений. С определенной вероятностью можно найти в сундуках, в рамках текущего матча, либо приобрести в кровавой паутине стоимостью 6000 очков крови. Во время использования предмета может неоднократно появляться проверка реакции.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -294,8 +250,6 @@
       "en": "Engineer's Toolbox",
       "ru": "Инструменты инженера"
     },
-    "description": "A metal box with highly specialised tools meant for engineering.Most of the tools can be used by neophytes to make quick repairs or break various mechanical components. 16 Charges. Increases the Repair speed by +100 %. Unlocks the Sabotage action. Increases the Sabotage speed by +10 %. \"I've created tools beyond compare and stood paralysed as they were stolen from me. These are but a poor replica, spat out by The Fog.\" — Vigo's Journal",
-    "descriptionRuRaw": "Данный предмет обладает рядом особенностей: Количество зарядов инструментов можно увеличить с помощью различных улучшений. С определенной вероятностью можно найти в сундуках, в рамках текущего матча, либо приобрести в кровавой паутине стоимостью 6000 очков крови. Во время использования предмета может неоднократно появляться проверка реакции.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -307,8 +261,6 @@
       "en": "Festive Toolbox",
       "ru": "Праздничный ящик с инструментами"
     },
-    "description": "A Toolbox packed to the brim with fireworks, it is prepared to celebrate all your life's successes... and failures. 32 Charges. Increases the Repair speed by +50 %. Unlocks the Sabotage action. Increases the Sabotage speed by +50 %. Succeeding a Great Skill Check detonates a small cluster of firecrackers. Missing a Skill Check detonates fireworks. The Festive Toolbox is only available during Spring Events.",
-    "descriptionRuRaw": "Данный предмет обладает рядом особенностей: Количество зарядов инструментов можно увеличить с помощью различных улучшений. Ящик можно найти в сундуках с предметами или кровавой паутине в рамках праздничных мероприятий. Ящики, оставшиеся в кровавой паутине, доступны для покупки после окончания событий. Ящики, оставшиеся в кровавой паутине, доступны для покупки после окончания событий. Во время использования предмета может неоднократно появляться проверка реакции.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   }
 ]

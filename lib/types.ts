@@ -9,6 +9,13 @@ export interface LocalizedDescription {
   quote?: string;
 }
 
+/** What a perk needs to be rolled, listed and drawn.
+ *
+ *  Deliberately without its description: prose lives in
+ *  data/perk-descriptions.json and loads on demand (see
+ *  lib/descriptions.ts and scripts/split-descriptions.ts), because it was
+ *  the majority of the shipped payload and is read only when someone opens
+ *  a card. */
 export interface Perk {
   slug: string;
   role: PerkRole;
@@ -16,18 +23,14 @@ export interface Perk {
     en: string;
     ru: string;
   };
-  description: string;
-  /** Present only for slugs with a hand-authored entry in
-   *  data/description-translations.ru.json; falls back to an auto-derived
-   *  view of `description` (see getPerkDescription) when absent. */
-  descriptionRu?: LocalizedDescription;
-  /** Raw RU description text scraped from the perk's own wiki page (see
-   *  scripts/sync-descriptions.ts / data/description-ru-raw.json) — used as
-   *  the auto-derivation source instead of the English `description` when
-   *  present and no hand-authored `descriptionRu` exists. */
-  descriptionRuRaw?: string;
   character: string;
   icon: string;
+  /** Tag ids from the keyword classifier, worked out by the scraper (see
+   *  classifyPerk in lib/perk-tags.ts). Stored rather than derived because
+   *  deriving it needs the description, and the pool filter and themed
+   *  builds need tags for every perk at once — which would have pulled the
+   *  whole description corpus back into the first page load. */
+  tags?: string[];
   /** ISO date this perk was first seen by the scraper — carried forward
    *  across runs so it doesn't reset every scrape. */
   addedAt: string;
@@ -59,20 +62,15 @@ export type ItemType =
 export type LoadoutKind = "item" | "addon" | "offering";
 
 /** Shared shape for the 3 Full Loadout piece types — deliberately mirrors
- *  Perk's field names (slug/name/description/icon/addedAt) so UI
- *  components (grid, card, detail modal) can stay generic across perks
- *  and loadout pieces instead of duplicating rendering logic per type. */
+ *  Perk's field names (slug/name/icon/addedAt) so UI components (grid,
+ *  card, detail modal) can stay generic across perks and loadout pieces
+ *  instead of duplicating rendering logic per type.
+ *
+ *  Descriptions live in data/loadout-descriptions.json, keyed `kind:slug`,
+ *  and load on demand — see lib/descriptions.ts. */
 interface LoadoutPieceBase {
   slug: string;
   name: { en: string; ru: string };
-  /** English only for now — RU descriptions for perks are hand-curated
-   *  (data/description-translations.ru.json) or synced from the RU wiki
-   *  (data/description-ru-raw.json); loadout pieces don't have either yet,
-   *  so RU-language users see the English text, same honest fallback the
-   *  perk system already uses for any perk without a translation. */
-  description: string;
-  descriptionRu?: LocalizedDescription;
-  descriptionRuRaw?: string;
   icon: string;
   addedAt: string;
 }

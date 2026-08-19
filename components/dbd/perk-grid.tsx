@@ -11,6 +11,7 @@ import { cn } from "@/lib/cn";
 import { useT } from "@/lib/i18n";
 import { getCharacterName } from "@/lib/character-name";
 import { getPerkDescription } from "@/lib/perk-description";
+import { useDescription } from "@/lib/descriptions";
 import { useBodyScrollLock } from "@/lib/use-body-scroll-lock";
 import { Highlighted } from "./highlighted-text";
 
@@ -389,6 +390,21 @@ function PerkDetailModal({
 
 type DescriptionTab = "core" | "full";
 
+/** Holds the modal's height steady for the moment before the description
+ *  bundle lands, so the card doesn't jump once text arrives. Shared by the
+ *  perk and loadout panels via their own copies — they render different
+ *  shapes around it but want the same placeholder. */
+export function DescriptionSkeleton() {
+  return (
+    <div className="mt-4 space-y-2" aria-hidden>
+      <div className="h-6 w-40 animate-pulse rounded-full bg-surface" />
+      <div className="h-3.5 w-full animate-pulse rounded bg-surface" />
+      <div className="h-3.5 w-11/12 animate-pulse rounded bg-surface" />
+      <div className="h-3.5 w-4/6 animate-pulse rounded bg-surface" />
+    </div>
+  );
+}
+
 /** Mirrors the game's own "core effect vs full text" description toggle.
  *  Keyed by perk.slug from the caller so switching perks resets the tab. */
 function PerkDescriptionPanel({
@@ -400,7 +416,15 @@ function PerkDescriptionPanel({
 }) {
   const t = useT();
   const [tab, setTab] = useState<DescriptionTab>("core");
-  const description = getPerkDescription(perk, language);
+  // Description text isn't part of the shipped perk list — it loads on
+  // demand (see lib/descriptions.ts). Asking for it here is what starts
+  // the load; in practice the bundle has usually been warmed on idle
+  // before anyone opens a card, so this placeholder is a frame rather
+  // than a wait.
+  const entry = useDescription("perks", perk.slug);
+
+  if (!entry) return <DescriptionSkeleton />;
+  const description = getPerkDescription(entry, language);
 
   return (
     <div className="mt-4">

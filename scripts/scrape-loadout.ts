@@ -18,6 +18,7 @@ import sharp from "sharp";
 import { slugify } from "../lib/slugify";
 import { gateScrapedRows, partitionByRelease } from "./release-gate";
 import { guardAgainstShrink } from "./scrape-census";
+import { splitDescriptions, type DescriptionEntry, type DescriptionLookup } from "./split-descriptions";
 import { resolveImageUrl, WIKI_GG } from "./wiki-source";
 import {
   GENERAL_CHARACTER,
@@ -35,6 +36,7 @@ const PUBLIC_LOADOUT_DIR = join(__dirname, "../public/loadout");
 const ITEMS_JSON = join(DATA_DIR, "items.json");
 const ADDONS_JSON = join(DATA_DIR, "addons.json");
 const OFFERINGS_JSON = join(DATA_DIR, "offerings.json");
+const LOADOUT_DESCRIPTIONS_JSON = join(DATA_DIR, "loadout-descriptions.json");
 const LOADOUT_META_JSON = join(DATA_DIR, "loadout-meta.json");
 const LOADOUT_IDS_JSON = join(DATA_DIR, "loadout-ids.json");
 const LOADOUT_TRANSLATIONS_JSON = join(DATA_DIR, "loadout-translations.ru.json");
@@ -984,7 +986,7 @@ async function main() {
     );
   }
 
-  const items: Item[] = [];
+  const items: (Item & DescriptionEntry)[] = [];
   for (const { type, pieces } of typedItemTables) {
     // Items belong to nobody, so there is no character release date to
     // gate them on — only the "brand new and documented against a patch
@@ -1090,7 +1092,7 @@ async function main() {
     usedAddonSlugs.add(row.piece.slug);
   }
 
-  const addons: Addon[] = addonRows.map((row) =>
+  const addons: (Addon & DescriptionEntry)[] = addonRows.map((row) =>
     row.role === "survivor"
       ? {
           kind: "addon",
@@ -1110,7 +1112,7 @@ async function main() {
   console.log(`Fetching ${OFFERINGS_PAGE} via MediaWiki API ...`);
   const offeringsHtml = await fetchWikiPageHtml(OFFERINGS_PAGE);
   const $offerings = cheerio.load(offeringsHtml);
-  const offerings: Offering[] = [];
+  const offerings: (Offering & DescriptionEntry)[] = [];
   const offeringSections = findOfferingTables($offerings, "List of Offerings");
   console.log("Resolving each offering's role from its own page ...");
   for (const { heading, table } of offeringSections) {
@@ -1227,10 +1229,26 @@ async function main() {
   ]);
   guardAgainstShrink("offerings", OFFERINGS_JSON, offerings, (o: Offering) => [`role:${o.role}`]);
 
+  // One lookup across all three kinds — they're opened by the same detail
+  // modal, so splitting them further would only mean two more requests for
+  // the same click. Keyed `kind:slug` because an item, an add-on and an
+  // offering can all slugify to the same string.
+  const loadoutDescriptions: DescriptionLookup = {};
+  const itemSplit = splitDescriptions(items, (p) => `item:${p.slug}`);
+  const addonSplit = splitDescriptions(addons, (p) => `addon:${p.slug}`);
+  const offeringSplit = splitDescriptions(offerings, (p) => `offering:${p.slug}`);
+  Object.assign(
+    loadoutDescriptions,
+    itemSplit.descriptions,
+    addonSplit.descriptions,
+    offeringSplit.descriptions,
+  );
+
   mkdirSync(DATA_DIR, { recursive: true });
-  writeFileSync(ITEMS_JSON, JSON.stringify(items, null, 2) + "\n");
-  writeFileSync(ADDONS_JSON, JSON.stringify(addons, null, 2) + "\n");
-  writeFileSync(OFFERINGS_JSON, JSON.stringify(offerings, null, 2) + "\n");
+  writeFileSync(LOADOUT_DESCRIPTIONS_JSON, JSON.stringify(loadoutDescriptions, null, 2) + "\n");
+  writeFileSync(ITEMS_JSON, JSON.stringify(itemSplit.rows, null, 2) + "\n");
+  writeFileSync(ADDONS_JSON, JSON.stringify(addonSplit.rows, null, 2) + "\n");
+  writeFileSync(OFFERINGS_JSON, JSON.stringify(offeringSplit.rows, null, 2) + "\n");
   writeFileSync(LOADOUT_META_JSON, JSON.stringify(meta, null, 2) + "\n");
   writeFileSync(LOADOUT_IDS_JSON, JSON.stringify(loadoutIds, null, 2) + "\n");
   writeFileSync(LOADOUT_ICON_SOURCES_JSON, JSON.stringify(iconSources, null, 2) + "\n");

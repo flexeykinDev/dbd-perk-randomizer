@@ -40,6 +40,7 @@ import type {
 } from "@/lib/types";
 import { cn } from "@/lib/cn";
 import { useMounted } from "@/lib/use-mounted";
+import { prefetchDescriptions } from "@/lib/descriptions";
 import { ROLE_COLOR } from "@/lib/role-color";
 import { useLanguage, useT } from "@/lib/i18n";
 import { dailyChallengeSeed } from "@/lib/seeded-random";
@@ -369,6 +370,13 @@ export function RandomizerBoard() {
   // otherwise the server-rendered HTML and the client's first render would
   // pick different perks and React would flag a hydration mismatch.
   const mounted = useMounted();
+  // Card text is no longer part of the page's own payload (see
+  // lib/descriptions.ts). Warming it once the browser is idle means the
+  // first card someone opens already has its text, without any of it
+  // sitting on the critical path.
+  useEffect(() => {
+    prefetchDescriptions();
+  }, []);
   const [nonce, setNonce] = useState(0);
   const [sharedBuild, setSharedBuild] = useState<Perk[] | null>(null);
   // A quick, session-only filter (not persisted, resets on role change) —

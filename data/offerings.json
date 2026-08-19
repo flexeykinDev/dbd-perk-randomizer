@@ -9,8 +9,6 @@
       "en": "Hollow Shell",
       "ru": "Пустая оболочка"
     },
-    "description": "Grants +25 % bonus Bloodpoints in all Scoring Categories. The bonus Bloodpoints are applied after exiting the Trial. \"An unidentifiable cocoon which was breached by whatever was inside.\"",
-    "descriptionRuRaw": "Даёт 25% бонусных очков крови во всех категориях.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -23,8 +21,6 @@
       "en": "Sealed Envelope",
       "ru": "Запечатанный конверт"
     },
-    "description": "Grants +25 % bonus Bloodpoints in all Scoring Categories. The bonus Bloodpoints are applied after exiting the Trial. \"An unaddressed and unopened envelope yellowed by its time.Its message will never be known.\"",
-    "descriptionRuRaw": "Даёт 25% бонусных очков крови во всех категориях. Личное подношение.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -37,8 +33,6 @@
       "en": "Survivor Pudding",
       "ru": "Пудинг из выживших"
     },
-    "description": "Grants +100 % bonus Bloodpoints in all Scoring Categories. The bonus Bloodpoints are applied after exiting the Trial. \"A heavily salted pudding...\"",
-    "descriptionRuRaw": "Дарует 100% бонусных очков крови во всех категориях. Личное подношение.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -51,8 +45,6 @@
       "en": "Bloody Party Streamers",
       "ru": "Окровавленные праздничные гирлянды"
     },
-    "description": "Grants +100 % bonus Bloodpoints in all Scoring Categories to all Players. The bonus Bloodpoints are applied after exiting the Trial. \"A reminder of a bloody good time when people came together, but left screaming.\"",
-    "descriptionRuRaw": "Дарует 100% бонусных очков крови во всех категориях для всех участников текущего испытания.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -65,8 +57,6 @@
       "en": "Bound Envelope",
       "ru": "Перевязанный конверт"
     },
-    "description": "Grants +25 % bonus Bloodpoints in all Scoring Categories to all Survivors. The bonus Bloodpoints are applied after exiting the Trial. \"An opened envelope re-sealed and bound with four coloured ribbons.\"",
-    "descriptionRuRaw": "Дарует 25% дополнительных очков крови во всех категориях всем выжившим.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -79,8 +69,6 @@
       "en": "Fresh Primrose Blossom",
       "ru": "Свежий цветок примулы"
     },
-    "description": "Grants +75 % bonus Bloodpoints in the Altruism Scoring Category. The bonus Bloodpoints are applied after exiting the Trial. \"Golden flowers harvested at their peak.The primrose opens at the very last moment before the sun gives place to the night.\"",
-    "descriptionRuRaw": "Даёт 75% бонусных очков крови в категории \"Альтруизм\". Личное подношение.",
     "addedAt": "2026-08-16T15:09:41.923Z"
   },
   {
@@ -93,8 +81,6 @@
       "en": "Fragrant Primrose Blossom",
       "ru": "Душистый цветок примулы"
     },
-    "description": "Grants +100 % bonus Bloodpoints in the Altruism Scoring Category. The bonus Bloodpoints are applied after exiting the Trial. \"Golden flowers harvested at their peak.Releases a strong earthy and comforting aroma.\"",
-    "descriptionRuRaw": "Даёт 100% бонусных очков крови в категории \"Альтруизм\". Личное подношение.",
     "addedAt": "2026-08-16T15:09:41.923Z"
   },
   {
@@ -107,8 +93,6 @@
       "en": "Fresh Sweet William",
       "ru": "Свежая гвоздика"
     },
-    "description": "Grants +75 % bonus Bloodpoints in the Boldness Scoring Category. The bonus Bloodpoints are applied after exiting the Trial. \"A bunch of flowers with pink petals and a blood red core.Releases a spicy, clove-like scent.\"",
-    "descriptionRuRaw": "Даёт 75% бонусных очков крови в категории \"Храбрость\". Личное подношение.",
     "addedAt": "2026-08-16T15:09:41.923Z"
   },
   {
@@ -121,8 +105,6 @@
       "en": "Fragrant Sweet William",
       "ru": "Душистый цветок гвоздики"
     },
-    "description": "Grants +100 % bonus Bloodpoints in the Boldness Scoring Category. The bonus Bloodpoints are applied after exiting the Trial. \"A bunch of flowers with pink petals and a blood red core.Releases a strong spicy, clove-like scent.\"",
-    "descriptionRuRaw": "Даёт 100% бонусных очков крови в категории \"Храбрость\". Личное подношение.",
     "addedAt": "2026-08-16T15:09:41.923Z"
   },
   {
@@ -135,8 +117,6 @@
       "en": "Fresh Bog Laurel",
       "ru": "Свежий вереск"
     },
-    "description": "Grants +75 % bonus Bloodpoints in the Objectives Scoring Category. The bonus Bloodpoints are applied after exiting the Trial. \"A beautiful purple flower that grows in the midst of the tainted swamp.Releases a mild tea-like aroma.\"",
-    "descriptionRuRaw": "Даёт 75% бонусных очков крови в категории \"Цели\". Личное подношение.",
     "addedAt": "2026-08-16T15:09:41.923Z"
   },
   {
@@ -149,8 +129,6 @@
       "en": "Fragrant Bog Laurel",
       "ru": "Душистый вереск"
     },
-    "description": "Grants +100 % bonus Bloodpoints in the Objectives Scoring Category. The bonus Bloodpoints are applied after exiting the Trial. \"A beautiful purple flower that grows in the midst of the tainted swamp.Releases a strong tea-like aroma.\"",
-    "descriptionRuRaw": "Даёт 100% бонусных очков крови в категории \"Цели\". Личное подношение.",
     "addedAt": "2026-08-16T15:09:41.923Z"
   },
   {
@@ -163,8 +141,6 @@
       "en": "Fresh Crispleaf Amaranth",
       "ru": "Свежая ширица"
     },
-    "description": "Grants +75 % bonus Bloodpoints in the Survival Scoring Category. The bonus Bloodpoints are applied after exiting the Trial. \"The pale green leaves are highlighted with peculiar crimson veins.Amaranth is said to be everlasting.\"",
-    "descriptionRuRaw": "Даёт 75% бонусных очков крови в категории \"Выживание\". Личное подношение.",
     "addedAt": "2026-08-16T15:09:41.923Z"
   },
   {
@@ -177,8 +153,6 @@
       "en": "Fragrant Crispleaf Amaranth",
       "ru": "Душистый лист ширицы"
     },
-    "description": "Grants +100 % bonus Bloodpoints in the Survival Scoring Category. The bonus Bloodpoints are applied after exiting the Trial. \"The pale green leaves are highlighted with peculiar crimson veins.Amaranth is said to be everlasting.\"",
-    "descriptionRuRaw": "Даёт 100% бонусных очков крови в категории \"Выживание\". Личное подношение.",
     "addedAt": "2026-08-16T15:09:41.923Z"
   },
   {
@@ -191,8 +165,6 @@
       "en": "Devout Tanager Wreath",
       "ru": "Молитвенный венок танагры"
     },
-    "description": "Grants +75 % bonus Bloodpoints in the Brutality Scoring Category. The bonus Bloodpoints are applied after exiting the Trial. \"Devoutly crafted out of sticks and guts, this wreath calls on The Entity's blessing for more blood.\"",
-    "descriptionRuRaw": "Даёт 75% бонусных очков крови в категории \"Жестокость\".",
     "addedAt": "2026-08-16T15:09:41.923Z"
   },
   {
@@ -205,8 +177,6 @@
       "en": "Ardent Tanager Wreath",
       "ru": "Пламенный венок танагры"
     },
-    "description": "Grants +100 % bonus Bloodpoints in the Brutality Scoring Category. The bonus Bloodpoints are applied after exiting the Trial. \"Crafted with a fiery, undying passion out of bloody sticks and guts, this wreath calls on The Entity's blessing fore more blood.\"",
-    "descriptionRuRaw": "Даёт 100% бонусных очков крови в категории \"Жестокость\".",
     "addedAt": "2026-08-16T15:09:41.923Z"
   },
   {
@@ -219,8 +189,6 @@
       "en": "Devout Raven Wreath",
       "ru": "Молитвенный венок ворона"
     },
-    "description": "Grants +75 % bonus Bloodpoints in the Deviousness Scoring Category. The bonus Bloodpoints are applied after exiting the Trial. \"Devoutly crafted out of blackened branches and coals, this wreath calls on The Entity's blessing for more blood.\"",
-    "descriptionRuRaw": "Даёт 75% бонусных очков крови в категории \"Хитрость\".",
     "addedAt": "2026-08-16T15:09:41.923Z"
   },
   {
@@ -233,8 +201,6 @@
       "en": "Ardent Raven Wreath",
       "ru": "Пламенный венок ворона"
     },
-    "description": "Grants +100 % bonus Bloodpoints in the Deviousness Scoring Category. The bonus Bloodpoints are applied after exiting the Trial. \"Crafted with a fiery, undying passion out of blackened branches and coals, this wreath calls on The Entity's blessing for more blood.\"",
-    "descriptionRuRaw": "Даёт 100% бонусных очков крови в категории \"Хитрость\".",
     "addedAt": "2026-08-16T15:09:41.923Z"
   },
   {
@@ -247,8 +213,6 @@
       "en": "Devout Spotted Owl Wreath",
       "ru": "Молитвенный венок пятнистой совы"
     },
-    "description": "Grants +75 % bonus Bloodpoints in the Hunter Scoring Category. The bonus Bloodpoints are applied after exiting the Trial. \"Devoutly crafted out of sharp metals, rope and features, this wreath calls on The Entity's blessing for more blood.\"",
-    "descriptionRuRaw": "Даёт 75% бонусных очков крови в категории \"Охота\".",
     "addedAt": "2026-08-16T15:09:41.923Z"
   },
   {
@@ -261,8 +225,6 @@
       "en": "Ardent Spotted Owl Wreath",
       "ru": "Пламенный венок пятнистой совы"
     },
-    "description": "Grants +100 % bonus Bloodpoints in the Hunter Scoring Category. The bonus Bloodpoints are applied after exiting the Trial. \"Crafted with a fiery, undying passion out of sharp metals, ropes and feathers, this wreath calls on The Entity's blessing for more blood.\"",
-    "descriptionRuRaw": "Даёт 100% бонусных очков крови в категории \"Охота\".",
     "addedAt": "2026-08-16T15:09:41.923Z"
   },
   {
@@ -275,8 +237,6 @@
       "en": "Devout Shrike Wreath",
       "ru": "Молитвенный венок сорокопута"
     },
-    "description": "Grants +75 % bonus Bloodpoints in the Sacrifice Scoring Category. The bonus Bloodpoints are applied after exiting the Trial. \"Devoutly crafted out of sticks, strings and bones, this wreath calls on The Entity's blessing for more blood.\"",
-    "descriptionRuRaw": "Даёт 75% бонусных очков крови в категории \"Жертвоприношение\".",
     "addedAt": "2026-08-16T15:09:41.923Z"
   },
   {
@@ -289,8 +249,6 @@
       "en": "Ardent Shrike Wreath",
       "ru": "Пламенный венок сорокопута"
     },
-    "description": "Grants +100 % bonus Bloodpoints in the Sacrifice Scoring Category. The bonus Bloodpoints are applied after exiting the Trial. \"Crafted with a fiery, undying passion out of sticks, strings and bones, this wreath calls on The Entity's blessing for more blood.\"",
-    "descriptionRuRaw": "Даёт 100% бонусных очков крови в категории \"Жертвоприношение\".",
     "addedAt": "2026-08-16T15:09:41.923Z"
   },
   {
@@ -303,8 +261,6 @@
       "en": "Cream Chalk Pouch",
       "ru": "Мешок с мелом кремового цвета"
     },
-    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Unlocks the ability to attempt Self-Unhooks during the first Hook Stage: Increases your personal Luck at succeeding them by +2 %. \"A small cotton pouch half-filled with a cream coloured chalky powder of unknown origin.Releases a faint herbal aroma. Some believe it brings good fortune.\"",
-    "descriptionRuRaw": "Дает возможность попытаться слезть с крюка. Повышает вашу удачу на 2%. Тайна.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -317,8 +273,6 @@
       "en": "Ivory Chalk Pouch",
       "ru": "Мешок с мелом из слоновой кости"
     },
-    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Unlocks the ability to attempt Self-Unhooks during the first Hook Stage: Increases your personal Luck at succeeding them by +3 %. \"A small leather pouch displaying a straight white line hand-sewn on one of its sides.The bag is filled with an ivory chalky powder that shines under the moonlight.Some believe it brings good fortune.\"",
-    "descriptionRuRaw": "Дает возможность попытаться слезть с крюка. Повышает вашу удачу на 3%. Тайна.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -331,8 +285,6 @@
       "en": "Black Salt Statuette",
       "ru": "Статуэтка из черной соли"
     },
-    "description": "Unlocks the ability to attempt Self-Unhooks during the first Hook Stage for all Survivors: Increases the Luck at succeeding them by +2 % for all Survivors. \"A friable miniature statuette made of black salt representing a woman in a kneeling position offering a gift.Some believe it brings good fortune.\"",
-    "descriptionRuRaw": "Все выжившие получают возможность попытаться слезть с крюка. Повышает удачу всех выживших на 2%.",
     "addedAt": "2026-08-16T15:09:41.923Z"
   },
   {
@@ -345,8 +297,6 @@
       "en": "Vigo's Jar of Salty Lips",
       "ru": "Банка Виго с засоленными губами"
     },
-    "description": "Unlocks the ability to attempt Self-Unhooks during the first Hook Stage for all Survivors: Increases the Luck at succeeding them by +3 % for all Survivors. \"A tightly sealed glass jar containing torn human lips floating in a murky brine.Some believe it brings good fortune.\"",
-    "descriptionRuRaw": "Все выжившие получают возможность попытаться слезть с крюка. Увеличивает удачу всех выживших на 3%.",
     "addedAt": "2026-08-16T15:09:41.923Z"
   },
   {
@@ -359,8 +309,6 @@
       "en": "Torn Blueprint",
       "ru": "Порванный чертеж"
     },
-    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Grants the following effects at the start of the Trial: Increases the likelihood of the Basement spawning in the Landmark Building by +100 %, if it is available. The Auras of the Basement Hooks are revealed to you for 20 seconds. \"Though brittle and torn, the design is mostly legible.\"",
-    "descriptionRuRaw": "Показывает вам ауру крюков в подвале на 20 сек. в начале матча. Чрезвычайно повышает шанс появления подвала в основном здании, если оно есть на карте. Тайна.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -373,8 +321,6 @@
       "en": "Tarnished Coin",
       "ru": "Потускневшая монета"
     },
-    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Increases the number of Chests in the environment by +1. \"A round piece of metal which has lost all sheen.\"",
-    "descriptionRuRaw": "Призывает Сущность создать на 1 сундук больше. Тайна.",
     "addedAt": "2026-08-16T15:09:41.923Z"
   },
   {
@@ -387,8 +333,6 @@
       "en": "Cut Coin",
       "ru": "Разрезанная монета"
     },
-    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Reduces the number of Chests in the environment by -2. \"Two halves of a thick metallic coin.\"",
-    "descriptionRuRaw": "Призывает Сущность предотвратить появление 2 сундуков. Тайна.",
     "addedAt": "2026-08-16T15:09:41.923Z"
   },
   {
@@ -401,8 +345,6 @@
       "en": "Shiny Coin",
       "ru": "Блестящая монета"
     },
-    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Increases the number of Chests in the environment by +2. \"A clean and polished piece of gold.\"",
-    "descriptionRuRaw": "Призывает Сущность создать еще 2 сундука. Тайна.",
     "addedAt": "2026-08-16T15:09:41.923Z"
   },
   {
@@ -415,8 +357,6 @@
       "en": "Faint Reagent",
       "ru": "Слабый реагент"
     },
-    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Increases the thickness of the Dark Mist by +25 %. \"Paralysed, I stand in the cold as death lingers.\"",
-    "descriptionRuRaw": "Слегка сгущает Темный туман. Тайна.",
     "addedAt": "2026-08-16T15:09:41.923Z"
   },
   {
@@ -429,8 +369,6 @@
       "en": "Hazy Reagent",
       "ru": "Туманный реагент"
     },
-    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Increases the thickness of the Dark Mist by +50 %. \"The Mist is alluring, hypnotising.I love it and fear it at the same time.\" — Donna's Sketchbook",
-    "descriptionRuRaw": "Умеренно сгущает Темный туман. Тайна.",
     "addedAt": "2026-08-16T15:09:41.923Z"
   },
   {
@@ -443,8 +381,6 @@
       "en": "Murky Reagent",
       "ru": "Мутный реагент"
     },
-    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Increases the thickness of the Dark Mist by +75 %. \"The Mist seems to protect us from the beast, but it is a poison, a cancer, filling us with darkness and insanity.\" — Unknown, Notebook",
-    "descriptionRuRaw": "Сильно сгущает Темный туман. Тайна.",
     "addedAt": "2026-08-16T15:09:41.923Z"
   },
   {
@@ -457,8 +393,6 @@
       "en": "Vigo's Blueprint",
       "ru": "Чертеж Виго"
     },
-    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Grants the following effect at the start of the Trial: Increases the likelihood of the Hatch spawning by the Landmark Building by +100 %, if it is available. \"A clever design that has the letter 'V' etched on the bottom.\"",
-    "descriptionRuRaw": "Чрезвычайно повышает шанс появления люка в основном здании, если оно есть на карте. Тайна.",
     "addedAt": "2026-08-16T15:09:41.923Z"
   },
   {
@@ -471,8 +405,6 @@
       "en": "Rotten Oak",
       "ru": "Гнилой дуб"
     },
-    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Reduces the minimum distance between Spawn locations for Hooks by -2.5 metres. \"A decomposing piece of oak in which strange markings have been etched.\"",
-    "descriptionRuRaw": "Призывает Сущность умеренно уменьшить расстояние между крюками для жертвоприношений. Тайна.",
     "addedAt": "2026-08-16T15:09:41.923Z"
   },
   {
@@ -485,8 +417,6 @@
       "en": "Petrified Oak",
       "ru": "Окаменевший дуб"
     },
-    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Increases the minimum distance between Spawn locations for Hooks by +1 metre. \"A deteriorating piece of petrified wood.\"",
-    "descriptionRuRaw": "Успокаивает Сущность и слегка увеличивает расстояние между крюками для жертвоприношений. Тайна.",
     "addedAt": "2026-08-16T15:09:41.923Z"
   },
   {
@@ -499,8 +429,6 @@
       "en": "Putrid Oak",
       "ru": "Разложившийся дуб"
     },
-    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Reduces the minimum distance between Spawn locations for Hooks by -3.5 metres. \"A ruined piece of oak oozing with a black putrescent liquid.\"",
-    "descriptionRuRaw": "Призывает Сущность значительно уменьшить расстояние между крюками для жертвоприношений. Тайна.",
     "addedAt": "2026-08-16T15:09:41.923Z"
   },
   {
@@ -513,8 +441,6 @@
       "en": "Ebony Memento Mori",
       "ru": "Эбеновое Memento Mori"
     },
-    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Grants the ability to kill all Survivors with 2 Hook Stages once they are in the Dying State. \"I could swear It spoke to the beast.It came to a halt, as if calmly listening to the leaves rustling, and then... grinned.\"",
-    "descriptionRuRaw": "Дарует возможность убить всех выживших, которых вы перед этим повесили на крюк, и которые достигли на нем второй стадии, в следующем матче. Секретное.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -527,8 +453,6 @@
       "en": "Alien Flora",
       "ru": "Инопланетная флора"
     },
-    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Increases the chances to be sent to the Toba Landing Map in the Dvarka Deepwood Realm to 20 %. \"Our arrival will change the face of this planet as we know it.\" — Sarah, Science Officer",
-    "descriptionRuRaw": "При сожжении чрезвычайно увеличивает вероятность попасть на карту \"Площадка Тоба\". Тайна. Эффект не суммируется.",
     "addedAt": "2026-08-16T15:09:41.923Z"
   },
   {
@@ -541,8 +465,6 @@
       "en": "Shroud of Vanishing",
       "ru": "Покров исчезновения"
     },
-    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Nullifies any Offerings that would change the starting locations of Survivors. \"In an instant, their power was lost.\"",
-    "descriptionRuRaw": "Призывает сущность отменить все подношения, которые меняют места появления выживших. Тайна.",
     "addedAt": "2026-08-19T08:56:36.678Z"
   },
   {
@@ -555,8 +477,6 @@
       "en": "Vigo's Shroud",
       "ru": "Платок Виго"
     },
-    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Causes you to spawn as far away from the Killer as possible. \"I found marvels through the years in The Fog, but only now do I understand how to bend The Fog's irrefragable rules.\" — Vigo's Journal",
-    "descriptionRuRaw": "Вы начинаете матч как можно дальше от убийцы. Секретное подношение.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -569,8 +489,6 @@
       "en": "Shroud of Separation",
       "ru": "Пелена разлуки"
     },
-    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: All Survivors start the Trial separated from one another. \"A square and washed out piece of fabric with small knots on each end.\"",
-    "descriptionRuRaw": "Все выжившие начинают матч порознь. Секретное подношение.",
     "addedAt": "2026-08-19T08:56:36.678Z"
   },
   {
@@ -583,8 +501,6 @@
       "en": "Black Ward",
       "ru": "Черный защитник"
     },
-    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Causes your Add-ons to not be consumed after ending the Trial. \"Hear my voice, spare my ways, protect me from the void.\"",
-    "descriptionRuRaw": "Сжигание данного подношения дает Вам защиту от потери улучшений по окончании матча.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   },
   {
@@ -597,8 +513,6 @@
       "en": "White Ward",
       "ru": "Белый защитник"
     },
-    "description": "THIS OFFERING IS SECRET (This Offering is secret and will not reveal its identity to the other Players during the burning sequence before loading into the Trial.) Calls upon The Entity for the following effect: Causes your held Item to be protected from loss upon death. Causes any attached Add-ons to not be consumed upon death or escaping the Trial. \"Keep me from evil, defend me, and pass away.\"",
-    "descriptionRuRaw": "Сжигание этого подношения дает вам защиту от потери your item and[1] улучшений.",
     "addedAt": "2026-08-16T07:16:30.038Z"
   }
 ]

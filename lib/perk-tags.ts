@@ -50,12 +50,22 @@ const TAG_RULES: Record<string, RegExp> = {
   exposure: /\bexposed\b|one-hit down|dying state/,
 };
 
-function textFor(perk: Perk): string {
-  return `${perk.name.en} ${perk.description}`.toLowerCase();
-}
-
-export function getTagsForPerk(perk: Perk): string[] {
-  const text = textFor(perk);
+/**
+ * Works out a perk's tags from its name and description text.
+ *
+ * Run by the scraper, not at render time. The rules below are a pure
+ * function of text that only changes when the wiki does, so classifying on
+ * every render was recomputing a constant — and, more to the point, it was
+ * the last thing forcing every perk's description into the first page load
+ * (see scripts/split-descriptions.ts). The result is written into
+ * data/perks.json; getTagsForPerk just reads it back.
+ */
+export function classifyPerk(perk: {
+  name: { en: string };
+  description: string;
+  role: PerkRole;
+}): string[] {
+  const text = `${perk.name.en} ${perk.description}`.toLowerCase();
   const tags: string[] = [];
 
   if (perk.role === "killer") {
@@ -71,4 +81,11 @@ export function getTagsForPerk(perk: Perk): string[] {
   }
 
   return tags;
+}
+
+/** The tags baked into the shipped data by classifyPerk. Empty for a perk
+ *  scraped before tags were stored, which reads as "matches no filter"
+ *  rather than as an error. */
+export function getTagsForPerk(perk: Perk): string[] {
+  return perk.tags ?? [];
 }

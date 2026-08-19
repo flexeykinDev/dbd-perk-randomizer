@@ -44,10 +44,32 @@ interface Entry {
   descriptionRuRaw?: string;
 }
 
-const perks = load<Entry>("perks.json");
-const items = load<Entry>("items.json");
-const addons = load<Entry>("addons.json");
-const offerings = load<Entry>("offerings.json");
+const loadMap = <T>(file: string): Record<string, T> =>
+  JSON.parse(readFileSync(join(dataDir, file), "utf8")) as Record<string, T>;
+
+// Names and descriptions ship as separate files now (see
+// scripts/split-descriptions.ts) — the list carries what a roll needs, the
+// lookup carries the prose. This module is entirely about the prose, so it
+// rejoins them, keyed the same way the app does at runtime.
+type Prose = Omit<Entry, "slug" | "name">;
+const perkProse = loadMap<Prose>("perk-descriptions.json");
+const loadoutProse = loadMap<Prose>("loadout-descriptions.json");
+
+const join2 = (
+  file: string,
+  prose: Record<string, Prose>,
+  keyOf: (row: { slug: string }) => string,
+): Entry[] =>
+  load<{ slug: string; name?: { en: string; ru: string } }>(file).map((row) => {
+    const text = prose[keyOf(row)];
+    assert.ok(text, `${keyOf(row)} has no description entry — the split has drifted`);
+    return { ...row, ...text };
+  });
+
+const perks = join2("perks.json", perkProse, (p) => p.slug);
+const items = join2("items.json", loadoutProse, (p) => `item:${p.slug}`);
+const addons = join2("addons.json", loadoutProse, (p) => `addon:${p.slug}`);
+const offerings = join2("offerings.json", loadoutProse, (p) => `offering:${p.slug}`);
 const everything = [...perks, ...items, ...addons, ...offerings];
 
 const bySlug = (slug: string): Entry => {

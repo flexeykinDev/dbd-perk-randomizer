@@ -9,6 +9,8 @@ import { getKillerPowerIcon, isNewLoadoutPiece, ITEM_TYPE_LABEL } from "@/lib/lo
 import { getCharacterPortrait } from "@/lib/perks";
 import { getCharacterName } from "@/lib/character-name";
 import { getLoadoutPieceDescription } from "@/lib/perk-description";
+import { useDescription } from "@/lib/descriptions";
+import { DescriptionSkeleton } from "./perk-grid";
 import { useBodyScrollLock } from "@/lib/use-body-scroll-lock";
 import { ROLE_COLOR } from "@/lib/role-color";
 import { cn } from "@/lib/cn";
@@ -526,16 +528,6 @@ function LoadoutDetailModal({
                 role={role}
                 language={language}
               />
-              {language === "ru" &&
-                (piece.name.ru === piece.name.en ||
-                  (!piece.descriptionRu && !piece.descriptionRuRaw)) && (
-                  <p className="mt-2 text-[11px] text-muted/60">
-                    {t({
-                      ru: "Перевод для этого предмета пока не добавлен — название и/или описание показаны на английском.",
-                      en: "No RU translation yet for this piece — the name and/or description are shown in English.",
-                    })}
-                  </p>
-                )}
 
               <div className="h-6" aria-hidden />
             </div>
@@ -577,7 +569,18 @@ function LoadoutDescriptionPanel({
 }) {
   const t = useT();
   const [tab, setTab] = useState<DescriptionTab>("core");
-  const description = getLoadoutPieceDescription(piece, language);
+  // Keyed `kind:slug`: an item, an add-on and an offering can all slugify
+  // to the same string. See lib/descriptions.ts for why this loads here
+  // rather than shipping with the piece.
+  const entry = useDescription("loadout", `${piece.kind}:${piece.slug}`);
+
+  if (!entry) return <DescriptionSkeleton />;
+  const description = getLoadoutPieceDescription(entry, language);
+  // Moved in here from the modal body: it's a statement about the
+  // description, and the description is what this component has.
+  const untranslated =
+    language === "ru" &&
+    (piece.name.ru === piece.name.en || (!entry.descriptionRu && !entry.descriptionRuRaw));
 
   return (
     <div className="mt-4">
@@ -626,6 +629,15 @@ function LoadoutDescriptionPanel({
             </p>
           )}
         </div>
+      )}
+
+      {untranslated && (
+        <p className="mt-2 text-[11px] text-muted/60">
+          {t({
+            ru: "Перевод для этого предмета пока не добавлен — название и/или описание показаны на английском.",
+            en: "No RU translation yet for this piece — the name and/or description are shown in English.",
+          })}
+        </p>
       )}
     </div>
   );

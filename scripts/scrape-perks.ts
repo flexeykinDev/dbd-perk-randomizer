@@ -10,6 +10,8 @@ import sharp from "sharp";
 import { slugify } from "../lib/slugify";
 import { gateScrapedRows } from "./release-gate";
 import { guardAgainstShrink } from "./scrape-census";
+import { splitDescriptions, type DescriptionEntry } from "./split-descriptions";
+import { classifyPerk } from "../lib/perk-tags";
 import { WIKI_GG } from "./wiki-source";
 import { GENERAL_CHARACTER } from "../lib/types";
 import {
@@ -34,6 +36,7 @@ const DATA_DIR = join(__dirname, "../data");
 const PUBLIC_PERKS_DIR = join(__dirname, "../public/perks");
 const PUBLIC_CHARACTERS_DIR = join(__dirname, "../public/characters");
 const PERKS_JSON = join(DATA_DIR, "perks.json");
+const PERK_DESCRIPTIONS_JSON = join(DATA_DIR, "perk-descriptions.json");
 const META_JSON = join(DATA_DIR, "meta.json");
 const TRANSLATIONS_JSON = join(DATA_DIR, "translations.ru.json");
 const DESCRIPTION_TRANSLATIONS_JSON = join(DATA_DIR, "description-translations.ru.json");
@@ -174,10 +177,20 @@ function loadIconSources(): Record<string, string> {
   }
 }
 
-function loadPreviousPerks(): Perk[] {
+/** The previously shipped perks, with their descriptions folded back in
+ *  from the file those now live in. Only the rename path below actually
+ *  needs the text, but re-joining here keeps that logic reading the same
+ *  way it did when the two were one file. */
+function loadPreviousPerks(): (Perk & { description?: string })[] {
   if (!existsSync(PERKS_JSON)) return [];
   try {
-    return JSON.parse(readFileSync(PERKS_JSON, "utf8"));
+    const rows: Perk[] = JSON.parse(readFileSync(PERKS_JSON, "utf8"));
+    const descriptions: Record<string, { description?: string }> = existsSync(
+      PERK_DESCRIPTIONS_JSON,
+    )
+      ? JSON.parse(readFileSync(PERK_DESCRIPTIONS_JSON, "utf8"))
+      : {};
+    return rows.map((p) => ({ ...p, description: descriptions[p.slug]?.description }));
   } catch {
     return [];
   }
@@ -388,12 +401,16 @@ async function main() {
         slugAliases[row.slug] = row.renamedTo;
         return false;
       }
-      const previousPerk = previous.get(`${role}/${row.slug}`);
-      if (previousPerk) {
+      // Requires the previous *text*, not just the previous row: the whole
+      // point of this branch is to keep showing real wording instead of
+      // the wiki's "Identical to …" pointer, so a row whose description
+      // didn't come back is no better than having nothing.
+      const previousDescription = previous.get(`${role}/${row.slug}`)?.description;
+      if (previousDescription) {
         console.log(
           `  "${row.name}" is being renamed to "${row.renamedTo}", which isn't live yet — keeping its current text`,
         );
-        row.description = previousPerk.description;
+        row.description = previousDescription;
         row.renamedTo = undefined;
         return true;
       }
@@ -412,7 +429,9 @@ async function main() {
     rowsByRole.set(role, rows);
   }
 
-  const perks: Perk[] = [];
+  // Carries the description fields the shipped Perk type no longer has —
+  // they're split out at write time (see splitDescriptions).
+  const perks: (Perk & DescriptionEntry)[] = [];
   const characterPortraitUrls = new Map<string, string>();
   for (const role of ROLES) {
     const rows = rowsByRole.get(role)!;
@@ -429,15 +448,21 @@ async function main() {
       const rawDescription = descriptionOverridesEn[row.slug] ?? row.description;
       const description =
         nameEn === row.name ? rawDescription : rawDescription.replaceAll(row.name, nameEn);
+      const name = { en: nameEn, ru: translations[row.slug] ?? nameEn };
       perks.push({
         slug: row.slug,
         role,
-        name: { en: nameEn, ru: translations[row.slug] ?? nameEn },
+        name,
         description,
         descriptionRu: descriptionTranslations[row.slug],
         descriptionRuRaw: descriptionRuRaw[row.slug],
         character: row.character,
         icon,
+        // Classified here, once, rather than on every render — the rules
+        // are a pure function of text that only changes when the wiki
+        // does, and doing it at render time was the last thing forcing
+        // every description into the first page load.
+        tags: classifyPerk({ name, description, role }),
         addedAt: prev?.addedAt ?? scrapedAt,
       });
       if (row.character && row.characterPortraitUrl && !characterPortraitUrls.has(row.character)) {
@@ -494,8 +519,16 @@ async function main() {
     `character:${p.character}`,
   ]);
 
+  // The prose goes to its own file so it can be loaded when a card is
+  // opened instead of on every visit — see scripts/split-descriptions.ts.
+  const { rows: perkRows, descriptions: perkDescriptions } = splitDescriptions(
+    perks,
+    (p) => p.slug,
+  );
+
   mkdirSync(DATA_DIR, { recursive: true });
-  writeFileSync(PERKS_JSON, JSON.stringify(perks, null, 2) + "\n");
+  writeFileSync(PERK_DESCRIPTIONS_JSON, JSON.stringify(perkDescriptions, null, 2) + "\n");
+  writeFileSync(PERKS_JSON, JSON.stringify(perkRows, null, 2) + "\n");
   writeFileSync(META_JSON, JSON.stringify(meta, null, 2) + "\n");
   writeFileSync(CHARACTERS_JSON, JSON.stringify(characters, null, 2) + "\n");
   writeFileSync(PERK_IDS_JSON, JSON.stringify(perkIds, null, 2) + "\n");
