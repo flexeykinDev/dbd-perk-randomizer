@@ -59,6 +59,12 @@ jobs:
             data/items.json
             data/addons.json
             data/offerings.json
+            # Written by the same scrapes since descriptions were split out
+            # of the lists (see scripts/split-descriptions.ts). Left out,
+            # a scrape would ship renamed or reworded perks whose text
+            # still came from the previous run.
+            data/perk-descriptions.json
+            data/loadout-descriptions.json
             data/loadout-meta.json
             data/loadout-ids.json
             data/killer-power-icons.json

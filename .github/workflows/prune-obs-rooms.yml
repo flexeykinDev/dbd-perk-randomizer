@@ -1,0 +1,47 @@
+# Housekeeping for the OBS overlay rooms in Firebase.
+#
+# Deliberately its own workflow rather than a step on the weekly data
+# scrape: it touches a live database, and it should never be able to fail
+# a run whose job is opening a data PR.
+#
+# Safe to run because a room code is not the room's data — the code lives
+# in the streamer's localStorage and in the URL pasted into OBS, so a
+# pruned room is recreated on their next publish and their Browser Source
+# never breaks. See scripts/prune-obs-rooms.ts.
+name: Prune stale OBS rooms
+
+on:
+  schedule:
+    - cron: "0 5 * * 1" # Mondays 05:00 UTC, an hour before the data scrape
+  workflow_dispatch:
+    inputs:
+      days:
+        description: "Delete rooms untouched for this many days"
+        default: "14"
+        required: false
+      dry_run:
+        description: "Only report what would be deleted"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  prune:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      # No secrets: the site publishes to these rooms from the browser
+      # without signing in, so this uses exactly the access the app already
+      # has. Nothing here can reach anything the page could not.
+      - name: Prune
+        run: >
+          npx tsx scripts/prune-obs-rooms.ts
+          --days=${{ github.event.inputs.days || '14' }}
+          ${{ github.event.inputs.dry_run == 'true' && ' ' || '--delete' }}
