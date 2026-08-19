@@ -610,6 +610,34 @@ test.describe("Slot pinning", () => {
   });
 });
 
+test.describe("Daily Challenge", () => {
+  test("activating it shows the seed, with or without a shared count", async ({
+    page,
+  }) => {
+    await openBoard(page);
+    await page.getByRole("button", { name: "Ещё", exact: true }).click();
+    await page.getByRole("button", { name: "Задание дня", exact: true }).click();
+
+    // The count comes from Firebase, which a CI runner may not reach at
+    // all — so the assertion is on the part that must work regardless.
+    // The counter is allowed to be absent; it is not allowed to break the
+    // line it lives in, or to claim nobody has played.
+    const seedLine = page.getByText(/Активный сид:/);
+    await expect(seedLine).toBeVisible();
+    await expect(seedLine).toContainText(/\d{4}-\d{2}-\d{2}-(survivor|killer)/);
+    await expect(seedLine).not.toContainText(/сыграл\w* 0 /);
+    await expect(page).toHaveURL(/[?&]seed=\d{4}-\d{2}-\d{2}-/);
+  });
+
+  test("a custom seed never shows the shared count", async ({ page }) => {
+    // The count only means something for a build everyone shares; a custom
+    // seed is yours alone.
+    await page.goto("/?role=survivor&seed=my-own-seed");
+    await expect(page.getByText(/Активный сид:/)).toContainText("my-own-seed");
+    await expect(page.getByText(/Активный сид:/)).not.toContainText(/сыграл/);
+  });
+});
+
 test.describe("Preset builds", () => {
   async function openPresets(page: import("@playwright/test").Page) {
     await openBoard(page);

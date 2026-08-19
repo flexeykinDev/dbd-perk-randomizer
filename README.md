@@ -23,6 +23,7 @@ its own project.
 - [Features](#features)
 - [Pinning and single-slot rerolls](#pinning-and-single-slot-rerolls)
 - [Preset builds](#preset-builds)
+- [Daily Challenge](#daily-challenge)
 - [Battle Royale](#battle-royale)
 - [Full Loadout](#full-loadout)
 - [Loadout localization](#loadout-localization-items-add-ons-offerings)
@@ -135,6 +136,31 @@ data is refreshed by a scheduled scraper, so a renamed perk could leave
 a preset quietly offering three perks instead of four.
 `lib/build-presets.test.ts` resolves every slug against the shipped data
 on each `npm test`, so a stale set fails CI instead of failing silently.
+
+## Daily Challenge
+
+Everyone who opens the Daily Challenge on the same UTC day gets the same
+build, and the active-seed line shows how many players have taken it:
+
+> Active seed: `2026-08-19-survivor` · 42 players took it today
+
+The number counts **participation, not visits**. Incrementing on page load
+would have been simpler and would have meant the figure said "people who
+opened the site" while the label said "played today" — and it would have
+written to a shared database on behalf of every passer-by who never touched
+the feature. It counts when someone actually switches the board into Daily
+Challenge mode, once per browser per day.
+
+It is anonymous by construction: the only thing stored is a per-day integer
+under `daily-challenge/<YYYY-MM-DD>/count`. There is no per-visitor record,
+in the database or in the browser beyond a "did I already count today" flag.
+
+Everything about it degrades silently — an ad-blocker, an offline tab, or
+database rules that don't grant that path cost the player nothing, and the
+count simply doesn't appear. It is never rendered as `0`: a fresh UTC day
+and an unreachable database look identical from the browser, and neither is
+worth telling people the site is dead. A custom seed never shows a count at
+all, since that build is yours alone.
 
 ## Battle Royale
 

@@ -42,6 +42,7 @@ import { useMounted } from "@/lib/use-mounted";
 import { ROLE_COLOR } from "@/lib/role-color";
 import { useLanguage, useT } from "@/lib/i18n";
 import { dailyChallengeSeed } from "@/lib/seeded-random";
+import { recordDailyParticipation } from "@/lib/daily-count";
 import { recordRoll } from "@/lib/stats";
 import {
   parseLoadoutKey,
@@ -76,6 +77,7 @@ import { CopyToast } from "./copy-toast";
 import { ExcludePanel } from "./exclude-panel";
 import { LoadoutExcludePanel } from "./loadout-exclude-panel";
 import { StatsModal } from "./stats-modal";
+import { DailyCount } from "./daily-count";
 import { HistoryModal } from "./history-modal";
 import { PresetsModal } from "./presets-modal";
 import { ToggleSwitch } from "./toggle-switch";
@@ -1674,6 +1676,10 @@ export function RandomizerBoard() {
       clearSeed();
       return;
     }
+    // Counted here rather than on page load: this is the moment someone
+    // actually takes the challenge, which is what the number claims to
+    // report. Deduplicated per browser per day inside the helper.
+    recordDailyParticipation();
     setSeedMode("daily");
     setCustomSeedInput("");
     setSharedBuild(null);
@@ -2122,6 +2128,10 @@ export function RandomizerBoard() {
             <code className="rounded bg-surface px-1.5 py-0.5 text-accent">
               {activeSeed}
             </code>
+            {/* Daily Challenge only: a custom seed is yours alone, so a
+                shared count would mean nothing there. Mounting this is
+                also what opens the listener — see the component. */}
+            {seedMode === "daily" && <DailyCount />}
           </p>
         )}
       </div>
