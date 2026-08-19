@@ -610,6 +610,72 @@ test.describe("Slot pinning", () => {
   });
 });
 
+test.describe("Preset builds", () => {
+  async function openPresets(page: import("@playwright/test").Page) {
+    await openBoard(page);
+    await page.getByRole("button", { name: "Ещё", exact: true }).click();
+    await page.getByRole("button", { name: "Готовые билды", exact: true }).click();
+    await expect(page.getByText("Готовые билды").first()).toBeVisible();
+  }
+
+  test("applying a preset shows exactly that build", async ({ page }) => {
+    await openPresets(page);
+    await page.getByRole("button", { name: /^Тихий выживший/ }).click();
+
+    await expect.poll(() => liveBuild(page)).toEqual([
+      "Железная воля",
+      "Городской бег",
+      "Искажение",
+      "Легковес",
+    ]);
+    // Applying goes through the shared-build path, so the URL describes it
+    // and the link is shareable like any other build.
+    await expect(page).toHaveURL(/[?&]r=s&p=\d+(%2C\d+)*/);
+  });
+
+  test("a preset is a fixed build, so it offers no pins or rerolls", async ({
+    page,
+  }) => {
+    await openPresets(page);
+    await page.getByRole("button", { name: /^Второй шанс/ }).click();
+    await expect.poll(async () => (await liveBuild(page)).length).toBe(4);
+
+    // Same rule as a shared or seeded build: there is nothing to reroll
+    // around in a build that was handed to you whole.
+    await expect(
+      page.getByRole("button", { name: /^(За|От)крепить перк$/ }),
+    ).toHaveCount(0);
+    await expect(
+      page.getByRole("button", { name: "Перебросить этот перк" }),
+    ).toHaveCount(0);
+  });
+
+  test("Generate replaces a preset with a fresh random build", async ({ page }) => {
+    await openPresets(page);
+    await page.getByRole("button", { name: /^Охота на тотемы/ }).click();
+    await expect.poll(async () => (await liveBuild(page))[0]).toBe("Мелкая дичь");
+
+    await page
+      .getByRole("button", { name: "Сгенерировать новый билд" })
+      .click();
+    // A preset is a starting point, not a mode — rolling leaves it, and the
+    // per-slot controls come back with the random build.
+    await expect
+      .poll(() => page.getByRole("button", { name: "Перебросить этот перк" }).count())
+      .toBe(4);
+  });
+
+  test("the killer picker offers the killer presets", async ({ page }) => {
+    await openBoard(page);
+    await page.getByRole("button", { name: "Убийца" }).click();
+    await page.getByRole("button", { name: "Ещё", exact: true }).click();
+    await page.getByRole("button", { name: "Готовые билды", exact: true }).click();
+
+    await expect(page.getByRole("button", { name: /^Порчи/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /^Тихий выживший/ })).toHaveCount(0);
+  });
+});
+
 test.describe("Single-slot reroll", () => {
   test("the dice button changes only its own slot", async ({ page }) => {
     const before = await openBoard(page);

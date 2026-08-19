@@ -7,6 +7,7 @@ import {
   Dices,
   Skull,
   BarChart3,
+  BookOpen,
   CalendarClock,
   Copy,
   History,
@@ -26,6 +27,7 @@ import {
   getTeachablePerks,
 } from "@/lib/perks";
 import { getCharacterName } from "@/lib/character-name";
+import { resolvePreset, type BuildPreset } from "@/lib/build-presets";
 import { getTagsForPerk, getTagsForRole } from "@/lib/perk-tags";
 import type {
   Addon,
@@ -75,6 +77,7 @@ import { ExcludePanel } from "./exclude-panel";
 import { LoadoutExcludePanel } from "./loadout-exclude-panel";
 import { StatsModal } from "./stats-modal";
 import { HistoryModal } from "./history-modal";
+import { PresetsModal } from "./presets-modal";
 import { ToggleSwitch } from "./toggle-switch";
 import {
   ShareCard,
@@ -392,6 +395,7 @@ export function RandomizerBoard() {
   const [showStats, setShowStats] = useState(false);
   const [statsModalOpen, setStatsModalOpen] = useState(false);
   const [historyModalOpen, setHistoryModalOpen] = useState(false);
+  const [presetsModalOpen, setPresetsModalOpen] = useState(false);
   const [obsModalOpen, setObsModalOpen] = useState(false);
   const [statsVersion, setStatsVersion] = useState(0);
   const [battleRoyale, setBattleRoyale] = useState(false);
@@ -1085,6 +1089,24 @@ export function RandomizerBoard() {
     const targetRole = matched[0].role;
     setRole(targetRole);
     setSharedBuild(matched.filter((p) => p.role === targetRole));
+  }, []);
+
+  /** Shows a hand-picked build (see data/build-presets.json).
+   *
+   *  Reuses the shared-build path rather than adding a mode of its own, so
+   *  a preset behaves exactly like a build someone sent you: displayed as
+   *  given, and replaced the moment you roll. That also means it inherits
+   *  every existing consequence for free — the URL updates, the OBS
+   *  overlay follows, and the padlocks hide themselves because there is
+   *  nothing to reroll around in a fixed build. */
+  const applyPreset = useCallback((preset: BuildPreset) => {
+    const perks = resolvePreset(preset);
+    if (perks.length === 0) return;
+    setRole(preset.role);
+    // A seeded build outranks a shared one further up, so leaving a seed
+    // active would show the seed's build and quietly ignore the pick.
+    setSeedMode("none");
+    setSharedBuild(perks);
   }, []);
 
   useEffect(() => {
@@ -2078,6 +2100,19 @@ export function RandomizerBoard() {
                 <History className="size-4 shrink-0" />
                 {t({ ru: "История", en: "History" })}
               </button>
+              {/* Hidden in loadout-only mode: presets are perk builds, and
+                  an entry that opens a picker with nothing to apply is
+                  worse than no entry. */}
+              {mode !== "loadout" && (
+                <button
+                  type="button"
+                  onClick={() => setPresetsModalOpen(true)}
+                  className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm font-medium text-foreground transition-colors hover:bg-surface-hover"
+                >
+                  <BookOpen className="size-4 shrink-0" />
+                  {t({ ru: "Готовые билды", en: "Preset Builds" })}
+                </button>
+              )}
             </div>
           </MoreMenu>
         </div>
@@ -2435,6 +2470,14 @@ export function RandomizerBoard() {
         language={language}
         onClose={() => setStatsModalOpen(false)}
         version={statsVersion}
+      />
+
+      <PresetsModal
+        open={presetsModalOpen}
+        role={role}
+        language={language}
+        onClose={() => setPresetsModalOpen(false)}
+        onApply={applyPreset}
       />
 
       <HistoryModal

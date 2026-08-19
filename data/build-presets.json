@@ -1,0 +1,90 @@
+{
+  "_comment": "Hand-picked themed builds, offered alongside the randomizer as a starting point. Deliberately NOT generated from lib/perk-tags.ts: that classifier is a keyword heuristic, and a build assembled from it reads as 'four perks that mention generators' rather than a build anyone would actually run. These are the archetypes players already know by name. That does mean they are hand-maintained content, which is the usual objection to curated lists — a renamed or retired perk rots the set silently. lib/build-presets.test.ts is the answer: it resolves every slug here against the shipped data on each `npm test`, so a set that has gone stale fails CI instead of quietly showing three perks. Perk order within a set is the order they read best in, not a ranking.",
+  "presets": [
+    {
+      "id": "stealth",
+      "role": "survivor",
+      "name": { "en": "Silent Survivor", "ru": "Тихий выживший" },
+      "description": {
+        "en": "Stay unheard and unseen. No chase tools at all — the plan is to never be in one.",
+        "ru": "Ни звука, ни следа. Инструментов для погони здесь нет вовсе — расчёт на то, чтобы в неё не попадать."
+      },
+      "perks": ["iron-will", "urban-evasion", "distortion", "lightweight"]
+    },
+    {
+      "id": "gen-rush",
+      "role": "survivor",
+      "name": { "en": "Generator Rush", "ru": "Гонка генераторов" },
+      "description": {
+        "en": "Everything points at repair speed. Fragile if the Killer finds you, fast if they don't.",
+        "ru": "Всё ради скорости ремонта. Хрупко, если убийца вас нашёл, и очень быстро, если нет."
+      },
+      "perks": ["prove-thyself", "deja-vu", "hyperfocus", "resilience"]
+    },
+    {
+      "id": "totems",
+      "role": "survivor",
+      "name": { "en": "Totem Hunter", "ru": "Охота на тотемы" },
+      "description": {
+        "en": "Find totems, cleanse them, and turn them into healing of your own.",
+        "ru": "Найти тотемы, снять их и превратить в собственное лечение."
+      },
+      "perks": ["small-game", "counterforce", "boon-circle-of-healing", "inner-strength"]
+    },
+    {
+      "id": "second-chance",
+      "role": "survivor",
+      "name": { "en": "Second Chance", "ru": "Второй шанс" },
+      "description": {
+        "en": "Four separate ways to undo one mistake. The classic answer to being caught.",
+        "ru": "Четыре разных способа отыграть одну ошибку. Классический ответ на «поймали»."
+      },
+      "perks": ["dead-hard", "decisive-strike", "unbreakable", "adrenaline"]
+    },
+    {
+      "id": "gen-regression",
+      "role": "killer",
+      "name": { "en": "Generator Regression", "ru": "Откат генераторов" },
+      "description": {
+        "en": "Never win a chase, win the clock. Every hook and every kick takes progress back.",
+        "ru": "Выигрывать не погоню, а время. Каждый крюк и каждый удар по генератору отматывает прогресс назад."
+      },
+      "perks": [
+        "corrupt-intervention",
+        "pop-goes-the-weasel",
+        "scourge-hook-pain-resonance",
+        "eruption"
+      ]
+    },
+    {
+      "id": "hex",
+      "role": "killer",
+      "name": { "en": "Hex Totems", "ru": "Порчи" },
+      "description": {
+        "en": "High risk, high reward: enormous while the totems stand, nothing once they don't.",
+        "ru": "Ва-банк: очень сильно, пока тотемы стоят, и ничего, когда их снимут."
+      },
+      "perks": ["hex-ruin", "hex-undying", "hex-devour-hope", "hex-haunted-ground"]
+    },
+    {
+      "id": "info",
+      "role": "killer",
+      "name": { "en": "Total Information", "ru": "Тотальная слежка" },
+      "description": {
+        "en": "You always know where they are. Walking to the right place beats searching for it.",
+        "ru": "Вы всегда знаете, где они. Идти сразу в нужное место выгоднее, чем искать."
+      },
+      "perks": ["lethal-pursuer", "barbecue-and-chilli", "nowhere-to-hide", "darkness-revealed"]
+    },
+    {
+      "id": "chase",
+      "role": "killer",
+      "name": { "en": "Chase Pressure", "ru": "Давление в погоне" },
+      "description": {
+        "en": "Built to end chases quickly: pallets stop helping and windows stop working.",
+        "ru": "Собрано, чтобы заканчивать погони быстро: доски перестают спасать, а окна — работать."
+      },
+      "perks": ["bamboozle", "enduring", "spirit-fury", "save-the-best-for-last"]
+    }
+  ]
+}

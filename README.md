@@ -22,6 +22,7 @@ its own project.
 - [Screenshots](#screenshots)
 - [Features](#features)
 - [Pinning and single-slot rerolls](#pinning-and-single-slot-rerolls)
+- [Preset builds](#preset-builds)
 - [Battle Royale](#battle-royale)
 - [Full Loadout](#full-loadout)
 - [Loadout localization](#loadout-localization-items-add-ons-offerings)
@@ -55,6 +56,8 @@ its own project.
   Loadout** mode (item/Power, add-ons, offering)
 - 📌 **Pin** a perk to keep it through the next roll, or reroll a
   single slot without disturbing the other three
+- 📖 **Preset builds** — eight hand-picked archetypes (Gen Rush, Hex
+  Totems, Chase Pressure…) as a starting point
 - 🧑 Pick a specific character — guarantees their teachables (Perks
   mode) or decides whose Power gets rolled (Loadout mode, killer)
 - 🌍 EN/RU language switch — every name and description is pulled from
@@ -106,6 +109,32 @@ Shortcuts stay out of the way while you're typing in a field or a
 modal is open, and never override a browser shortcut (`Ctrl`/`Cmd`/
 `Alt` combinations pass straight through). Seeded and shared builds
 hide both controls, since those builds are fixed by definition.
+
+## Preset builds
+
+**More → Preset Builds** offers four hand-picked builds per role — the
+archetypes players already know by name (Generator Rush, Second Chance,
+Hex Totems, Chase Pressure, and so on). They exist for the case the
+randomizer is bad at: you have 300+ perks and no idea which ones belong
+together.
+
+Applying one reuses the same "shared build" path a Share link or a
+Twitch `!paste` takes, so a preset behaves exactly like a build someone
+sent you — shown as-is, shareable by URL, and replaced the moment you
+press Generate. It's a starting point, not a mode; for _themed random_
+builds, use the tag filter in the pool instead.
+
+The sets live in [`data/build-presets.json`](data/build-presets.json)
+and are deliberately hand-written rather than generated from the tag
+classifier, which is a keyword heuristic — a build assembled from it
+reads as "four perks that mention generators" rather than a build
+anyone would run.
+
+That makes them hand-maintained content, which normally rots: the perk
+data is refreshed by a scheduled scraper, so a renamed perk could leave
+a preset quietly offering three perks instead of four.
+`lib/build-presets.test.ts` resolves every slug against the shipped data
+on each `npm test`, so a stale set fails CI instead of failing silently.
 
 ## Battle Royale
 
