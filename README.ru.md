@@ -47,8 +47,8 @@ Hub](https://github.com/flexeykinDev/Vortex-Hub), теперь отдельны�
 | ![Модалка выбора персонажа](docs/screenshots/character-picker.png) | ![Настройка пула перков](docs/screenshots/manage-pool.png) |
 | **Карточка перка** | **Статистика роллов** |
 | ![Карточка перка с описанием](docs/screenshots/perk-modal.png) | ![Статистика роллов](docs/screenshots/stats.png) |
-| **Светлая тема** | |
-| ![Светлая тема](docs/screenshots/board-light.png) | |
+| **Готовые билды** | **Светлая тема** |
+| ![Модалка готовых билдов](docs/screenshots/preset-builds.png) | ![Светлая тема](docs/screenshots/board-light.png) |
 
 ## Возможности
 

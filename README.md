@@ -48,8 +48,8 @@ its own project.
 | ![Character picker modal](docs/screenshots/character-picker.png) | ![Manage the perk pool](docs/screenshots/manage-pool.png) |
 | **Perk card** | **Roll statistics** |
 | ![Perk card with description](docs/screenshots/perk-modal.png) | ![Roll statistics](docs/screenshots/stats.png) |
-| **Light theme** | |
-| ![Light theme](docs/screenshots/board-light.png) | |
+| **Preset builds** | **Light theme** |
+| ![Preset builds modal](docs/screenshots/preset-builds.png) | ![Light theme](docs/screenshots/board-light.png) |
 
 ## Features
 

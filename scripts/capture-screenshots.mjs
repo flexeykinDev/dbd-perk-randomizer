@@ -14,7 +14,12 @@ const BASE = "http://localhost:3000";
 mkdirSync(OUT_DIR, { recursive: true });
 
 async function shot(page, path, name, opts = {}) {
-  await page.goto(`${BASE}${path}`, { waitUntil: "networkidle" });
+  // "load", not "networkidle". The page can hold a Firebase connection
+  // open (the OBS relay, and the Daily Challenge counter), so the network
+  // never goes idle and the wait hangs until Playwright's default timeout
+  // — which is how this script came to sit for ten minutes producing one
+  // screenshot. The explicit waits below are what actually settle the UI.
+  await page.goto(`${BASE}${path}`, { waitUntil: "load" });
   await page.waitForTimeout(600);
   if (opts.hideTrailer) {
     const btn = page.getByRole("button", { name: "Скрыть трейлер" });
@@ -71,7 +76,20 @@ async function main() {
     setup: async (p) => {
       await p.getByRole("button", { name: "Сгенерировать новый билд" }).click();
       await p.waitForTimeout(300);
+      // Stats moved into the "Ещё" popover when the toolbar was
+      // decluttered — it is no longer a top-level button.
+      await p.getByRole("button", { name: "Ещё", exact: true }).click();
+      await p.waitForTimeout(200);
       await p.getByRole("button", { name: "Статистика", exact: true }).click();
+    },
+  });
+
+  await shot(page, "/?role=survivor", "preset-builds.png", {
+    hideTrailer: true,
+    setup: async (p) => {
+      await p.getByRole("button", { name: "Ещё", exact: true }).click();
+      await p.waitForTimeout(200);
+      await p.getByRole("button", { name: "Готовые билды", exact: true }).click();
     },
   });
 
