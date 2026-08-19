@@ -151,9 +151,9 @@ export function gateScrapedRows<T>(
 }
 
 /**
- * Splits entries into those that count as live and those still pending,
- * so callers can log what was withheld instead of dropping it silently —
- * a scrape that quietly ships fewer perks than the wiki lists is exactly
+ * Splits entries into those that count as live and those still pending, so
+ * callers can log what was withheld instead of dropping it silently — a
+ * scrape that quietly ships fewer add-ons than the wiki lists is exactly
  * the kind of thing nobody notices until a player does.
  */
 export function partitionByRelease<T>(

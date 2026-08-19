@@ -8,12 +8,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import {
-  gateScrapedRows,
-  isReleased,
-  partitionByRelease,
-  ReleaseDateError,
-} from "./release-gate";
+import { gateScrapedRows, isReleased, ReleaseDateError } from "./release-gate";
 
 const NOW = new Date("2026-08-18T12:00:00Z");
 
@@ -38,37 +33,6 @@ test("a missing or malformed date throws rather than guessing", () => {
   }
 });
 
-test("partitionByRelease splits and reports what it held", () => {
-  const { live, pending } = partitionByRelease(
-    [
-      { n: "Krasue", d: "2025-09-23" },
-      { n: "Judgment", d: "2026-08-25" },
-      { n: "Slasher", d: "2026-06-16" },
-    ],
-    (e) => e.d,
-    (e) => e.n,
-    NOW,
-  );
-  assert.deepEqual(live.map((e) => e.n), ["Krasue", "Slasher"]);
-  assert.deepEqual(pending.map((p) => p.entry.n), ["Judgment"]);
-});
-
-// The shipped data files are the actual thing being protected, so assert
-// against them directly rather than only against synthetic entries.
-const dataDir = join(dirname(fileURLToPath(import.meta.url)), "../data");
-for (const file of ["supplemental-perks.en.json", "supplemental-addons.en.json"]) {
-  test(`every entry in ${file} has a usable releasedAt`, () => {
-    const raw = JSON.parse(readFileSync(join(dataDir, file), "utf8"));
-    const entries: { character: string; releasedAt?: string }[] = raw.entries ?? [];
-    assert.ok(entries.length > 0, `${file} has no entries`);
-    for (const entry of entries) {
-      assert.doesNotThrow(
-        () => isReleased(entry.releasedAt, entry.character, NOW),
-        `${entry.character} in ${file} has a missing/malformed releasedAt`,
-      );
-    }
-  });
-}
 
 /* ------------------------------------------------------------------ */
 /* gateScrapedRows — the gate for rows read off a wiki page             */

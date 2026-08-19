@@ -8,10 +8,9 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
 import { slugify } from "../lib/slugify";
-import { gateScrapedRows, partitionByRelease } from "./release-gate";
+import { gateScrapedRows } from "./release-gate";
 import { WIKI_GG } from "./wiki-source";
 import {
-  cleanText,
   parsePerkTables,
   resolveCharacterCollisions,
   type ScrapedRow,
@@ -40,7 +39,6 @@ const DESCRIPTION_RU_RAW_JSON = join(DATA_DIR, "description-ru-raw.json");
 const DESCRIPTION_OVERRIDES_EN_JSON = join(DATA_DIR, "description-overrides.en.json");
 const NAME_OVERRIDES_EN_JSON = join(DATA_DIR, "name-overrides.en.json");
 const ICON_OVERRIDES_JSON = join(DATA_DIR, "icon-overrides.json");
-const SUPPLEMENTAL_PERKS_EN_JSON = join(DATA_DIR, "supplemental-perks.en.json");
 const CHARACTER_RELEASE_DATES_JSON = join(DATA_DIR, "character-release-dates.json");
 const CHARACTER_ALIASES_JSON = join(DATA_DIR, "character-aliases.json");
 const PERK_SLUG_ALIASES_JSON = join(DATA_DIR, "perk-slug-aliases.json");
@@ -102,13 +100,6 @@ function loadIconSourceOverrides(): Record<string, string> {
   return raw.sources ?? {};
 }
 
-interface SupplementalEntry {
-  role: PerkRole;
-  character: string;
-  characterPortraitUrl: string;
-  releasedAt?: string;
-  perks: { name: string; description: string; iconSourceUrl: string }[];
-}
 
 /** Records retired perk slugs so old share links keep working.
  *
@@ -154,48 +145,7 @@ function loadCharacterReleaseDates(): Record<string, string> {
   return raw.characters ?? {};
 }
 
-/** Loads the supplemental entries that are actually live, and reports any
- *  held back — see scripts/release-gate.ts for why wiki.gg-sourced data
- *  needs gating at all. */
-function loadSupplementalPerks(): SupplementalEntry[] {
-  if (!existsSync(SUPPLEMENTAL_PERKS_EN_JSON)) return [];
-  const raw = JSON.parse(readFileSync(SUPPLEMENTAL_PERKS_EN_JSON, "utf8"));
-  const entries: SupplementalEntry[] = raw.entries ?? [];
-  const { live, pending } = partitionByRelease(
-    entries,
-    (e) => e.releasedAt,
-    (e) => `Supplemental ${e.role} "${e.character}"`,
-  );
-  for (const { entry, releasedAt } of pending) {
-    console.log(`  Holding back ${entry.character} — releases ${releasedAt}`);
-  }
-  return live;
-}
 
-// See data/supplemental-perks.en.json's own comment — turns each curated
-// entry into the same ScrapedRow shape the Fandom table parser produces, so
-// everything downstream (icon/portrait download, name overrides, perk-id
-// assignment) treats a supplemental character exactly like a scraped one.
-function supplementalRows(entries: SupplementalEntry[], role: PerkRole): ScrapedRow[] {
-  return entries
-    .filter((entry) => entry.role === role)
-    .flatMap((entry) =>
-      entry.perks.map((perk) => ({
-        name: perk.name,
-        slug: slugify(perk.name),
-        description: cleanText(perk.description),
-        character: entry.character,
-        characterFullName: entry.character,
-        iconSourceUrl: perk.iconSourceUrl,
-        characterPortraitUrl: entry.characterPortraitUrl,
-        // Hand-curated entries are gated on their own releasedAt (see
-        // loadSupplementalPerks), so by the time one gets here it is live
-        // by definition — the wiki's own "upcoming patch" marker has no
-        // say over it either way.
-        upcoming: false,
-      })),
-    );
-}
 
 
 function loadPerkIds(): Record<string, number> {
@@ -351,7 +301,6 @@ async function main() {
   const nameOverridesEn = loadNameOverridesEn();
   const pinnedIcons = loadPinnedIcons();
   const iconSourceOverrides = loadIconSourceOverrides();
-  const supplementalEntries = loadSupplementalPerks();
   const characterReleaseDates = loadCharacterReleaseDates();
   const previous = new Map(
     loadPreviousPerks().map((p) => [`${p.role}/${p.slug}`, p]),
@@ -450,27 +399,10 @@ async function main() {
 
   const rowsByRole = new Map<PerkRole, ScrapedRow[]>();
   for (const role of ROLES) {
-    const scraped = scrapedByRole[role];
-    const scrapedSlugs = new Set(scraped.map((r) => r.slug));
-    // A supplemental entry is redundant (and skipped) once Fandom's own
-    // table catches up and starts producing the same perk slug on its
-    // own — no need to hand-remove the data/supplemental-perks.en.json
-    // entry the moment that happens, just eventually for tidiness.
-    const supplemental = supplementalRows(supplementalEntries, role).filter(
-      (r) => !scrapedSlugs.has(r.slug),
-    );
-    const rows = [...scraped, ...supplemental];
-    console.log(
-      `Found ${scraped.length} ${role} perks` +
-        (supplemental.length ? ` (+${supplemental.length} supplemental)` : ""),
-    );
+    const rows = scrapedByRole[role];
+    console.log(`Found ${rows.length} ${role} perks`);
     rowsByRole.set(role, rows);
   }
-  // Re-run now that the supplemental rows have joined, in case one of them
-  // shares a display name with a scraped character. Idempotent: the first
-  // pass has already given any colliding row its distinct full name, so a
-  // second pass finds no collision left to resolve.
-  resolveCharacterCollisions([...rowsByRole.values()].flat());
 
   const perks: Perk[] = [];
   const characterPortraitUrls = new Map<string, string>();

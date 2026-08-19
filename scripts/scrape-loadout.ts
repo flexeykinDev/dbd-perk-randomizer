@@ -129,6 +129,31 @@ function gateLoadoutRows<T>(
   return live;
 }
 
+interface SupplementalAddonEntry {
+  character: string;
+  releasedAt?: string;
+  addons: { name: string; description: string; iconSourceUrl: string }[];
+}
+
+/** Killers whose Power add-ons the scrape source doesn't carry — see
+ *  data/supplemental-addons.en.json. Gated on releasedAt for the same
+ *  reason everything else is: the pages these are transcribed from go up
+ *  before the Chapter ships. */
+function loadSupplementalAddons(): SupplementalAddonEntry[] {
+  if (!existsSync(SUPPLEMENTAL_ADDONS_EN_JSON)) return [];
+  const raw = JSON.parse(readFileSync(SUPPLEMENTAL_ADDONS_EN_JSON, "utf8"));
+  const entries: SupplementalAddonEntry[] = raw.entries ?? [];
+  const { live, pending } = partitionByRelease(
+    entries,
+    (e) => e.releasedAt,
+    (e) => `Supplemental add-ons for "${e.character}"`,
+  );
+  for (const { entry, releasedAt } of pending) {
+    console.log(`  Holding back ${entry.character}'s add-ons — releases ${releasedAt}`);
+  }
+  return live;
+}
+
 function apiUrl(page: string): string {
   return `${SOURCE.apiBase}?action=parse&page=${encodeURIComponent(page)}&format=json&prop=text`;
 }
@@ -848,32 +873,7 @@ function loadDescriptionRuRaw(): Record<string, string> {
   return raw;
 }
 
-interface SupplementalAddonEntry {
-  character: string;
-  releasedAt?: string;
-  addons: { name: string; description: string; iconSourceUrl: string }[];
-}
 
-// See data/supplemental-addons.en.json's own comment — same "Fandom hasn't
-// caught up yet" pattern as data/supplemental-perks.en.json, just for a
-// killer's Power add-ons instead of teachable perks. Gated on releasedAt
-// for the same reason scrape-perks.ts gates its own supplemental entries:
-// the wiki.gg pages these come from go up before the Chapter ships (see
-// scripts/release-gate.ts).
-function loadSupplementalAddons(): SupplementalAddonEntry[] {
-  if (!existsSync(SUPPLEMENTAL_ADDONS_EN_JSON)) return [];
-  const raw = JSON.parse(readFileSync(SUPPLEMENTAL_ADDONS_EN_JSON, "utf8"));
-  const entries: SupplementalAddonEntry[] = raw.entries ?? [];
-  const { live, pending } = partitionByRelease(
-    entries,
-    (e) => e.releasedAt,
-    (e) => `Supplemental add-ons for "${e.character}"`,
-  );
-  for (const { entry, releasedAt } of pending) {
-    console.log(`  Holding back ${entry.character}'s add-ons — releases ${releasedAt}`);
-  }
-  return live;
-}
 
 async function main() {
   const translations = loadTranslations();
@@ -991,11 +991,16 @@ async function main() {
     if (alias) row.character = alias;
   }
   addonRows.push(...gateLoadoutRows(scrapedKillerRows, (r) => r.character, (r) => r.piece));
+
+  // Anything the source still doesn't cover. Skipped per killer once it
+  // does — checked against what this scrape actually produced, not against
+  // the shipped addons.json, which would include whatever this file put
+  // there last time and so could never report itself redundant.
   const scrapedKillerCharacters = new Set(
     addonRows.filter((r) => r.role === "killer").map((r) => r.character),
   );
   for (const entry of loadSupplementalAddons()) {
-    if (scrapedKillerCharacters.has(entry.character)) continue; // Fandom's own table caught up
+    if (scrapedKillerCharacters.has(entry.character)) continue;
     for (const addon of entry.addons) {
       addonRows.push({
         role: "killer",
@@ -1005,8 +1010,7 @@ async function main() {
           slug: slugify(addon.name),
           description: cleanDescription(addon.description),
           iconSourceUrl: addon.iconSourceUrl,
-          // Gated on its own releasedAt (see loadSupplementalAddons), so
-          // by the time it gets here it is live by definition.
+          // Gated on its own releasedAt above, so it is live by definition.
           upcoming: false,
         },
       });
