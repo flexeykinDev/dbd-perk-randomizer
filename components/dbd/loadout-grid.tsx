@@ -224,6 +224,18 @@ function PieceSlot({
               transition={{ duration: 0.2 }}
               role="button"
               tabIndex={0}
+              /* What a piece actually is, published on the element itself.
+                 The item/add-on pairing is the one thing here that has
+                 been wrong in a way the page still renders confidently —
+                 a Fog Vial shown holding Flashlight add-ons looks entirely
+                 normal — so a test has no way to check it from the visible
+                 text alone: it would have to map localized names back to
+                 types and re-implement the bug to find it. These make the
+                 pairing something the DOM states outright. */
+              data-piece-kind={piece.kind}
+              data-piece-slug={piece.slug}
+              data-item-type={"itemType" in piece ? piece.itemType : undefined}
+              data-character={piece.kind === "addon" ? piece.character : undefined}
               onClick={() => onOpenDetail(piece)}
               onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === " ") {

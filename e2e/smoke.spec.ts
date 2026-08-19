@@ -187,6 +187,172 @@ test.describe("Full Loadout", () => {
   });
 });
 
+test.describe("Loadout pairing on the page", () => {
+  // lib/loadout-roll.test.ts already rolls getRandomLoadout thousands of
+  // times and asserts the same pairing rules. This exists because that is
+  // not what a player looks at. The Fog Vial bug was reported from the
+  // live site, and between the roller and the screen sit the URL
+  // round-trip, the seeded/daily path, hydration, and LoadoutGrid picking
+  // pieces out of a flat array by `kind` — any of which could pair the
+  // slots correctly in memory and still draw them wrong.
+  //
+  // What's read here is the piece cards' own data-* attributes rather than
+  // their labels: names are localized and give no clue what type they are,
+  // so checking the visible text would mean mapping RU names back to item
+  // types in the test, i.e. reimplementing the thing under test.
+
+  interface RenderedPiece {
+    kind: string | null;
+    slug: string | null;
+    itemType: string | null;
+    character: string | null;
+  }
+
+  /** Survivors show Item + 2 Add-ons + Offering; killers show a Power
+   *  instead of an item, and the Power is an <img>, not a piece card. */
+  const PIECE_COUNT = { survivor: 4, killer: 3 } as const;
+
+  async function renderedBuild(page: import("@playwright/test").Page): Promise<RenderedPiece[]> {
+    return page.locator("[data-piece-kind]").evaluateAll((nodes) =>
+      nodes.map((n) => ({
+        kind: n.getAttribute("data-piece-kind"),
+        slug: n.getAttribute("data-piece-slug"),
+        itemType: n.getAttribute("data-item-type"),
+        character: n.getAttribute("data-character"),
+      })),
+    );
+  }
+
+  /**
+   * The build once it has finished swapping in.
+   *
+   * Each slot animates its old piece out before the new one enters, so a
+   * read taken too early can catch a half-swapped HUD — some slots new,
+   * some still old — which looks exactly like the mismatch these tests are
+   * hunting for. Waiting for the full complement of slots to be occupied
+   * rules that out.
+   *
+   * Pass `unlike` to wait for a *different* build than the one named. It
+   * compares the whole build rather than one slot: an individual slot can
+   * legitimately reroll into the same piece (some item types have only a
+   * handful of add-ons), so "this one slot changed" is not a sound signal
+   * that a reroll happened, while four slots landing identically is not
+   * something that occurs in practice.
+   */
+  async function settledBuild(
+    page: import("@playwright/test").Page,
+    role: "survivor" | "killer",
+    unlike?: RenderedPiece[],
+  ): Promise<RenderedPiece[]> {
+    const fingerprint = unlike ? JSON.stringify(unlike) : null;
+    await expect
+      .poll(async () => {
+        const build = await renderedBuild(page);
+        if (build.length !== PIECE_COUNT[role]) return false;
+        return fingerprint === null || JSON.stringify(build) !== fingerprint;
+      }, { timeout: 10_000 })
+      .toBe(true);
+    return renderedBuild(page);
+  }
+
+  /** Every complaint a build can draw, as sentences — collected rather
+   *  than thrown one at a time, so a failing run reports what was actually
+   *  on screen instead of only the first thing noticed. */
+  function complaints(pieces: RenderedPiece[], role: "survivor" | "killer"): string[] {
+    const found: string[] = [];
+    const item = pieces.find((p) => p.kind === "item") ?? null;
+    const addons = pieces.filter((p) => p.kind === "addon");
+
+    if (role === "survivor") {
+      for (const addon of addons) {
+        if (!item) {
+          found.push(`add-on ${addon.slug} rendered with no item`);
+        } else if (addon.itemType !== item.itemType) {
+          found.push(`${addon.slug} (${addon.itemType}) rendered on ${item.slug} (${item.itemType})`);
+        }
+      }
+    } else {
+      if (item) found.push(`killer build rendered an item slot (${item.slug})`);
+      // A killer's two add-ons come from one killer's power, and the Power
+      // icon shown beside them is derived from addons[0] — so a build
+      // mixing two killers would also mislabel the Power.
+      const owners = [...new Set(addons.map((a) => a.character))];
+      if (owners.length > 1) found.push(`add-ons from ${owners.length} killers at once: ${owners.join(", ")}`);
+      if (owners.includes("All")) found.push("a killer add-on rendered on the general sentinel");
+    }
+
+    const slugs = pieces.map((p) => `${p.kind}:${p.slug}`);
+    if (new Set(slugs).size !== slugs.length) found.push(`the same piece twice: ${slugs.join(", ")}`);
+    return found;
+  }
+
+  for (const role of ["survivor", "killer"] as const) {
+    test(`${role} add-ons match what they're shown next to, across rerolls`, async ({ page }) => {
+      await page.goto(`/?role=${role}&mode=loadout`);
+
+      const regenerate = page.getByRole("button", { name: "Сгенерировать новый билд" });
+      const seen = new Set<string>();
+      const found: string[] = [];
+      let pieces = await settledBuild(page, role);
+
+      // Enough rerolls to cover the item types several times over. The bug
+      // this guards affected whole types, so it would show up within the
+      // first few — the rest is margin against a type that rolls rarely.
+      for (let i = 0; i < 25; i++) {
+        found.push(...complaints(pieces, role).map((c) => `reroll ${i}: ${c}`));
+        const item = pieces.find((p) => p.kind === "item");
+        if (item?.itemType) seen.add(item.itemType);
+        await regenerate.click();
+        pieces = await settledBuild(page, role, pieces);
+      }
+
+      expect(found, "the rendered build contradicted its own slots").toEqual([]);
+      if (role === "survivor") {
+        // A survivor build that never rolled an item at all would satisfy
+        // every check above vacuously.
+        expect(seen.size, "25 rerolls should turn up more than one item type").toBeGreaterThan(1);
+      }
+    });
+  }
+
+  test("a shared loadout link renders the same pairing the sender saw", async ({ page }) => {
+    // The URL round-trip rebuilds a build from short piece IDs rather than
+    // rolling it, so it can pair slots wrongly even when the roller can't.
+    await page.goto("/?role=survivor&mode=loadout");
+    const before = await settledBuild(page, "survivor");
+    await page.getByRole("button", { name: "Сгенерировать новый билд" }).click();
+    await expect(page).toHaveURL(/[?&]lp=\d+/);
+
+    // Read after the swap settles: the URL updates on the click, so a read
+    // taken with it would capture the build being replaced, not the one
+    // the link now describes.
+    const sent = await settledBuild(page, "survivor", before);
+    expect(complaints(sent, "survivor")).toEqual([]);
+
+    const url = page.url();
+    await page.goto("about:blank");
+    await page.goto(url);
+    await expect.poll(() => renderedBuild(page)).toEqual(sent);
+  });
+
+  test("a seeded loadout is paired correctly, and is the same for everyone", async ({ page }) => {
+    // Seeded builds come from getSeededLoadout, a second implementation of
+    // the roll — the one behind Daily Challenge, whose seed is exactly this
+    // `<date>-<role>` shape. A wrong pairing here is wrong for every player
+    // at once and can't be rerolled away, so it's worth its own check
+    // rather than trusting that the two implementations agree.
+    const seed = "2026-08-19-survivor";
+    await page.goto(`/?role=survivor&mode=loadout&seed=${seed}`);
+    const first = await settledBuild(page, "survivor");
+    expect(complaints(first, "survivor")).toEqual([]);
+
+    // Same seed, fresh load: everyone taking the challenge must see this.
+    await page.goto("about:blank");
+    await page.goto(`/?role=survivor&mode=loadout&seed=${seed}`);
+    await expect.poll(() => renderedBuild(page)).toEqual(first);
+  });
+});
+
 test.describe("Combined All mode", () => {
   test("shows both the perk grid and the loadout HUD together", async ({
     page,
