@@ -52,6 +52,36 @@ test.describe("DBD randomizer", () => {
     expect(JSON.parse(excludedSlugs ?? "[]").length).toBeGreaterThan(0);
   });
 
+  test("the pool and favourites come back after a reload", async ({ page }) => {
+    // Writing to storage and reading it back on the next visit are two
+    // different code paths, and only the write was covered. Restoring is
+    // the half a returning visitor actually experiences, and it moved into
+    // lib/use-persisted-set.ts — a hydrate that silently did nothing would
+    // leave the test above passing.
+    await page.goto("/");
+    await page.getByRole("button", { name: "Пул", exact: true }).click();
+    await expect(page.getByText("Настроить пул перков")).toBeVisible();
+
+    const cards = page.locator("div.fixed.inset-0").locator('[role="button"]:has(img)');
+    await cards.first().click();
+    // The star inside a card is the favourite toggle — a separate saved
+    // set, restored by the same mechanism.
+    await cards.nth(1).locator("button").first().click();
+
+    // Asserted through what the panel *draws*, not through localStorage.
+    // Storage keeps its contents whether or not anything reads them back,
+    // so a storage-only assertion passes even when hydration is completely
+    // broken — confirmed by making hydrate return an empty set, which this
+    // catches and the storage version did not.
+    const excludedCards = page.locator("div.fixed.inset-0 .grayscale");
+    await expect(excludedCards).toHaveCount(1);
+
+    await page.reload();
+    await page.getByRole("button", { name: "Пул", exact: true }).click();
+    await expect(page.getByText("Настроить пул перков")).toBeVisible();
+    await expect(page.locator("div.fixed.inset-0 .grayscale")).toHaveCount(1);
+  });
+
   test("exclude panel's Close button actually closes it", async ({ page }) => {
     // Regression test: ExcludePanel and CharacterPickerModal both used a
     // bare `key={role}` ("survivor"/"killer") on themselves as siblings in

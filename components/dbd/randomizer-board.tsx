@@ -42,6 +42,8 @@ import { cn } from "@/lib/cn";
 import { useMounted } from "@/lib/use-mounted";
 import { prefetchDescriptions } from "@/lib/descriptions";
 import { useObsHold } from "@/lib/use-obs-hold";
+import { usePersistedSet } from "@/lib/use-persisted-set";
+import { useBuildClipboard } from "@/lib/use-build-clipboard";
 import { ROLE_COLOR } from "@/lib/role-color";
 import { useLanguage, useT } from "@/lib/i18n";
 import { dailyChallengeSeed } from "@/lib/seeded-random";
@@ -133,18 +135,6 @@ const ROLE_FROM_SHORT: Record<string, PerkRole> = {
 };
 
 type SeedMode = "none" | "daily" | "custom";
-
-function loadSlugSet(key: string): Set<string> {
-  // Validate the parsed shape, not just that it parsed — a value written by
-  // some future/incompatible version of the app could be valid JSON that's
-  // still the wrong shape (e.g. an object instead of an array), and
-  // `new Set()` on a non-iterable throws rather than returning [].
-  const stored = safeGetJSON<unknown>("local", key, []);
-  const slugs = Array.isArray(stored)
-    ? stored.filter((s) => typeof s === "string")
-    : [];
-  return new Set(slugs);
-}
 
 function loadPerkCount(): number {
   const n = parseInt(safeGet("local", PERK_COUNT_STORAGE_KEY) ?? "", 10);
@@ -307,7 +297,6 @@ export function RandomizerBoard() {
   const t = useT();
   const { lang: language } = useLanguage();
   const [role, setRole] = useState<PerkRole>("survivor");
-  const [toast, setToast] = useState<string | null>(null);
   const [generatingImage, setGeneratingImage] =
     useState<ShareCardLayout | null>(null);
   const shareCardRef = useRef<HTMLDivElement>(null);
@@ -325,8 +314,10 @@ export function RandomizerBoard() {
   // localStorage during the client's first render, which happens *before*
   // hydration reconciles against the server's (window-less) HTML and would
   // throw a hydration mismatch for any returning visitor with saved state.
-  const [excludedSlugs, setExcludedSlugs] = useState<Set<string>>(new Set());
-  const [favoriteSlugs, setFavoriteSlugs] = useState<Set<string>>(new Set());
+  const excludedPerks = usePersistedSet(EXCLUDED_STORAGE_KEY);
+  const favorites = usePersistedSet(FAVORITE_STORAGE_KEY);
+  const excludedSlugs = excludedPerks.values;
+  const favoriteSlugs = favorites.values;
   const [perkCount, setPerkCount] = useState<number>(DEFAULT_PERK_COUNT);
   // Full Loadout mode — same hydration-safety rule as everything else here:
   // SSR-safe defaults, corrected from localStorage/URL in the mount effect.
@@ -334,9 +325,13 @@ export function RandomizerBoard() {
   const [loadoutSlots, setLoadoutSlots] = useState<LoadoutSlots>(
     DEFAULT_LOADOUT_SLOTS,
   );
-  const [excludedLoadoutSlugs, setExcludedLoadoutSlugs] = useState<Set<string>>(
-    new Set(),
-  );
+  const excludedLoadout = usePersistedSet(EXCLUDED_LOADOUT_STORAGE_KEY);
+  const excludedLoadoutSlugs = excludedLoadout.values;
+  // Pulled out by name so the mount effect can depend on stable callbacks
+  // rather than on the hooks' return objects, which are new every render.
+  const { hydrate: hydrateExcludedPerks } = excludedPerks;
+  const { hydrate: hydrateFavorites } = favorites;
+  const { hydrate: hydrateExcludedLoadout } = excludedLoadout;
   const [sharedLoadoutPieces, setSharedLoadoutPieces] = useState<
     LoadoutPiece[] | null
   >(null);
@@ -401,12 +396,13 @@ export function RandomizerBoard() {
 
   useEffect(() => {
     function applyInitialClientState() {
-      setExcludedSlugs(loadSlugSet(EXCLUDED_STORAGE_KEY));
-      setFavoriteSlugs(loadSlugSet(FAVORITE_STORAGE_KEY));
+      // The three saved Sets restore themselves — see lib/use-persisted-set.ts.
+      hydrateExcludedPerks();
+      hydrateFavorites();
+      hydrateExcludedLoadout();
       setPerkCount(loadPerkCount());
       setMode(loadMode());
       setLoadoutSlots(loadLoadoutSlots());
-      setExcludedLoadoutSlugs(loadSlugSet(EXCLUDED_LOADOUT_STORAGE_KEY));
       setGuaranteeTeachables(
         safeGet("local", GUARANTEE_TEACHABLES_STORAGE_KEY) === "1",
       );
@@ -452,7 +448,12 @@ export function RandomizerBoard() {
       );
     }
     applyInitialClientState();
-  }, []);
+    // The individual hydrate callbacks, not the hook objects that carry
+    // them: usePersistedSet returns a fresh object every render, so
+    // depending on those would re-run this on every render — and since
+    // hydrating sets state, that is an endless loop rather than merely
+    // wasteful. The callbacks themselves are stable.
+  }, [hydrateExcludedPerks, hydrateFavorites, hydrateExcludedLoadout]);
 
   // Perks the current theme filter rules out, expressed as an exclusion set
   // so it can merge into the same combinedExcluded pipeline that already
@@ -797,6 +798,15 @@ export function RandomizerBoard() {
     });
   }, [mode, perks, loadoutPieces]);
 
+  // Declared after eliminateCurrentBuild because it takes it: copying a
+  // build is one of the two ways Battle Royale retires one (the other is
+  // regenerating, below).
+  const { toast, showToast, copy } = useBuildClipboard({
+    onUsed: () => {
+      if (battleRoyale) eliminateCurrentBuild();
+    },
+  });
+
   const regenerate = useCallback(() => {
     // Battle Royale's whole premise is elimination — the pool should shrink
     // every round regardless of *how* you moved on, not only when you
@@ -996,82 +1006,29 @@ export function RandomizerBoard() {
     setNonce((n) => n + 1);
   }
 
-  function toggleExcluded(slug: string) {
-    setExcludedSlugs((prev) => {
-      const next = new Set(prev);
-      if (next.has(slug)) next.delete(slug);
-      else next.add(slug);
-      safeSetJSON("local", EXCLUDED_STORAGE_KEY, [...next]);
-      return next;
-    });
-  }
-
-  function bulkSetExcluded(slugs: string[], excluded: boolean) {
-    setExcludedSlugs((prev) => {
-      const next = new Set(prev);
-      for (const slug of slugs) {
-        if (excluded) next.add(slug);
-        else next.delete(slug);
-      }
-      safeSetJSON("local", EXCLUDED_STORAGE_KEY, [...next]);
-      return next;
-    });
-  }
+  // All six of these used to spell out the same "copy the Set, mutate it,
+  // write it to localStorage" by hand, once per set — see
+  // lib/use-persisted-set.ts.
+  const toggleExcluded = excludedPerks.toggle;
+  const bulkSetExcluded = excludedPerks.setMany;
+  const toggleFavorite = favorites.toggle;
 
   function resetExcludedForRole(targetRole: PerkRole) {
     const roleSlugs = new Set(getPerksByRole(targetRole).map((p) => p.slug));
-    setExcludedSlugs((prev) => {
-      const next = new Set([...prev].filter((slug) => !roleSlugs.has(slug)));
-      safeSetJSON("local", EXCLUDED_STORAGE_KEY, [...next]);
-      return next;
-    });
+    excludedPerks.removeWhere((slug) => roleSlugs.has(slug));
   }
 
-  function toggleExcludedLoadoutPiece(
-    kind: LoadoutPiece["kind"],
-    slug: string,
-  ) {
-    const key = `${kind}:${slug}`;
-    setExcludedLoadoutSlugs((prev) => {
-      const next = new Set(prev);
-      if (next.has(key)) next.delete(key);
-      else next.add(key);
-      safeSetJSON("local", EXCLUDED_LOADOUT_STORAGE_KEY, [...next]);
-      return next;
-    });
+  function toggleExcludedLoadoutPiece(kind: LoadoutPiece["kind"], slug: string) {
+    excludedLoadout.toggle(`${kind}:${slug}`);
   }
 
-  function bulkSetExcludedLoadout(keys: string[], excluded: boolean) {
-    setExcludedLoadoutSlugs((prev) => {
-      const next = new Set(prev);
-      for (const key of keys) {
-        if (excluded) next.add(key);
-        else next.delete(key);
-      }
-      safeSetJSON("local", EXCLUDED_LOADOUT_STORAGE_KEY, [...next]);
-      return next;
-    });
-  }
+  const bulkSetExcludedLoadout = excludedLoadout.setMany;
 
   function resetExcludedLoadoutForRole(targetRole: PerkRole) {
     const roleKeys = new Set(
       getLoadoutPoolForRole(targetRole).map((p) => `${p.kind}:${p.slug}`),
     );
-    setExcludedLoadoutSlugs((prev) => {
-      const next = new Set([...prev].filter((key) => !roleKeys.has(key)));
-      safeSetJSON("local", EXCLUDED_LOADOUT_STORAGE_KEY, [...next]);
-      return next;
-    });
-  }
-
-  function toggleFavorite(slug: string) {
-    setFavoriteSlugs((prev) => {
-      const next = new Set(prev);
-      if (next.has(slug)) next.delete(slug);
-      else next.add(slug);
-      safeSetJSON("local", FAVORITE_STORAGE_KEY, [...next]);
-      return next;
-    });
+    excludedLoadout.removeWhere((key) => roleKeys.has(key));
   }
 
 
@@ -1083,100 +1040,44 @@ export function RandomizerBoard() {
     });
   }
 
-  function showToast(message: string) {
-    setToast(message);
-    setTimeout(() => setToast(null), 2500);
-  }
-
+  // All five of these were the same eleven lines with a different string —
+  // see lib/use-build-clipboard.ts, which also owns the toast.
   function handleCopy(perk: Perk) {
-    navigator.clipboard
-      .writeText(perk.name[language])
-      .then(() =>
-        showToast(
-          t({
-            ru: `«${perk.name[language]}» скопировано в буфер обмена!`,
-            en: `"${perk.name[language]}" copied to clipboard!`,
-          }),
-        ),
-      )
-      .catch(() =>
-        showToast(t({ ru: "Не удалось скопировать", en: "Couldn't copy" })),
-      );
-    if (battleRoyale) eliminateCurrentBuild();
+    copy(perk.name[language], {
+      ru: `«${perk.name[language]}» скопировано в буфер обмена!`,
+      en: `"${perk.name[language]}" copied to clipboard!`,
+    });
   }
 
   function handleCopyAll() {
-    const text = perks.map((p) => p.name[language]).join(", ");
-    navigator.clipboard
-      .writeText(text)
-      .then(() =>
-        showToast(
-          t({
-            ru: "Весь билд скопирован в буфер обмена!",
-            en: "Full build copied to clipboard!",
-          }),
-        ),
-      )
-      .catch(() =>
-        showToast(t({ ru: "Не удалось скопировать", en: "Couldn't copy" })),
-      );
-    if (battleRoyale) eliminateCurrentBuild();
+    copy(perks.map((p) => p.name[language]).join(", "), {
+      ru: "Весь билд скопирован в буфер обмена!",
+      en: "Full build copied to clipboard!",
+    });
   }
 
   function handleCopyLoadoutPiece(piece: LoadoutPiece) {
-    navigator.clipboard
-      .writeText(piece.name[language])
-      .then(() =>
-        showToast(
-          t({
-            ru: `«${piece.name[language]}» скопировано в буфер обмена!`,
-            en: `"${piece.name[language]}" copied to clipboard!`,
-          }),
-        ),
-      )
-      .catch(() =>
-        showToast(t({ ru: "Не удалось скопировать", en: "Couldn't copy" })),
-      );
-    if (battleRoyale) eliminateCurrentBuild();
+    copy(piece.name[language], {
+      ru: `«${piece.name[language]}» скопировано в буфер обмена!`,
+      en: `"${piece.name[language]}" copied to clipboard!`,
+    });
   }
 
   function handleCopyAllLoadout() {
-    const text = loadoutPieces.map((p) => p.name[language]).join(", ");
-    navigator.clipboard
-      .writeText(text)
-      .then(() =>
-        showToast(
-          t({
-            ru: "Вся экипировка скопирована в буфер обмена!",
-            en: "Full loadout copied to clipboard!",
-          }),
-        ),
-      )
-      .catch(() =>
-        showToast(t({ ru: "Не удалось скопировать", en: "Couldn't copy" })),
-      );
-    if (battleRoyale) eliminateCurrentBuild();
+    copy(loadoutPieces.map((p) => p.name[language]).join(", "), {
+      ru: "Вся экипировка скопирована в буфер обмена!",
+      en: "Full loadout copied to clipboard!",
+    });
   }
 
   function handleCopyAllCombined() {
-    const names = [
-      ...perks.map((p) => p.name[language]),
-      ...loadoutPieces.map((p) => p.name[language]),
-    ];
-    navigator.clipboard
-      .writeText(names.join(", "))
-      .then(() =>
-        showToast(
-          t({
-            ru: "Всё скопировано в буфер обмена!",
-            en: "Everything copied to clipboard!",
-          }),
-        ),
-      )
-      .catch(() =>
-        showToast(t({ ru: "Не удалось скопировать", en: "Couldn't copy" })),
-      );
-    if (battleRoyale) eliminateCurrentBuild();
+    copy(
+      [
+        ...perks.map((p) => p.name[language]),
+        ...loadoutPieces.map((p) => p.name[language]),
+      ].join(", "),
+      { ru: "Всё скопировано в буфер обмена!", en: "Everything copied to clipboard!" },
+    );
   }
 
   function handleShare() {

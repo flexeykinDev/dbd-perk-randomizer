@@ -145,7 +145,7 @@ export function LoadoutExcludePanel({
   /** Selected killer (Feature #2's picker), if any — narrows the add-on pool
    *  to that killer's own Power add-ons, see getLoadoutPoolForRole. */
   character?: string | null;
-  excludedKeys: Set<string>;
+  excludedKeys: ReadonlySet<string>;
   /** Pieces that read as unavailable for another reason (e.g. eliminated in
    *  Battle Royale) — grayed out the same way, not counted or cleared by Reset. */
   alsoGrayedOut?: ReadonlySet<string>;

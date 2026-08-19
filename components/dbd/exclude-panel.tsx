@@ -42,7 +42,7 @@ export function ExcludePanel({
   open: boolean;
   role: PerkRole;
   language: "en" | "ru";
-  excludedSlugs: Set<string>;
+  excludedSlugs: ReadonlySet<string>;
   /** Perks that read as unavailable for another reason (e.g. eliminated in
    *  Battle Royale) — shown with the same grayed-out treatment, just not
    *  counted in the "N excluded" badge or cleared by "Сбросить". */
@@ -51,7 +51,7 @@ export function ExcludePanel({
    *  instead of being force-included — a perk can be both favorited and
    *  excluded at once (exclusion always wins, it's just never drawn), so
    *  the two sets are intentionally independent. */
-  favoriteSlugs: Set<string>;
+  favoriteSlugs: ReadonlySet<string>;
   onToggle: (slug: string) => void;
   onBulkSet: (slugs: string[], excluded: boolean) => void;
   onToggleFavorite: (slug: string) => void;
