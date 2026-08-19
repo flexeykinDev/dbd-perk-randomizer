@@ -160,3 +160,18 @@ export const GENERAL_CHARACTER = "All";
 
 /** What the wikis write before normalisation — see GENERAL_CHARACTER. */
 export const WIKI_GENERAL_CHARACTER = ".All";
+
+/** Which piece kinds (plus perks) are shown in the OBS overlay and in
+ *  Download Image.
+ *
+ *  Deliberately separate from LoadoutSlots, which decides what gets
+ *  *rolled*: hiding the Offering here still rolls one, it just doesn't
+ *  reach the stream. Owned by randomizer-board.tsx, since it filters both
+ *  the overlay publish and ShareCard's export; the OBS modal only renders
+ *  the toggles for it. */
+export interface PieceVisibility {
+  perks: boolean;
+  item: boolean;
+  addon: boolean;
+  offering: boolean;
+}

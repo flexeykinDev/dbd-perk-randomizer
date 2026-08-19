@@ -614,6 +614,181 @@ test.describe("OBS overlay", () => {
   });
 });
 
+test.describe("OBS Overlay modal", () => {
+  // The modal is where a streamer configures the overlay, and until now
+  // nothing exercised it — the "OBS overlay" tests above only load the
+  // overlay *page*. That gap mattered when the modal was split into panels
+  // and hooks: the whole suite stayed green while none of it had ever
+  // opened this dialog.
+  //
+  // Everything here is asserted through the generated link, because the
+  // link is the actual product of this dialog: whatever the controls do,
+  // what reaches OBS is the URL.
+
+  async function openObsModal(page: import("@playwright/test").Page) {
+    await page.goto("/?role=survivor");
+    await expect(page.locator("main").locator("img[alt]").first()).toBeVisible();
+    await page.getByRole("button", { name: /Оверлей OBS/ }).click();
+    await expect(page.getByRole("dialog")).toBeVisible();
+  }
+
+  /** The overlay link currently shown, which is what a streamer pastes. */
+  async function overlayLink(page: import("@playwright/test").Page) {
+    return (await page.getByRole("dialog").locator("code").first().textContent()) ?? "";
+  }
+
+  test("the three tabs each show their own panel", async ({ page }) => {
+    await openObsModal(page);
+    const dialog = page.getByRole("dialog");
+
+    // Overlay tab is the default.
+    await expect(dialog.getByText("Оформление")).toBeVisible();
+
+    await dialog.getByRole("tab", { name: "Twitch чат" }).click();
+    await expect(dialog.getByText("Управление из чата Twitch")).toBeVisible();
+    await expect(dialog.getByText("Оформление")).toHaveCount(0);
+
+    await dialog.getByRole("tab", { name: "Конструктор" }).click();
+    await expect(dialog.getByText("Конструктор билда")).toBeVisible();
+
+    await dialog.getByRole("tab", { name: "Оверлей" }).click();
+    await expect(dialog.getByText("Оформление")).toBeVisible();
+  });
+
+  test("a style preset rewrites the link and the OBS setup dimensions", async ({ page }) => {
+    await openObsModal(page);
+    const dialog = page.getByRole("dialog");
+
+    await dialog.getByRole("button", { name: "Компакт" }).click();
+    const compact = await overlayLink(page);
+    await dialog.getByRole("button", { name: "Просторно" }).click();
+    const roomy = await overlayLink(page);
+    expect(roomy).not.toBe(compact);
+
+    // The setup steps quote the canvas size the preset implies — if those
+    // drifted from the preset, a streamer would size their Browser Source
+    // wrong and see a cropped overlay.
+    await dialog.getByRole("button", { name: "Настройка в OBS" }).click();
+    await expect(dialog.getByText("1100")).toBeVisible();
+    await expect(dialog.getByText("420")).toBeVisible();
+  });
+
+  test("the custom dials only appear for the Custom preset, and drive the link", async ({
+    page,
+  }) => {
+    await openObsModal(page);
+    const dialog = page.getByRole("dialog");
+    const cardSize = dialog.getByRole("slider", { name: "Размер карточек" });
+
+    await expect(cardSize).toHaveCount(0);
+    await dialog.getByRole("button", { name: "Свой" }).click();
+    await expect(cardSize).toBeVisible();
+
+    const before = await overlayLink(page);
+    await cardSize.fill("80");
+    await expect.poll(() => overlayLink(page)).not.toBe(before);
+  });
+
+  test("toggling card names off is reflected in the link", async ({ page }) => {
+    await openObsModal(page);
+    const dialog = page.getByRole("dialog");
+    const before = await overlayLink(page);
+    const names = dialog.getByRole("switch", { name: "Показывать названия карточек" });
+    // Off by default on purpose — a full row of name pills reads as clutter
+    // over stream footage (see DEFAULT_OBS_OPTIONS).
+    await expect(names).toHaveAttribute("aria-checked", "false");
+
+    await names.click();
+    await expect(names).toHaveAttribute("aria-checked", "true");
+    await expect.poll(() => overlayLink(page)).not.toBe(before);
+
+    // Off again returns the link to exactly what it was — the toggle writes
+    // one parameter rather than accumulating state.
+    await names.click();
+    await expect.poll(() => overlayLink(page)).toBe(before);
+  });
+
+  test("dragging a preview icon writes positions into the link, and Reset clears them", async ({
+    page,
+  }) => {
+    await openObsModal(page);
+    const dialog = page.getByRole("dialog");
+    const before = await overlayLink(page);
+
+    // The preview canvas is the drag surface; the first slot sits in its
+    // upper-left quadrant.
+    const canvas = dialog.locator("div.touch-none").first();
+    const box = await canvas.boundingBox();
+    expect(box).not.toBeNull();
+    const { x, y, width, height } = box!;
+    await page.mouse.move(x + width * 0.125, y + height * 0.33);
+    await page.mouse.down();
+    await page.mouse.move(x + width * 0.6, y + height * 0.6, { steps: 8 });
+    await page.mouse.up();
+
+    const dragged = await overlayLink(page);
+    expect(dragged).not.toBe(before);
+
+    await dialog.getByRole("button", { name: "Сбросить" }).click();
+    await expect.poll(() => overlayLink(page)).toBe(before);
+  });
+
+  test("the constructor builds a paste command and clears it on role switch", async ({
+    page,
+  }) => {
+    await openObsModal(page);
+    const dialog = page.getByRole("dialog");
+    await dialog.getByRole("tab", { name: "Конструктор" }).click();
+
+    await expect(dialog.getByText("Выбери до 4 перков, чтобы получить команду.")).toBeVisible();
+    await expect(dialog.getByText("0/4")).toBeVisible();
+
+    // The grid of pickable perks sits under the search box.
+    const picker = dialog.locator("div.grid.overflow-y-auto").first();
+    await picker.locator("button").nth(0).click();
+    await picker.locator("button").nth(1).click();
+    await expect(dialog.getByText("2/4")).toBeVisible();
+    await expect(dialog.locator("code")).toContainText("!paste");
+
+    // A build can't mix survivor and killer perks, so switching role has to
+    // drop the selection rather than produce an unpasteable command.
+    await dialog.getByRole("button", { name: "Убийца", exact: true }).click();
+    await expect(dialog.getByText("0/4")).toBeVisible();
+    await expect(dialog.locator("code")).toHaveCount(0);
+  });
+
+  test("the constructor stops at four perks", async ({ page }) => {
+    await openObsModal(page);
+    const dialog = page.getByRole("dialog");
+    await dialog.getByRole("tab", { name: "Конструктор" }).click();
+
+    const picker = dialog.locator("div.grid.overflow-y-auto").first();
+    for (let i = 0; i < 4; i++) await picker.locator("button").nth(i).click();
+    await expect(dialog.getByText("4/4")).toBeVisible();
+    // A fifth is refused by disabling every unselected perk, rather than by
+    // silently swapping one out — so the choice stays the user's.
+    await expect(picker.locator("button").nth(4)).toBeDisabled();
+    // The four already picked stay clickable, since clicking one removes it.
+    await expect(picker.locator("button").nth(0)).toBeEnabled();
+  });
+
+  test("Twitch commands stay hidden until the disclosure is opened", async ({ page }) => {
+    await openObsModal(page);
+    const dialog = page.getByRole("dialog");
+    await dialog.getByRole("tab", { name: "Twitch чат" }).click();
+
+    const rerollCommand = dialog.getByRole("textbox", { name: "Команда реролла" });
+    await expect(rerollCommand).toHaveCount(0);
+    await dialog.getByRole("button", { name: "Команды и права доступа" }).click();
+    await expect(rerollCommand).toBeVisible();
+
+    await dialog.getByRole("textbox", { name: "Имя канала Twitch" }).fill("some_channel");
+    await expect(dialog.getByRole("textbox", { name: "Имя канала Twitch" })).toHaveValue(
+      "some_channel",
+    );
+  });
+});
+
 test.describe("Build History", () => {
   test("a generated build appears in History and can be reopened", async ({
     page,

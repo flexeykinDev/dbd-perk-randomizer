@@ -2075,23 +2075,7 @@ export function RandomizerBoard() {
         character={shareCharacter}
         pieceVisibility={pieceVisibility}
         onPieceVisibilityChange={updatePieceVisibility}
-        twitchChannel={twitch.channel}
-        twitchEnabled={twitch.enabled}
-        twitchState={twitch.state}
-        onTwitchChannelChange={twitch.setChannel}
-        onTwitchToggle={twitch.setEnabled}
-        twitchRerollCommand={twitch.rerollCommand}
-        twitchRerollPermission={twitch.rerollPermission}
-        twitchCooldownSec={twitch.cooldownSec}
-        twitchPasteEnabled={twitch.pasteEnabled}
-        twitchPasteCommand={twitch.pasteCommand}
-        twitchPastePermission={twitch.pastePermission}
-        onTwitchRerollCommandChange={twitch.setRerollCommand}
-        onTwitchRerollPermissionChange={twitch.setRerollPermission}
-        onTwitchCooldownSecChange={twitch.setCooldownSec}
-        onTwitchPasteToggle={twitch.setPasteEnabled}
-        onTwitchPasteCommandChange={twitch.setPasteCommand}
-        onTwitchPastePermissionChange={twitch.setPastePermission}
+        twitch={twitch}
       />
 
       <CharacterPickerModal
