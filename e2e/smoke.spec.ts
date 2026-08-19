@@ -138,8 +138,9 @@ test.describe("DBD randomizer", () => {
     await page.goto("/?role=survivor&perks=pharmacy");
     await page.getByRole("button", { name: "Описание: Аптекарь" }).first().click();
 
-    // .modal-card, not role="dialog" — the detail modals don't carry that
-    // role (only the OBS one does).
+    // Scoped to the card rather than the dialog role: this page also has
+    // the off-screen ShareCard, and narrowing to the visible modal keeps
+    // the assertions about what a person is actually looking at.
     const modal = page.locator(".modal-card");
     // Core Effect is the default tab; its bullets are the derived summary,
     // and there are none at all while the placeholder is showing.
@@ -1014,6 +1015,56 @@ test.describe("OBS Overlay modal", () => {
     await expect(dialog.getByRole("textbox", { name: "Имя канала Twitch" })).toHaveValue(
       "some_channel",
     );
+  });
+});
+
+test.describe("Pool coverage", () => {
+  async function openStats(page: import("@playwright/test").Page) {
+    await page.goto("/?role=survivor");
+    await expect(page.locator("main").locator("img[alt]").first()).toBeVisible();
+    await page.getByRole("button", { name: "Ещё", exact: true }).click();
+    await page.getByRole("button", { name: "Статистика", exact: true }).click();
+  }
+
+  test("counts the perks that have come up, out of the whole pool", async ({ page }) => {
+    // "Least rolled" already names five perks that haven't appeared; this
+    // is the count of how many are left, which nothing answered before.
+    await page.goto("/?role=survivor");
+    await expect(page.locator("main").locator("img[alt]").first()).toBeVisible();
+    // Two builds so the first four perks are definitely recorded.
+    await page.getByRole("button", { name: "Сгенерировать новый билд" }).click();
+    await page.getByRole("button", { name: "Сгенерировать новый билд" }).click();
+
+    await page.getByRole("button", { name: "Ещё", exact: true }).click();
+    await page.getByRole("button", { name: "Статистика", exact: true }).click();
+
+    const bar = page.getByRole("progressbar", { name: "Открыто перков" });
+    await expect(bar).toBeVisible();
+    const seen = Number(await bar.getAttribute("aria-valuenow"));
+    const pool = Number(await bar.getAttribute("aria-valuemax"));
+
+    // A handful of perks seen, out of the real survivor pool.
+    expect(seen).toBeGreaterThan(0);
+    expect(pool).toBeGreaterThan(100);
+    expect(seen).toBeLessThanOrEqual(pool);
+    await expect(page.getByText(/Ещё \d+ ни разу не выпадали\./)).toBeVisible();
+  });
+
+  test("the count rises as more perks come up", async ({ page }) => {
+    await openStats(page);
+    const bar = page.getByRole("progressbar", { name: "Открыто перков" });
+    const before = Number(await bar.getAttribute("aria-valuenow"));
+
+    // Close, roll a lot, reopen — with 300+ perks and 4 per build, a dozen
+    // builds will turn up something new.
+    await page.getByRole("button", { name: "Закрыть" }).first().click();
+    for (let i = 0; i < 12; i++) {
+      await page.getByRole("button", { name: "Сгенерировать новый билд" }).click();
+    }
+    await openStats(page);
+    await expect
+      .poll(async () => Number(await bar.getAttribute("aria-valuenow")))
+      .toBeGreaterThan(before);
   });
 });
 

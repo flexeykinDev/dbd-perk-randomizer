@@ -139,6 +139,8 @@ export function StatsModal({
                       </p>
                     </div>
 
+                    <PoolCoverage seen={stats.seen} poolSize={stats.poolSize} />
+
                     <StatList
                       title={t({ ru: "Чаще всего выпадают", en: "Most Frequently Rolled" })}
                       stats={stats.top}
@@ -176,6 +178,54 @@ export function StatsModal({
         onCancel={() => setConfirmOpen(false)}
       />
     </>
+  );
+}
+
+/** How much of the role's pool has ever come up.
+ *
+ *  "Least rolled" below already names five perks that haven't appeared,
+ *  which says *which*; this says *how many are left*, which is the
+ *  question a randomizer invites and the one nothing answered. Both raw
+ *  counts are shown rather than only a percentage, because the pool grows
+ *  with every chapter — 41% of 315 is a different achievement from 41% of
+ *  260, and a bare percentage hides that it can go down when perks ship. */
+function PoolCoverage({ seen, poolSize }: { seen: number; poolSize: number }) {
+  const t = useT();
+  const percent = poolSize > 0 ? Math.round((seen / poolSize) * 100) : 0;
+  const left = poolSize - seen;
+
+  return (
+    <div>
+      <div className="mb-1.5 flex items-baseline justify-between gap-3">
+        <p className="text-xs font-semibold tracking-wide text-muted uppercase">
+          {t({ ru: "Открыто перков", en: "Perks seen" })}
+        </p>
+        <p className="text-xs tabular-nums text-muted">
+          {seen} / {poolSize} · {percent}%
+        </p>
+      </div>
+      <div
+        className="h-2 overflow-hidden rounded-full bg-surface-hover"
+        role="progressbar"
+        aria-valuenow={seen}
+        aria-valuemin={0}
+        aria-valuemax={poolSize}
+        aria-label={t({ ru: "Открыто перков", en: "Perks seen" })}
+      >
+        <div className="h-full rounded-full bg-accent transition-[width]" style={{ width: `${percent}%` }} />
+      </div>
+      <p className="mt-1.5 text-[11px] text-muted/70">
+        {left > 0
+          ? t({
+              ru: `Ещё ${left} ни разу не выпадали.`,
+              en: `${left} still haven't come up.`,
+            })
+          : t({
+              ru: "Выпадали все до одного.",
+              en: "Every one of them has come up.",
+            })}
+      </p>
+    </div>
   );
 }
 

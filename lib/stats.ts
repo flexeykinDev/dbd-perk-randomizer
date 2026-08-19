@@ -60,6 +60,16 @@ export interface RoleStatsSummary {
   totalRolls: number;
   top: PerkRollStat[];
   bottom: PerkRollStat[];
+  /** How many of the role's perks have come up at least once, against how
+   *  many exist.
+   *
+   *  "Least rolled" already lists five perks that haven't appeared, which
+   *  answers *which* — it can't answer *how many are left*, and that is
+   *  the question a randomizer actually invites. Two counters rather than
+   *  a percentage so the modal can phrase it; a percentage alone loses the
+   *  fact that the pool grows with every chapter. */
+  seen: number;
+  poolSize: number;
 }
 
 /** @param allPerksForRole Full role pool, so "least rolled" can surface
@@ -79,5 +89,16 @@ export function getRoleStatsSummary(role: PerkRole, allPerksForRole: Perk[]): Ro
   const top = [...rolledOnly].sort((a, b) => b.count - a.count).slice(0, 5);
   const bottom = [...withCounts].sort((a, b) => a.count - b.count).slice(0, 5);
 
-  return { totalBuilds: roleStats.totalBuilds, totalRolls, top, bottom };
+  return {
+    totalBuilds: roleStats.totalBuilds,
+    totalRolls,
+    top,
+    bottom,
+    // Counted from the live pool rather than from the saved tally: a perk
+    // that has been retired since it was rolled shouldn't keep counting
+    // towards a total it is no longer part of, or coverage could read
+    // above 100%.
+    seen: rolledOnly.length,
+    poolSize: allPerksForRole.length,
+  };
 }
