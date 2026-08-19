@@ -23,6 +23,7 @@ import { createSeededRandom, shuffle } from "./seeded-random";
 export const ITEM_TYPE_LABEL: Record<ItemType, { ru: string; en: string }> = {
   firecracker: { ru: "Петарда", en: "Firecracker" },
   flashlight: { ru: "Фонарик", en: "Flashlight" },
+  "fog-vial": { ru: "Флакон с туманом", en: "Fog Vial" },
   key: { ru: "Ключ", en: "Key" },
   map: { ru: "Карта", en: "Map" },
   medkit: { ru: "Аптечка", en: "Med-Kit" },

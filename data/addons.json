@@ -557,6 +557,76 @@
   {
     "kind": "addon",
     "role": "survivor",
+    "itemType": "fog-vial",
+    "character": "All",
+    "icon": "/loadout/addon/volcanic-stone.webp",
+    "slug": "volcanic-stone",
+    "name": {
+      "en": "Volcanic Stone",
+      "ru": "Volcanic Stone"
+    },
+    "description": "\"The heat of its birthplace glows within this living rock.\" Modifies the Fog Vial with the following effect: Reduces the Recharge time of the Fog Cloud by -5 seconds.",
+    "addedAt": "2026-08-19T13:33:44.362Z"
+  },
+  {
+    "kind": "addon",
+    "role": "survivor",
+    "itemType": "fog-vial",
+    "character": "All",
+    "icon": "/loadout/addon/reactive-compound.webp",
+    "slug": "reactive-compound",
+    "name": {
+      "en": "Reactive Compound",
+      "ru": "Reactive Compound"
+    },
+    "description": "\"Pressure builds within the vial. Its contents beg for release.\" Modifies the Fog Vial with the following effect: Reduces the Expansion time of the Fog Cloud by -1 second.",
+    "addedAt": "2026-08-19T13:33:44.362Z"
+  },
+  {
+    "kind": "addon",
+    "role": "survivor",
+    "itemType": "fog-vial",
+    "character": "All",
+    "icon": "/loadout/addon/oily-sap.webp",
+    "slug": "oily-sap",
+    "name": {
+      "en": "Oily Sap",
+      "ru": "Oily Sap"
+    },
+    "description": "\"The emerging fog clings to the air, overwhelming the senses for even longer.\" Modifies the Fog Vial with the following effect: Increases the duration of the Fog Cloud by +2 seconds.",
+    "addedAt": "2026-08-19T13:33:44.362Z"
+  },
+  {
+    "kind": "addon",
+    "role": "survivor",
+    "itemType": "fog-vial",
+    "character": "All",
+    "icon": "/loadout/addon/mushroom-formula.webp",
+    "slug": "mushroom-formula",
+    "name": {
+      "en": "Mushroom Formula",
+      "ru": "Mushroom Formula"
+    },
+    "description": "\"Blooming wisps of fog grasp at the environment, reaching farther and farther out.\" Modifies the Fog Vial with the following effect: Increases the maximum size of the Fog Cloud by +2 metres.",
+    "addedAt": "2026-08-19T13:33:44.362Z"
+  },
+  {
+    "kind": "addon",
+    "role": "survivor",
+    "itemType": "fog-vial",
+    "character": "All",
+    "icon": "/loadout/addon/potent-extract.webp",
+    "slug": "potent-extract",
+    "name": {
+      "en": "Potent Extract",
+      "ru": "Potent Extract"
+    },
+    "description": "\"One drop is enough to change the consistency of this strange elixir.\" Modifies the Fog Vial with the following effects: Increases the opacity of the Fog Cloud by +100 %. Reduces the duration of the Fog Cloud by -50 %. Reduces the size of the Fog Cloud by -25 %.",
+    "addedAt": "2026-08-19T13:33:44.362Z"
+  },
+  {
+    "kind": "addon",
+    "role": "survivor",
     "itemType": "key",
     "character": "All",
     "icon": "/loadout/addon/friendship-charm.webp",

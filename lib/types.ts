@@ -48,7 +48,13 @@ export interface PerksMeta {
  *  the scraper skips them entirely (see ITEM_TABLE_TYPES in
  *  scripts/scrape-loadout.ts) instead of giving them a type here. */
 export type ItemType =
-  "firecracker" | "flashlight" | "key" | "map" | "medkit" | "toolbox";
+  | "firecracker"
+  | "flashlight"
+  | "fog-vial"
+  | "key"
+  | "map"
+  | "medkit"
+  | "toolbox";
 
 export type LoadoutKind = "item" | "addon" | "offering";
 

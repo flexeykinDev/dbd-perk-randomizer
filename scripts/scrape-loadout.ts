@@ -6,7 +6,7 @@
 //
 // Unlike Perks (one wiki page, one table per role), these 3 pages each lay
 // their data out differently — see the comments on parsePieceTable,
-// findHeadingTables, and ITEM_TABLE_TYPES below for what was actually
+// findHeadingTables, and ITEM_TABLE_SIGNATURES below for what was actually
 // found on each page and why the parsing approach differs per page.
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -507,37 +507,73 @@ function findOfferingTables(
 const ITEM_TYPE_BY_ADDON_HEADING: Record<string, ItemType> = {
   Firecrackers: "firecracker",
   Flashlights: "flashlight",
+  "Fog Vials": "fog-vial",
   Keys: "key",
   Maps: "map",
   "Med-Kits": "medkit",
   Toolboxes: "toolbox",
 };
 
-// The Items page (unlike Add-ons) does *not* heading-delimit its tables by
-// item type — verified by inspecting the page directly: 10 top-level
-// tables in a fixed order (rarity-tier legend, then one table per item
-// type, then a single unused item, then a nav box), with item type only
-// recoverable from which table a row is in. If the wiki's table count or
-// order ever changes, this throws (see main()) instead of silently
-// mis-tagging items with the wrong type.
-const ITEM_TABLE_TYPES: readonly (ItemType | null)[] = [
-  null, // 0: rarity-tier legend, not data
-  "firecracker",
-  "flashlight",
-  "key",
-  "map",
-  "medkit",
-  "toolbox",
-  // Deliberately skipped, not just untyped: every entry here (Eye of Vecna,
-  // Lament Configuration, Keycard, ...) is a "Limited Item" per its own
-  // wiki description — one that spawns in the trial environment for a
-  // specific chapter's mechanic, not something a player brings in via
-  // their own loadout. Scraping them as pickable items would let the
-  // randomizer roll something nobody can actually pre-select.
-  null,
-  null, // single unused item ("Trapple")
-  null, // "browse other unlockables" nav box
+// The Items page, unlike Add-ons, doesn't heading-delimit its tables by
+// item type — the headings on it are prose sections ("Obtaining",
+// "Charges"), so the type is only recoverable from which table a row sits
+// in.
+//
+// This used to be a list indexed by table position, and that broke the
+// moment the source changed: wiki.gg's page has no rarity-legend table
+// where Fandom's did, and adds one for Fog Vials, so tables 0-2 all
+// shifted by one while 3-9 happened to still line up. The count stayed at
+// 10, so the guard that was supposed to catch exactly this never fired.
+// The result shipped: real Firecrackers were dropped, Flashlights were
+// tagged `firecracker` (a type with no add-ons at all), and Fog Vials
+// inherited the Flashlight add-ons.
+//
+// Identifying a table by an item that can only appear in it is immune to
+// insertions, removals and reordering alike. Each signature is a name
+// unique to its own table across the whole page — checked against the
+// live page, and asserted below so a wiki rename fails the scrape loudly
+// rather than mis-tagging silently.
+const ITEM_TABLE_SIGNATURES: readonly { type: ItemType; contains: string }[] = [
+  { type: "firecracker", contains: "Chinese Firecracker" },
+  { type: "flashlight", contains: "Sport Flashlight" },
+  { type: "fog-vial", contains: "Vigo's Fog Vial" },
+  { type: "key", contains: "Skeleton Key" },
+  { type: "map", contains: "Cryptic Map" },
+  { type: "medkit", contains: "Camping Aid Kit" },
+  { type: "toolbox", contains: "Commodious Toolbox" },
 ];
+
+/** Which item type a table holds, or null for one that isn't item data.
+ *
+ *  Unmatched tables are deliberately ignored rather than guessed at. The
+ *  page also carries a "Limited Item" table (Eye of Vecna, Lament
+ *  Configuration, ...) — those spawn in a trial for a chapter's own
+ *  mechanic rather than being brought in a loadout, so offering them
+ *  would let the randomizer roll something nobody can pre-select. */
+/** Every name in a table's Name column, before any filtering.
+ *
+ *  Used only to identify which table this is, which must not depend on
+ *  whether its contents are currently obtainable: every Firecracker is an
+ *  expired event item, so UNAVAILABLE_MARKERS empties that table
+ *  completely and parsePieceTable's output has nothing left to match on. */
+function tableItemNames($: cheerio.CheerioAPI, table: Cheerio<AnyNode>): string[] {
+  const names: string[] = [];
+  table.find("tr").each((i, tr) => {
+    if (i === 0) return;
+    const cells = $(tr).find("th, td");
+    if (cells.length < 3) return;
+    const name = cleanText(cells.eq(1).text());
+    if (name) names.push(name);
+  });
+  return names;
+}
+
+function itemTypeForTable(names: readonly string[]): ItemType | null {
+  for (const { type, contains } of ITEM_TABLE_SIGNATURES) {
+    if (names.some((n) => n === contains)) return type;
+  }
+  return null;
+}
 
 // Deliberately just a fallback now, not the source of truth — see
 // resolveOfferingRole, which fetches each offering's own page instead.
@@ -923,28 +959,40 @@ async function main() {
   const itemsHtml = await fetchWikiPageHtml(ITEMS_PAGE);
   const $items = cheerio.load(itemsHtml);
   const itemTables = $items("table.wikitable");
-  if (itemTables.length !== ITEM_TABLE_TYPES.length) {
+
+  // Parsed once, then identified by content — see ITEM_TABLE_SIGNATURES.
+  const typedItemTables: { type: ItemType; pieces: ScrapedPiece[] }[] = [];
+  itemTables.each((_, t) => {
+    const table = $items(t) as Cheerio<AnyNode>;
+    const type = itemTypeForTable(tableItemNames($items, table));
+    if (type) typedItemTables.push({ type, pieces: parsePieceTable($items, table) });
+  });
+
+  // The guard the old index-based version was supposed to be. A table
+  // count is not evidence of anything — the count was still 10 while three
+  // types were mislabelled. Every signature matching exactly one table is.
+  const foundTypes = typedItemTables.map((t) => t.type);
+  const missing = ITEM_TABLE_SIGNATURES.filter((sig) => !foundTypes.includes(sig.type));
+  const duplicated = foundTypes.filter((t, i) => foundTypes.indexOf(t) !== i);
+  if (missing.length > 0 || duplicated.length > 0) {
     throw new Error(
-      `Items page has ${itemTables.length} tables, expected ${ITEM_TABLE_TYPES.length} — ` +
-        `the wiki's layout changed and ITEM_TABLE_TYPES in this script needs updating.`,
+      `Items page no longer matches ITEM_TABLE_SIGNATURES — ` +
+        (missing.length ? `nothing matched ${missing.map((m) => `"${m.contains}"`).join(", ")}. ` : "") +
+        (duplicated.length ? `more than one table matched ${duplicated.join(", ")}. ` : "") +
+        `Update the signatures in scripts/scrape-loadout.ts.`,
     );
   }
+
   const items: Item[] = [];
-  itemTables.each((i, t) => {
-    const itemType = ITEM_TABLE_TYPES[i];
-    if (!itemType) return;
+  for (const { type, pieces } of typedItemTables) {
     // Items belong to nobody, so there is no character release date to
     // gate them on — only the "brand new and documented against a patch
     // that hasn't shipped" rule applies.
-    const pieces = gateLoadoutRows(
-      parsePieceTable($items, $items(t)),
-      () => null,
-      (piece) => piece,
-    );
-    for (const piece of pieces) {
-      items.push({ kind: "item", itemType, icon: "", ...toLocalized("item", piece) });
+    const live = gateLoadoutRows(pieces, () => null, (piece) => piece);
+    for (const piece of live) {
+      items.push({ kind: "item", itemType: type, icon: "", ...toLocalized("item", piece) });
     }
-  });
+  }
   console.log(`Found ${items.length} items`);
 
   // --- Add-ons ---
@@ -1109,11 +1157,7 @@ async function main() {
 
   console.log("Downloading icons ...");
   {
-    const allItemRows: ScrapedPiece[] = [];
-    itemTables.each((i, t) => {
-      if (!ITEM_TABLE_TYPES[i]) return;
-      allItemRows.push(...parsePieceTable($items, $items(t)));
-    });
+    const allItemRows: ScrapedPiece[] = typedItemTables.flatMap((t) => t.pieces);
     await attachIcons(items, allItemRows);
   }
   {

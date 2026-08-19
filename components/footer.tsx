@@ -5,7 +5,12 @@ import { useT } from "@/lib/i18n";
 import { useIsObsMode } from "@/lib/use-obs-mode";
 
 const GITHUB_USERNAME = "flexeykinDev";
-const FALLBACK_NAME = "yiksnele";
+// Shown until the profile fetch resolves, and permanently whenever it
+// can't — an unauthenticated api.github.com call is rate-limited per IP and
+// is exactly the sort of request an ad-blocker drops. So the fallback has
+// to be a name that is correct on its own, not a placeholder: it used to be
+// an old handle, which is what most visitors actually saw.
+const FALLBACK_NAME = GITHUB_USERNAME;
 
 interface GitHubAuthor {
   name: string;
