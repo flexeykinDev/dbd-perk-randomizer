@@ -98,17 +98,32 @@ function splitTrailingAttributedQuote(
   for (let pair = Math.floor(marks.length / 2) * 2 - 2; pair >= 0; pair -= 2) {
     const open = marks[pair];
     const close = marks[pair + 1];
-    if (text[close + 1] !== ".") continue;
+
+    // Two shapes of credit follow the closing mark, and the RU wiki uses
+    // both. Either the sentence's period sits outside the quote and the
+    // credit runs on after it:
+    //
+    //   "…нож моей любви". Песня "Сквозь тебя"
+    //
+    // or the speaker is parenthesised, which is how Ghost Face's add-ons
+    // are written and which left a stray `"` on three of them:
+    //
+    //   "…незабываемые подарки" (Гоуст Фейс).
+    const rest = text.slice(close + 1);
+    const parenthesised = /^\s*\((.+?)\)\.?\s*$/.exec(rest);
+    if (rest[0] !== "." && !parenthesised) continue;
+
     const inner = text.slice(open + 1, close);
     if (inner.length < LORE_QUOTE_MIN_LENGTH) continue;
     if (inner.trim().split(/\s+/).length < LORE_QUOTE_MIN_WORDS) continue;
-    const attribution = text.slice(close + 2).trim();
+
+    const attribution = (parenthesised ? parenthesised[1] : rest.slice(1)).trim();
     if (attribution === "" || attribution.length > ATTRIBUTION_MAX_LENGTH) continue;
     if (attribution.includes("%")) continue;
     return {
       body: text.slice(0, open).trim(),
       inner,
-      // A dash is optional in this form; drop it when present so the
+      // A dash is optional in the run-on form; drop it when present so the
       // rendered attribution doesn't end up with two.
       attribution: attribution.replace(/^[-—]\s*/, ""),
     };
