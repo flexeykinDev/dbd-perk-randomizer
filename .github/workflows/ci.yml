@@ -8,6 +8,12 @@ on:
 jobs:
   validate:
     runs-on: ubuntu-latest
+    # Without this a hung step runs to GitHub's 6-hour default. "Install
+    # Playwright browsers" has stalled indefinitely twice while every other
+    # step passed in under two minutes, and the only way to notice was to go
+    # looking. 20 is roughly ten times a healthy run, so it can only fire on
+    # something genuinely stuck.
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -16,11 +22,30 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run lint
-      - name: Unit tests (release gate)
+      - name: Unit tests
         run: npm test
       - name: Build (static export, includes typecheck)
         run: npm run build
+
+      # Cached against the installed Playwright version, since that is what
+      # decides which browser build is needed — a lockfile change that
+      # doesn't move Playwright shouldn't cost another download. On a hit
+      # the install below is a no-op, which also means the step that has
+      # been stalling usually doesn't run at all.
+      - name: Resolve Playwright version
+        id: playwright
+        run: echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}
       - name: Install Playwright browsers
+        # --with-deps needs root and installs OS packages, so it still runs
+        # on a cache hit; only the browser download is skipped.
         run: npx playwright install --with-deps chromium
+        timeout-minutes: 8
+
       - name: E2E smoke tests
         run: npm run test:e2e
