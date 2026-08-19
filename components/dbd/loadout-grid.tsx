@@ -11,7 +11,7 @@ import { getCharacterName } from "@/lib/character-name";
 import { getLoadoutPieceDescription } from "@/lib/perk-description";
 import { useDescription } from "@/lib/descriptions";
 import { DescriptionSkeleton } from "./perk-grid";
-import { useBodyScrollLock } from "@/lib/use-body-scroll-lock";
+import { useModal } from "@/lib/use-modal";
 import { ROLE_COLOR } from "@/lib/role-color";
 import { cn } from "@/lib/cn";
 import { GENERAL_CHARACTER } from "@/lib/types";
@@ -395,7 +395,11 @@ function LoadoutDetailModal({
   onClose: () => void;
 }) {
   const t = useT();
-  useBodyScrollLock(piece !== null);
+  const { attachCard, dialogProps } = useModal({
+    open: piece !== null,
+    onClose,
+    label: piece ? piece.name[language] : undefined,
+  });
   const roleColor = ROLE_COLOR[role];
   const character =
     piece?.kind === "addon" && piece.character !== GENERAL_CHARACTER
@@ -420,6 +424,8 @@ function LoadoutDetailModal({
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
             transition={{ type: "spring", stiffness: 400, damping: 32 }}
             onClick={(e) => e.stopPropagation()}
+            ref={attachCard}
+            {...dialogProps}
             /* Same fixed-header / scrolling-body / fixed-action shape as
                PerkDetailModal — see its comment. */
             className="modal-card relative flex w-full max-w-sm flex-col overflow-hidden rounded-2xl border border-border bg-gradient-to-b from-surface to-background text-left shadow-2xl"

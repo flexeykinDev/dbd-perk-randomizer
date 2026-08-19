@@ -12,7 +12,7 @@ import { useT } from "@/lib/i18n";
 import { getCharacterName } from "@/lib/character-name";
 import { getPerkDescription } from "@/lib/perk-description";
 import { useDescription } from "@/lib/descriptions";
-import { useBodyScrollLock } from "@/lib/use-body-scroll-lock";
+import { useModal } from "@/lib/use-modal";
 import { Highlighted } from "./highlighted-text";
 
 /* The small circular controls in a perk card's top-right corner. Split into
@@ -249,7 +249,11 @@ function PerkDetailModal({
   const t = useT();
   const roleColor = perk ? ROLE_COLOR[perk.role] : null;
   const portrait = perk ? getCharacterPortrait(perk.character) : undefined;
-  useBodyScrollLock(perk !== null);
+  const { attachCard, dialogProps } = useModal({
+    open: perk !== null,
+    onClose,
+    label: perk ? perk.name[language] : undefined,
+  });
 
   return (
     <AnimatePresence>
@@ -267,6 +271,8 @@ function PerkDetailModal({
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
             transition={{ type: "spring", stiffness: 400, damping: 32 }}
             onClick={(e) => e.stopPropagation()}
+            ref={attachCard}
+            {...dialogProps}
             /* flex column + .modal-card: the card is capped to the visible
                viewport and splits into a fixed header, a scrolling middle,
                and a fixed action row, so a long description scrolls inside

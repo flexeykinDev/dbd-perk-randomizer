@@ -169,6 +169,81 @@ test.describe("DBD randomizer", () => {
   });
 });
 
+test.describe("Dialog behaviour", () => {
+  // An audit found role="dialog" on one of the eight modals, an Escape
+  // handler on none, and no focus management anywhere. These cover the
+  // shared hook that fixes it (lib/use-modal.ts), across enough different
+  // dialogs to catch one being wired up wrong.
+
+  /** Every dialog reachable from the board, with how to open it. */
+  const dialogs = [
+    {
+      name: "perk description",
+      open: async (page: import("@playwright/test").Page) => {
+        await page.goto("/?role=survivor&perks=pharmacy");
+        await page.getByRole("button", { name: "Описание: Аптекарь" }).first().click();
+      },
+    },
+    {
+      name: "perk pool",
+      open: async (page: import("@playwright/test").Page) => {
+        await page.goto("/");
+        await page.getByRole("button", { name: "Пул", exact: true }).click();
+      },
+    },
+    {
+      name: "OBS overlay",
+      open: async (page: import("@playwright/test").Page) => {
+        await page.goto("/?role=survivor");
+        await expect(page.locator("main").locator("img[alt]").first()).toBeVisible();
+        await page.getByRole("button", { name: /Оверлей OBS/ }).click();
+      },
+    },
+  ];
+
+  for (const { name, open } of dialogs) {
+    test(`${name}: announces itself as a dialog and closes on Escape`, async ({ page }) => {
+      await open(page);
+      const dialog = page.getByRole("dialog");
+      await expect(dialog).toBeVisible();
+      await expect(dialog).toHaveAttribute("aria-modal", "true");
+
+      await page.keyboard.press("Escape");
+      await expect(page.getByRole("dialog")).toHaveCount(0);
+    });
+  }
+
+  test("focus moves into the dialog and returns to the button that opened it", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const poolButton = page.getByRole("button", { name: "Пул", exact: true });
+    await poolButton.click();
+
+    // Focus starts on the dialog itself rather than being left behind on
+    // the page, so the next Tab lands inside.
+    await expect(page.getByRole("dialog")).toBeFocused();
+
+    await page.keyboard.press("Escape");
+    await expect(poolButton).toBeFocused();
+  });
+
+  test("Tab stays inside the dialog instead of reaching the page behind it", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    await page.getByRole("button", { name: "Пул", exact: true }).click();
+    const dialog = page.getByRole("dialog");
+    await expect(dialog).toBeVisible();
+
+    // Enough presses to run past the end of any reasonable dialog and wrap.
+    for (let i = 0; i < 40; i++) await page.keyboard.press("Tab");
+
+    const insideDialog = await dialog.evaluate((el) => el.contains(document.activeElement));
+    expect(insideDialog).toBe(true);
+  });
+});
+
 test.describe("Full Loadout", () => {
   test("switching to loadout mode rolls an item/add-ons/offering HUD", async ({
     page,

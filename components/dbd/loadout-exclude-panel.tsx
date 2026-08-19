@@ -11,6 +11,7 @@ import { GENERAL_CHARACTER } from "@/lib/types";
 import { ROLE_COLOR } from "@/lib/role-color";
 import { getCharacterName } from "@/lib/character-name";
 import { useT } from "@/lib/i18n";
+import { useModal } from "@/lib/use-modal";
 
 type StatusFilter = "all" | "active" | "disabled";
 
@@ -155,6 +156,11 @@ export function LoadoutExcludePanel({
   onClose: () => void;
 }) {
   const t = useT();
+  const { attachCard, dialogProps } = useModal({
+    open,
+    onClose,
+    label: t({ ru: "Настроить пул экипировки", en: "Manage loadout pool" }),
+  });
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<StatusFilter>("all");
   const [category, setCategory] = useState<string>("all");
@@ -214,6 +220,8 @@ export function LoadoutExcludePanel({
             exit={{ opacity: 0, scale: 0.96, y: 10 }}
             transition={{ type: "spring", stiffness: 400, damping: 34 }}
             onClick={(e) => e.stopPropagation()}
+            ref={attachCard}
+            {...dialogProps}
             className="flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-border bg-surface shadow-2xl lg:max-w-4xl"
           >
             <div className="flex items-center justify-between gap-3 border-b border-border p-4">

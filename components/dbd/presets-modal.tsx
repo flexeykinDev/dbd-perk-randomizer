@@ -7,7 +7,7 @@ import { withBasePath } from "@/lib/asset-path";
 import { ROLE_COLOR } from "@/lib/role-color";
 import { cn } from "@/lib/cn";
 import { useT } from "@/lib/i18n";
-import { useBodyScrollLock } from "@/lib/use-body-scroll-lock";
+import { useModal } from "@/lib/use-modal";
 import type { PerkRole } from "@/lib/types";
 
 /** Hand-picked builds, offered as an entry point for players who don't yet
@@ -38,7 +38,11 @@ export function PresetsModal({
   onApply: (preset: BuildPreset) => void;
 }) {
   const t = useT();
-  useBodyScrollLock(open);
+  const { attachCard, dialogProps } = useModal({
+    open,
+    onClose,
+    label: t({ ru: "Готовые билды", en: "Preset Builds" }),
+  });
 
   const presets = getBuildPresets(role);
 
@@ -58,6 +62,8 @@ export function PresetsModal({
             exit={{ opacity: 0, scale: 0.96, y: 10 }}
             transition={{ type: "spring", stiffness: 400, damping: 34 }}
             onClick={(e) => e.stopPropagation()}
+            ref={attachCard}
+            {...dialogProps}
             className="modal-card flex w-full max-w-lg flex-col overflow-hidden rounded-2xl border border-border bg-surface shadow-2xl"
           >
             <div className="flex shrink-0 items-center justify-between gap-3 border-b border-border p-4">

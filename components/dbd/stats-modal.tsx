@@ -10,6 +10,7 @@ import { getRoleStatsSummary, resetStats, type PerkRollStat } from "@/lib/stats"
 import { cn } from "@/lib/cn";
 import { ROLE_COLOR } from "@/lib/role-color";
 import { useT } from "@/lib/i18n";
+import { useModal } from "@/lib/use-modal";
 import { ConfirmDialog } from "./confirm-dialog";
 
 export function StatsModal({
@@ -26,6 +27,11 @@ export function StatsModal({
   version: number;
 }) {
   const t = useT();
+  const { attachCard, dialogProps } = useModal({
+    open,
+    onClose,
+    label: t({ ru: "Статистика", en: "Stats" }),
+  });
   const [role, setRole] = useState<PerkRole>("survivor");
   const [confirmOpen, setConfirmOpen] = useState(false);
 
@@ -50,6 +56,8 @@ export function StatsModal({
               exit={{ opacity: 0, scale: 0.96, y: 10 }}
               transition={{ type: "spring", stiffness: 400, damping: 34 }}
               onClick={(e) => e.stopPropagation()}
+            ref={attachCard}
+            {...dialogProps}
               className="flex max-h-[85vh] w-full max-w-lg flex-col overflow-hidden rounded-2xl border border-border bg-surface shadow-2xl lg:max-w-xl"
             >
               <div className="flex items-center justify-between gap-3 border-b border-border p-4">

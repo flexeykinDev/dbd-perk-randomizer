@@ -20,6 +20,7 @@ import type { LoadoutPiece, Perk, PerkRole, PieceVisibility } from "@/lib/types"
 import { pasteCommandFor, useBuildConstructor } from "@/lib/use-build-constructor";
 import { useCopyFeedback } from "@/lib/use-copy-feedback";
 import { useObsPublishStatus, type ObsPublishState } from "@/lib/use-obs-mode";
+import { useModal } from "@/lib/use-modal";
 import { previewPiecesFor, useObsOverlayOptions } from "@/lib/use-obs-overlay-options";
 import type { TwitchSettings } from "@/lib/use-twitch-settings";
 import type { ObsHold } from "@/lib/use-obs-hold";
@@ -103,6 +104,10 @@ export function ObsOverlayModal({
   const titleId = useId();
   const descId = useId();
   const publishStatus = useObsPublishStatus();
+  // This one already had the role and the labelling; the hook adds the
+  // Escape key and focus handling it was missing, and keeps all eight
+  // dialogs behaving the same way.
+  const { attachCard, dialogProps } = useModal({ open, onClose, labelledBy: titleId });
   const [panelTab, setPanelTab] = useState<PanelTab>("overlay");
   const [obsSetupOpen, setObsSetupOpen] = useState(false);
 
@@ -139,9 +144,8 @@ export function ObsOverlayModal({
             exit={{ opacity: 0, scale: 0.96, y: 10 }}
             transition={{ type: "spring", stiffness: 400, damping: 34 }}
             onClick={(e) => e.stopPropagation()}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby={titleId}
+            ref={attachCard}
+            {...dialogProps}
             aria-describedby={descId}
             className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-border bg-surface p-5 shadow-2xl lg:max-w-xl"
           >
