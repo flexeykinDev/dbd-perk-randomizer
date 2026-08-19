@@ -17,6 +17,7 @@ import type { AnyNode } from "domhandler";
 import sharp from "sharp";
 import { slugify } from "../lib/slugify";
 import { gateScrapedRows, partitionByRelease } from "./release-gate";
+import { guardAgainstShrink } from "./scrape-census";
 import { resolveImageUrl, WIKI_GG } from "./wiki-source";
 import {
   GENERAL_CHARACTER,
@@ -1211,6 +1212,20 @@ async function main() {
   const killerPowerIcons = await scrapeKillerPowerIcons(killerCharacters);
   writeFileSync(KILLER_POWER_ICONS_JSON, JSON.stringify(killerPowerIcons, null, 2) + "\n");
   console.log(`Wrote ${Object.keys(killerPowerIcons).length} killer Power icons`);
+
+  // Counted before anything is written, so tripping the guard leaves the
+  // previous data intact — the GitHub Action commits whatever it finds in
+  // data/, and a half-replaced directory is worse than a skipped run.
+  console.log("Checking the counts against what's committed ...");
+  guardAgainstShrink("items", ITEMS_JSON, items, (i: Item) => [`type:${i.itemType}`]);
+  guardAgainstShrink("add-ons", ADDONS_JSON, addons, (a: Addon) => [
+    `role:${a.role}`,
+    // Both halves of the Fog Vial bug are visible here and nowhere in the
+    // totals: Flashlight add-ons going to zero, and a killer's add-ons
+    // landing on the general sentinel instead of on them.
+    a.role === "survivor" ? `item-type:${a.itemType}` : `killer:${a.character}`,
+  ]);
+  guardAgainstShrink("offerings", OFFERINGS_JSON, offerings, (o: Offering) => [`role:${o.role}`]);
 
   mkdirSync(DATA_DIR, { recursive: true });
   writeFileSync(ITEMS_JSON, JSON.stringify(items, null, 2) + "\n");

@@ -356,6 +356,33 @@ it still shows up on the site — just with an English description and
 an auto-generated (not hand-translated) short summary, until a
 translation lands in a separate PR.
 
+### The headcount that stops a bad scrape
+
+The wiki is someone else's page, and its markup moves. When a parser
+stops matching, the scrape doesn't crash — it just returns fewer rows,
+and the weekly PR quietly ships a site with a hole in it.
+
+Both scrapers count what they're about to write and compare it against
+what's already committed in `data/`, per category rather than in total
+([`scripts/scrape-census.ts`](scripts/scrape-census.ts)). Any category
+that shrinks stops the run **before** anything is written, so a tripped
+guard leaves the previous data in place rather than committing half a
+replacement.
+
+Categories are the point. Totals are the number that has always looked
+fine: when the Items page's tables shifted, real Firecrackers were
+dropped and Fog Vials took their place, so the add-on total didn't move
+by one — while two item types were wrong on the live site. Counting per
+role, per item type, and per character makes that visible as
+`item-type:flashlight: 13 -> 0` instead of as nothing at all.
+
+Growth is never questioned; new chapters are the normal case. If a loss
+is real — a licence lapsing does remove content — re-run and say so:
+
+```bash
+npm run scrape:loadout -- --allow-shrink
+```
+
 ### Refreshing Russian perk names
 
 Names in `data/translations.ru.json` can be typed by hand, or pulled
@@ -408,8 +435,21 @@ npm install
 npm run dev       # http://localhost:3000
 npm run lint
 npm run build      # static export into out/
+npm test           # unit tests (node:test via tsx)
 npm run test:e2e   # Playwright smoke tests
 ```
+
+The loadout tests are worth knowing about, because they exist for a bug
+a player found rather than for coverage. `lib/loadout.test.ts` checks
+the shipped data hangs together; `lib/loadout-roll.test.ts` runs the
+roller itself hundreds of times per case and asserts what someone would
+actually notice — add-ons matching the item they came with, a killer's
+add-ons belonging to the killer that was rolled, exclusions holding. The
+`Loadout pairing on the page` block in `e2e/smoke.spec.ts` then asserts
+the same thing about the rendered HUD, reading the piece cards' `data-*`
+attributes: the two are not redundant, since the URL round-trip and the
+seeded Daily Challenge path can each pair the slots correctly in memory
+and still draw them wrong.
 
 ### Firebase (for syncing the OBS overlay across browser profiles)
 

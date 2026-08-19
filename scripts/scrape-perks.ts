@@ -9,6 +9,7 @@ import { fileURLToPath } from "node:url";
 import sharp from "sharp";
 import { slugify } from "../lib/slugify";
 import { gateScrapedRows } from "./release-gate";
+import { guardAgainstShrink } from "./scrape-census";
 import { WIKI_GG } from "./wiki-source";
 import { GENERAL_CHARACTER } from "../lib/types";
 import {
@@ -481,6 +482,17 @@ async function main() {
     survivorCount: perks.filter((p) => p.role === "survivor").length,
     killerCount: perks.filter((p) => p.role === "killer").length,
   };
+
+  // Checked before anything is written, so a run that trips the guard
+  // leaves the previously shipped perks in place rather than committing a
+  // partial replacement. Counting per character as well as per role is the
+  // point: one character's perks disappearing is what a name collision or
+  // a failed alias looks like, and it barely moves the total.
+  console.log("Checking the counts against what's committed ...");
+  guardAgainstShrink("perks", PERKS_JSON, perks, (p: Perk) => [
+    `role:${p.role}`,
+    `character:${p.character}`,
+  ]);
 
   mkdirSync(DATA_DIR, { recursive: true });
   writeFileSync(PERKS_JSON, JSON.stringify(perks, null, 2) + "\n");
