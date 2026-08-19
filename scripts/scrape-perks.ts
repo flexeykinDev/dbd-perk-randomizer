@@ -10,6 +10,7 @@ import sharp from "sharp";
 import { slugify } from "../lib/slugify";
 import { gateScrapedRows } from "./release-gate";
 import { WIKI_GG } from "./wiki-source";
+import { GENERAL_CHARACTER } from "../lib/types";
 import {
   parsePerkTables,
   resolveCharacterCollisions,
@@ -337,7 +338,13 @@ async function main() {
   if (SOURCE.publishesPreRelease) {
     for (const role of ROLES) {
       const { live, held } = gateScrapedRows(scrapedByRole[role], {
-        getCharacter: (row) => row.character,
+        // A general perk belongs to everybody, so there is no character
+        // whose release date could gate it — same as items and offerings
+        // on the loadout side. Passing its sentinel through as a name
+        // instead made the gate treat "every base-game perk" as an
+        // unknown character and withhold all 35 of them.
+        getCharacter: (row) =>
+          row.character === GENERAL_CHARACTER ? null : row.character,
         getSlug: (row) => row.slug,
         isUpcoming: (row) => row.upcoming,
         knownCharacters,

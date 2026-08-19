@@ -31,6 +31,7 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { GENERAL_CHARACTER } from "../lib/types";
 import type { Perk, PerkRole } from "../lib/types";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -131,7 +132,7 @@ async function main() {
   // (survivors) or keep it whole (killers).
   const roleByCharacter = new Map<string, PerkRole>();
   for (const perk of perks) {
-    if (perk.character === ".All") continue;
+    if (perk.character === GENERAL_CHARACTER) continue;
     roleByCharacter.set(perk.character, perk.role);
   }
 

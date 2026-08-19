@@ -25,7 +25,7 @@ import * as cheerio from "cheerio";
 import type { AnyNode } from "domhandler";
 import { slugify } from "../lib/slugify";
 import { resolveImageUrl } from "./wiki-source";
-import type { PerkRole } from "../lib/types";
+import { GENERAL_CHARACTER, WIKI_GENERAL_CHARACTER, type PerkRole } from "../lib/types";
 
 export interface ScrapedRow {
   name: string;
@@ -136,18 +136,15 @@ export function parsePerkTables(
 
         const rawDescription = cleanText(descriptionCell.text());
         const upcoming = UPCOMING_PATCH_NOTICE.test(rawDescription);
-        // Taken verbatim, hidden sort key and all. Both wikis prefix the
-        // general-perk rows with an invisible character so they sort ahead
-        // of the named ones — `<span class="display-none">.</span>All` —
-        // and the leading dot therefore survives into the text. That looks
-        // like something to strip, but it is load-bearing: ".All" is the
-        // sentinel lib/perks.ts checks to keep general perks out of the
-        // character picker (getCharactersForRole), and it is what the 27
-        // perks and 47 add-ons already shipped are keyed on. Both wikis
-        // produce the same string, so preserving it is also what keeps the
-        // two sources interchangeable. Renaming it is a data migration in
-        // its own right, not a parser detail.
-        const character = cleanText(characterCell.text());
+        // Both wikis prefix the general-perk rows with an invisible
+        // character so they sort ahead of the named ones —
+        // `<span class="display-none">.</span>All` — so the leading dot
+        // survives into the text. It is a sorting artifact, not a name, and
+        // this is the one place that knows that: normalising here means
+        // nothing downstream compares against a magic string.
+        const rawCharacter = cleanText(characterCell.text());
+        const character =
+          rawCharacter === WIKI_GENERAL_CHARACTER ? GENERAL_CHARACTER : rawCharacter;
 
         const renamedMatch = RENAMED_PERK_NOTICE.exec(rawDescription);
 

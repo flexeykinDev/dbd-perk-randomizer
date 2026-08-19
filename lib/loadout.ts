@@ -3,6 +3,7 @@ import addonsData from "@/data/addons.json";
 import offeringsData from "@/data/offerings.json";
 import loadoutMetaData from "@/data/loadout-meta.json";
 import killerPowerIconsData from "@/data/killer-power-icons.json";
+import { GENERAL_CHARACTER } from "./types";
 import type {
   Addon,
   Item,
@@ -88,7 +89,7 @@ export function getAddonsForKiller(character: string): Addon[] {
  *  character you can actually be assigned as. */
 export function getKillerCharacters(): string[] {
   return [...new Set(addons.filter((a) => a.role === "killer").map((a) => a.character))]
-    .filter((c) => c !== ".All")
+    .filter((c) => c !== GENERAL_CHARACTER)
     .sort();
 }
 

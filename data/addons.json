@@ -3,7 +3,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "flashlight",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/battery.webp",
     "slug": "battery",
     "name": {
@@ -18,7 +18,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "flashlight",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/leather-grip.webp",
     "slug": "leather-grip",
     "name": {
@@ -33,7 +33,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "flashlight",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/power-bulb.webp",
     "slug": "power-bulb",
     "name": {
@@ -48,7 +48,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "flashlight",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/wide-lens.webp",
     "slug": "wide-lens",
     "name": {
@@ -63,7 +63,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "flashlight",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/focus-lens.webp",
     "slug": "focus-lens",
     "name": {
@@ -78,7 +78,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "flashlight",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/heavy-duty-battery.webp",
     "slug": "heavy-duty-battery",
     "name": {
@@ -93,7 +93,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "flashlight",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/low-amp-filament.webp",
     "slug": "low-amp-filament",
     "name": {
@@ -108,7 +108,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "flashlight",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/rubber-grip.webp",
     "slug": "rubber-grip",
     "name": {
@@ -123,7 +123,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "flashlight",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/tir-optic.webp",
     "slug": "tir-optic",
     "name": {
@@ -138,7 +138,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "flashlight",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/intense-halogen.webp",
     "slug": "intense-halogen",
     "name": {
@@ -153,7 +153,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "flashlight",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/long-life-battery.webp",
     "slug": "long-life-battery",
     "name": {
@@ -168,7 +168,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "flashlight",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/high-end-sapphire-lens.webp",
     "slug": "high-end-sapphire-lens",
     "name": {
@@ -183,7 +183,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "flashlight",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/odd-bulb.webp",
     "slug": "odd-bulb",
     "name": {
@@ -198,7 +198,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "medkit",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/bandages.webp",
     "slug": "bandages",
     "name": {
@@ -213,7 +213,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "medkit",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/butterfly-tape.webp",
     "slug": "butterfly-tape",
     "name": {
@@ -228,7 +228,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "medkit",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/rubber-gloves.webp",
     "slug": "rubber-gloves",
     "name": {
@@ -243,7 +243,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "medkit",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/medical-scissors.webp",
     "slug": "medical-scissors",
     "name": {
@@ -258,7 +258,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "medkit",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/needle-and-thread.webp",
     "slug": "needle-and-thread",
     "name": {
@@ -273,7 +273,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "medkit",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/self-adherent-wrap.webp",
     "slug": "self-adherent-wrap",
     "name": {
@@ -288,7 +288,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "medkit",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/sponge.webp",
     "slug": "sponge",
     "name": {
@@ -303,7 +303,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "medkit",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/gauze-roll.webp",
     "slug": "gauze-roll",
     "name": {
@@ -318,7 +318,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "medkit",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/surgical-suture.webp",
     "slug": "surgical-suture",
     "name": {
@@ -333,7 +333,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "medkit",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/abdominal-dressing.webp",
     "slug": "abdominal-dressing",
     "name": {
@@ -348,7 +348,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "medkit",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/styptic-agent.webp",
     "slug": "styptic-agent",
     "name": {
@@ -363,7 +363,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "medkit",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/anti-exhaustion-syringe.webp",
     "slug": "anti-exhaustion-syringe",
     "name": {
@@ -378,7 +378,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "medkit",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/gel-dressings.webp",
     "slug": "gel-dressings",
     "name": {
@@ -393,7 +393,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "toolbox",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/clean-rag.webp",
     "slug": "clean-rag",
     "name": {
@@ -408,7 +408,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "toolbox",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/instructions.webp",
     "slug": "instructions",
     "name": {
@@ -423,7 +423,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "toolbox",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/scraps.webp",
     "slug": "scraps",
     "name": {
@@ -438,7 +438,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "toolbox",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/cutting-wire.webp",
     "slug": "cutting-wire",
     "name": {
@@ -453,7 +453,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "toolbox",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/protective-gloves.webp",
     "slug": "protective-gloves",
     "name": {
@@ -468,7 +468,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "toolbox",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/socket-swivels.webp",
     "slug": "socket-swivels",
     "name": {
@@ -483,7 +483,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "toolbox",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/spring-clamp.webp",
     "slug": "spring-clamp",
     "name": {
@@ -498,7 +498,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "toolbox",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/wire-spool.webp",
     "slug": "wire-spool",
     "name": {
@@ -513,7 +513,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "toolbox",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/grip-wrench.webp",
     "slug": "grip-wrench",
     "name": {
@@ -528,7 +528,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "toolbox",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/hacksaw.webp",
     "slug": "hacksaw",
     "name": {
@@ -543,7 +543,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "toolbox",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/brand-new-part.webp",
     "slug": "brand-new-part",
     "name": {
@@ -558,7 +558,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "key",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/friendship-charm.webp",
     "slug": "friendship-charm",
     "name": {
@@ -573,7 +573,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "key",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/shrill-whistle.webp",
     "slug": "shrill-whistle",
     "name": {
@@ -588,7 +588,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "key",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/braided-bauble.webp",
     "slug": "braided-bauble",
     "name": {
@@ -603,7 +603,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "key",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/unique-wedding-ring.webp",
     "slug": "unique-wedding-ring",
     "name": {
@@ -618,7 +618,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "key",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/blood-amber.webp",
     "slug": "blood-amber",
     "name": {
@@ -633,7 +633,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "map",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/glowing-ink.webp",
     "slug": "glowing-ink",
     "name": {
@@ -648,7 +648,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "map",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/gnarled-compass.webp",
     "slug": "gnarled-compass",
     "name": {
@@ -663,7 +663,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "map",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/battered-tape.webp",
     "slug": "battered-tape",
     "name": {
@@ -678,7 +678,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "map",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/sharpened-flint.webp",
     "slug": "sharpened-flint",
     "name": {
@@ -693,7 +693,7 @@
     "kind": "addon",
     "role": "survivor",
     "itemType": "map",
-    "character": ".All",
+    "character": "All",
     "icon": "/loadout/addon/crimson-stamp.webp",
     "slug": "crimson-stamp",
     "name": {

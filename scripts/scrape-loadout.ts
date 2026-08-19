@@ -18,7 +18,15 @@ import sharp from "sharp";
 import { slugify } from "../lib/slugify";
 import { gateScrapedRows, partitionByRelease } from "./release-gate";
 import { resolveImageUrl, WIKI_GG } from "./wiki-source";
-import type { Addon, Item, ItemType, LoadoutMeta, Offering, PerkRole } from "../lib/types";
+import {
+  GENERAL_CHARACTER,
+  type Addon,
+  type Item,
+  type ItemType,
+  type LoadoutMeta,
+  type Offering,
+  type PerkRole,
+} from "../lib/types";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = join(__dirname, "../data");
@@ -561,7 +569,7 @@ const OFFERING_CATEGORY_ROLE: Record<string, PerkRole | "both"> = {
 // "X is the Power of <Killer>" from the power's own page (also confirmed
 // against a real page — see below) before giving up to ".All".
 const POWER_HEADING_OVERRIDES: Record<string, string> = {
-  "Any Killer": ".All",
+  "Any Killer": GENERAL_CHARACTER,
   // Its own article opens with prose, not the standard "X is the Power of
   // <Killer>" sentence POWER_OF_PATTERN below looks for — confirmed by
   // reading the actual page text.
@@ -652,7 +660,7 @@ async function resolvePowerToCharacter(headings: string[]): Promise<Record<strin
   for (const h of headings) {
     if (!(h in result)) {
       console.warn(`  Could not resolve a killer for power heading "${h}" — using ".All"`);
-      result[h] = ".All";
+      result[h] = GENERAL_CHARACTER;
     }
   }
 
@@ -963,12 +971,12 @@ async function main() {
     // comment) — Fandom's own tables for these two are stale post-9.1.0.
     if (itemType === "key" || itemType === "map") continue;
     for (const piece of parsePieceTable($addons, table)) {
-      addonRows.push({ role: "survivor", character: ".All", itemType, piece });
+      addonRows.push({ role: "survivor", character: GENERAL_CHARACTER, itemType, piece });
     }
   }
   for (const { itemType, ...piece } of KEY_MAP_ADDON_OVERRIDES) {
     // Hand-pinned, so the wiki's own upcoming-patch marker has no say.
-    addonRows.push({ role: "survivor", character: ".All", itemType, piece: { ...piece, upcoming: false } });
+    addonRows.push({ role: "survivor", character: GENERAL_CHARACTER, itemType, piece: { ...piece, upcoming: false } });
   }
 
   const killerAddonSections = findHeadingTables($addons, "Killer Power Add-ons");
@@ -1039,7 +1047,7 @@ async function main() {
           kind: "addon",
           role: "survivor",
           itemType: row.itemType!,
-          character: ".All",
+          character: GENERAL_CHARACTER,
           icon: "",
           ...toLocalized("addon", row.piece),
         }
@@ -1154,7 +1162,7 @@ async function main() {
   // would go) — see getKillerPowerIcon in lib/loadout.ts.
   console.log("Fetching killer Power icons ...");
   const killerCharacters = [...new Set(addons.filter((a) => a.role === "killer").map((a) => a.character))]
-    .filter((c) => c !== ".All")
+    .filter((c) => c !== GENERAL_CHARACTER)
     .sort();
   const killerPowerIcons = await scrapeKillerPowerIcons(killerCharacters);
   writeFileSync(KILLER_POWER_ICONS_JSON, JSON.stringify(killerPowerIcons, null, 2) + "\n");

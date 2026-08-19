@@ -2,7 +2,7 @@ import perksData from "@/data/perks.json";
 import metaData from "@/data/meta.json";
 import charactersData from "@/data/characters.json";
 import slugAliasData from "@/data/perk-slug-aliases.json";
-import type { Perk, PerkRole, PerksMeta } from "./types";
+import { GENERAL_CHARACTER, type Perk, type PerkRole, type PerksMeta } from "./types";
 import { createSeededRandom, shuffle } from "./seeded-random";
 
 export const perks: Perk[] = perksData as Perk[];
@@ -43,12 +43,12 @@ export function getPerkBySlug(slug: string): Perk | undefined {
   return renamed ? perksBySlug.get(renamed) : undefined;
 }
 
-/** Every character with at least one teachable perk for `role` — ".All"
- *  (perks that shipped with the base game, not tied to any one character's
- *  teachables, see Perk.character) is deliberately excluded since it isn't
- *  a character a "Random Character" roll could ever land on. */
+/** Every character with at least one teachable perk for `role`. Perks
+ *  belonging to everybody (GENERAL_CHARACTER) are deliberately excluded —
+ *  that isn't a character a "Random Character" roll could land on, and
+ *  guaranteeing "its" teachables would mean nothing. */
 export function getCharactersForRole(role: PerkRole): string[] {
-  return [...new Set(perks.filter((p) => p.role === role && p.character !== ".All").map((p) => p.character))].sort();
+  return [...new Set(perks.filter((p) => p.role === role && p.character !== GENERAL_CHARACTER).map((p) => p.character))].sort();
 }
 
 export function getTeachablePerks(role: PerkRole, character: string): Perk[] {

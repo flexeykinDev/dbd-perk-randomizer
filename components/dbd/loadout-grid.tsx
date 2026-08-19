@@ -12,6 +12,7 @@ import { getLoadoutPieceDescription } from "@/lib/perk-description";
 import { useBodyScrollLock } from "@/lib/use-body-scroll-lock";
 import { ROLE_COLOR } from "@/lib/role-color";
 import { cn } from "@/lib/cn";
+import { GENERAL_CHARACTER } from "@/lib/types";
 import { useT } from "@/lib/i18n";
 import { Highlighted } from "./highlighted-text";
 
@@ -383,7 +384,7 @@ function LoadoutDetailModal({
   useBodyScrollLock(piece !== null);
   const roleColor = ROLE_COLOR[role];
   const character =
-    piece?.kind === "addon" && piece.character !== ".All"
+    piece?.kind === "addon" && piece.character !== GENERAL_CHARACTER
       ? piece.character
       : null;
   const portrait = character ? getCharacterPortrait(character) : undefined;

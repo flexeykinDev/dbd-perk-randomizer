@@ -395,7 +395,7 @@
     },
     "description": "\"A supernatural bond links you to the Killer.\" Whenever the Killer reads your Aura, Bound by Obsession activates for the same duration as their Aura-reading action: The Aura of the Killer is revealed to you. Increases your Action speeds for Cleansing, Healing, and Repairing actions by 2/4/6 %. If you are the Killer's current Obsession, the following effect triggers automatically every 30 seconds: Your Aura is revealed to the Killer for 3 seconds. Increases your chance of becoming the initial Obsession by increasing the default value by +100 %.The Killer can only be obsessed with one Survivor at a time.",
     "descriptionRuRaw": "Пока убийца одержим вами, каждые 30 сек. он видит вашу ауру в течение 3 сек. Пока убийца видит вашу ауру: вы видите его ауру; вы очищаете тотемы на 2/4/6% быстрее; ваша скорость исцеления увеличивается на 2/4/6%; вы ремонтируете на 2/4/6% быстрее. В начале матча у вас больше шансов стать объектом одержимости.",
-    "character": ".All",
+    "character": "All",
     "icon": "/perks/survivor/bound-by-obsession.webp",
     "addedAt": "2026-08-19T08:56:09.086Z"
   },
@@ -652,7 +652,7 @@
     },
     "description": "Unlocks potential in your Aura-reading ability.Whenever a Generator is completed, Dark Sense activates: The Aura of the Killer is revealed to you for 5/7/10 seconds once they come within 24 metres of your location. Dark Sense deactivates after use. \"Take it from an old-timer: Slow down, don't rush and try not to worry so much! The best way to beat him is to know how he thinks.\" — Murf, The Lost Tapes",
     "descriptionRuRaw": "После окончания ремонта генератора вы видите ауру убийцы в течение 5/7/10 сек., если тот находится в пределах 24м от вас.",
-    "character": ".All",
+    "character": "All",
     "icon": "/perks/survivor/dark-sense.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
@@ -704,7 +704,7 @@
     },
     "description": "\"Paranoia paired with your horror of failure helps prepare you from repeating the same mistakes.\" Unlocks potential in your Aura-reading ability: The Auras of whichever 3 Generators are currently in closest proximity to one another are revealed to you. Increases your Repair speed on those Generators by 4/5/6 %.",
     "descriptionRuRaw": "Вы видите ауры генераторов (3), которые стоят ближе всего друг к другу, а починка этих генераторов ускоряется на 4/5/6%.",
-    "character": ".All",
+    "character": "All",
     "icon": "/perks/survivor/deja-vu.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
@@ -795,7 +795,7 @@
     },
     "description": "As more of your friends fall to the Killer, you become shrouded in isolation and the Killer's Aura-reading abilities towards you are disrupted. Each time a Survivor other than yourself is killed or sacrificed, Down to the Last gains 1 Token, up to a maximum of 3 Tokens: Grants a stack-able radius of 20/22/24 metres per Token around you, up to a maximum of 60/66/72 metres, within which you are immune to the Killer's Aura-reading abilities. When you are the Last Survivor Standing, you benefit from the following effects: Increases your Repair speed by +75 %. Increases your Gate and Hatch Opening speeds by +50 %. Increases your chance of becoming the initial Obsession by increasing the default value by +100 %.The Killer can only be obsessed with one Survivor at a time.",
     "descriptionRuRaw": "Когда выживший погибает, вы получаете жетоны (1шт.). За каждый жетон ваша аура скрывается от убийцы на расстоянии до 20/22/24 метра. Если все остальные выжившие мертвы: вы ремонтируете на 75% быстрее; вы открываете ворота и люк на 50% быстрее. В начале матча у вас больше шансов стать объектом одержимости.",
-    "character": ".All",
+    "character": "All",
     "icon": "/perks/survivor/down-to-the-last.webp",
     "addedAt": "2026-08-19T08:56:09.086Z"
   },
@@ -1084,7 +1084,7 @@
     },
     "description": "\"The growing odds of a successful escape fill you with hope and give you wings.\" Once the Exit Gates are powered, Hope activates for the remainder of the Trial: Grants a 3/4/5 % Haste Status Effect. \"Buckle up, fuckos! Let's roll.\" — Nikki, The Lost Tapes",
     "descriptionRuRaw": "По завершении ремонта всех генераторов вы получаете 3/4/5% эффекта \"Спешка\". \"Спешка\" ускоряет движение убийц и выживших.",
-    "character": ".All",
+    "character": "All",
     "icon": "/perks/survivor/hope.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
@@ -1184,7 +1184,7 @@
     },
     "description": "Unlocks potential in your Aura-reading ability. Whenever any Survivor is hooked, Kindred activates and applies the following effects: The Aura of the Killer is revealed to all Survivors whenever the Killer comes within 8/12/16 metres of the Hook. If you are the Hooked Survivor, the Auras of all Survivors are revealed to each other. If you are not the Hooked Survivor, the Auras of all other Survivors are only revealed to you. \"Be kind to one another, We're all in this together\" — Sujan, The Lost Tapes",
     "descriptionRuRaw": "Пока вы висите на крюке, все выжившие видят ауры друг друга. Пока убийца находится в пределах 8/12/16 метров, они видят и его ауру. Пока на крюк подвешен кто-то другой, вы видите ауры остальных выживших. Если убийца находится от него в пределах 8/12/16 метров, вы видите и ауру убийцы.",
-    "character": ".All",
+    "character": "All",
     "icon": "/perks/survivor/kindred.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
@@ -1269,7 +1269,7 @@
     },
     "description": "Your running is light and soft, making your tracks harder to follow. Reduces the Lifetime of your Scratch Marks by 3/4/5 seconds. Reduces the Spawn chance of patches of Scratch Marks by -60 %, making their spacing inconsistent. \"Take it slow, he knows where you have been... just like I have always said:'live slow and die old'.\" — Dylan, The Lost Tapes",
     "descriptionRuRaw": "Ваши следы-трещины исчезают на 3/4/5 сек. быстрее и кажутся более рассеянными.",
-    "character": ".All",
+    "character": "All",
     "icon": "/perks/survivor/lightweight.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
@@ -1407,7 +1407,7 @@
     },
     "description": "\"It is inconceivable to leave someone behind.\" Once the Exit Gates are powered, No One Left Behind activates: The Auras of all other Survivors are revealed to you. Increases your Action speeds for Healing and Unhooking by 50/75/100 %. Increases the strength and duration of the Haste Status Effect granted to Survivors you unhook by +10 % and +5 seconds respectively: Causes them to benefit from a 20 % Haste Status Effect for 15 seconds. \"Yeah, no shit.But I believe we can outsmart and overthrow him if we work together.Don't be predictable and selfish!\" — Clyde, The Lost Tapes",
     "descriptionRuRaw": "По завершении ремонта всех генераторов: ваша скорость лечения увеличивается на 50/75/100%; вы снимаете выживших с крюков на 50/75/100% быстрее; когда вы снимаете выжившего с крюка, он получает на 10% больше эффекта \"Спешка\"; вы видите ауры остальных выживших. \"Спешка\" ускоряет движение убийц и выживших.",
-    "character": ".All",
+    "character": "All",
     "icon": "/perks/survivor/no-one-left-behind.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
@@ -1532,7 +1532,7 @@
     },
     "description": "Unlocks potential in your Aura-reading ability: The Auras of the following objects are revealed to you within 32/48/64 metres: Closed Chests located in the environment. Items sitting inside opened Chests. Items dropped in the environment. When unlocking or rummaging through Chests, you benefit from the following effect: Increases the chances of finding rarer Items by +50 %. \"The pioneers used to loot these babies for hours.\" — Aizeyu, The Lost Tapes",
     "descriptionRuRaw": "Вы видите ауры запертых сундуков и упавших предметов в радиусе 32/48/64 метров. Когда вы открываете сундук, вероятность найти редкий предмет возрастает на 50%.",
-    "character": ".All",
+    "character": "All",
     "icon": "/perks/survivor/plunderer-s-instinct.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
@@ -1584,7 +1584,7 @@
     },
     "description": "\"You have the undeniable capability to sense danger.\" Projects an invisible cone in the direction you are looking, with a Detection angle of 45 ° and a range of 36 metres: Triggers an audio cue when detecting the Killer within it. Premonition has a cool-down of 60/45/30 seconds. \"I have a bad feeling about this!\"",
     "descriptionRuRaw": "Если убийца находится в пределах 36м и в конусе с углом 45 град., то, повернувшись к нему, вы услышите звуковое оповещение. Перезарядка: 60/45/30 сек..",
-    "character": ".All",
+    "character": "All",
     "icon": "/perks/survivor/premonition.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
@@ -1714,7 +1714,7 @@
     },
     "description": "\"You are motivated in dire situations.\" Whenever you are in the Injured State, Resilience activates: Increases the Action speeds for the following interactions by 3/6/9 %: Blessing or Cleansing Totems. Healing yourself or other Survivors. Opening Exit Gates. Repairing Generators. Sabotaging Hooks. Searching Chests. Unhooking other Survivors. Vaulting Windows. \"Focus, even in these desperate times.\"",
     "descriptionRuRaw": "Когда вы ранены: благословление и очистка тотемов ускоряются на 3/6/9%; лечение ускоряется на 3/6/9%; скорость открытия ворот увеличивается на 3/6/9%; скорость починки увеличивается на 3/6/9%; вы ломаете крюки на 3/6/9% быстрее; вы снимаете выживших с крюка на 3/6/9% быстрее; вы открываете сундуки на 3/6/9% быстрее; вы прыгаете на 3/6/9% быстрее;",
-    "character": ".All",
+    "character": "All",
     "icon": "/perks/survivor/resilience.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
@@ -1857,7 +1857,7 @@
     },
     "description": "You have developed an efficient way to get off Hooks. Grants the ability to attempt +3 additional Self-Unhooks during the first Hook Stage. Increases the chances to successfully perform a Self-Unhook by 2/3/4 %.",
     "descriptionRuRaw": "Вы можете дополнительно попытаться слезть с крюка до 3р., а шанс успеха увеличивается на 2/3/4%.",
-    "character": ".All",
+    "character": "All",
     "icon": "/perks/survivor/slippery-meat.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
@@ -1878,7 +1878,7 @@
       ],
       "quote": "«Не-а» — Энди, «Утерянные записи»"
     },
-    "character": ".All",
+    "character": "All",
     "icon": "/perks/survivor/small-game.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
@@ -1943,7 +1943,7 @@
     },
     "description": "An unnatural tingle warns you of impending doom. Whenever the Killer is within 36 metres of your location and looking at you with a clear Line of Sight, Spine Chill activates: Warns of the Killer's proximity and their potential awareness of your location by lighting its icon. Increases your Action speeds for Blessing, Cleansing, Gate-Opening, Healing, Repairing, Sabotaging, Unhooking, and Unlocking by 2/4/6 %. This effect lingers for 0.5 seconds after the Killer loses Line of Sight or exits the Activation range. \"There is a voice that doesn't use words. Listen..\" — Sassy, The Lost Tapes",
     "descriptionRuRaw": "Когда убийца в радиусе 36м смотрит на вас, вы получаете звуковое уведомление. Пока убийца смотрит на вас с расстояния до 36м, вы: благословляете и очищаете на 2/4/6% быстрее; лечите на 2/4/6% быстрее; открываете ворота на 2/4/6% быстрее; чините генераторы на 2/4/6% быстрее; повреждаете крюки на 2/4/6% быстрее; снимаете выживших с крюков на 2/4/6% быстрее; открываете сундуки на 2/4/6% быстрее.",
-    "character": ".All",
+    "character": "All",
     "icon": "/perks/survivor/spine-chill.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
@@ -2125,7 +2125,7 @@
     },
     "description": "\"You perform at your best when you are under extreme stress.\" Whenever you are in the Injured State, This Is Not Happening activates and you benefit from the following effect: Increases the Success zone for a Great Skill Check by 10/20/30 % for the following interactions: Healing Repairing",
     "descriptionRuRaw": "Пока вы ранены, отличные зоны базовой проверки реакции становятся на 10/20/30% больше.",
-    "character": ".All",
+    "character": "All",
     "icon": "/perks/survivor/this-is-not-happening.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
@@ -2250,7 +2250,7 @@
     },
     "description": "\"Helping others heightens your morale.\" After unhooking another Survivor, We'll Make It activates for 30/60/90 seconds: Increases your Altruistic Healing speed by +100 %. \"I am confident we can all escape in one piece if we help each other.\"",
     "descriptionRuRaw": "После того, как вы снимаете выжившего с крюка, вы лечите остальных на 100% в течение 30/60/90 сек.[1].",
-    "character": ".All",
+    "character": "All",
     "icon": "/perks/survivor/we-ll-make-it.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
@@ -2302,7 +2302,7 @@
     },
     "description": "Using whatever is at hand, you stab your aggressor in an ultimate attempt to escape. After being unhooked or unhooking yourself, Will to Live activates for the next 40/50/60 seconds: When grabbed or picked up by the Killer, succeed a Skill Check to stab the Killer and escape from their grasp. Stuns the Killer for 4 seconds. Causes you to become the next Obsession. Will to Live is deactivated once the Exit Gates are powered.Will to Live is disabled for the remainder of the Trial after use. Will to Live is deactivated prematurely when performing a Conspicuous Action. Increases your chance of becoming the initial Obsession by increasing the default value by +100 %.The Killer can only be obsessed with one Survivor at a time.",
     "descriptionRuRaw": "Когда вас снимают с крюка, но не все генераторы еще отремонтированы, то в течение следующих 40/50/60 сек., когда убийца хватает вас, один раз за матч вы должны пройти особую проверку реакции, и в случае успеха вы: оглушите убийцу на 4 сек.; станете объектом одержимости. Действия, привлекающие внимание, отменяют этот эффект. В начале матча у вас больше шансов стать объектом одержимости.",
-    "character": ".All",
+    "character": "All",
     "icon": "/perks/survivor/will-to-live.webp",
     "addedAt": "2026-08-19T08:56:09.086Z"
   },
@@ -2465,7 +2465,7 @@
     },
     "description": "Unlocks potential in your Aura-reading ability.Whenever a Generator is completed, Bitter Murmur triggers its primary effect: The Auras of any Survivors within 16 metres of that Generator are revealed to you for 5 seconds. Once the last Generator is completed, Bitter Murmur triggers its secondary effect: The Auras of all Survivors are revealed to you for 5/7/10 seconds.",
     "descriptionRuRaw": "По окончании починки генератора вы в течение 5 сек. видите ауры выживших в радиусе 16м от него. Когда все генераторы отремонтированы, ауры всех выживших становятся видны на 5/7/10 сек..",
-    "character": ".All",
+    "character": "All",
     "icon": "/perks/killer/bitter-murmur.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
@@ -2595,7 +2595,7 @@
     },
     "description": "Each time you hook a Survivor other than your Obsession, you gain +1 Token: For as long as the Obsession is alive, all other Survivors suffer from a stack-able 2/2.5/3 % per Token Action Speed penalty to Repairing, Healing, and Sabotaging, up to a maximum of 22/27.5/33 % or 11 Tokens. The Obsession is unaffected by this penalty and instead granted a permanent +33 % Action Speed bonus to Unhooking and Healing other Survivors. You can only be obsessed with one Survivor at a time.",
     "descriptionRuRaw": "Когда вы вешаете на крюк выжившего, которым не одержимы, то получаете жетоны (1). Пока объект одержимости жив, за каждый жетон остальные выжившие: лечатся на 2/2.5/3% медленнее; ремонтируют на 2/2.5/3% медленнее; ломают крюки на 2/2.5/3% медленнее. Объект одержимости: лечит других выживших на 33% быстрее; снимает выживших с крюков на 33% быстрее.",
-    "character": ".All",
+    "character": "All",
     "icon": "/perks/killer/cull-the-weak.webp",
     "addedAt": "2026-08-19T08:56:09.086Z"
   },
@@ -2682,7 +2682,7 @@
     },
     "description": "Unlocks potential in your Aura-reading ability.Whenever a Survivor reads your Aura, Deerstalker activates for the same duration as their Aura-reading action: The Aura of that Survivor is revealed to you. Furthermore, the following effect triggers automatically every 40/35/30 seconds: Your Aura is revealed for 3 seconds to the Survivor with currently the lowest cumulative Chase time.",
     "descriptionRuRaw": "Каждые 40/35/30 сек. ваша аура становится видна выжившему с минимальным временем погони на 3 сек. Когда выживший видит вашу ауру, вы видите его ауру.",
-    "character": ".All",
+    "character": "All",
     "icon": "/perks/killer/deerstalker.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
@@ -2721,7 +2721,7 @@
     },
     "description": "\"Your horrifying emanation strikes at a supernaturally long distance.\" You benefit from the following permanent effect: Increases your Terror Radius by 20/25/30 %.",
     "descriptionRuRaw": "Ваш радиус террора расширяется на 20/25/30%.",
-    "character": ".All",
+    "character": "All",
     "icon": "/perks/killer/distressing.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
@@ -3007,7 +3007,7 @@
     },
     "description": "The first time you hook each Survivor, they become Cursed and a Dull Totem ignites. For 90 seconds, the Cursed Totem is blocked for other Survivors. Cursed Survivors: are afflicted with the Oblivious Status Effect. See the Cursed Totem's Aura within a 24/20/16 metre radius. Oblivious Survivors do not hear the Killer's Terror Radius.",
     "descriptionRuRaw": "Когда вы впервые вешаете каждого выжившего на крюк, на него ложится порча, а тусклый тотем загорается. В течение 90 сек. проклятый тотем блокируется для других выживших. Проклятые выжившие: получают эффект \"Забывчивость\"; в радиусе 24/20/16 м. от проклятого тотема видят его ауру. Забывчивые выжившие не слышат радиус террора убийцы.",
-    "character": ".All",
+    "character": "All",
     "icon": "/perks/killer/hex-fortune-s-fool.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
@@ -3059,7 +3059,7 @@
     },
     "description": "\"A Hex rooting its power on hope.You are animated by the power of your Hex Totem when the Survivors are on the verge of escaping.\" Once the Exit Gates are powered, if there is still a Dull Totem remaining in the environment, Hex: No One Escapes Death activates and lights it: Grants a 2/3/4 % Haste Status Effect. Causes all Survivors to suffer from the Exposed Status Effect. Once the Status Effect is revealed to Survivors, Hex: No One Escapes Death triggers the following effect: The Aura of its Hex Totem is revealed to all Survivors within 4 metres. This range gradually expands to 24 metres over the course of 30 seconds. Hex: No One Escapes Death remains inactive if no Dull Totems are available. The Hex Effects persist until the Hex Totem is either blessed or cleansed by a Survivor, disabling it for the remainder of the Trial. \"And the beast became faster and more powerful as if The Entity's shadowy whips were lashing at its back.\"",
     "descriptionRuRaw": "По завершении ремонта всех генераторов загорается тусклый тотем: выжившие получают эффект \"Уязвимость\"; вы получаете 2/3/4% эффекта \"Спешка. Выжившие видят ауру проклятого тотема с расстояния 4м. Через 30 сек. дистанция увеличивается до 24м. \"Спешка\" ускоряет движение убийц и выживших. Уязвимые выжившие получают смертельные ранения от базовых атак, даже если полностью здоровы.",
-    "character": ".All",
+    "character": "All",
     "icon": "/perks/killer/hex-no-one-escapes-death.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
@@ -3163,7 +3163,7 @@
     },
     "description": "\"A Hex rooting its power on hope.The false hope of Survivors fills you with excitement and strengthens your Totems.\" Start the Trial with 5 Tokens, one for each Totem located in the environment: Reduces the Action speeds for Blessing and Cleansing by a stack-able 8/9/10 % per Token, up to a maximum of 40/45/50 %. Hex: Thrill of the Hunt loses -1 Token whenever a Totem is cleansed. The Hex Effects persist until the Hex Totem is either blessed or cleansed by a Survivor, disabling it for the remainder of the Trial.",
     "descriptionRuRaw": "В начале матча загорается тусклый тотем. За каждый оставшийся тусклый или проклятый тотемы вы получаете жетоны (1 шт.). За каждый жетон скорость благословения и очищения тотемов снижается на 8/10/12%.",
-    "character": ".All",
+    "character": "All",
     "icon": "/perks/killer/hex-thrill-of-the-hunt.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
@@ -3293,7 +3293,7 @@
     },
     "description": "Unlocks the stealth ability.After standing still for 3/2/1 second(s), Insidious activates for as long as you remain stationary: Grants the Undetectable Status Effect. Insidious deactivates once you start moving again.",
     "descriptionRuRaw": "Если вы бездействуете 3/2/1 сек., то получаете эффект \"Незаметность\", пока не совершите действие. Незаметные убийцы: не имеют радиуса террора и красного свечения; выжившие не видят их ауры.",
-    "character": ".All",
+    "character": "All",
     "icon": "/perks/killer/insidious.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
@@ -3306,7 +3306,7 @@
     },
     "description": "\"Your powerful grasp on Survivors causes escapes to be nearly impossible.\" While carrying a Survivor, they suffer from the following effects: Reduces the strength of the Involuntary Strafing caused by their wiggling by -75 %. Increases the time required to break free from your grasp by 4/8/12 %.",
     "descriptionRuRaw": "Когда вы несете выжившего: он вырывается на 4/8/12% медленнее; он вырывается на 75% слабее.",
-    "character": ".All",
+    "character": "All",
     "icon": "/perks/killer/iron-grasp.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
@@ -3495,7 +3495,7 @@
     },
     "description": "\"You induce mental suffering by crushing any hope of escape.\" Each time a Generator is completed, No Holds Barred calls upon The Entity for the following effects: Blocks the Generator with the most Progression for 15/20/25 seconds. The Aura of the Blocked Generator is highlighted to you in white.",
     "descriptionRuRaw": "По завершении ремонта генератора, генератор с наибольшим прогрессом блокируется на 15/20/25 сек..",
-    "character": ".All",
+    "character": "All",
     "icon": "/perks/killer/no-holds-barred.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
@@ -3755,7 +3755,7 @@
     },
     "description": "\"Your fervent care of the Hooks found in the Basement has aroused The Entity's interest.\" At the start of the Trial, the 4 Hooks located inside the Basement and an additional 4 Hooks located throughout the Trial Grounds are all changed into Scourge Hooks: The Auras of Scourge Hooks are highlighted to you in white. Whenever you are farther than 24 metres from a Survivor hooked onto a Scourge Hook, the following effect applies: Accelerates their Sacrifice Process by 10/15/20 %. \"Then you will know that there is no escape. When hanging in the depths, you face the dark one.\"",
     "descriptionRuRaw": "В начале матча: 4 случайных крюка становятся секущими:. крюки в подвале становятся секущими. Пока вы в радиусе не менее 24м от выжившего на секущем крюке, жертвоприношение происходит на 10/15/20% быстрее.",
-    "character": ".All",
+    "character": "All",
     "icon": "/perks/killer/scourge-hook-monstrous-shrine.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
@@ -3781,7 +3781,7 @@
     },
     "description": "\"You are the bringer of sweet pain.\" At the start of the Trial, 4 Hooks in the environment are changed into Scourge Hooks: The Auras of these Scourge Hooks are highlighted in white. Each time a Survivor is unhooked from a Scourge Hook, the following effects apply: Causes that Survivor to suffer from the Haemorrhage Status Effect for 90 seconds. After the first time that Survivor is healed back to full health, they suffer from the following effect until they are injured again by any means: Reduces their Action speeds for Healing and Repairing by 10/13/16 %.",
     "descriptionRuRaw": "В начале матча 4 случайных крюка становятся секущими. Когда выжившего снимают с секущего крюка: он получает эффект \"Кровотечение\" на 90 сек.; он получает эффект \"Травма\" на 90 сек. когда этого выжившего лечат, до следующего получения урона лечение и ремонт замедляются на 10/13/16%. Кровоточащие выжившие: теряют прогресс лечения, если их не лечат; оставляют больше луж крови. Травмированные выжившие лечатся медленнее.",
-    "character": ".All",
+    "character": "All",
     "icon": "/perks/killer/scourge-hook-weeping-wounds.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
@@ -3807,7 +3807,7 @@
     },
     "description": "Losing your Obsession in a chase causes See How They Run to gain +1 Token, up to a maximum of 3 Tokens, and performing a Basic or Special Attack with the potential to damage a Survivor causes it to lose -1 Token.While having at least 1 Token, you benefit from the following effect: Grants a stack-able 3/4/5 % Haste Status Effect per Token, up to a maximum of 9/12/15 %. See How They Run has a cool-down of 10 seconds between gaining additional Tokens. You can only be obsessed with one Survivor at a time.",
     "descriptionRuRaw": "Прекращая преследование объекта одержимости, вы получаете жетоны (1 шт., максимум - 3). Перезарядка: 10 сек. За каждый жетон вы получаете 3/4/5% эффекта \"Спешка\". На каждую атаку вы тратите жетоны (1шт.). \"Спешка\" ускоряет движение убийц и выживших.",
-    "character": ".All",
+    "character": "All",
     "icon": "/perks/killer/see-how-they-run.webp",
     "addedAt": "2026-08-19T08:56:09.086Z"
   },
@@ -3846,7 +3846,7 @@
     },
     "description": "To capture your prey, you must first extinguish their hope. Instead of snuffing Boon Totems you destroy them. Destroying a Boon Totem this way reveals the Auras of all Survivors that were within its range at that moment for 6/7/8 seconds. \"Nothing is permanent here. Nothing except our endless perdition.\" — Unknown, Notebook",
     "descriptionRuRaw": "Когда гасите дарующий тотем: вы видите ауры всех выживших в его области действия в течение 6/7/8 сек.; он уничтожается.",
-    "character": ".All",
+    "character": "All",
     "icon": "/perks/killer/shattered-hope.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
@@ -3872,7 +3872,7 @@
     },
     "description": "\"You know where to hit to make them bleed.\" Survivors hit with your vicious Basic Attack suffer from the following effects for 70/80/90 seconds: Inflicts the Haemorrhage and Mangled Status Effects. Modifies the potency of Haemorrhage: Increases the Spawn frequency of Pools of Blood by 50/75/100 %. Increases the Regression rate of partial Healing progression by +25 %. \"It is in its sadistic nature. There is no swift kill as it delights in the obscene spectacle of our agonising suffering.\"",
     "descriptionRuRaw": "Когда вы попадаете по выжившему базовой атакой, тот: получает эффект \"Кровотечение\" на 90 сек.; получает эффект \"Травма\" на 90 сек. У выживших с эффектом \"Кровотечение\" прогресс лечения снижается на 15/20/25% быстрее. Травмированные выжившие лечатся медленнее. Кровоточащие выжившие: теряют прогресс лечения, если их не лечат; оставляют больше луж крови.",
-    "character": ".All",
+    "character": "All",
     "icon": "/perks/killer/sloppy-butcher.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
@@ -3885,7 +3885,7 @@
     },
     "description": "\"Allows the Crows found in the environment to directly communicate with you.\" Whenever a Survivor startles a Crow within 20/28/36 metres of your location, Spies from the Shadows triggers its effect: Alerts you with a unique Loud Noise Notification in the shape of a Crow. Spies from the Shadows has a cool-down of 5 seconds between alerts. \"In the shadows they torment, scarring our minds with each scream.\"",
     "descriptionRuRaw": "Когда выживший спугивает ворону в пределах 20/28/36 м. от вас, вы получаете уведомление. Перезарядка: 5 сек.",
-    "character": ".All",
+    "character": "All",
     "icon": "/perks/killer/spies-from-the-shadows.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
@@ -4152,7 +4152,7 @@
     },
     "description": "\"You recuperate faster from missed attacks made with your main weapon.\" Basic Attacks benefit from the following effect: Reduces the Cool-down time of missed attacks by 20/25/30 %.",
     "descriptionRuRaw": "Если вы промахиваетесь базовой атакой, перезарядка ускоряется на 20/25/30%.",
-    "character": ".All",
+    "character": "All",
     "icon": "/perks/killer/unrelenting.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
@@ -4191,7 +4191,7 @@
     },
     "description": "\"You have a rudimentary understanding of The Entity's voice.\" Whenever any Survivor is within 48/40/32 metres of your location, Whispers triggers its effect: Causes you to hear the sporadic whispers of The Entity, indicating a Survivor's presence. \"It is unclear as to the motivations of The Fog, but it is undeniable that it often takes the beast's side.\" — Unknown, Notebook",
     "descriptionRuRaw": "В радиусе 48/40/32 м. от выжившего вы слышите беспорядочный шепот.",
-    "character": ".All",
+    "character": "All",
     "icon": "/perks/killer/whispers.webp",
     "addedAt": "2020-01-01T00:00:00.000Z"
   },

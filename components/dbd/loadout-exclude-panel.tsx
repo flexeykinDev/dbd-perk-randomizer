@@ -7,6 +7,7 @@ import type { ItemType, LoadoutPiece, PerkRole } from "@/lib/types";
 import { getLoadoutPoolForRole, ITEM_TYPE_LABEL } from "@/lib/loadout";
 import { withBasePath } from "@/lib/asset-path";
 import { cn } from "@/lib/cn";
+import { GENERAL_CHARACTER } from "@/lib/types";
 import { ROLE_COLOR } from "@/lib/role-color";
 import { getCharacterName } from "@/lib/character-name";
 import { useT } from "@/lib/i18n";
@@ -97,7 +98,7 @@ function charactersFor(pool: LoadoutPiece[]): { name: string; count: number }[] 
   const counts = new Map<string, number>();
   for (const piece of pool) {
     if (piece.kind !== "addon") continue;
-    if (!piece.character || piece.character === ".All") continue;
+    if (!piece.character || piece.character === GENERAL_CHARACTER) continue;
     counts.set(piece.character, (counts.get(piece.character) ?? 0) + 1);
   }
   return [...counts.entries()]

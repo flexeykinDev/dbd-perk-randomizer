@@ -134,3 +134,23 @@ export interface Loadout {
  *  at once. Lives here rather than in the board because the keyboard
  *  shortcuts branch on it too (lib/use-board-shortcuts.ts). */
 export type BuildMode = "perks" | "loadout" | "all";
+
+/** The value `character` carries for content that belongs to everybody
+ *  rather than to one survivor or killer — base-game perks, and add-ons
+ *  that fit any item of their type.
+ *
+ *  Both wikis write this as `.All`, with a leading dot that exists purely
+ *  to sort those rows above the named characters. That dot used to reach
+ *  the shipped data and every comparison against it, so a sorting artifact
+ *  was doing the work of a sentinel in six different files. The scrapers
+ *  now normalise it here on the way in, and everything downstream compares
+ *  against this constant instead of repeating a magic string.
+ *
+ *  Deliberately not `null` or absent: `character` is a required string
+ *  everywhere it is read, and making it optional would push a null check
+ *  into every call site to express something no caller actually cares
+ *  about. */
+export const GENERAL_CHARACTER = "All";
+
+/** What the wikis write before normalisation — see GENERAL_CHARACTER. */
+export const WIKI_GENERAL_CHARACTER = ".All";
