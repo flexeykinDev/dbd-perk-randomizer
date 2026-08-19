@@ -62,7 +62,40 @@ export function resolveImageUrl(
 ): string {
   if (!raw) return "";
   const url = raw.split("/revision/")[0];
-  if (url.startsWith("//")) return `https:${url}`;
-  if (url.startsWith("/")) return `${origin}${url}`;
-  return url;
+  const absolute = url.startsWith("//")
+    ? `https:${url}`
+    : url.startsWith("/")
+      ? `${origin}${url}`
+      : url;
+  return preferFullSize(absolute);
+}
+
+/**
+ * Points a MediaWiki thumbnail URL at the file it is a thumbnail of.
+ *
+ * The `<img>` in a wiki table is sized for the wiki's own layout — on
+ * wiki.gg that is a 96px thumb:
+ *
+ *   /images/thumb/IconPerks_adrenaline.png/96px-IconPerks_adrenaline.png
+ *   /images/IconPerks_adrenaline.png                       <- 256x256
+ *
+ * Taking the thumb at face value meant every perk and add-on icon carried
+ * 96 pixels of real detail and was then *enlarged* to 128 on the way to
+ * disk, which is worse than useless: it costs bytes to store blur. The
+ * originals have been 256x256 the whole time, which is what the character
+ * portraits already used.
+ *
+ * Requesting a specific larger thumb (`256px-…`) would work equally well
+ * today and break the moment a file's original is smaller than the number
+ * asked for. Asking for the original and refusing to enlarge it (see
+ * ICON_SIZE's resize in both scrapers) can't be wrong for any file.
+ */
+export function preferFullSize(url: string): string {
+  // Only MediaWiki's own thumb layout. Fandom uses a different scheme
+  // (`/scale-to-width-down/…`) and is not the live source; leaving it
+  // alone keeps this to a change that can be reasoned about.
+  const match = /^(.*)\/images\/thumb\/(.+?)\/\d+px-[^/?]+(\?.*)?$/.exec(url);
+  if (!match) return url;
+  const [, host, file, query = ""] = match;
+  return `${host}/images/${file}${query}`;
 }

@@ -8,10 +8,10 @@
     },
     "character": "Kwon",
     "icon": "/perks/survivor/a-place-for-us.webp",
-    "addedAt": "2026-08-17T19:11:57.577Z",
     "tags": [
       "healing"
-    ]
+    ],
+    "addedAt": "2026-08-17T19:11:57.577Z"
   },
   {
     "slug": "ace-in-the-hole",
@@ -22,10 +22,10 @@
     },
     "character": "Ace",
     "icon": "/perks/survivor/ace-in-the-hole.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "items"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "adrenaline",
@@ -36,11 +36,11 @@
     },
     "character": "Meg",
     "icon": "/perks/survivor/adrenaline.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "healing",
       "exhaustion"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "aftercare",
@@ -51,11 +51,11 @@
     },
     "character": "Jeff",
     "icon": "/perks/survivor/aftercare.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "healing",
       "aura"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "alert",
@@ -66,10 +66,10 @@
     },
     "character": "Feng",
     "icon": "/perks/survivor/alert.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "any-means-necessary",
@@ -80,10 +80,10 @@
     },
     "character": "Yui",
     "icon": "/perks/survivor/any-means-necessary.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "apocalyptic-ingenuity",
@@ -94,10 +94,10 @@
     },
     "character": "Rick",
     "icon": "/perks/survivor/apocalyptic-ingenuity.webp",
-    "addedAt": "2026-08-17T19:11:57.577Z",
     "tags": [
       "aura"
-    ]
+    ],
+    "addedAt": "2026-08-17T19:11:57.577Z"
   },
   {
     "slug": "appraisal",
@@ -108,10 +108,10 @@
     },
     "character": "Élodie",
     "icon": "/perks/survivor/appraisal.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "items"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "autodidact",
@@ -122,10 +122,10 @@
     },
     "character": "Adam",
     "icon": "/perks/survivor/autodidact.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "healing"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "babysitter",
@@ -136,12 +136,12 @@
     },
     "character": "Steve",
     "icon": "/perks/survivor/babysitter.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura",
       "stealth",
       "unhooking"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "background-player",
@@ -152,10 +152,10 @@
     },
     "character": "Renato",
     "icon": "/perks/survivor/background-player.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "exhaustion"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "bada-bada-boom",
@@ -166,11 +166,11 @@
     },
     "character": "Dustin",
     "icon": "/perks/survivor/bada-bada-boom.webp",
-    "addedAt": "2026-08-17T19:11:57.577Z",
     "tags": [
       "generator",
       "aura"
-    ]
+    ],
+    "addedAt": "2026-08-17T19:11:57.577Z"
   },
   {
     "slug": "balanced-landing",
@@ -181,10 +181,10 @@
     },
     "character": "Nea",
     "icon": "/perks/survivor/balanced-landing.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "exhaustion"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "bardic-inspiration",
@@ -195,8 +195,8 @@
     },
     "character": "Aestri",
     "icon": "/perks/survivor/bardic-inspiration.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "better-together",
@@ -207,11 +207,11 @@
     },
     "character": "Nancy",
     "icon": "/perks/survivor/better-together.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "generator",
       "aura"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "better-than-new",
@@ -222,10 +222,10 @@
     },
     "character": "Rebecca",
     "icon": "/perks/survivor/better-than-new.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "healing"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "bite-the-bullet",
@@ -236,10 +236,10 @@
     },
     "character": "Leon",
     "icon": "/perks/survivor/bite-the-bullet.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "healing"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "blast-mine",
@@ -250,11 +250,11 @@
     },
     "character": "Jill",
     "icon": "/perks/survivor/blast-mine.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "generator",
       "aura"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "blood-pact",
@@ -265,11 +265,11 @@
     },
     "character": "Cheryl",
     "icon": "/perks/survivor/blood-pact.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "healing",
       "aura"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "blood-rush",
@@ -280,11 +280,11 @@
     },
     "character": "Renato",
     "icon": "/perks/survivor/blood-rush.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "exhaustion",
       "unhooking"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "boil-over",
@@ -295,11 +295,11 @@
     },
     "character": "Kate",
     "icon": "/perks/survivor/boil-over.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura",
       "unhooking"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "bond",
@@ -310,10 +310,10 @@
     },
     "character": "Dwight",
     "icon": "/perks/survivor/bond.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "boon-circle-of-healing",
@@ -324,12 +324,12 @@
     },
     "character": "Mikaela",
     "icon": "/perks/survivor/boon-circle-of-healing.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "healing",
       "aura",
       "totems"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "boon-dark-theory",
@@ -340,10 +340,10 @@
     },
     "character": "Yoichi",
     "icon": "/perks/survivor/boon-dark-theory.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "totems"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "boon-exponential",
@@ -354,10 +354,10 @@
     },
     "character": "Jonah",
     "icon": "/perks/survivor/boon-exponential.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "totems"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "boon-illumination",
@@ -368,12 +368,12 @@
     },
     "character": "Alan",
     "icon": "/perks/survivor/boon-illumination.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "generator",
       "aura",
       "totems"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "boon-shadow-step",
@@ -384,12 +384,12 @@
     },
     "character": "Mikaela",
     "icon": "/perks/survivor/boon-shadow-step.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura",
       "stealth",
       "totems"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "borrowed-time",
@@ -400,10 +400,10 @@
     },
     "character": "Bill",
     "icon": "/perks/survivor/borrowed-time.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "unhooking"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "botany-knowledge",
@@ -414,10 +414,10 @@
     },
     "character": "Claudette",
     "icon": "/perks/survivor/botany-knowledge.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "healing"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "bound-by-obsession",
@@ -428,12 +428,12 @@
     },
     "character": "All",
     "icon": "/perks/survivor/bound-by-obsession.webp",
-    "addedAt": "2026-08-19T08:56:09.086Z",
     "tags": [
       "generator",
       "healing",
       "aura"
-    ]
+    ],
+    "addedAt": "2026-08-19T08:56:09.086Z"
   },
   {
     "slug": "breakdown",
@@ -444,13 +444,13 @@
     },
     "character": "Jeff",
     "icon": "/perks/survivor/breakdown.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "generator",
       "aura",
       "unhooking",
       "items"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "breakout",
@@ -461,8 +461,8 @@
     },
     "character": "Yui",
     "icon": "/perks/survivor/breakout.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "buckle-up",
@@ -473,13 +473,13 @@
     },
     "character": "Ash",
     "icon": "/perks/survivor/buckle-up.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "healing",
       "aura",
       "exhaustion",
       "stealth"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "built-to-last",
@@ -490,10 +490,10 @@
     },
     "character": "Felix",
     "icon": "/perks/survivor/built-to-last.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "items"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "calm-spirit",
@@ -504,10 +504,10 @@
     },
     "character": "Jake",
     "icon": "/perks/survivor/calm-spirit.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "totems"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "camaraderie",
@@ -518,10 +518,10 @@
     },
     "character": "Steve",
     "icon": "/perks/survivor/camaraderie.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "unhooking"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "champion-of-light",
@@ -532,8 +532,8 @@
     },
     "character": "Alan",
     "icon": "/perks/survivor/champion-of-light.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "change-of-plan",
@@ -544,11 +544,11 @@
     },
     "character": "Dustin",
     "icon": "/perks/survivor/change-of-plan.webp",
-    "addedAt": "2026-08-17T19:11:57.577Z",
     "tags": [
       "generator",
       "items"
-    ]
+    ],
+    "addedAt": "2026-08-17T19:11:57.577Z"
   },
   {
     "slug": "chemical-trap",
@@ -559,11 +559,11 @@
     },
     "character": "Ellen",
     "icon": "/perks/survivor/chemical-trap.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "generator",
       "aura"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "clairvoyance",
@@ -574,13 +574,13 @@
     },
     "character": "Mikaela",
     "icon": "/perks/survivor/clairvoyance.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "generator",
       "aura",
       "totems",
       "items"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "clean-break",
@@ -591,10 +591,10 @@
     },
     "character": "Taurie",
     "icon": "/perks/survivor/clean-break.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "healing"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "come-and-get-me",
@@ -605,12 +605,12 @@
     },
     "character": "Rick",
     "icon": "/perks/survivor/come-and-get-me.webp",
-    "addedAt": "2026-08-17T19:11:57.577Z",
     "tags": [
       "aura",
       "stealth",
       "unhooking"
-    ]
+    ],
+    "addedAt": "2026-08-17T19:11:57.577Z"
   },
   {
     "slug": "conviction",
@@ -621,10 +621,10 @@
     },
     "character": "Michonne",
     "icon": "/perks/survivor/conviction.webp",
-    "addedAt": "2026-08-17T19:11:57.577Z",
     "tags": [
       "healing"
-    ]
+    ],
+    "addedAt": "2026-08-17T19:11:57.577Z"
   },
   {
     "slug": "corrective-action",
@@ -635,10 +635,10 @@
     },
     "character": "Jonah",
     "icon": "/perks/survivor/corrective-action.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "counterforce",
@@ -649,11 +649,11 @@
     },
     "character": "Jill",
     "icon": "/perks/survivor/counterforce.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura",
       "totems"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "cross-examination",
@@ -664,10 +664,10 @@
     },
     "character": "Shane",
     "icon": "/perks/survivor/cross-examination.webp",
-    "addedAt": "2026-08-17T19:11:57.577Z",
     "tags": [
       "stealth"
-    ]
+    ],
+    "addedAt": "2026-08-17T19:11:57.577Z"
   },
   {
     "slug": "cut-loose",
@@ -678,8 +678,8 @@
     },
     "character": "Thalita",
     "icon": "/perks/survivor/cut-loose.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "dance-with-me",
@@ -690,10 +690,10 @@
     },
     "character": "Kate",
     "icon": "/perks/survivor/dance-with-me.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "stealth"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "dark-sense",
@@ -704,11 +704,11 @@
     },
     "character": "All",
     "icon": "/perks/survivor/dark-sense.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "generator",
       "aura"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "dead-hard",
@@ -719,11 +719,11 @@
     },
     "character": "David King",
     "icon": "/perks/survivor/dead-hard.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "exhaustion",
       "unhooking"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "deadline",
@@ -734,11 +734,11 @@
     },
     "character": "Alan",
     "icon": "/perks/survivor/deadline.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "generator",
       "healing"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "deception",
@@ -749,10 +749,10 @@
     },
     "character": "Élodie",
     "icon": "/perks/survivor/deception.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "stealth"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "deja-vu",
@@ -763,11 +763,11 @@
     },
     "character": "All",
     "icon": "/perks/survivor/deja-vu.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "generator",
       "aura"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "deliverance",
@@ -778,10 +778,10 @@
     },
     "character": "Adam",
     "icon": "/perks/survivor/deliverance.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "unhooking"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "desperate-measures",
@@ -792,11 +792,11 @@
     },
     "character": "Felix",
     "icon": "/perks/survivor/desperate-measures.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "healing",
       "unhooking"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "detective-s-hunch",
@@ -807,12 +807,12 @@
     },
     "character": "David Tapp",
     "icon": "/perks/survivor/detective-s-hunch.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "generator",
       "aura",
       "totems"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "distortion",
@@ -823,11 +823,11 @@
     },
     "character": "Jeff",
     "icon": "/perks/survivor/distortion.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura",
       "stealth"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "diversion",
@@ -838,10 +838,10 @@
     },
     "character": "Adam",
     "icon": "/perks/survivor/diversion.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "stealth"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "do-no-harm",
@@ -852,10 +852,10 @@
     },
     "character": "Orela",
     "icon": "/perks/survivor/do-no-harm.webp",
-    "addedAt": "2026-08-17T19:11:57.577Z",
     "tags": [
       "healing"
-    ]
+    ],
+    "addedAt": "2026-08-17T19:11:57.577Z"
   },
   {
     "slug": "down-to-the-last",
@@ -866,11 +866,11 @@
     },
     "character": "All",
     "icon": "/perks/survivor/down-to-the-last.webp",
-    "addedAt": "2026-08-19T08:56:09.086Z",
     "tags": [
       "generator",
       "aura"
-    ]
+    ],
+    "addedAt": "2026-08-19T08:56:09.086Z"
   },
   {
     "slug": "dramaturgy",
@@ -881,11 +881,11 @@
     },
     "character": "Nicolas",
     "icon": "/perks/survivor/dramaturgy.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "exhaustion",
       "items"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "duty-of-care",
@@ -896,8 +896,8 @@
     },
     "character": "Orela",
     "icon": "/perks/survivor/duty-of-care.webp",
-    "addedAt": "2026-08-17T19:11:57.577Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2026-08-17T19:11:57.577Z"
   },
   {
     "slug": "empathic-connection",
@@ -908,11 +908,11 @@
     },
     "character": "Yoichi",
     "icon": "/perks/survivor/empathic-connection.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "healing",
       "aura"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "empathy",
@@ -923,10 +923,10 @@
     },
     "character": "Claudette",
     "icon": "/perks/survivor/empathy.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "extrasensory-perception",
@@ -937,12 +937,12 @@
     },
     "character": "Eleven",
     "icon": "/perks/survivor/extrasensory-perception.webp",
-    "addedAt": "2026-08-17T19:11:57.577Z",
     "tags": [
       "generator",
       "aura",
       "totems"
-    ]
+    ],
+    "addedAt": "2026-08-17T19:11:57.577Z"
   },
   {
     "slug": "exultation",
@@ -953,10 +953,10 @@
     },
     "character": "Trevor",
     "icon": "/perks/survivor/exultation.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "items"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "eyes-of-belmont",
@@ -967,11 +967,11 @@
     },
     "character": "Trevor",
     "icon": "/perks/survivor/eyes-of-belmont.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "generator",
       "aura"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "fast-track",
@@ -982,12 +982,12 @@
     },
     "character": "Yun-Jin",
     "icon": "/perks/survivor/fast-track.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "generator",
       "unhooking",
       "items"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "finesse",
@@ -998,8 +998,8 @@
     },
     "character": "Lara",
     "icon": "/perks/survivor/finesse.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "five-moves-ahead",
@@ -1010,11 +1010,11 @@
     },
     "character": "Kwon",
     "icon": "/perks/survivor/five-moves-ahead.webp",
-    "addedAt": "2026-08-17T19:11:57.577Z",
     "tags": [
       "aura",
       "stealth"
-    ]
+    ],
+    "addedAt": "2026-08-17T19:11:57.577Z"
   },
   {
     "slug": "fixated",
@@ -1025,10 +1025,10 @@
     },
     "character": "Nancy",
     "icon": "/perks/survivor/fixated.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "stealth"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "flashbang",
@@ -1039,10 +1039,10 @@
     },
     "character": "Leon",
     "icon": "/perks/survivor/flashbang.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "generator"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "flip-flop",
@@ -1053,10 +1053,10 @@
     },
     "character": "Ash",
     "icon": "/perks/survivor/flip-flop.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "items"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "flow-state",
@@ -1067,13 +1067,13 @@
     },
     "character": "Kwon",
     "icon": "/perks/survivor/flow-state.webp",
-    "addedAt": "2026-08-17T19:11:57.577Z",
     "tags": [
       "generator",
       "healing",
       "totems",
       "unhooking"
-    ]
+    ],
+    "addedAt": "2026-08-17T19:11:57.577Z"
   },
   {
     "slug": "fogwise",
@@ -1084,11 +1084,11 @@
     },
     "character": "Vittorio",
     "icon": "/perks/survivor/fogwise.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "generator",
       "aura"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "for-the-people",
@@ -1099,11 +1099,11 @@
     },
     "character": "Zarina",
     "icon": "/perks/survivor/for-the-people.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "healing",
       "unhooking"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "friendly-competition",
@@ -1114,10 +1114,10 @@
     },
     "character": "Thalita",
     "icon": "/perks/survivor/friendly-competition.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "generator"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "ghost-notes",
@@ -1128,11 +1128,11 @@
     },
     "character": "Vee",
     "icon": "/perks/survivor/ghost-notes.webp",
-    "addedAt": "2026-08-17T19:11:57.577Z",
     "tags": [
       "exhaustion",
       "stealth"
-    ]
+    ],
+    "addedAt": "2026-08-17T19:11:57.577Z"
   },
   {
     "slug": "hardened",
@@ -1143,11 +1143,11 @@
     },
     "character": "Lara",
     "icon": "/perks/survivor/hardened.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura",
       "totems"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "head-on",
@@ -1158,10 +1158,10 @@
     },
     "character": "Jane",
     "icon": "/perks/survivor/head-on.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "exhaustion"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "hope",
@@ -1172,8 +1172,8 @@
     },
     "character": "All",
     "icon": "/perks/survivor/hope.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "hyperfocus",
@@ -1184,11 +1184,11 @@
     },
     "character": "Rebecca",
     "icon": "/perks/survivor/hyperfocus.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "generator",
       "healing"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "inner-focus",
@@ -1199,11 +1199,11 @@
     },
     "character": "Haddie",
     "icon": "/perks/survivor/inner-focus.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura",
       "stealth"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "inner-strength",
@@ -1214,11 +1214,11 @@
     },
     "character": "Nancy",
     "icon": "/perks/survivor/inner-strength.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "healing",
       "totems"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "invocation-treacherous-crows",
@@ -1229,11 +1229,11 @@
     },
     "character": "Taurie",
     "icon": "/perks/survivor/invocation-treacherous-crows.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura",
       "stealth"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "invocation-weaving-spiders",
@@ -1244,12 +1244,12 @@
     },
     "character": "Sable",
     "icon": "/perks/survivor/invocation-weaving-spiders.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "generator",
       "aura",
       "items"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "iron-will",
@@ -1260,10 +1260,10 @@
     },
     "character": "Jake",
     "icon": "/perks/survivor/iron-will.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "exhaustion"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "kindred",
@@ -1274,10 +1274,10 @@
     },
     "character": "All",
     "icon": "/perks/survivor/kindred.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "last-stand",
@@ -1288,10 +1288,10 @@
     },
     "character": "Michonne",
     "icon": "/perks/survivor/last-stand.webp",
-    "addedAt": "2026-08-17T19:11:57.577Z",
     "tags": [
       "stealth"
-    ]
+    ],
+    "addedAt": "2026-08-17T19:11:57.577Z"
   },
   {
     "slug": "leader",
@@ -1302,11 +1302,11 @@
     },
     "character": "Dwight",
     "icon": "/perks/survivor/leader.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "healing",
       "unhooking"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "left-behind",
@@ -1317,10 +1317,10 @@
     },
     "character": "Bill",
     "icon": "/perks/survivor/left-behind.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "lend-a-hand",
@@ -1331,12 +1331,12 @@
     },
     "character": "Shane",
     "icon": "/perks/survivor/lend-a-hand.webp",
-    "addedAt": "2026-08-17T19:11:57.577Z",
     "tags": [
       "healing",
       "totems",
       "items"
-    ]
+    ],
+    "addedAt": "2026-08-17T19:11:57.577Z"
   },
   {
     "slug": "light-footed",
@@ -1347,10 +1347,10 @@
     },
     "character": "Ellen",
     "icon": "/perks/survivor/light-footed.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "stealth"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "lightweight",
@@ -1361,10 +1361,10 @@
     },
     "character": "All",
     "icon": "/perks/survivor/lightweight.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "stealth"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "lithe",
@@ -1375,10 +1375,10 @@
     },
     "character": "Feng",
     "icon": "/perks/survivor/lithe.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "exhaustion"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "low-profile",
@@ -1389,10 +1389,10 @@
     },
     "character": "Ada",
     "icon": "/perks/survivor/low-profile.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "stealth"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "lucky-break",
@@ -1403,11 +1403,11 @@
     },
     "character": "Yui",
     "icon": "/perks/survivor/lucky-break.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "healing",
       "stealth"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "lucky-star",
@@ -1418,11 +1418,11 @@
     },
     "character": "Ellen",
     "icon": "/perks/survivor/lucky-star.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "generator",
       "aura"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "made-for-this",
@@ -1433,11 +1433,11 @@
     },
     "character": "Gabriel",
     "icon": "/perks/survivor/made-for-this.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "healing",
       "unhooking"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "mettle-of-man",
@@ -1448,11 +1448,11 @@
     },
     "character": "Ash",
     "icon": "/perks/survivor/mettle-of-man.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "healing",
       "aura"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "mirrored-illusion",
@@ -1463,11 +1463,11 @@
     },
     "character": "Aestri",
     "icon": "/perks/survivor/mirrored-illusion.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "generator",
       "totems"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "moment-of-glory",
@@ -1478,10 +1478,10 @@
     },
     "character": "Trevor",
     "icon": "/perks/survivor/moment-of-glory.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "healing"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "no-mither",
@@ -1492,8 +1492,8 @@
     },
     "character": "David King",
     "icon": "/perks/survivor/no-mither.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "no-one-left-behind",
@@ -1504,12 +1504,12 @@
     },
     "character": "All",
     "icon": "/perks/survivor/no-one-left-behind.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "healing",
       "aura",
       "unhooking"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "off-the-record",
@@ -1520,12 +1520,12 @@
     },
     "character": "Zarina",
     "icon": "/perks/survivor/off-the-record.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura",
       "stealth",
       "unhooking"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "one-two-three-four",
@@ -1536,11 +1536,11 @@
     },
     "character": "Vee",
     "icon": "/perks/survivor/one-two-three-four.webp",
-    "addedAt": "2026-08-17T19:11:57.577Z",
     "tags": [
       "generator",
       "healing"
-    ]
+    ],
+    "addedAt": "2026-08-17T19:11:57.577Z"
   },
   {
     "slug": "open-handed",
@@ -1551,10 +1551,10 @@
     },
     "character": "Ace",
     "icon": "/perks/survivor/open-handed.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "overcome",
@@ -1565,10 +1565,10 @@
     },
     "character": "Jonah",
     "icon": "/perks/survivor/overcome.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "exhaustion"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "overzealous",
@@ -1579,11 +1579,11 @@
     },
     "character": "Haddie",
     "icon": "/perks/survivor/overzealous.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "generator",
       "totems"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "parental-guidance",
@@ -1594,10 +1594,10 @@
     },
     "character": "Yoichi",
     "icon": "/perks/survivor/parental-guidance.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "stealth"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "pharmacy",
@@ -1608,8 +1608,8 @@
     },
     "character": "Quentin",
     "icon": "/perks/survivor/pharmacy.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "plot-twist",
@@ -1620,10 +1620,10 @@
     },
     "character": "Nicolas",
     "icon": "/perks/survivor/plot-twist.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "healing"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "plunderer-s-instinct",
@@ -1634,10 +1634,10 @@
     },
     "character": "All",
     "icon": "/perks/survivor/plunderer-s-instinct.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "poised",
@@ -1648,12 +1648,12 @@
     },
     "character": "Jane",
     "icon": "/perks/survivor/poised.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "generator",
       "aura",
       "stealth"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "potential-energy",
@@ -1664,11 +1664,11 @@
     },
     "character": "Vittorio",
     "icon": "/perks/survivor/potential-energy.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "generator",
       "items"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "power-struggle",
@@ -1679,11 +1679,11 @@
     },
     "character": "Élodie",
     "icon": "/perks/survivor/power-struggle.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura",
       "unhooking"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "premonition",
@@ -1694,8 +1694,8 @@
     },
     "character": "All",
     "icon": "/perks/survivor/premonition.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "prove-thyself",
@@ -1706,10 +1706,10 @@
     },
     "character": "Dwight",
     "icon": "/perks/survivor/prove-thyself.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "generator"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "quick-and-quiet",
@@ -1720,8 +1720,8 @@
     },
     "character": "Meg",
     "icon": "/perks/survivor/quick-and-quiet.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "quick-gambit",
@@ -1732,11 +1732,11 @@
     },
     "character": "Vittorio",
     "icon": "/perks/survivor/quick-gambit.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "generator",
       "aura"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "rapid-response",
@@ -1747,11 +1747,11 @@
     },
     "character": "Orela",
     "icon": "/perks/survivor/rapid-response.webp",
-    "addedAt": "2026-08-17T19:11:57.577Z",
     "tags": [
       "aura",
       "exhaustion"
-    ]
+    ],
+    "addedAt": "2026-08-17T19:11:57.577Z"
   },
   {
     "slug": "reactive-healing",
@@ -1762,10 +1762,10 @@
     },
     "character": "Ada",
     "icon": "/perks/survivor/reactive-healing.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "healing"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "reassurance",
@@ -1776,10 +1776,10 @@
     },
     "character": "Rebecca",
     "icon": "/perks/survivor/reassurance.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "unhooking"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "red-herring",
@@ -1790,11 +1790,11 @@
     },
     "character": "Zarina",
     "icon": "/perks/survivor/red-herring.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "generator",
       "aura"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "repressed-alliance",
@@ -1805,11 +1805,11 @@
     },
     "character": "Cheryl",
     "icon": "/perks/survivor/repressed-alliance.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "generator",
       "aura"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "residual-manifest",
@@ -1820,8 +1820,8 @@
     },
     "character": "Haddie",
     "icon": "/perks/survivor/residual-manifest.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "resilience",
@@ -1832,13 +1832,13 @@
     },
     "character": "All",
     "icon": "/perks/survivor/resilience.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "generator",
       "healing",
       "totems",
       "unhooking"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "resurgence",
@@ -1849,11 +1849,11 @@
     },
     "character": "Jill",
     "icon": "/perks/survivor/resurgence.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "healing",
       "unhooking"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "road-life",
@@ -1864,11 +1864,11 @@
     },
     "character": "Vee",
     "icon": "/perks/survivor/road-life.webp",
-    "addedAt": "2026-08-17T19:11:57.577Z",
     "tags": [
       "generator",
       "healing"
-    ]
+    ],
+    "addedAt": "2026-08-17T19:11:57.577Z"
   },
   {
     "slug": "rookie-spirit",
@@ -1879,11 +1879,11 @@
     },
     "character": "Leon",
     "icon": "/perks/survivor/rookie-spirit.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "generator",
       "aura"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "saboteur",
@@ -1894,11 +1894,11 @@
     },
     "character": "Jake",
     "icon": "/perks/survivor/saboteur.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "generator",
       "aura"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "scavenger",
@@ -1909,10 +1909,10 @@
     },
     "character": "Gabriel",
     "icon": "/perks/survivor/scavenger.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "generator"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "scene-partner",
@@ -1923,11 +1923,11 @@
     },
     "character": "Nicolas",
     "icon": "/perks/survivor/scene-partner.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura",
       "stealth"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "second-wind",
@@ -1938,11 +1938,11 @@
     },
     "character": "Steve",
     "icon": "/perks/survivor/second-wind.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "healing",
       "unhooking"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "self-care",
@@ -1953,10 +1953,10 @@
     },
     "character": "Claudette",
     "icon": "/perks/survivor/self-care.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "healing"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "self-preservation",
@@ -1967,8 +1967,8 @@
     },
     "character": "Yun-Jin",
     "icon": "/perks/survivor/self-preservation.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "shoulder-the-burden",
@@ -1979,10 +1979,10 @@
     },
     "character": "Taurie",
     "icon": "/perks/survivor/shoulder-the-burden.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "unhooking"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "slippery-meat",
@@ -1993,10 +1993,10 @@
     },
     "character": "All",
     "icon": "/perks/survivor/slippery-meat.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "unhooking"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "small-game",
@@ -2007,10 +2007,10 @@
     },
     "character": "All",
     "icon": "/perks/survivor/small-game.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "totems"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "smash-hit",
@@ -2021,10 +2021,10 @@
     },
     "character": "Yun-Jin",
     "icon": "/perks/survivor/smash-hit.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "exhaustion"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "solidarity",
@@ -2035,10 +2035,10 @@
     },
     "character": "Jane",
     "icon": "/perks/survivor/solidarity.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "healing"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "soul-guard",
@@ -2049,10 +2049,10 @@
     },
     "character": "Cheryl",
     "icon": "/perks/survivor/soul-guard.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "healing"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "specialist",
@@ -2063,11 +2063,11 @@
     },
     "character": "Lara",
     "icon": "/perks/survivor/specialist.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "generator",
       "items"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "spine-chill",
@@ -2078,12 +2078,12 @@
     },
     "character": "All",
     "icon": "/perks/survivor/spine-chill.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "generator",
       "healing",
       "unhooking"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "sprint-burst",
@@ -2094,10 +2094,10 @@
     },
     "character": "Meg",
     "icon": "/perks/survivor/sprint-burst.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "exhaustion"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "stake-out",
@@ -2108,10 +2108,10 @@
     },
     "character": "David Tapp",
     "icon": "/perks/survivor/stake-out.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "stealth"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "still-sight",
@@ -2122,11 +2122,11 @@
     },
     "character": "Aestri",
     "icon": "/perks/survivor/still-sight.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "generator",
       "aura"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "streetwise",
@@ -2137,11 +2137,11 @@
     },
     "character": "Nea",
     "icon": "/perks/survivor/streetwise.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura",
       "items"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "strength-in-shadows",
@@ -2152,11 +2152,11 @@
     },
     "character": "Sable",
     "icon": "/perks/survivor/strength-in-shadows.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "healing",
       "aura"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "teamwork-collective-stealth",
@@ -2167,11 +2167,11 @@
     },
     "character": "Renato",
     "icon": "/perks/survivor/teamwork-collective-stealth.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "healing",
       "stealth"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "teamwork-full-circuit",
@@ -2182,10 +2182,10 @@
     },
     "character": "Dustin",
     "icon": "/perks/survivor/teamwork-full-circuit.webp",
-    "addedAt": "2026-08-17T19:11:57.577Z",
     "tags": [
       "generator"
-    ]
+    ],
+    "addedAt": "2026-08-17T19:11:57.577Z"
   },
   {
     "slug": "teamwork-power-of-two",
@@ -2196,10 +2196,10 @@
     },
     "character": "Thalita",
     "icon": "/perks/survivor/teamwork-power-of-two.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "healing"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "teamwork-soft-spoken",
@@ -2210,10 +2210,10 @@
     },
     "character": "Eleven",
     "icon": "/perks/survivor/teamwork-soft-spoken.webp",
-    "addedAt": "2026-08-17T19:11:57.577Z",
     "tags": [
       "generator"
-    ]
+    ],
+    "addedAt": "2026-08-17T19:11:57.577Z"
   },
   {
     "slug": "teamwork-throw-down",
@@ -2224,8 +2224,8 @@
     },
     "character": "Michonne",
     "icon": "/perks/survivor/teamwork-throw-down.webp",
-    "addedAt": "2026-08-17T19:11:57.577Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2026-08-17T19:11:57.577Z"
   },
   {
     "slug": "teamwork-toughen-up",
@@ -2236,10 +2236,10 @@
     },
     "character": "Rick",
     "icon": "/perks/survivor/teamwork-toughen-up.webp",
-    "addedAt": "2026-08-17T19:11:57.577Z",
     "tags": [
       "stealth"
-    ]
+    ],
+    "addedAt": "2026-08-17T19:11:57.577Z"
   },
   {
     "slug": "technician",
@@ -2250,10 +2250,10 @@
     },
     "character": "Feng",
     "icon": "/perks/survivor/technician.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "generator"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "tenacity",
@@ -2264,10 +2264,10 @@
     },
     "character": "David Tapp",
     "icon": "/perks/survivor/tenacity.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "this-is-not-happening",
@@ -2278,11 +2278,11 @@
     },
     "character": "All",
     "icon": "/perks/survivor/this-is-not-happening.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "generator",
       "healing"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "troubleshooter",
@@ -2293,11 +2293,11 @@
     },
     "character": "Gabriel",
     "icon": "/perks/survivor/troubleshooter.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "generator",
       "aura"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "unbreakable",
@@ -2308,8 +2308,8 @@
     },
     "character": "Bill",
     "icon": "/perks/survivor/unbreakable.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "up-the-ante",
@@ -2320,10 +2320,10 @@
     },
     "character": "Ace",
     "icon": "/perks/survivor/up-the-ante.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "unhooking"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "urban-evasion",
@@ -2334,8 +2334,8 @@
     },
     "character": "Nea",
     "icon": "/perks/survivor/urban-evasion.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "vigil",
@@ -2346,10 +2346,10 @@
     },
     "character": "Quentin",
     "icon": "/perks/survivor/vigil.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "exhaustion"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "visionary",
@@ -2360,11 +2360,11 @@
     },
     "character": "Felix",
     "icon": "/perks/survivor/visionary.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "generator",
       "aura"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "wake-up",
@@ -2375,11 +2375,11 @@
     },
     "character": "Quentin",
     "icon": "/perks/survivor/wake-up.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "generator",
       "aura"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "we-see-you",
@@ -2390,10 +2390,10 @@
     },
     "character": "Eleven",
     "icon": "/perks/survivor/we-see-you.webp",
-    "addedAt": "2026-08-17T19:11:57.577Z",
     "tags": [
       "aura"
-    ]
+    ],
+    "addedAt": "2026-08-17T19:11:57.577Z"
   },
   {
     "slug": "we-ll-make-it",
@@ -2404,11 +2404,11 @@
     },
     "character": "All",
     "icon": "/perks/survivor/we-ll-make-it.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "healing",
       "unhooking"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "we-re-gonna-live-forever",
@@ -2419,10 +2419,10 @@
     },
     "character": "David King",
     "icon": "/perks/survivor/we-re-gonna-live-forever.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "healing"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "wicked",
@@ -2433,11 +2433,11 @@
     },
     "character": "Sable",
     "icon": "/perks/survivor/wicked.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura",
       "unhooking"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "wide-open-throttle",
@@ -2448,8 +2448,8 @@
     },
     "character": "Shane",
     "icon": "/perks/survivor/wide-open-throttle.webp",
-    "addedAt": "2026-08-17T19:11:57.577Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2026-08-17T19:11:57.577Z"
   },
   {
     "slug": "will-to-live",
@@ -2460,10 +2460,10 @@
     },
     "character": "All",
     "icon": "/perks/survivor/will-to-live.webp",
-    "addedAt": "2026-08-19T08:56:09.086Z",
     "tags": [
       "unhooking"
-    ]
+    ],
+    "addedAt": "2026-08-19T08:56:09.086Z"
   },
   {
     "slug": "windows-of-opportunity",
@@ -2474,10 +2474,10 @@
     },
     "character": "Kate",
     "icon": "/perks/survivor/windows-of-opportunity.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "wiretap",
@@ -2488,11 +2488,11 @@
     },
     "character": "Ada",
     "icon": "/perks/survivor/wiretap.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "generator",
       "aura"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "a-nurse-s-calling",
@@ -2503,10 +2503,10 @@
     },
     "character": "Nurse",
     "icon": "/perks/killer/a-nurse-s-calling.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "agitation",
@@ -2517,8 +2517,8 @@
     },
     "character": "Trapper",
     "icon": "/perks/killer/agitation.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "alien-instinct",
@@ -2529,10 +2529,10 @@
     },
     "character": "Xenomorph",
     "icon": "/perks/killer/alien-instinct.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "all-shaking-thunder",
@@ -2543,10 +2543,10 @@
     },
     "character": "Houndmaster",
     "icon": "/perks/killer/all-shaking-thunder.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "chase"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "awakened-awareness",
@@ -2557,10 +2557,10 @@
     },
     "character": "Mastermind",
     "icon": "/perks/killer/awakened-awareness.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "bamboozle",
@@ -2571,10 +2571,10 @@
     },
     "character": "Clown",
     "icon": "/perks/killer/bamboozle.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "chase"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "barbecue-and-chilli",
@@ -2585,10 +2585,10 @@
     },
     "character": "Cannibal",
     "icon": "/perks/killer/barbecue-and-chilli.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "batteries-included",
@@ -2599,10 +2599,10 @@
     },
     "character": "Good Guy",
     "icon": "/perks/killer/batteries-included.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "chase"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "beast-of-prey",
@@ -2613,8 +2613,8 @@
     },
     "character": "Huntress",
     "icon": "/perks/killer/beast-of-prey.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "bitter-murmur",
@@ -2625,10 +2625,10 @@
     },
     "character": "All",
     "icon": "/perks/killer/bitter-murmur.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "blood-echo",
@@ -2639,8 +2639,8 @@
     },
     "character": "Oni",
     "icon": "/perks/killer/blood-echo.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "blood-warden",
@@ -2651,10 +2651,10 @@
     },
     "character": "Nightmare",
     "icon": "/perks/killer/blood-warden.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "bloodhound",
@@ -2665,8 +2665,8 @@
     },
     "character": "Wraith",
     "icon": "/perks/killer/bloodhound.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "brutal-strength",
@@ -2677,10 +2677,10 @@
     },
     "character": "Trapper",
     "icon": "/perks/killer/brutal-strength.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "chase"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "call-of-brine",
@@ -2691,11 +2691,11 @@
     },
     "character": "Onryō",
     "icon": "/perks/killer/call-of-brine.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "gen-regression",
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "corrupt-intervention",
@@ -2706,11 +2706,11 @@
     },
     "character": "Plague",
     "icon": "/perks/killer/corrupt-intervention.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "gen-regression",
       "exposure"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "coulrophobia",
@@ -2721,8 +2721,8 @@
     },
     "character": "Clown",
     "icon": "/perks/killer/coulrophobia.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "coup-de-grace",
@@ -2733,10 +2733,10 @@
     },
     "character": "Twins",
     "icon": "/perks/killer/coup-de-grace.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "chase"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "cruel-limits",
@@ -2747,11 +2747,11 @@
     },
     "character": "Demogorgon",
     "icon": "/perks/killer/cruel-limits.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "gen-regression",
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "cull-the-weak",
@@ -2762,8 +2762,8 @@
     },
     "character": "All",
     "icon": "/perks/killer/cull-the-weak.webp",
-    "addedAt": "2026-08-19T08:56:09.086Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2026-08-19T08:56:09.086Z"
   },
   {
     "slug": "dark-arrogance",
@@ -2774,10 +2774,10 @@
     },
     "character": "Lich",
     "icon": "/perks/killer/dark-arrogance.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "chase"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "dark-devotion",
@@ -2788,8 +2788,8 @@
     },
     "character": "Plague",
     "icon": "/perks/killer/dark-devotion.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "darkness-revealed",
@@ -2800,10 +2800,10 @@
     },
     "character": "Dredge",
     "icon": "/perks/killer/darkness-revealed.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "dead-man-s-switch",
@@ -2814,10 +2814,10 @@
     },
     "character": "Deathslinger",
     "icon": "/perks/killer/dead-man-s-switch.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "gen-regression"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "deathbound",
@@ -2828,10 +2828,10 @@
     },
     "character": "Executioner",
     "icon": "/perks/killer/deathbound.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "deerstalker",
@@ -2842,10 +2842,10 @@
     },
     "character": "All",
     "icon": "/perks/killer/deerstalker.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "discordance",
@@ -2856,10 +2856,10 @@
     },
     "character": "Legion",
     "icon": "/perks/killer/discordance.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "dissolution",
@@ -2870,10 +2870,10 @@
     },
     "character": "Dredge",
     "icon": "/perks/killer/dissolution.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "chase"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "distressing",
@@ -2884,8 +2884,8 @@
     },
     "character": "All",
     "icon": "/perks/killer/distressing.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "dominance",
@@ -2896,10 +2896,10 @@
     },
     "character": "Dark Lord",
     "icon": "/perks/killer/dominance.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "dragon-s-grip",
@@ -2910,11 +2910,11 @@
     },
     "character": "Blight",
     "icon": "/perks/killer/dragon-s-grip.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura-info",
       "exposure"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "enduring",
@@ -2925,10 +2925,10 @@
     },
     "character": "Hillbilly",
     "icon": "/perks/killer/enduring.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "chase"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "eruption",
@@ -2939,12 +2939,12 @@
     },
     "character": "Nemesis",
     "icon": "/perks/killer/eruption.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "gen-regression",
       "aura-info",
       "exposure"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "fire-up",
@@ -2955,10 +2955,10 @@
     },
     "character": "Nightmare",
     "icon": "/perks/killer/fire-up.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "chase"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "forced-hesitation",
@@ -2969,10 +2969,10 @@
     },
     "character": "Singularity",
     "icon": "/perks/killer/forced-hesitation.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "exposure"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "forced-penance",
@@ -2983,8 +2983,8 @@
     },
     "character": "Executioner",
     "icon": "/perks/killer/forced-penance.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "forever-entwined",
@@ -2995,8 +2995,8 @@
     },
     "character": "Ghoul",
     "icon": "/perks/killer/forever-entwined.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "franklin-s-demise",
@@ -3007,10 +3007,10 @@
     },
     "character": "Cannibal",
     "icon": "/perks/killer/franklin-s-demise.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "friends-til-the-end",
@@ -3021,11 +3021,11 @@
     },
     "character": "Good Guy",
     "icon": "/perks/killer/friends-til-the-end.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura-info",
       "exposure"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "furtive-chase",
@@ -3036,10 +3036,10 @@
     },
     "character": "Ghost Face",
     "icon": "/perks/killer/furtive-chase.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "chase"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "game-afoot",
@@ -3050,10 +3050,10 @@
     },
     "character": "Skull Merchant",
     "icon": "/perks/killer/game-afoot.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "chase"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "gearhead",
@@ -3064,10 +3064,10 @@
     },
     "character": "Deathslinger",
     "icon": "/perks/killer/gearhead.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "genetic-limits",
@@ -3078,8 +3078,8 @@
     },
     "character": "Singularity",
     "icon": "/perks/killer/genetic-limits.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "grim-embrace",
@@ -3090,10 +3090,10 @@
     },
     "character": "Artist",
     "icon": "/perks/killer/grim-embrace.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "haywire",
@@ -3104,8 +3104,8 @@
     },
     "character": "Animatronic",
     "icon": "/perks/killer/haywire.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "help-wanted",
@@ -3116,8 +3116,8 @@
     },
     "character": "Animatronic",
     "icon": "/perks/killer/help-wanted.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "hex-blood-favour",
@@ -3128,11 +3128,11 @@
     },
     "character": "Blight",
     "icon": "/perks/killer/hex-blood-favour.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "hex",
       "chase"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "hex-crowd-control",
@@ -3143,12 +3143,12 @@
     },
     "character": "Trickster",
     "icon": "/perks/killer/hex-crowd-control.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "hex",
       "aura-info",
       "chase"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "hex-devour-hope",
@@ -3159,12 +3159,12 @@
     },
     "character": "Hag",
     "icon": "/perks/killer/hex-devour-hope.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "hex",
       "chase",
       "exposure"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "hex-face-the-darkness",
@@ -3175,12 +3175,12 @@
     },
     "character": "Knight",
     "icon": "/perks/killer/hex-face-the-darkness.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "hex",
       "aura-info",
       "exposure"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "hex-fortune-s-fool",
@@ -3191,11 +3191,11 @@
     },
     "character": "All",
     "icon": "/perks/killer/hex-fortune-s-fool.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "hex",
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "hex-haunted-ground",
@@ -3206,11 +3206,11 @@
     },
     "character": "Spirit",
     "icon": "/perks/killer/hex-haunted-ground.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "hex",
       "exposure"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "hex-hive-mind",
@@ -3221,12 +3221,12 @@
     },
     "character": "First",
     "icon": "/perks/killer/hex-hive-mind.webp",
-    "addedAt": "2026-08-17T19:11:57.577Z",
     "tags": [
       "hex",
       "gen-regression",
       "aura-info"
-    ]
+    ],
+    "addedAt": "2026-08-17T19:11:57.577Z"
   },
   {
     "slug": "hex-huntress-lullaby",
@@ -3237,10 +3237,10 @@
     },
     "character": "Huntress",
     "icon": "/perks/killer/hex-huntress-lullaby.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "hex"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "hex-no-one-escapes-death",
@@ -3251,13 +3251,13 @@
     },
     "character": "All",
     "icon": "/perks/killer/hex-no-one-escapes-death.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "hex",
       "aura-info",
       "chase",
       "exposure"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "hex-nothing-but-misery",
@@ -3268,10 +3268,10 @@
     },
     "character": "Ghoul",
     "icon": "/perks/killer/hex-nothing-but-misery.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "hex"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "hex-overture-of-doom",
@@ -3282,11 +3282,11 @@
     },
     "character": "Krasue",
     "icon": "/perks/killer/hex-overture-of-doom.webp",
-    "addedAt": "2026-08-17T19:11:57.577Z",
     "tags": [
       "hex",
       "aura-info"
-    ]
+    ],
+    "addedAt": "2026-08-17T19:11:57.577Z"
   },
   {
     "slug": "hex-pentimento",
@@ -3297,11 +3297,11 @@
     },
     "character": "Artist",
     "icon": "/perks/killer/hex-pentimento.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "hex",
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "hex-retribution",
@@ -3312,11 +3312,11 @@
     },
     "character": "Deathslinger",
     "icon": "/perks/killer/hex-retribution.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "hex",
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "hex-ruin",
@@ -3327,11 +3327,11 @@
     },
     "character": "Hag",
     "icon": "/perks/killer/hex-ruin.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "hex",
       "gen-regression"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "hex-scared-to-death",
@@ -3342,11 +3342,11 @@
     },
     "character": "Slasher",
     "icon": "/perks/killer/hex-scared-to-death.webp",
-    "addedAt": "2026-08-17T19:11:57.577Z",
     "tags": [
       "hex",
       "chase"
-    ]
+    ],
+    "addedAt": "2026-08-17T19:11:57.577Z"
   },
   {
     "slug": "hex-the-third-seal",
@@ -3357,11 +3357,11 @@
     },
     "character": "Hag",
     "icon": "/perks/killer/hex-the-third-seal.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "hex",
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "hex-thrill-of-the-hunt",
@@ -3372,10 +3372,10 @@
     },
     "character": "All",
     "icon": "/perks/killer/hex-thrill-of-the-hunt.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "hex"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "hex-two-can-play",
@@ -3386,10 +3386,10 @@
     },
     "character": "Good Guy",
     "icon": "/perks/killer/hex-two-can-play.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "hex"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "hex-undying",
@@ -3400,11 +3400,11 @@
     },
     "character": "Blight",
     "icon": "/perks/killer/hex-undying.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "hex",
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "hex-wretched-fate",
@@ -3415,11 +3415,11 @@
     },
     "character": "Dark Lord",
     "icon": "/perks/killer/hex-wretched-fate.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "hex",
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "hoarder",
@@ -3430,8 +3430,8 @@
     },
     "character": "Twins",
     "icon": "/perks/killer/hoarder.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "hubris",
@@ -3442,10 +3442,10 @@
     },
     "character": "Knight",
     "icon": "/perks/killer/hubris.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "exposure"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "human-greed",
@@ -3456,10 +3456,10 @@
     },
     "character": "Dark Lord",
     "icon": "/perks/killer/human-greed.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "hysteria",
@@ -3470,8 +3470,8 @@
     },
     "character": "Nemesis",
     "icon": "/perks/killer/hysteria.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "i-m-all-ears",
@@ -3482,11 +3482,11 @@
     },
     "character": "Ghost Face",
     "icon": "/perks/killer/i-m-all-ears.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura-info",
       "chase"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "infectious-fright",
@@ -3497,11 +3497,11 @@
     },
     "character": "Plague",
     "icon": "/perks/killer/infectious-fright.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura-info",
       "exposure"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "insidious",
@@ -3512,8 +3512,8 @@
     },
     "character": "All",
     "icon": "/perks/killer/insidious.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "iron-grasp",
@@ -3524,8 +3524,8 @@
     },
     "character": "All",
     "icon": "/perks/killer/iron-grasp.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "iron-maiden",
@@ -3536,10 +3536,10 @@
     },
     "character": "Legion",
     "icon": "/perks/killer/iron-maiden.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "exposure"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "knock-out",
@@ -3550,10 +3550,10 @@
     },
     "character": "Cannibal",
     "icon": "/perks/killer/knock-out.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "chase"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "languid-touch",
@@ -3564,10 +3564,10 @@
     },
     "character": "Lich",
     "icon": "/perks/killer/languid-touch.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "lethal-pursuer",
@@ -3578,10 +3578,10 @@
     },
     "character": "Nemesis",
     "icon": "/perks/killer/lethal-pursuer.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "leverage",
@@ -3592,8 +3592,8 @@
     },
     "character": "Skull Merchant",
     "icon": "/perks/killer/leverage.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "lightborn",
@@ -3604,10 +3604,10 @@
     },
     "character": "Hillbilly",
     "icon": "/perks/killer/lightborn.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "machine-learning",
@@ -3618,11 +3618,11 @@
     },
     "character": "Singularity",
     "icon": "/perks/killer/machine-learning.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura-info",
       "chase"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "mad-grit",
@@ -3633,8 +3633,8 @@
     },
     "character": "Legion",
     "icon": "/perks/killer/mad-grit.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "make-your-choice",
@@ -3645,11 +3645,11 @@
     },
     "character": "Pig",
     "icon": "/perks/killer/make-your-choice.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura-info",
       "exposure"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "merciless-storm",
@@ -3660,10 +3660,10 @@
     },
     "character": "Onryō",
     "icon": "/perks/killer/merciless-storm.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "gen-regression"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "mindbreaker",
@@ -3674,8 +3674,8 @@
     },
     "character": "Demogorgon",
     "icon": "/perks/killer/mindbreaker.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "monitor-and-abuse",
@@ -3686,8 +3686,8 @@
     },
     "character": "Doctor",
     "icon": "/perks/killer/monitor-and-abuse.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "nemesis",
@@ -3698,11 +3698,11 @@
     },
     "character": "Oni",
     "icon": "/perks/killer/nemesis.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura-info",
       "chase"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "no-holds-barred",
@@ -3713,11 +3713,11 @@
     },
     "character": "All",
     "icon": "/perks/killer/no-holds-barred.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "gen-regression",
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "no-quarter",
@@ -3728,8 +3728,8 @@
     },
     "character": "Houndmaster",
     "icon": "/perks/killer/no-quarter.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "no-way-out",
@@ -3740,8 +3740,8 @@
     },
     "character": "Trickster",
     "icon": "/perks/killer/no-way-out.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "none-are-free",
@@ -3752,11 +3752,11 @@
     },
     "character": "Ghoul",
     "icon": "/perks/killer/none-are-free.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "gen-regression",
       "chase"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "nowhere-to-hide",
@@ -3767,10 +3767,10 @@
     },
     "character": "Knight",
     "icon": "/perks/killer/nowhere-to-hide.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "oppression",
@@ -3781,10 +3781,10 @@
     },
     "character": "Twins",
     "icon": "/perks/killer/oppression.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "gen-regression"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "overcharge",
@@ -3795,10 +3795,10 @@
     },
     "character": "Doctor",
     "icon": "/perks/killer/overcharge.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "gen-regression"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "overwhelming-presence",
@@ -3809,10 +3809,10 @@
     },
     "character": "Doctor",
     "icon": "/perks/killer/overwhelming-presence.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "phantom-fear",
@@ -3823,10 +3823,10 @@
     },
     "character": "Animatronic",
     "icon": "/perks/killer/phantom-fear.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "pop-goes-the-weasel",
@@ -3837,10 +3837,10 @@
     },
     "character": "Clown",
     "icon": "/perks/killer/pop-goes-the-weasel.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "gen-regression"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "predator",
@@ -3851,10 +3851,10 @@
     },
     "character": "Wraith",
     "icon": "/perks/killer/predator.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "rampage",
@@ -3865,10 +3865,10 @@
     },
     "character": "Slasher",
     "icon": "/perks/killer/rampage.webp",
-    "addedAt": "2026-08-17T19:11:57.577Z",
     "tags": [
       "chase"
-    ]
+    ],
+    "addedAt": "2026-08-17T19:11:57.577Z"
   },
   {
     "slug": "rancor",
@@ -3879,11 +3879,11 @@
     },
     "character": "Spirit",
     "icon": "/perks/killer/rancor.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura-info",
       "exposure"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "rapid-brutality",
@@ -3894,10 +3894,10 @@
     },
     "character": "Xenomorph",
     "icon": "/perks/killer/rapid-brutality.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "chase"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "ravenous",
@@ -3908,10 +3908,10 @@
     },
     "character": "Krasue",
     "icon": "/perks/killer/ravenous.webp",
-    "addedAt": "2026-08-17T19:11:57.577Z",
     "tags": [
       "exposure"
-    ]
+    ],
+    "addedAt": "2026-08-17T19:11:57.577Z"
   },
   {
     "slug": "remember-me",
@@ -3922,8 +3922,8 @@
     },
     "character": "Nightmare",
     "icon": "/perks/killer/remember-me.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "save-the-best-for-last",
@@ -3934,8 +3934,8 @@
     },
     "character": "Shape",
     "icon": "/perks/killer/save-the-best-for-last.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "scourge-hook-floods-of-rage",
@@ -3946,11 +3946,11 @@
     },
     "character": "Onryō",
     "icon": "/perks/killer/scourge-hook-floods-of-rage.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "scourge-hook",
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "scourge-hook-hangman-s-trick",
@@ -3961,11 +3961,11 @@
     },
     "character": "Pig",
     "icon": "/perks/killer/scourge-hook-hangman-s-trick.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "scourge-hook",
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "scourge-hook-jagged-compass",
@@ -3976,11 +3976,11 @@
     },
     "character": "Houndmaster",
     "icon": "/perks/killer/scourge-hook-jagged-compass.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "scourge-hook",
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "scourge-hook-monstrous-shrine",
@@ -3991,11 +3991,11 @@
     },
     "character": "All",
     "icon": "/perks/killer/scourge-hook-monstrous-shrine.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "scourge-hook",
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "scourge-hook-pain-resonance",
@@ -4006,12 +4006,12 @@
     },
     "character": "Artist",
     "icon": "/perks/killer/scourge-hook-pain-resonance.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "scourge-hook",
       "gen-regression",
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "scourge-hook-weeping-wounds",
@@ -4022,11 +4022,11 @@
     },
     "character": "All",
     "icon": "/perks/killer/scourge-hook-weeping-wounds.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "scourge-hook",
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "secret-project",
@@ -4037,10 +4037,10 @@
     },
     "character": "First",
     "icon": "/perks/killer/secret-project.webp",
-    "addedAt": "2026-08-17T19:11:57.577Z",
     "tags": [
       "gen-regression"
-    ]
+    ],
+    "addedAt": "2026-08-17T19:11:57.577Z"
   },
   {
     "slug": "see-how-they-run",
@@ -4051,10 +4051,10 @@
     },
     "character": "All",
     "icon": "/perks/killer/see-how-they-run.webp",
-    "addedAt": "2026-08-19T08:56:09.086Z",
     "tags": [
       "chase"
-    ]
+    ],
+    "addedAt": "2026-08-19T08:56:09.086Z"
   },
   {
     "slug": "septic-touch",
@@ -4065,8 +4065,8 @@
     },
     "character": "Dredge",
     "icon": "/perks/killer/septic-touch.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "shadowborn",
@@ -4077,10 +4077,10 @@
     },
     "character": "Wraith",
     "icon": "/perks/killer/shadowborn.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "chase"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "shattered-hope",
@@ -4091,10 +4091,10 @@
     },
     "character": "All",
     "icon": "/perks/killer/shattered-hope.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "silent-shadow",
@@ -4105,8 +4105,8 @@
     },
     "character": "Slasher",
     "icon": "/perks/killer/silent-shadow.webp",
-    "addedAt": "2026-08-17T19:11:57.577Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2026-08-17T19:11:57.577Z"
   },
   {
     "slug": "sloppy-butcher",
@@ -4117,8 +4117,8 @@
     },
     "character": "All",
     "icon": "/perks/killer/sloppy-butcher.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "spies-from-the-shadows",
@@ -4129,8 +4129,8 @@
     },
     "character": "All",
     "icon": "/perks/killer/spies-from-the-shadows.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "spirit-fury",
@@ -4141,10 +4141,10 @@
     },
     "character": "Spirit",
     "icon": "/perks/killer/spirit-fury.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "chase"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "starstruck",
@@ -4155,10 +4155,10 @@
     },
     "character": "Trickster",
     "icon": "/perks/killer/starstruck.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "exposure"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "stridor",
@@ -4169,8 +4169,8 @@
     },
     "character": "Nurse",
     "icon": "/perks/killer/stridor.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "superior-anatomy",
@@ -4181,10 +4181,10 @@
     },
     "character": "Mastermind",
     "icon": "/perks/killer/superior-anatomy.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "chase"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "surge",
@@ -4195,11 +4195,11 @@
     },
     "character": "Demogorgon",
     "icon": "/perks/killer/surge.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "gen-regression",
       "exposure"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "surveillance",
@@ -4210,11 +4210,11 @@
     },
     "character": "Pig",
     "icon": "/perks/killer/surveillance.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "gen-regression",
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "thwack",
@@ -4225,11 +4225,11 @@
     },
     "character": "Skull Merchant",
     "icon": "/perks/killer/thwack.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura-info",
       "chase"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "terminus",
@@ -4240,8 +4240,8 @@
     },
     "character": "Mastermind",
     "icon": "/perks/killer/terminus.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "territorial-imperative",
@@ -4252,10 +4252,10 @@
     },
     "character": "Huntress",
     "icon": "/perks/killer/territorial-imperative.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "thanatophobia",
@@ -4266,8 +4266,8 @@
     },
     "character": "Nurse",
     "icon": "/perks/killer/thanatophobia.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "thrilling-tremors",
@@ -4278,11 +4278,11 @@
     },
     "character": "Ghost Face",
     "icon": "/perks/killer/thrilling-tremors.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "gen-regression",
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "tinkerer",
@@ -4293,10 +4293,10 @@
     },
     "character": "Hillbilly",
     "icon": "/perks/killer/tinkerer.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "trail-of-torment",
@@ -4307,11 +4307,11 @@
     },
     "character": "Executioner",
     "icon": "/perks/killer/trail-of-torment.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "gen-regression",
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "turn-back-the-clock",
@@ -4322,10 +4322,10 @@
     },
     "character": "First",
     "icon": "/perks/killer/turn-back-the-clock.webp",
-    "addedAt": "2026-08-17T19:11:57.577Z",
     "tags": [
       "gen-regression"
-    ]
+    ],
+    "addedAt": "2026-08-17T19:11:57.577Z"
   },
   {
     "slug": "ultimate-weapon",
@@ -4336,10 +4336,10 @@
     },
     "character": "Xenomorph",
     "icon": "/perks/killer/ultimate-weapon.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "unbound",
@@ -4350,10 +4350,10 @@
     },
     "character": "Unknown",
     "icon": "/perks/killer/unbound.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "chase"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "undone",
@@ -4364,10 +4364,10 @@
     },
     "character": "Unknown",
     "icon": "/perks/killer/undone.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "gen-regression"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "unforeseen",
@@ -4378,8 +4378,8 @@
     },
     "character": "Unknown",
     "icon": "/perks/killer/unforeseen.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "unnerving-presence",
@@ -4390,8 +4390,8 @@
     },
     "character": "Trapper",
     "icon": "/perks/killer/unnerving-presence.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "unrelenting",
@@ -4402,10 +4402,10 @@
     },
     "character": "All",
     "icon": "/perks/killer/unrelenting.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "chase"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "wandering-eye",
@@ -4416,10 +4416,10 @@
     },
     "character": "Krasue",
     "icon": "/perks/killer/wandering-eye.webp",
-    "addedAt": "2026-08-17T19:11:57.577Z",
     "tags": [
       "aura-info"
-    ]
+    ],
+    "addedAt": "2026-08-17T19:11:57.577Z"
   },
   {
     "slug": "weave-attunement",
@@ -4430,10 +4430,10 @@
     },
     "character": "Lich",
     "icon": "/perks/killer/weave-attunement.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura-info"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "whispers",
@@ -4444,8 +4444,8 @@
     },
     "character": "All",
     "icon": "/perks/killer/whispers.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
-    "tags": []
+    "tags": [],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "slug": "zanshin-tactics",
@@ -4456,10 +4456,10 @@
     },
     "character": "Oni",
     "icon": "/perks/killer/zanshin-tactics.webp",
-    "addedAt": "2020-01-01T00:00:00.000Z",
     "tags": [
       "aura-info",
       "chase"
-    ]
+    ],
+    "addedAt": "2020-01-01T00:00:00.000Z"
   }
 ]

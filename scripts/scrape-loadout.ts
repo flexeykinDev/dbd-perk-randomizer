@@ -46,7 +46,12 @@ const KILLER_POWER_ICONS_JSON = join(DATA_DIR, "killer-power-icons.json");
 const LOADOUT_ICON_SOURCES_JSON = join(DATA_DIR, "loadout-icon-sources.json");
 const SUPPLEMENTAL_ADDONS_EN_JSON = join(DATA_DIR, "supplemental-addons.en.json");
 
-const ICON_SIZE = 128;
+// 256 because that is what the wiki's originals actually are, and what the
+// character portraits already used. `withoutEnlargement` is the important
+// half: the previous 128 was reached by *enlarging* a 96px thumbnail, so
+// the stored files cost bytes to hold blur. Never enlarging means a file
+// whose original is smaller simply stays smaller and honest.
+const ICON_SIZE = 256;
 const REQUEST_HEADERS = {
   "User-Agent": "vortex-info-next loadout scraper (personal site, contact via github)",
 };
@@ -734,7 +739,12 @@ async function downloadIcon(
   // costs nothing extra and means a wiki-side icon rework (art gets
   // redrawn on an existing add-on) actually gets picked up on the next
   // scrape instead of the local copy staying stale forever.
-  if (iconSources[cacheKey] === sourceUrl && existsSync(destAbsolute)) {
+  // Size folded in alongside the URL: comparing the URL alone left every
+  // icon whose source hadn't changed sitting at the previous ICON_SIZE
+  // when that constant was raised.
+  const cacheValue = `${sourceUrl}@${ICON_SIZE}`;
+
+  if (iconSources[cacheKey] === cacheValue && existsSync(destAbsolute)) {
     return destRelative;
   }
 
@@ -743,8 +753,8 @@ async function downloadIcon(
   const buffer = Buffer.from(await res.arrayBuffer());
 
   mkdirSync(dirname(destAbsolute), { recursive: true });
-  await sharp(buffer).resize(ICON_SIZE, ICON_SIZE, { fit: "cover" }).webp({ quality: 90 }).toFile(destAbsolute);
-  iconSources[cacheKey] = sourceUrl;
+  await sharp(buffer).resize(ICON_SIZE, ICON_SIZE, { fit: "cover", withoutEnlargement: true }).webp({ quality: 90 }).toFile(destAbsolute);
+  iconSources[cacheKey] = cacheValue;
   return destRelative;
 }
 
@@ -865,13 +875,24 @@ const POWER_ICON_SOURCE_OVERRIDES: Record<string, string> = {
 // normalization note in resolvePowerToCharacter — but the wiki's actual
 // page title is the full in-universe one ("The Trapper"), so that prefix
 // is added back on just for the fetch.
-async function scrapeKillerPowerIcons(killers: string[]): Promise<Record<string, string>> {
+async function scrapeKillerPowerIcons(
+  killers: string[],
+  iconSources: Record<string, string>,
+): Promise<Record<string, string>> {
   const existing = loadJson<Record<string, string>>(KILLER_POWER_ICONS_JSON, {});
   const result: Record<string, string> = {};
   for (const killer of killers) {
     const slug = slugify(killer);
     const destAbsolute = join(PUBLIC_LOADOUT_DIR, "power", `${slug}.webp`);
-    if (existing[killer] && existsSync(destAbsolute)) {
+    // Keyed by size only, not by source URL, because the URL isn't known
+    // until the killer's whole wiki page has been fetched — and fetching 43
+    // pages to discover that nothing changed is the cost this skip exists
+    // to avoid. Recording the size still invalidates every icon when
+    // ICON_SIZE moves, which is what was missing: the skip used to be
+    // "is there a file?", so these 43 stayed at whatever size they were
+    // first written at, forever.
+    const sizeKey = `power:${slug}`;
+    if (existing[killer] && existsSync(destAbsolute) && iconSources[sizeKey] === `@${ICON_SIZE}`) {
       result[killer] = existing[killer];
       continue;
     }
@@ -891,7 +912,10 @@ async function scrapeKillerPowerIcons(killers: string[]): Promise<Record<string,
       if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
       const buffer = Buffer.from(await res.arrayBuffer());
       mkdirSync(dirname(destAbsolute), { recursive: true });
-      await sharp(buffer).resize(ICON_SIZE, ICON_SIZE, { fit: "cover" }).webp({ quality: 90 }).toFile(destAbsolute);
+      await sharp(buffer).resize(ICON_SIZE, ICON_SIZE, { fit: "cover", withoutEnlargement: true }).webp({ quality: 90 }).toFile(destAbsolute);
+      // Written after a successful download, so a failed fetch doesn't mark
+      // the icon as current and skip it on the next run.
+      iconSources[sizeKey] = `@${ICON_SIZE}`;
       result[killer] = `/loadout/power/${slug}.webp`;
     } catch (err) {
       console.warn(`  Failed to fetch a Power icon for ${killer}: ${(err as Error).message}`);
@@ -1212,7 +1236,7 @@ async function main() {
   const killerCharacters = [...new Set(addons.filter((a) => a.role === "killer").map((a) => a.character))]
     .filter((c) => c !== GENERAL_CHARACTER)
     .sort();
-  const killerPowerIcons = await scrapeKillerPowerIcons(killerCharacters);
+  const killerPowerIcons = await scrapeKillerPowerIcons(killerCharacters, iconSources);
   writeFileSync(KILLER_POWER_ICONS_JSON, JSON.stringify(killerPowerIcons, null, 2) + "\n");
   console.log(`Wrote ${Object.keys(killerPowerIcons).length} killer Power icons`);
 

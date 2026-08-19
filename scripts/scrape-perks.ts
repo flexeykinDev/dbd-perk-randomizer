@@ -52,7 +52,12 @@ const CHARACTERS_JSON = join(DATA_DIR, "characters.json");
 const PERK_IDS_JSON = join(DATA_DIR, "perk-ids.json");
 const ICON_SOURCES_JSON = join(DATA_DIR, "icon-sources.json");
 
-const ICON_SIZE = 128;
+// 256 because that is what the wiki's originals actually are, and what the
+// character portraits already used. `withoutEnlargement` is the important
+// half: the previous 128 was reached by *enlarging* a 96px thumbnail, so
+// the stored files cost bytes to hold blur. Never enlarging means a file
+// whose original is smaller simply stays smaller and honest.
+const ICON_SIZE = 256;
 const ROLES: PerkRole[] = ["survivor", "killer"];
 
 function loadTranslations(): Record<string, string> {
@@ -246,8 +251,17 @@ async function downloadIcon(
   // source is named explicitly per slug.
   const sourceUrl = iconSourceOverrides[`${role}/${row.slug}`] ?? row.iconSourceUrl;
 
-  if (iconSources[cacheKey] === sourceUrl && existsSync(destAbsolute)) {
-    // Skip re-downloading when the source URL hasn't changed since last run.
+  // The recorded key carries the output size as well as the source URL.
+  // Comparing the URL alone meant that raising ICON_SIZE left every icon
+  // whose source happened to be unchanged sitting at the old dimensions —
+  // which is exactly what happened to the two icons with a source override
+  // (their URLs were already the original, so nothing looked different).
+  // Folding the size in makes any future change to it invalidate the cache
+  // on its own, with nothing to remember.
+  const cacheValue = `${sourceUrl}@${ICON_SIZE}`;
+
+  if (iconSources[cacheKey] === cacheValue && existsSync(destAbsolute)) {
+    // Skip re-downloading when neither the source nor the size has changed.
     return destRelative;
   }
 
@@ -261,14 +275,14 @@ async function downloadIcon(
 
   mkdirSync(dirname(destAbsolute), { recursive: true });
   await sharp(buffer)
-    .resize(ICON_SIZE, ICON_SIZE, { fit: "cover" })
+    .resize(ICON_SIZE, ICON_SIZE, { fit: "cover", withoutEnlargement: true })
     .webp({ quality: 90 })
     .toFile(destAbsolute);
 
   // Records the URL actually fetched, override included — storing the
   // wiki's original here would never match on the next run and would
   // re-download the overridden icon every single time.
-  iconSources[cacheKey] = sourceUrl;
+  iconSources[cacheKey] = cacheValue;
   return destRelative;
 }
 
@@ -282,8 +296,17 @@ async function downloadPortrait(
   const destAbsolute = join(PUBLIC_CHARACTERS_DIR, `${slug}.webp`);
   const cacheKey = `character:${characterName}`;
 
-  if (iconSources[cacheKey] === sourceUrl && existsSync(destAbsolute)) {
-    // Skip re-downloading when the source URL hasn't changed since last run.
+  // The recorded key carries the output size as well as the source URL.
+  // Comparing the URL alone meant that raising ICON_SIZE left every icon
+  // whose source happened to be unchanged sitting at the old dimensions —
+  // which is exactly what happened to the two icons with a source override
+  // (their URLs were already the original, so nothing looked different).
+  // Folding the size in makes any future change to it invalidate the cache
+  // on its own, with nothing to remember.
+  const cacheValue = `${sourceUrl}@${ICON_SIZE}`;
+
+  if (iconSources[cacheKey] === cacheValue && existsSync(destAbsolute)) {
+    // Skip re-downloading when neither the source nor the size has changed.
     return destRelative;
   }
 
@@ -297,11 +320,11 @@ async function downloadPortrait(
 
   mkdirSync(dirname(destAbsolute), { recursive: true });
   await sharp(buffer)
-    .resize(256, 256, { fit: "cover" })
+    .resize(256, 256, { fit: "cover", withoutEnlargement: true })
     .webp({ quality: 90 })
     .toFile(destAbsolute);
 
-  iconSources[cacheKey] = sourceUrl;
+  iconSources[cacheKey] = cacheValue;
   return destRelative;
 }
 
