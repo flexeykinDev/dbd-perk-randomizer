@@ -352,7 +352,7 @@ export function ObsOverlayModal({
                   )}
                 </div>
 
-                <p className="mt-3 text-xs text-muted/70">
+                <p className="mt-3 text-xs text-muted">
                   {t({
                     ru: "Держи основную вкладку сайта открытой — оверлей просто зеркалит то, что на ней сгенерировано.",
                     en: "Keep the main site tab open — the overlay just mirrors whatever build is showing there.",

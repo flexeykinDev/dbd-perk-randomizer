@@ -119,7 +119,7 @@ export function PerkGrid({
                 {isNewPerk(perk) && (
                   <span
                     className={cn(
-                      "absolute -top-2 -left-2 z-10 rounded-full px-2 py-0.5 text-[10px] font-bold text-white shadow",
+                      "absolute -top-2 -left-2 z-10 rounded-full px-2 py-0.5 text-[10px] font-bold text-black shadow",
                       perk.role === "survivor" ? "bg-sky-500" : "bg-rose-500",
                     )}
                   >
@@ -476,7 +476,7 @@ function PerkDescriptionPanel({
             <Highlighted text={description.full} role={perk.role} />
           </p>
           {description.quote && (
-            <p className="border-l-2 border-accent/40 pl-3 text-xs italic leading-relaxed text-muted/80">
+            <p className="border-l-2 border-accent/40 pl-3 text-xs italic leading-relaxed text-muted">
               {description.quote}
             </p>
           )}

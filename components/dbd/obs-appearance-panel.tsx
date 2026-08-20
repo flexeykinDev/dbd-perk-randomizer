@@ -61,7 +61,7 @@ export function ObsAppearancePanel({
         />
       </div>
       {options.activePresetDescription && (
-        <p className="-mt-1 text-[11px] text-muted/70">{t(options.activePresetDescription)}</p>
+        <p className="-mt-1 text-[11px] text-muted">{t(options.activePresetDescription)}</p>
       )}
 
       {options.styleMode === "custom" && (
@@ -224,7 +224,7 @@ function SliderRow({
         aria-label={label}
         className="w-full accent-accent"
       />
-      {hint && <p className="text-[11px] text-muted/70">{hint}</p>}
+      {hint && <p className="text-[11px] text-muted">{hint}</p>}
     </div>
   );
 }
@@ -278,7 +278,7 @@ function PieceVisibilityChips({
           </button>
         ))}
       </div>
-      <p className="text-[11px] text-muted/70">
+      <p className="text-[11px] text-muted">
         {t({
           ru: "Не влияет на то, что реально выпадает — только на то, что видно в оверлее и на картинке.",
           en: "Doesn't change what actually gets rolled — only what's visible in the overlay and the downloaded image.",

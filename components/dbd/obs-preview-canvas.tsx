@@ -168,7 +168,7 @@ export function ObsPreviewCanvas({
         )}
       </div>
 
-      <p className="mt-1.5 text-[11px] text-muted/70">
+      <p className="mt-1.5 text-[11px] text-muted">
         {t({
           ru: "Позиции сохраняются в самой ссылке — «Сбросить» вернёт стандартный ряд по центру. Портрет персонажа: перетащи, чтобы переместить, крути колесо мыши над ним, чтобы изменить размер.",
           en: "Positions are saved right in the link — “Reset” restores the default centered row. Character portrait: drag to move it, scroll over it to resize.",

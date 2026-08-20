@@ -101,7 +101,7 @@ export function ObsLayoutBookmarks({ options }: { options: ObsOverlayOptions }) 
         </button>
       )}
 
-      <p className="mt-1.5 text-[11px] text-muted/70">
+      <p className="mt-1.5 text-[11px] text-muted">
         {t({
           ru: "Сохраняются настройки, а не ссылка — раскладку можно применить, и ссылка соберётся заново. Хранится только в этом браузере.",
           en: "Stores the settings rather than the link — applying one rebuilds the link. Kept in this browser only.",

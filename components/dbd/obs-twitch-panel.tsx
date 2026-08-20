@@ -57,7 +57,7 @@ export function ObsTwitchPanel({
           {t({ ru: "Управление из чата Twitch", en: "Control from Twitch chat" })}
         </h3>
       </div>
-      <p className="mb-3 text-xs text-muted/80">
+      <p className="mb-3 text-xs text-muted">
         {t({
           ru: "Читает публичный чат канала анонимно (без входа в Twitch).",
           en: "Reads the channel's public chat anonymously (no Twitch login).",
@@ -169,7 +169,7 @@ export function ObsTwitchPanel({
                     onChange={twitch.setPastePermission}
                   />
                 </div>
-                <p className="pl-5 text-[11px] text-muted/70">
+                <p className="pl-5 text-[11px] text-muted">
                   {t({
                     ru: 'Пример: "!paste 42,105,12,8" — числа берутся из ссылки Поделиться на сайте.',
                     en: 'Example: "!paste 42,105,12,8" — the numbers come from the site\'s Share link.',
@@ -224,7 +224,7 @@ export function ObsTwitchPanel({
             )}
           </div>
 
-          <p className="text-[11px] text-muted/60">
+          <p className="text-[11px] text-muted">
             {t({
               ru: "Twitch не даёт напрямую узнать «донатер» из чата — саб/VIP статус ближе всего к этому и виден в самом чате.",
               en: 'Twitch\'s chat itself has no notion of "donator" — sub/VIP status is the closest thing visible directly in chat.',
@@ -248,6 +248,7 @@ function PermissionSelect({
     <select
       value={value}
       onChange={(e) => onChange(e.target.value as TwitchPermission)}
+      aria-label={t({ ru: "Кому разрешена команда", en: "Who may use this command" })}
       className="rounded-full border border-border bg-background px-2.5 py-1 text-[11px] text-foreground focus:ring-2 focus:ring-accent/40 focus:outline-none"
     >
       {(["everyone", "subs_vips", "mods"] as const).map((option) => (

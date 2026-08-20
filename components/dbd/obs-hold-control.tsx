@@ -51,7 +51,7 @@ export function ObsHoldControl({ hold }: { hold: ObsHold }) {
         )}
       </div>
 
-      <p className="mt-2 text-[11px] text-muted/70">
+      <p className="mt-2 text-[11px] text-muted">
         {hold.held
           ? hold.pending > 0
             ? t({

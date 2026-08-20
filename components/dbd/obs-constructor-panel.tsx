@@ -33,7 +33,7 @@ export function ObsConstructorPanel({
           {t({ ru: "Конструктор билда", en: "Build constructor" })}
         </h3>
       </div>
-      <p className="mb-3 text-xs text-muted/80">
+      <p className="mb-3 text-xs text-muted">
         {t({
           ru: "Собери билд с нуля — независимо от того, что сгенерировано на сайте сейчас, например чтобы заранее подготовить билд для анонса.",
           en: "Build one from scratch — independent of whatever's currently rolled on the main site, e.g. to prepare an announcement build ahead of time.",
@@ -174,7 +174,7 @@ export function ObsConstructorPanel({
             </button>
           </div>
         ) : (
-          <p className="border-t border-border pt-2 text-[11px] text-muted/70">
+          <p className="border-t border-border pt-2 text-[11px] text-muted">
             {t({
               ru: "Выбери до 4 перков, чтобы получить команду.",
               en: "Pick up to 4 perks to get a command.",
@@ -184,7 +184,7 @@ export function ObsConstructorPanel({
       </div>
 
       {!pasteEnabled && (
-        <p className="mt-3 text-[11px] text-muted/60">
+        <p className="mt-3 text-[11px] text-muted">
           {t({
             ru: "Команда «вставить билд по коду» сейчас выключена во вкладке Twitch — включи её там, чтобы зрители могли использовать эту команду в чате.",
             en: 'The "paste a build by code" command is currently off in the Twitch tab — turn it on there for viewers to actually use this command in chat.',

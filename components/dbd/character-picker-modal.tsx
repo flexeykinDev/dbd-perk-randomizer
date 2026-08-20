@@ -101,6 +101,7 @@ export function CharacterPickerModal({
                     type="text"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
+                    aria-label={t({ ru: "Поиск персонажа", en: "Search characters" })}
                     placeholder={t({ ru: "Поиск персонажа…", en: "Search character…" })}
                     className="w-full rounded-full border border-border bg-background py-1.5 pr-3 pl-8 text-xs text-foreground placeholder:text-muted/60 focus:ring-2 focus:ring-accent/40 focus:outline-none"
                   />

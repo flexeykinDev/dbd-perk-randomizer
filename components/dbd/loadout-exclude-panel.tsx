@@ -263,6 +263,7 @@ export function LoadoutExcludePanel({
                       type="text"
                       value={search}
                       onChange={(e) => setSearch(e.target.value)}
+                      aria-label={t({ ru: "Поиск экипировки", en: "Search loadout" })}
                       placeholder={t({
                         ru: "Поиск: EN или RU название…",
                         en: "Search: EN or RU name…",

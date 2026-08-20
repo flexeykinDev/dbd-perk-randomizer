@@ -207,6 +207,7 @@ export function ExcludePanel({
                       type="text"
                       value={search}
                       onChange={(e) => setSearch(e.target.value)}
+                      aria-label={t({ ru: "Поиск перка", en: "Search perks" })}
                       placeholder={t({
                         ru: "Поиск: EN или RU название…",
                         en: "Search: EN or RU name…",
@@ -217,6 +218,7 @@ export function ExcludePanel({
                   <select
                     value={sortField}
                     onChange={(e) => setSortField(e.target.value as SortField)}
+                    aria-label={t({ ru: "Сортировка", en: "Sort by" })}
                     className="rounded-full border border-border bg-background px-3 py-1.5 text-xs text-foreground focus:ring-2 focus:ring-accent/40 focus:outline-none"
                   >
                     <option value="name">{t({ ru: "По названию", en: "By Name" })}</option>
@@ -246,7 +248,7 @@ export function ExcludePanel({
                   </button>
                 </div>
                 {sortField === "date" && dateSortIsCurrentlyMeaningless && (
-                  <p className="text-[11px] text-muted/70">
+                  <p className="text-[11px] text-muted">
                     {t({
                       ru: "Пока не сортирует — у всех перков одна и та же дата первого добавления в базу сайта. Заработает, когда скрапер найдёт новый перк.",
                       en: "Doesn't reorder anything yet — every perk currently shares the same first-added-to-the-site date. Starts working once the scraper picks up a genuinely new perk.",

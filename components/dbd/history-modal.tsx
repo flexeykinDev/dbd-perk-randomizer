@@ -179,12 +179,12 @@ export function HistoryModal({
                                 · {entry.mode === "loadout" ? t({ ru: "Экипировка", en: "Loadout" }) : t({ ru: "Перки", en: "Perks" })}
                               </span>
                             </p>
-                            <p className="truncate text-xs text-muted/80">
+                            <p className="truncate text-xs text-muted">
                               {pieces.map((p) => p.name[language]).join(", ")}
                             </p>
                           </div>
                           <div className="flex shrink-0 flex-col items-end gap-1">
-                            <span className="flex items-center gap-1 text-[10px] text-muted/70">
+                            <span className="flex items-center gap-1 text-[10px] text-muted">
                               <Clock className="size-2.5" />
                               {formatRelativeTime(entry.at, language)}
                             </span>

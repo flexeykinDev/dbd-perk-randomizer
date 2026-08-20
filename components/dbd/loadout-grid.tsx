@@ -630,7 +630,7 @@ function LoadoutDescriptionPanel({
             <Highlighted text={description.full} role={role} />
           </p>
           {description.quote && (
-            <p className="border-l-2 border-accent/40 pl-3 text-xs italic leading-relaxed text-muted/80">
+            <p className="border-l-2 border-accent/40 pl-3 text-xs italic leading-relaxed text-muted">
               {description.quote}
             </p>
           )}
@@ -638,7 +638,7 @@ function LoadoutDescriptionPanel({
       )}
 
       {untranslated && (
-        <p className="mt-2 text-[11px] text-muted/60">
+        <p className="mt-2 text-[11px] text-muted">
           {t({
             ru: "Перевод для этого предмета пока не добавлен — название и/или описание показаны на английском.",
             en: "No RU translation yet for this piece — the name and/or description are shown in English.",

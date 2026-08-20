@@ -1345,6 +1345,7 @@ export function RandomizerBoard() {
             <select
               value={themeTag ?? ""}
               onChange={(e) => selectTheme(e.target.value || null)}
+              aria-label={t({ ru: "Тема билда", en: "Build theme" })}
               className="rounded-full border border-border bg-background px-3 py-1 text-xs text-foreground focus:ring-2 focus:ring-accent/40 focus:outline-none"
             >
               <option value="">{t({ ru: "Любая", en: "Any" })}</option>
@@ -1557,6 +1558,7 @@ export function RandomizerBoard() {
                   value={customSeedInput}
                   onChange={(e) => setCustomSeedInput(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && applyCustomSeed()}
+                  aria-label={t({ ru: "Свой сид", en: "Custom seed" })}
                   placeholder={t({ ru: "Свой сид…", en: "Custom seed…" })}
                   className="min-w-0 flex-1 rounded-full border border-border bg-background px-3 py-1 text-xs text-foreground placeholder:text-muted/60 focus:ring-2 focus:ring-accent/40 focus:outline-none"
                 />
@@ -1847,7 +1849,7 @@ export function RandomizerBoard() {
 
       {/* Shortcuts are only useful if they're discoverable — a streamer
           mid-broadcast isn't going to find them by experiment. */}
-      <p className="-mt-1 flex flex-wrap items-center justify-center gap-x-1 gap-y-1 text-[11px] text-muted/70">
+      <p className="-mt-1 flex flex-wrap items-center justify-center gap-x-1 gap-y-1 text-[11px] text-muted">
         <kbd className="rounded border border-border bg-surface px-1 py-0.5 font-sans">
           Space
         </kbd>
@@ -1878,7 +1880,7 @@ export function RandomizerBoard() {
       <button
         type="button"
         onClick={() => setShowStats((v) => !v)}
-        className="tap flex items-center gap-1.5 text-xs text-muted/60 transition-colors hover:text-muted"
+        className="tap flex items-center gap-1.5 text-xs text-muted transition-colors hover:text-muted"
       >
         <BarChart3 className="size-3.5" />
         {t({ ru: "Статистика пула", en: "Pool stats" })}
