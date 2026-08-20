@@ -87,6 +87,7 @@ import {
   type ShareCardPiece,
 } from "./share-card";
 import { DownloadImageButton } from "./download-image-button";
+import { canvasToPngBlob, saveImage } from "@/lib/save-image";
 import { ObsOverlayModal, type PieceVisibility } from "./obs-overlay-modal";
 import { CharacterPickerModal } from "./character-picker-modal";
 import { MoreMenu } from "./more-menu";
@@ -1118,14 +1119,21 @@ export function RandomizerBoard() {
         scale: 3,
         useCORS: true,
       });
-      const link = document.createElement("a");
       const suffix = layout === "story" ? "-story" : "";
-      link.download = `dbd-${role}-build-${sharePieces.map((p) => p.slug).join("-")}${suffix}.png`;
-      link.href = canvas.toDataURL("image/png");
-      link.click();
-      showToast(
-        t({ ru: "Картинка билда скачана!", en: "Build image downloaded!" }),
-      );
+      const filename = `dbd-${role}-build-${sharePieces.map((p) => p.slug).join("-")}${suffix}.png`;
+      // See lib/save-image.ts: this used to be an <a download> pointed at a
+      // data: URL, which does nothing whatsoever on iOS and reported success
+      // anyway.
+      const outcome = await saveImage(await canvasToPngBlob(canvas), filename);
+      if (outcome === "shared") {
+        showToast(t({ ru: "Картинка билда готова!", en: "Build image ready!" }));
+      } else if (outcome === "downloaded") {
+        showToast(
+          t({ ru: "Картинка билда скачана!", en: "Build image downloaded!" }),
+        );
+      }
+      // "cancelled" means the share sheet was dismissed on purpose. Nothing
+      // went wrong and nothing was saved, so say neither.
     } catch {
       showToast(
         t({
@@ -1848,8 +1856,17 @@ export function RandomizerBoard() {
       </button>
 
       {/* Shortcuts are only useful if they're discoverable — a streamer
-          mid-broadcast isn't going to find them by experiment. */}
-      <p className="-mt-1 flex flex-wrap items-center justify-center gap-x-1 gap-y-1 text-[11px] text-muted">
+          mid-broadcast isn't going to find them by experiment.
+          Hidden under `pointer: coarse`: measured on a 412px Pixel 7, this
+          row still rendered 275x23 advertising keys a phone has no way to
+          press. Hiding it is the rare fix that gives the tightest viewport
+          space back instead of asking for more.
+          The digit shortcuts are deliberately not listed here. They live on
+          the reroll buttons themselves (perk-grid.tsx), because a legend
+          grows with every shortcut added while a label on the control does
+          not — and this row reading as the complete set while omitting
+          them was the actual problem. */}
+      <p className="-mt-1 flex flex-wrap items-center justify-center gap-x-1 gap-y-1 text-[11px] text-muted pointer-coarse:hidden">
         <kbd className="rounded border border-border bg-surface px-1 py-0.5 font-sans">
           Space
         </kbd>

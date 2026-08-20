@@ -31,6 +31,16 @@ const CORNER_BUTTON_IDLE =
   "bg-black/40 text-white/80 opacity-0 pointer-coarse:opacity-100 group-hover:opacity-100 hover:bg-black/60 hover:text-white focus-visible:opacity-100";
 const CORNER_BUTTON = cn(CORNER_BUTTON_BASE, CORNER_BUTTON_IDLE);
 
+/* The reroll button carries its keyboard digit, so it is a pill on pointer
+   devices rather than a circle. Back to a plain circle under
+   `pointer: coarse`: a phone has no number row, so the digit would be a
+   label for something the visitor cannot do. */
+const REROLL_BUTTON = cn(
+  CORNER_BUTTON_BASE,
+  CORNER_BUTTON_IDLE,
+  "w-auto min-w-6 gap-0.5 px-1.5 pointer-coarse:w-10 pointer-coarse:min-w-10 pointer-coarse:gap-0 pointer-coarse:px-0",
+);
+
 export function PerkGrid({
   perks,
   language,
@@ -139,20 +149,35 @@ export function PerkGrid({
                         onRerollSlot(index);
                       }}
                       disabled={isPinned}
-                      // Names the keyboard shortcut in the tooltip — the
-                      // digit hotkeys are otherwise invisible, and this is
-                      // the button they correspond to.
+                      // The digit used to live only here, in a tooltip on a
+                      // button that is itself only revealed on hover: you
+                      // had to hover the card, wait for the button to fade
+                      // in, hover the button, then wait out the browser's
+                      // own tooltip delay. Four steps to discover a
+                      // shortcut, which in practice means nobody did. It is
+                      // drawn in the button now; this stays for the longer
+                      // phrasing, since a bare "1" reads as a count as
+                      // easily as a key.
                       title={t({
-                        ru: `Перебросить этот перк (${index + 1})`,
-                        en: `Reroll this perk (${index + 1})`,
+                        ru: `Перебросить этот перк — клавиша ${index + 1}`,
+                        en: `Reroll this perk — press ${index + 1}`,
                       })}
                       aria-label={t({
                         ru: "Перебросить этот перк",
                         en: "Reroll this perk",
                       })}
-                      className={CORNER_BUTTON}
+                      className={REROLL_BUTTON}
                     >
-                      <Dices className="size-3.5" />
+                      <Dices className="size-3.5 shrink-0" />
+                      {/* aria-hidden: the button is already named, and a
+                          screen reader announcing "Reroll this perk 1"
+                          would sound like a count. */}
+                      <span
+                        aria-hidden
+                        className="text-[10px] leading-none font-semibold tabular-nums pointer-coarse:hidden"
+                      >
+                        {index + 1}
+                      </span>
                     </button>
                   )}
 

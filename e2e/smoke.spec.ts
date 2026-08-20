@@ -1629,3 +1629,67 @@ test.describe("OBS overlay, fed by the real site", () => {
     await overlay.close();
   });
 });
+
+test.describe("Shortcut discoverability", () => {
+  test("each reroll button shows the digit that triggers it", async ({ page }) => {
+    // The digit used to exist only in a title tooltip on a hover-revealed
+    // button, so finding it took four steps and two delays. Drawing it in
+    // the button is what makes the 1-4 hotkeys findable at all — and the
+    // numbers have to match the slot order, or the hint teaches the wrong
+    // key.
+    await page.goto("/?role=survivor");
+    await expect(page.locator("[data-perk-card]")).toHaveCount(4);
+
+    const cards = page.locator("[data-perk-card]");
+    const shown: string[] = [];
+    for (let i = 0; i < 4; i++) {
+      const button = cards.nth(i).getByRole("button", { name: "Перебросить этот перк" });
+      // Hovering the card is what reveals the corner controls.
+      await cards.nth(i).hover();
+      await expect(button).toBeVisible();
+      shown.push((await button.innerText()).trim());
+    }
+    expect(shown, "the digit drawn on each reroll button, left to right").toEqual([
+      "1",
+      "2",
+      "3",
+      "4",
+    ]);
+  });
+
+  test("the digit shown on a slot is the key that rerolls that slot", async ({ page }) => {
+    // Ties the label to the behaviour: pressing what slot 2 advertises has
+    // to change slot 2 and leave the rest alone. A hint that names the
+    // wrong key is worse than no hint.
+    await page.goto("/?role=survivor");
+    await expect(page.locator("[data-perk-card]")).toHaveCount(4);
+    const before = await boardPerks(page);
+
+    await page.locator("[data-perk-card]").nth(1).hover();
+    const label = (
+      await page
+        .locator("[data-perk-card]")
+        .nth(1)
+        .getByRole("button", { name: "Перебросить этот перк" })
+        .innerText()
+    ).trim();
+    expect(label).toBe("2");
+
+    await page.locator("body").click({ position: { x: 5, y: 5 } });
+    await page.keyboard.press(`Digit${label}`);
+    await expect.poll(() => boardPerks(page).then((p) => p[1])).not.toBe(before[1]);
+
+    const after = await boardPerks(page);
+    expect([after[0], after[2], after[3]]).toEqual([before[0], before[2], before[3]]);
+  });
+
+  test("the shortcut legend does not claim to be the complete list", async ({ page }) => {
+    // It advertises Space/C/S. An incomplete list reads as a complete one,
+    // which is why the digits are labelled on the controls instead of being
+    // appended here — a legend grows with every shortcut, a label does not.
+    await page.goto("/?role=survivor");
+    await expect(page.locator("[data-perk-card]")).toHaveCount(4);
+    const keys = await page.locator("kbd").allInnerTexts();
+    expect(keys.map((k) => k.trim())).toEqual(["Space", "C", "S"]);
+  });
+});

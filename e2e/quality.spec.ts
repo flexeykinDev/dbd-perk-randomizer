@@ -103,6 +103,11 @@ async function eachPanel(page: Page, inspect: (label: string) => Promise<void>):
 }
 
 test("no URL, however malformed, produces an error or a blank page", async ({ browser }) => {
+  // Twenty-one fresh browser contexts, each loading and settling a page.
+  // That is inherently slower than the 30s default allows for, and running
+  // out of budget here shows up as an unrelated-looking "Test ended" rather
+  // than as a finding.
+  test.setTimeout(180_000);
   // Share links are pasted, edited and truncated by hand and by chat
   // clients. Every one of these has to degrade to a working randomiser
   // rather than an exception.

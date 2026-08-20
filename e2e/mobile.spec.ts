@@ -152,3 +152,120 @@ test("opening a card's description is readable rather than clipped", async ({ pa
   // by the header.
   await expect(modal.getByRole("listitem").first()).toBeInViewport();
 });
+
+test("no keyboard hint is shown to a device with no keyboard", async ({ page }) => {
+  // This row rendered 275x23 on a phone, advertising Space/C/S — keys a
+  // touch device cannot press. The digit hints on the reroll buttons are
+  // hidden here for the same reason; see the desktop counterpart in
+  // smoke.spec.ts, which checks they *are* shown where they work.
+  await page.goto("/?role=survivor");
+  await expect(page.locator("[data-perk-card]")).toHaveCount(4);
+
+  expect(await page.evaluate(() => matchMedia("(hover: hover)").matches)).toBe(false);
+
+  const visibleKeys: string[] = [];
+  const kbd = page.locator("kbd");
+  for (let i = 0; i < (await kbd.count()); i++) {
+    const key = kbd.nth(i);
+    if (await key.isVisible()) visibleKeys.push((await key.innerText()).trim());
+  }
+  expect(visibleKeys, "keyboard hints on a touch device").toEqual([]);
+
+  const digits = page
+    .locator("[data-perk-card]")
+    .getByRole("button", { name: "Перебросить этот перк" })
+    .locator("span");
+  expect(await digits.evaluateAll((els) => els.filter((e) => e.checkVisibility()).length)).toBe(0);
+});
+
+test("on a phone, Download Image hands a real PNG to the share sheet", async ({ page }) => {
+  // Reported from an iPhone 17 Pro: the button did nothing, and the toast
+  // still said the image had been saved. The old path was an <a download>
+  // pointed at a multi-megabyte data: URL — which iOS ignores on both
+  // counts — and the success toast fired unconditionally.
+  //
+  // The share sheet cannot be driven from a test, so it is stubbed here and
+  // the assertions are about what the site hands it: a real PNG file, of
+  // non-zero size, named after the build. That is the part this code owns.
+  await page.addInitScript(() => {
+    const shared: Array<{ name: string; type: string; size: number }> = [];
+    (window as unknown as { __shared: typeof shared }).__shared = shared;
+    Object.defineProperty(navigator, "canShare", {
+      configurable: true,
+      value: (data: { files?: File[] }) => Array.isArray(data?.files),
+    });
+    Object.defineProperty(navigator, "share", {
+      configurable: true,
+      value: async (data: { files?: File[] }) => {
+        for (const file of data.files ?? [])
+          shared.push({ name: file.name, type: file.type, size: file.size });
+      },
+    });
+  });
+
+  await page.goto("/?role=survivor");
+  await expect(page.locator("[data-perk-card]")).toHaveCount(4);
+
+  await page.getByRole("button", { name: /Скачать картинку/ }).click();
+  await page.getByRole("menuitem", { name: /Стандартный/ }).click();
+
+  await expect
+    .poll(
+      () => page.evaluate(() => (window as unknown as { __shared: unknown[] }).__shared.length),
+      { timeout: 30_000 },
+    )
+    .toBe(1);
+
+  const [file] = await page.evaluate(
+    () => (window as unknown as { __shared: Array<{ name: string; type: string; size: number }> }).__shared,
+  );
+  expect(file.type).toBe("image/png");
+  expect(file.name).toMatch(/^dbd-survivor-build-.+\.png$/);
+  // A blob that exists but is empty would still "share" — and would still
+  // be a broken feature.
+  expect(file.size).toBeGreaterThan(10_000);
+
+  // And it must not claim the file was downloaded, because it was not.
+  await expect(page.getByText("Картинка билда готова!")).toBeVisible();
+  await expect(page.getByText("Картинка билда скачана!")).not.toBeVisible();
+});
+
+test("a dismissed share sheet is not reported as a success", async ({ page }) => {
+  // Cancelling is a decision, not a failure. Congratulating someone for
+  // saving a file they deliberately did not save is how the original bug
+  // stayed invisible for so long.
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, "canShare", {
+      configurable: true,
+      value: () => true,
+    });
+    Object.defineProperty(navigator, "share", {
+      configurable: true,
+      value: async () => {
+        throw Object.assign(new Error("cancelled"), { name: "AbortError" });
+      },
+    });
+  });
+
+  await page.goto("/?role=survivor");
+  await expect(page.locator("[data-perk-card]")).toHaveCount(4);
+  await page.getByRole("button", { name: /Скачать картинку/ }).click();
+  await page.getByRole("menuitem", { name: /Стандартный/ }).click();
+
+  // Sampled rather than checked once at the end: a toast dismisses itself
+  // after a few seconds, so "wait, then assert it is gone" passes whether or
+  // not it ever appeared. Confirmed — that version of this test survived the
+  // mutation that reports a cancelled share as a success.
+  const seen = new Set<string>();
+  for (let i = 0; i < 60; i++) {
+    const text = (await page.locator("body").innerText()).trim();
+    for (const toast of [
+      "Картинка билда скачана!",
+      "Картинка билда готова!",
+      "Не удалось создать картинку",
+    ])
+      if (text.includes(toast)) seen.add(toast);
+    await page.waitForTimeout(150);
+  }
+  expect([...seen], "a dismissed share sheet should say nothing at all").toEqual([]);
+});
