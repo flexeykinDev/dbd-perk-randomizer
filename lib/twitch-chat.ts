@@ -44,7 +44,7 @@ function escapeRegExp(s: string): string {
   return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-function hasPermission(roles: TwitchSenderRoles, required: TwitchPermission): boolean {
+export function hasPermission(roles: TwitchSenderRoles, required: TwitchPermission): boolean {
   if (roles.isBroadcaster || roles.isModerator) return true;
   if (required === "mods") return false;
   if (required === "subs_vips") return roles.isVip || roles.isSubscriber;
@@ -76,16 +76,74 @@ function rolesFromTags(tags: Record<string, string>): TwitchSenderRoles {
   };
 }
 
+/** What one raw IRC line asked for. Only "pong" needs the socket — by the
+ *  time anything else is returned the line has already been dispatched (or
+ *  refused). Finer-grained than the caller needs, so a test can tell a
+ *  permission refusal apart from a line that simply wasn't a command. */
+export type ChatLineOutcome = "pong" | "ignored" | "no-match" | "denied" | "cooling-down" | "triggered";
+
+/** The entire decision path for an incoming chat line — tag parsing, role
+ *  derivation, command matching, permission gating, cooldown — with no
+ *  WebSocket in it.
+ *
+ *  Pulled out of socket.onmessage, where all of it used to live and was
+ *  therefore unreachable from a test: the rules deciding whether a stranger
+ *  can reroll a live stream's build were only ever verified by watching a
+ *  real chat. `now` is injected so a cooldown can be tested without waiting
+ *  one out.
+ *
+ *  `channel` must already be normalised (lowercase, no leading '#').  */
+export function createChatDispatcher(
+  channel: string,
+  commands: TwitchCommand[],
+  now: () => number = Date.now,
+): (rawLine: string) => ChatLineOutcome {
+  const privmsgMarker = ` PRIVMSG #${channel} :`;
+  const matchers = commands.map((command) => ({
+    command,
+    re: new RegExp(`^${escapeRegExp(command.trigger.toLowerCase())}(?:\\s+(.*))?$`, "i"),
+    // -Infinity, not 0: with an injected clock that starts near zero, a 0
+    // sentinel would swallow the very first command as if it were still
+    // cooling down.
+    lastTriggerAt: -Infinity,
+  }));
+
+  return function handleLine(rawLine: string): ChatLineOutcome {
+    if (!rawLine) return "ignored";
+    if (rawLine.startsWith("PING")) return "pong";
+
+    const { tags, rest: line } = parseTags(rawLine);
+    const markerIndex = line.indexOf(privmsgMarker);
+    if (markerIndex === -1) return "ignored";
+    const text = line.slice(markerIndex + privmsgMarker.length).trim();
+    const roles = rolesFromTags(tags);
+
+    let outcome: ChatLineOutcome = "no-match";
+    for (const matcher of matchers) {
+      const match = text.match(matcher.re);
+      if (!match) continue;
+      if (!hasPermission(roles, matcher.command.permission)) {
+        outcome = "denied";
+        continue;
+      }
+      const at = now();
+      if (at - matcher.lastTriggerAt < matcher.command.cooldownMs) {
+        outcome = "cooling-down";
+        continue;
+      }
+      matcher.lastTriggerAt = at;
+      matcher.command.onTrigger(match[1]?.trim() ?? "", roles);
+      outcome = "triggered";
+    }
+    return outcome;
+  };
+}
+
 /** Opens the connection and returns a cleanup function that closes it and
  *  stops any pending reconnect — call on toggle-off or unmount. */
 export function connectTwitchChat(options: TwitchChatOptions): () => void {
   const channel = options.channel.trim().toLowerCase().replace(/^#/, "");
-  const privmsgMarker = ` PRIVMSG #${channel} :`;
-  const commandMatchers = options.commands.map((command) => ({
-    command,
-    re: new RegExp(`^${escapeRegExp(command.trigger.toLowerCase())}(?:\\s+(.*))?$`, "i"),
-    lastTriggerAt: 0,
-  }));
+  const handleLine = createChatDispatcher(channel, options.commands);
 
   let ws: WebSocket | null = null;
   let stopped = false;
@@ -108,27 +166,7 @@ export function connectTwitchChat(options: TwitchChatOptions): () => void {
     socket.onmessage = (event) => {
       const raw = typeof event.data === "string" ? event.data : "";
       for (const rawLine of raw.split("\r\n")) {
-        if (!rawLine) continue;
-        if (rawLine.startsWith("PING")) {
-          socket.send("PONG :tmi.twitch.tv");
-          continue;
-        }
-
-        const { tags, rest: line } = parseTags(rawLine);
-        const markerIndex = line.indexOf(privmsgMarker);
-        if (markerIndex === -1) continue;
-        const text = line.slice(markerIndex + privmsgMarker.length).trim();
-        const roles = rolesFromTags(tags);
-
-        for (const matcher of commandMatchers) {
-          const match = text.match(matcher.re);
-          if (!match) continue;
-          if (!hasPermission(roles, matcher.command.permission)) continue;
-          const now = Date.now();
-          if (now - matcher.lastTriggerAt < matcher.command.cooldownMs) continue;
-          matcher.lastTriggerAt = now;
-          matcher.command.onTrigger(match[1]?.trim() ?? "", roles);
-        }
+        if (handleLine(rawLine) === "pong") socket.send("PONG :tmi.twitch.tv");
       }
     };
 

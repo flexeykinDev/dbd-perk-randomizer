@@ -1,4 +1,27 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
+
+// The pool button is matched as /^Пул\d*$/ rather than by the exact name "Пул"
+// everywhere below. It carries a count badge as soon as anything is
+// excluded, so its accessible name becomes "Пул1" — and an exact match then
+// only succeeds in the window before the saved pool has hydrated. That made
+// the reload test below pass by outrunning the very restore it exists to
+// check, and fail whenever it lost the race. Anchoring at the start keeps
+// "Статистика пула" out of it, and anchoring the end keeps the separate
+// "Пул перков" / "Пул экип." buttons that All mode shows out too.
+import { readFile } from "node:fs/promises";
+
+/** The perk names currently on the board, read off the card images.
+ *
+ *  Waits for the card count to settle first: a regenerate cross-fades, so
+ *  the outgoing cards stay mounted until their exit animation finishes and
+ *  a naive read catches two builds at once — eight names, half of them from
+ *  the build that is on its way out. */
+async function boardPerks(page: Page, count = 4): Promise<string[]> {
+  await expect(page.locator("[data-perk-card]")).toHaveCount(count);
+  return page
+    .locator("[data-perk-card] img[alt]")
+    .evaluateAll((imgs) => imgs.map((img) => img.getAttribute("alt") ?? ""));
+}
 
 test.describe("DBD randomizer", () => {
   test("home page generates a build, toggles role, and updates the share URL", async ({
@@ -30,7 +53,7 @@ test.describe("DBD randomizer", () => {
   }) => {
     await page.goto("/");
     // exact: true — a fuzzy match also catches "Статистика пула" (Pool stats).
-    await page.getByRole("button", { name: "Пул", exact: true }).click();
+    await page.getByRole("button", { name: /^Пул\d*$/ }).click();
 
     const panel = page.getByText("Настроить пул перков");
     await expect(panel).toBeVisible();
@@ -59,7 +82,7 @@ test.describe("DBD randomizer", () => {
     // lib/use-persisted-set.ts — a hydrate that silently did nothing would
     // leave the test above passing.
     await page.goto("/");
-    await page.getByRole("button", { name: "Пул", exact: true }).click();
+    await page.getByRole("button", { name: /^Пул\d*$/ }).click();
     await expect(page.getByText("Настроить пул перков")).toBeVisible();
 
     const cards = page.locator("div.fixed.inset-0").locator('[role="button"]:has(img)');
@@ -77,7 +100,7 @@ test.describe("DBD randomizer", () => {
     await expect(excludedCards).toHaveCount(1);
 
     await page.reload();
-    await page.getByRole("button", { name: "Пул", exact: true }).click();
+    await page.getByRole("button", { name: /^Пул\d*$/ }).click();
     await expect(page.getByText("Настроить пул перков")).toBeVisible();
     await expect(page.locator("div.fixed.inset-0 .grayscale")).toHaveCount(1);
   });
@@ -90,7 +113,7 @@ test.describe("DBD randomizer", () => {
     // responding entirely (see randomizer-board.tsx's namespaced
     // `perk-pool-${role}` / `char-picker-${...}` keys).
     await page.goto("/");
-    await page.getByRole("button", { name: "Пул", exact: true }).click();
+    await page.getByRole("button", { name: /^Пул\d*$/ }).click();
     const panel = page.getByText("Настроить пул перков");
     await expect(panel).toBeVisible();
 
@@ -189,7 +212,7 @@ test.describe("Dialog behaviour", () => {
       name: "perk pool",
       open: async (page: import("@playwright/test").Page) => {
         await page.goto("/");
-        await page.getByRole("button", { name: "Пул", exact: true }).click();
+        await page.getByRole("button", { name: /^Пул\d*$/ }).click();
       },
     },
     {
@@ -218,7 +241,7 @@ test.describe("Dialog behaviour", () => {
     page,
   }) => {
     await page.goto("/");
-    const poolButton = page.getByRole("button", { name: "Пул", exact: true });
+    const poolButton = page.getByRole("button", { name: /^Пул\d*$/ });
     await poolButton.click();
 
     // Focus starts on the dialog itself rather than being left behind on
@@ -233,7 +256,7 @@ test.describe("Dialog behaviour", () => {
     page,
   }) => {
     await page.goto("/");
-    await page.getByRole("button", { name: "Пул", exact: true }).click();
+    await page.getByRole("button", { name: /^Пул\d*$/ }).click();
     const dialog = page.getByRole("dialog");
     await expect(dialog).toBeVisible();
 
@@ -310,10 +333,15 @@ test.describe("Full Loadout", () => {
     // wait for hydration to finish wiring up the Пул button's onClick
     // before we click it. See the same comment in "Combined All mode"
     // below for the failure this avoids.
-    await expect(
-      page.locator("main").locator("img[alt]").first(),
-    ).toBeVisible();
-    await page.getByRole("button", { name: "Пул", exact: true }).click();
+    //
+    // The *first* image is not a strong enough signal — it shows up while
+    // the grid is still filling in, so the click could still land before
+    // React had attached the handler and the panel then never opened at
+    // all. A settled set of pieces is what actually means "hydrated".
+    await expect
+      .poll(() => page.locator("[data-piece-slug]").count())
+      .toBeGreaterThan(2);
+    await page.getByRole("button", { name: /^Пул\d*$/ }).click();
 
     const panel = page.getByText("Настроить пул экипировки");
     await expect(panel).toBeVisible();
@@ -656,7 +684,7 @@ test.describe("Character picker", () => {
     // their own add-ons + offerings.
     await page.goto("/?role=killer&mode=loadout");
 
-    await page.getByRole("button", { name: "Пул", exact: true }).click();
+    await page.getByRole("button", { name: /^Пул\d*$/ }).click();
     const poolHeader = page.getByText(/Активно:/);
     const beforeText = await poolHeader.textContent();
     const beforeTotal = Number(beforeText?.split("/")[1]?.trim());
@@ -665,7 +693,7 @@ test.describe("Character picker", () => {
     await page.getByRole("button", { name: "Выбрать персонажа" }).click();
     await page.getByRole("button", { name: "Случайный", exact: true }).click();
 
-    await page.getByRole("button", { name: "Пул", exact: true }).click();
+    await page.getByRole("button", { name: /^Пул\d*$/ }).click();
     const afterText = await poolHeader.textContent();
     const afterTotal = Number(afterText?.split("/")[1]?.trim());
 
@@ -1378,5 +1406,220 @@ test.describe("Single-slot reroll", () => {
     await expect.poll(async () => (await liveBuild(page))[0]).not.toBe(fresh[0]);
     expect((await liveBuild(page)).slice(1)).toEqual(fresh.slice(1));
     expect(rerolled).toBeTruthy();
+  });
+});
+
+test.describe("Battle Royale", () => {
+  /** "Использовано в Battle Royale: 8 · Осталось: 307" → [8, 307]. */
+  async function attrition(page: Page): Promise<[number, number]> {
+    const text = await page
+      .getByText("Использовано в Battle Royale:")
+      .first()
+      .innerText();
+    const numbers = text.match(/\d+/g) ?? [];
+    return [Number(numbers[0]), Number(numbers[1])];
+  }
+
+  test("every round permanently retires the build it replaces", async ({
+    page,
+  }) => {
+    // The mode's entire premise — "play until every perk for this role is
+    // gone" — and none of it was covered. A regression here is invisible in
+    // a single round: the build still rolls, it just quietly stops draining
+    // the pool, so the mode silently becomes ordinary randomisation.
+    await page.goto("/?role=survivor");
+    await expect(page.locator("[data-perk-card]").first()).toBeVisible();
+
+    await page.getByRole("switch", { name: "Battle Royale" }).click();
+    await page.getByRole("button", { name: "Статистика пула" }).click();
+
+    const [usedAtStart, remainingAtStart] = await attrition(page);
+    expect(usedAtStart, "switching the mode on starts a fresh run").toBe(0);
+
+    const generate = page.getByRole("button", {
+      name: "Сгенерировать новый билд",
+    });
+    const rounds: string[][] = [await boardPerks(page)];
+    for (let round = 0; round < 3; round++) {
+      const before = rounds[rounds.length - 1];
+      // The board is rebuilt in place, so wait for the perks to actually
+      // differ rather than for a visibility change that never happens.
+      await generate.click();
+      await expect
+        .poll(() => boardPerks(page).then((p) => p.join()))
+        .not.toBe(before.join());
+      rounds.push(await boardPerks(page));
+    }
+
+    const [used, remaining] = await attrition(page);
+    expect(used, "three rounds should retire three builds").toBe(12);
+    expect(remaining).toBe(remainingAtStart - 12);
+
+    // The counter can be right while the pool is not; what actually matters
+    // is that a retired perk never comes back.
+    const seen = rounds.flat();
+    expect(new Set(seen).size, `repeats among ${seen.join(", ")}`).toBe(
+      seen.length,
+    );
+  });
+
+  test("switching the mode off and on again starts a new run", async ({
+    page,
+  }) => {
+    await page.goto("/?role=survivor");
+    await expect(page.locator("[data-perk-card]").first()).toBeVisible();
+    const toggle = page.getByRole("switch", { name: "Battle Royale" });
+    await toggle.click();
+    await page.getByRole("button", { name: "Статистика пула" }).click();
+    await page
+      .getByRole("button", { name: "Сгенерировать новый билд" })
+      .click();
+    await expect.poll(() => attrition(page).then(([u]) => u)).toBe(4);
+
+    await toggle.click();
+    await expect(
+      page.getByText("Использовано в Battle Royale:"),
+    ).not.toBeVisible();
+    await toggle.click();
+    expect((await attrition(page))[0]).toBe(0);
+  });
+});
+
+test.describe("Download Image", () => {
+  /** Width and height straight out of a PNG's IHDR chunk, which sits at a
+   *  fixed offset — cheaper and more trustworthy than decoding the image. */
+  function pngSize(buffer: Buffer): { width: number; height: number } {
+    expect(buffer.subarray(0, 8).toString("hex"), "not a PNG").toBe(
+      "89504e470d0a1a0a",
+    );
+    return { width: buffer.readUInt32BE(16), height: buffer.readUInt32BE(20) };
+  }
+
+  async function grab(page: Page, format: RegExp) {
+    const started = page.waitForEvent("download");
+    await page.getByRole("button", { name: /Скачать картинку/ }).click();
+    await page.getByRole("menuitem", { name: format }).click();
+    const file = await started;
+    const path = await file.path();
+    return { name: file.suggestedFilename(), buffer: await readFile(path) };
+  }
+
+  test("each format produces a real PNG in its own shape", async ({ page }) => {
+    // Untested end to end until now: the button rasterises a hidden
+    // off-screen ShareCard through html2canvas, and a failure in there is
+    // caught and turned into a toast — so a completely broken export still
+    // looks like a working button.
+    await page.goto("/?role=survivor");
+    await expect(page.locator("[data-perk-card]").first()).toBeVisible();
+
+    const landscape = await grab(page, /Стандартный/);
+    expect(landscape.name).toMatch(/^dbd-survivor-build-.+\.png$/);
+    expect(landscape.name).not.toContain("-story");
+    const wide = pngSize(landscape.buffer);
+    expect(wide.width).toBeGreaterThan(wide.height);
+
+    const story = await grab(page, /История/);
+    expect(story.name).toMatch(/^dbd-survivor-build-.+-story\.png$/);
+    const tall = pngSize(story.buffer);
+    // The two formats exist to be different shapes; asking for the story
+    // card and getting the landscape one is the bug this guards.
+    expect(tall.height).toBeGreaterThan(tall.width);
+
+    await expect(page.getByText("Картинка билда скачана!")).toBeVisible();
+  });
+});
+
+test.describe("Language switch", () => {
+  test("English translates the page and leaves the build alone", async ({
+    page,
+  }) => {
+    await page.goto("/?role=survivor");
+    await expect(page.locator("[data-perk-card]").first()).toBeVisible();
+
+    const russian = await boardPerks(page);
+    expect(russian.join()).toMatch(/[А-Яа-я]/);
+    const buildBefore = new URL(page.url()).searchParams.get("p");
+
+    await page
+      .getByRole("button", { name: "Switch language / Переключить язык" })
+      .click();
+
+    await expect(
+      page.getByRole("button", { name: "Generate a new build" }),
+    ).toBeVisible();
+    // Chrome and data both have to switch: the buttons come from the i18n
+    // dictionary, the perk names from the shipped data files.
+    await expect
+      .poll(() => boardPerks(page).then((p) => p.join()))
+      .not.toMatch(/[А-Яа-я]/);
+
+    // Language is a display concern; re-rolling while changing it would
+    // throw away the build the visitor is looking at.
+    expect(new URL(page.url()).searchParams.get("p")).toBe(buildBefore);
+
+    // And the choice has to outlive the tab, or every visit fights the
+    // browser's own locale again.
+    await page.reload();
+    await expect(
+      page.getByRole("button", { name: "Generate a new build" }),
+    ).toBeVisible();
+
+    await page
+      .getByRole("button", { name: "Switch language / Переключить язык" })
+      .click();
+    await expect(
+      page.getByRole("button", { name: "Сгенерировать новый билд" }),
+    ).toBeVisible();
+  });
+});
+
+test.describe("OBS overlay, fed by the real site", () => {
+  test("a Browser Source opened mid-session shows the build already rolled, then follows it", async ({
+    page,
+    context,
+  }) => {
+    // The overlay had only ever been tested in its empty "waiting" state —
+    // the one state that needs no data at all. This drives the real publish
+    // path (the board writes, the overlay reads) from a second tab in the
+    // same browser, which is how OBS's Browser Source sits alongside the
+    // streamer's own window.
+    await page.goto("/?role=survivor");
+    await expect(page.locator("[data-perk-card]").first()).toBeVisible();
+    const published = await boardPerks(page);
+    expect(published.length).toBeGreaterThan(0);
+
+    const overlay = await context.newPage();
+    const overlayPerks = () =>
+      overlay
+        .locator("img[alt]")
+        .evaluateAll((imgs) => imgs.map((i) => i.getAttribute("alt") ?? ""));
+    await overlay.goto("/?obs=1");
+
+    // Opening late must not mean waiting for the next roll — the last known
+    // build is mirrored to storage for exactly this case.
+    await expect
+      .poll(() =>
+        overlayPerks().then((names) => published.every((p) => names.includes(p))),
+      )
+      .toBe(true);
+    await expect(
+      overlay.getByText(/Ждём билд с основного сайта|Waiting for a build/),
+    ).not.toBeVisible();
+
+    // And it keeps up once it is open.
+    await page
+      .getByRole("button", { name: "Сгенерировать новый билд" })
+      .click();
+    await expect
+      .poll(() => boardPerks(page).then((p) => p.join()))
+      .not.toBe(published.join());
+    const next = await boardPerks(page);
+    await expect
+      .poll(() =>
+        overlayPerks().then((names) => next.every((p) => names.includes(p))),
+      )
+      .toBe(true);
+
+    await overlay.close();
   });
 });

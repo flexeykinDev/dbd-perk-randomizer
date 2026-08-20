@@ -76,7 +76,10 @@ test("the primary action is reachable without scrolling to find it", async ({ pa
 
 test("toolbar controls are big enough to hit with a thumb", async ({ page }) => {
   await page.goto("/?role=survivor");
-  await expect(page.locator("main").locator("img[alt]").first()).toBeVisible();
+  // Not just "a card is visible": the board cross-fades, and a card on its
+  // way out is mid-transform, so its buttons measure smaller than they will
+  // ever actually be drawn. Waiting for exactly the build settles that.
+  await expect(page.locator("[data-perk-card]")).toHaveCount(4);
 
   const tooSmall: string[] = [];
   const buttons = await page.getByRole("button").all();
@@ -98,8 +101,13 @@ test("toolbar controls are big enough to hit with a thumb", async ({ page }) => 
 
 test("a modal fits the screen and its close button is reachable", async ({ page }) => {
   await page.goto("/?role=survivor");
-  await expect(page.locator("main").locator("img[alt]").first()).toBeVisible();
-  await page.getByRole("button", { name: "Пул", exact: true }).click();
+  // Wait for the settled build rather than for the first image: the cards
+  // are rendered client-side, so a full set of them is the signal that
+  // hydration has finished and the pool button's onClick is actually
+  // attached. Clicking it before that does nothing at all, and the dialog
+  // below never appears.
+  await expect(page.locator("[data-perk-card]")).toHaveCount(4);
+  await page.getByRole("button", { name: /^Пул\d*$/ }).click();
 
   const dialog = page.getByRole("dialog");
   await expect(dialog).toBeVisible();
@@ -119,7 +127,10 @@ test("a modal fits the screen and its close button is reachable", async ({ page 
 test("the perk grid stacks instead of squeezing four across", async ({ page }) => {
   await page.goto("/?role=survivor");
   const cards = page.locator("[data-perk-card]");
-  await expect(cards.first()).toBeVisible();
+  // Exactly the build, not the build plus a set of outgoing cards still
+  // finishing their cross-fade — with eight cards on screen "more than one
+  // row" would be true no matter how the grid is configured.
+  await expect(cards).toHaveCount(4);
 
   const boxes = await Promise.all((await cards.all()).map((c) => c.boundingBox()));
   const tops = new Set(boxes.filter(Boolean).map((b) => Math.round(b!.y / 10)));
