@@ -311,7 +311,7 @@ function PieceCopyButton({
       type="button"
       onClick={onClick}
       className={cn(
-        "flex items-center justify-center gap-1 rounded-md border border-border text-muted transition-colors hover:border-accent/50 hover:bg-accent/10 hover:text-accent",
+        "tap flex items-center justify-center gap-1 rounded-md border border-border text-muted transition-colors hover:border-accent/50 hover:bg-accent/10 hover:text-accent",
         size === "lg" ? "w-24 py-1 text-[10px] sm:w-28 lg:w-32" : "w-16 py-0.5 text-[9px] sm:w-20 lg:w-24",
       )}
     >

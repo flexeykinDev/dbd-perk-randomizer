@@ -140,7 +140,7 @@ export function VideoEmbed({ src, title }: { src: string; title: string }) {
             onClick={toggleCollapsed}
             aria-label={t({ ru: "Скрыть трейлер", en: "Hide video" })}
             title={t({ ru: "Скрыть трейлер", en: "Hide video" })}
-            className="absolute top-3 right-3 z-10 flex size-8 items-center justify-center rounded-full bg-black/50 text-white/80 backdrop-blur-sm transition-colors hover:bg-black/70 hover:text-white"
+            className="tap-square absolute top-3 right-3 z-10 flex size-8 items-center justify-center rounded-full bg-black/50 text-white/80 backdrop-blur-sm transition-colors hover:bg-black/70 hover:text-white"
           >
             <ChevronUp className="size-4" />
           </button>

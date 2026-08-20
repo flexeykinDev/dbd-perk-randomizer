@@ -106,6 +106,28 @@
   -webkit-overflow-scrolling: touch;
 }
 
+/* A control sized for a mouse is not sized for a thumb. Applied to the
+   buttons that are comfortable at 24-30px with a cursor and are not with a
+   fingertip — the toolbars and the per-card actions.
+
+   Only under `pointer: coarse`, so nothing changes on desktop: growing
+   every button everywhere would wreck the compact toolbar this page
+   deliberately has. 44px is Apple's figure and the more generous of the
+   two common ones; the site's own e2e checks a 40px floor, so this clears
+   it rather than sitting exactly on it. */
+@media (pointer: coarse) {
+  .tap {
+    min-height: 44px;
+  }
+
+  /* Icon-only controls need the width too — a 44px-tall, 24px-wide button
+     is still a hard target. */
+  .tap-square {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
 /* Perk, add-on, item, offering and Power icons are the game's own art:
    white line drawings on transparency, made for a dark HUD. Verified
    across all 1274 shipped icons — every one is greyscale bar a single

@@ -69,7 +69,7 @@ export function MoreMenu({ children }: { children: ReactNode }) {
         onClick={toggleOpen}
         aria-expanded={open}
         className={cn(
-          "flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-colors",
+          "tap flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-colors",
           open
             ? "bg-surface-hover text-foreground"
             : "text-muted hover:bg-surface-hover hover:text-foreground",

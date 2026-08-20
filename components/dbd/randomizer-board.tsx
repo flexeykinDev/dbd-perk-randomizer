@@ -1253,7 +1253,7 @@ export function RandomizerBoard() {
                 type="button"
                 onClick={() => selectRole(r)}
                 className={cn(
-                  "rounded-full border px-5 py-1.5 text-sm font-medium capitalize transition-colors",
+                  "tap rounded-full border px-5 py-1.5 text-sm font-medium capitalize transition-colors",
                   role === r
                     ? cn(c.border, c.bg, c.text)
                     : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
@@ -1272,7 +1272,7 @@ export function RandomizerBoard() {
               type="button"
               onClick={() => selectMode(m)}
               className={cn(
-                "rounded-full px-3 py-1 text-xs font-medium transition-colors",
+                "tap rounded-full px-3 py-1 text-xs font-medium transition-colors",
                 mode === m
                   ? cn(roleColor.border, roleColor.bg, roleColor.text, "border")
                   : "text-muted hover:bg-surface-hover hover:text-foreground",
@@ -1324,7 +1324,7 @@ export function RandomizerBoard() {
                   type="button"
                   onClick={() => selectPerkCount(n)}
                   className={cn(
-                    "flex size-7 items-center justify-center rounded-full border text-xs font-semibold transition-colors",
+                    "tap-square flex size-7 items-center justify-center rounded-full border text-xs font-semibold transition-colors",
                     perkCount === n
                       ? cn(roleColor.border, roleColor.bg, roleColor.text)
                       : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
@@ -1442,7 +1442,7 @@ export function RandomizerBoard() {
           <button
             type="button"
             onClick={() => setCharacterPickerOpen(true)}
-            className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+            className="tap flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
           >
             <Users className="size-3.5" />
             {t({ ru: "Выбрать персонажа", en: "Choose Character" })}
@@ -1477,7 +1477,7 @@ export function RandomizerBoard() {
               <button
                 type="button"
                 onClick={() => openExcludePanel("perks")}
-                className="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+                className="tap flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
               >
                 <ListFilter className="size-3.5" />
                 {t({ ru: "Пул перков", en: "Perk pool" })}
@@ -1490,7 +1490,7 @@ export function RandomizerBoard() {
               <button
                 type="button"
                 onClick={() => openExcludePanel("loadout")}
-                className="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+                className="tap flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
               >
                 <ListFilter className="size-3.5" />
                 {t({ ru: "Пул экип.", en: "Loadout pool" })}
@@ -1507,7 +1507,7 @@ export function RandomizerBoard() {
               onClick={() =>
                 openExcludePanel(mode === "perks" ? "perks" : "loadout")
               }
-              className="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+              className="tap flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
             >
               <ListFilter className="size-3.5" />
               {t({ ru: "Пул", en: "Pool" })}
@@ -1529,7 +1529,7 @@ export function RandomizerBoard() {
               ru: "Отдельная ссылка специально для источника «Браузер» в OBS — не та же ссылка, что у кнопки «Поделиться».",
               en: "A separate link made specifically for an OBS Browser source — not the same link as the “Share” button.",
             })}
-            className="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+            className="tap flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
           >
             <MonitorPlay className="size-3.5" />
             {t({ ru: "Оверлей OBS", en: "OBS Overlay" })}
@@ -1585,7 +1585,7 @@ export function RandomizerBoard() {
               <button
                 type="button"
                 onClick={() => setStatsModalOpen(true)}
-                className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm font-medium text-foreground transition-colors hover:bg-surface-hover"
+                className="tap flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm font-medium text-foreground transition-colors hover:bg-surface-hover"
               >
                 <BarChart3 className="size-4 shrink-0" />
                 {t({ ru: "Статистика", en: "Stats" })}
@@ -1593,7 +1593,7 @@ export function RandomizerBoard() {
               <button
                 type="button"
                 onClick={() => setHistoryModalOpen(true)}
-                className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm font-medium text-foreground transition-colors hover:bg-surface-hover"
+                className="tap flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm font-medium text-foreground transition-colors hover:bg-surface-hover"
               >
                 <History className="size-4 shrink-0" />
                 {t({ ru: "История", en: "History" })}
@@ -1605,7 +1605,7 @@ export function RandomizerBoard() {
                 <button
                   type="button"
                   onClick={() => setPresetsModalOpen(true)}
-                  className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm font-medium text-foreground transition-colors hover:bg-surface-hover"
+                  className="tap flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm font-medium text-foreground transition-colors hover:bg-surface-hover"
                 >
                   <BookOpen className="size-4 shrink-0" />
                   {t({ ru: "Готовые билды", en: "Preset Builds" })}
@@ -1766,7 +1766,7 @@ export function RandomizerBoard() {
                 ? perks.length === 0 && loadoutPieces.length === 0
                 : perks.length === 0
           }
-          className="flex w-full items-center justify-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground disabled:pointer-events-none disabled:opacity-40 sm:w-auto"
+          className="tap flex w-full items-center justify-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground disabled:pointer-events-none disabled:opacity-40 sm:w-auto"
         >
           <Copy className="size-3.5" />
           {mode === "loadout"
@@ -1780,7 +1780,7 @@ export function RandomizerBoard() {
             ru: "Ссылка на этот билд для обычного просмотра — не для OBS, для этого есть отдельная кнопка «Оверлей OBS».",
             en: "A link to view this exact build — not for OBS, use the separate “OBS Overlay” button for that.",
           })}
-          className="flex w-full items-center justify-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground sm:w-auto"
+          className="tap flex w-full items-center justify-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground sm:w-auto"
         >
           <Link2 className="size-3.5" />
           {t({ ru: "Поделиться", en: "Share" })}
@@ -1878,7 +1878,7 @@ export function RandomizerBoard() {
       <button
         type="button"
         onClick={() => setShowStats((v) => !v)}
-        className="flex items-center gap-1.5 text-xs text-muted/60 transition-colors hover:text-muted"
+        className="tap flex items-center gap-1.5 text-xs text-muted/60 transition-colors hover:text-muted"
       >
         <BarChart3 className="size-3.5" />
         {t({ ru: "Статистика пула", en: "Pool stats" })}

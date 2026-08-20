@@ -16,7 +16,24 @@ export default defineConfig({
     // the tests actually assert against.
     locale: "ru-RU",
   },
-  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+  projects: [
+    {
+      name: "chromium",
+      use: { ...devices["Desktop Chrome"] },
+      testIgnore: /mobile\.spec\.ts/,
+    },
+    // Every test had only ever run at desktop width, despite the site
+    // having had a responsive pass. Pixel 7 rather than a bare 375px
+    // viewport because it also brings the touch flags and the mobile user
+    // agent, so anything gated on hover or pointer type behaves the way it
+    // would on a phone rather than on a narrow desktop window.
+    //
+    // The mobile-only checks live in e2e/mobile.spec.ts; the main suite
+    // stays desktop-only via testIgnore, because running all 63 twice
+    // doubles CI for very little — what differs on a phone is layout and
+    // reach, not whether a perk rolls.
+    { name: "mobile", use: { ...devices["Pixel 7"] }, testMatch: /mobile\.spec\.ts/ },
+  ],
   webServer: {
     command: "npm run dev",
     url: "http://localhost:3000",

@@ -20,10 +20,15 @@ import { Highlighted } from "./highlighted-text";
    always-visible pinned colours. The dark plate is deliberate and doesn't
    follow the theme: these sit on top of the perk artwork, which is light
    line-art in both themes, so a themed plate would vanish on one of them. */
+/* `pointer-coarse` is doing real work here, not polish. These were
+   `opacity-0` until hover, and a phone never hovers — so on touch the
+   reroll and the padlock were invisible *and* 22px, which means
+   single-slot reroll and pinning simply did not exist on mobile. Revealed
+   and enlarged where there is no hover to reveal them. */
 const CORNER_BUTTON_BASE =
-  "flex size-6 items-center justify-center rounded-full backdrop-blur-sm transition-opacity disabled:pointer-events-none disabled:opacity-30";
+  "flex size-6 pointer-coarse:size-10 items-center justify-center rounded-full backdrop-blur-sm transition-opacity disabled:pointer-events-none disabled:opacity-30";
 const CORNER_BUTTON_IDLE =
-  "bg-black/40 text-white/80 opacity-0 group-hover:opacity-100 hover:bg-black/60 hover:text-white focus-visible:opacity-100";
+  "bg-black/40 text-white/80 opacity-0 pointer-coarse:opacity-100 group-hover:opacity-100 hover:bg-black/60 hover:text-white focus-visible:opacity-100";
 const CORNER_BUTTON = cn(CORNER_BUTTON_BASE, CORNER_BUTTON_IDLE);
 
 export function PerkGrid({
@@ -214,7 +219,7 @@ export function PerkGrid({
                     e.stopPropagation();
                     onCopy(perk);
                   }}
-                  className="mt-auto flex w-full items-center justify-center gap-1.5 rounded-lg border border-border py-1.5 text-xs font-medium text-muted transition-colors hover:border-accent/50 hover:bg-accent/10 hover:text-accent"
+                  className="tap mt-auto flex w-full items-center justify-center gap-1.5 rounded-lg border border-border py-1.5 text-xs font-medium text-muted transition-colors hover:border-accent/50 hover:bg-accent/10 hover:text-accent"
                 >
                   <Copy className="size-3.5" />
                   {t({ ru: "Копировать", en: "Copy" })}
