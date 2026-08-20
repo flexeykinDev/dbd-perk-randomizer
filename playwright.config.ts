@@ -7,7 +7,7 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   reporter: "list",
   use: {
-    baseURL: "http://localhost:3000",
+    baseURL: "http://localhost:3100",
     trace: "on-first-retry",
     // The site auto-detects RU vs EN from the browser's own locale (see
     // lib/i18n.tsx) when there's no saved preference — Playwright's default
@@ -35,8 +35,10 @@ export default defineConfig({
     { name: "mobile", use: { ...devices["Pixel 7"] }, testMatch: /mobile\.spec\.ts/ },
   ],
   webServer: {
-    command: "npm run dev",
-    url: "http://localhost:3000",
+    // Serves out/, not next dev — see scripts/serve-out.mjs. npm run
+    // test:e2e builds first; CI builds in its own earlier step.
+    command: "node scripts/serve-out.mjs",
+    url: "http://localhost:3100",
     reuseExistingServer: !process.env.CI,
     timeout: 60_000,
   },

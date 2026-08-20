@@ -1,13 +1,19 @@
 import { test, expect, type Page } from "@playwright/test";
 
-// The pool button is matched as /^Пул\d*$/ rather than by the exact name "Пул"
-// everywhere below. It carries a count badge as soon as anything is
-// excluded, so its accessible name becomes "Пул1" — and an exact match then
-// only succeeds in the window before the saved pool has hydrated. That made
-// the reload test below pass by outrunning the very restore it exists to
-// check, and fail whenever it lost the race. Anchoring at the start keeps
-// "Статистика пула" out of it, and anchoring the end keeps the separate
-// "Пул перков" / "Пул экип." buttons that All mode shows out too.
+// The pool button is matched as /^Пул( \d+)?$/ everywhere below, rather
+// than by the exact name "Пул". It grows a count badge as soon as anything
+// is excluded, and the badge is its own element, so the accessible name
+// becomes "Пул 1" — with a space, even though textContent reads "Пул1".
+//
+// Matching "Пул" exactly therefore only succeeded in the window before the
+// saved pool had hydrated, which made the reload test below pass by
+// outrunning the very restore it exists to check. Worth spelling out
+// because the first fix here used \d* against the textContent spelling: it
+// still matched the bare pre-hydration name, so it kept the race alive and
+// looked fine for twelve consecutive runs.
+//
+// Anchoring the start keeps "Статистика пула" out; anchoring the end keeps
+// the separate "Пул перков" / "Пул экип." buttons that All mode shows out.
 import { readFile } from "node:fs/promises";
 
 /** The perk names currently on the board, read off the card images.
@@ -53,7 +59,7 @@ test.describe("DBD randomizer", () => {
   }) => {
     await page.goto("/");
     // exact: true — a fuzzy match also catches "Статистика пула" (Pool stats).
-    await page.getByRole("button", { name: /^Пул\d*$/ }).click();
+    await page.getByRole("button", { name: /^Пул( \d+)?$/ }).click();
 
     const panel = page.getByText("Настроить пул перков");
     await expect(panel).toBeVisible();
@@ -82,7 +88,7 @@ test.describe("DBD randomizer", () => {
     // lib/use-persisted-set.ts — a hydrate that silently did nothing would
     // leave the test above passing.
     await page.goto("/");
-    await page.getByRole("button", { name: /^Пул\d*$/ }).click();
+    await page.getByRole("button", { name: /^Пул( \d+)?$/ }).click();
     await expect(page.getByText("Настроить пул перков")).toBeVisible();
 
     const cards = page.locator("div.fixed.inset-0").locator('[role="button"]:has(img)');
@@ -100,7 +106,7 @@ test.describe("DBD randomizer", () => {
     await expect(excludedCards).toHaveCount(1);
 
     await page.reload();
-    await page.getByRole("button", { name: /^Пул\d*$/ }).click();
+    await page.getByRole("button", { name: /^Пул( \d+)?$/ }).click();
     await expect(page.getByText("Настроить пул перков")).toBeVisible();
     await expect(page.locator("div.fixed.inset-0 .grayscale")).toHaveCount(1);
   });
@@ -113,7 +119,7 @@ test.describe("DBD randomizer", () => {
     // responding entirely (see randomizer-board.tsx's namespaced
     // `perk-pool-${role}` / `char-picker-${...}` keys).
     await page.goto("/");
-    await page.getByRole("button", { name: /^Пул\d*$/ }).click();
+    await page.getByRole("button", { name: /^Пул( \d+)?$/ }).click();
     const panel = page.getByText("Настроить пул перков");
     await expect(panel).toBeVisible();
 
@@ -212,7 +218,7 @@ test.describe("Dialog behaviour", () => {
       name: "perk pool",
       open: async (page: import("@playwright/test").Page) => {
         await page.goto("/");
-        await page.getByRole("button", { name: /^Пул\d*$/ }).click();
+        await page.getByRole("button", { name: /^Пул( \d+)?$/ }).click();
       },
     },
     {
@@ -241,7 +247,7 @@ test.describe("Dialog behaviour", () => {
     page,
   }) => {
     await page.goto("/");
-    const poolButton = page.getByRole("button", { name: /^Пул\d*$/ });
+    const poolButton = page.getByRole("button", { name: /^Пул( \d+)?$/ });
     await poolButton.click();
 
     // Focus starts on the dialog itself rather than being left behind on
@@ -256,7 +262,7 @@ test.describe("Dialog behaviour", () => {
     page,
   }) => {
     await page.goto("/");
-    await page.getByRole("button", { name: /^Пул\d*$/ }).click();
+    await page.getByRole("button", { name: /^Пул( \d+)?$/ }).click();
     const dialog = page.getByRole("dialog");
     await expect(dialog).toBeVisible();
 
@@ -341,7 +347,7 @@ test.describe("Full Loadout", () => {
     await expect
       .poll(() => page.locator("[data-piece-slug]").count())
       .toBeGreaterThan(2);
-    await page.getByRole("button", { name: /^Пул\d*$/ }).click();
+    await page.getByRole("button", { name: /^Пул( \d+)?$/ }).click();
 
     const panel = page.getByText("Настроить пул экипировки");
     await expect(panel).toBeVisible();
@@ -684,7 +690,7 @@ test.describe("Character picker", () => {
     // their own add-ons + offerings.
     await page.goto("/?role=killer&mode=loadout");
 
-    await page.getByRole("button", { name: /^Пул\d*$/ }).click();
+    await page.getByRole("button", { name: /^Пул( \d+)?$/ }).click();
     const poolHeader = page.getByText(/Активно:/);
     const beforeText = await poolHeader.textContent();
     const beforeTotal = Number(beforeText?.split("/")[1]?.trim());
@@ -693,7 +699,7 @@ test.describe("Character picker", () => {
     await page.getByRole("button", { name: "Выбрать персонажа" }).click();
     await page.getByRole("button", { name: "Случайный", exact: true }).click();
 
-    await page.getByRole("button", { name: /^Пул\d*$/ }).click();
+    await page.getByRole("button", { name: /^Пул( \d+)?$/ }).click();
     const afterText = await poolHeader.textContent();
     const afterTotal = Number(afterText?.split("/")[1]?.trim());
 

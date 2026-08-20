@@ -54,5 +54,9 @@ jobs:
         run: npx playwright install chromium
         timeout-minutes: 8
 
+      # `npx playwright test`, not `npm run test:e2e`: the suite now runs
+      # against the static export in out/ rather than a dev server, and the
+      # build step above has already produced it. The npm script rebuilds
+      # first, which is what you want locally and a wasted minute here.
       - name: E2E smoke tests
-        run: npm run test:e2e
+        run: npx playwright test

@@ -107,7 +107,7 @@ test("a modal fits the screen and its close button is reachable", async ({ page 
   // attached. Clicking it before that does nothing at all, and the dialog
   // below never appears.
   await expect(page.locator("[data-perk-card]")).toHaveCount(4);
-  await page.getByRole("button", { name: /^Пул\d*$/ }).click();
+  await page.getByRole("button", { name: /^Пул( \d+)?$/ }).click();
 
   const dialog = page.getByRole("dialog");
   await expect(dialog).toBeVisible();
