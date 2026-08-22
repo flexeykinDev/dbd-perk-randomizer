@@ -9,7 +9,7 @@
 // files are there.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync, statSync } from "node:fs";
+import { readFileSync, readdirSync, statSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { Perk } from "../lib/types.ts";
@@ -144,4 +144,35 @@ test('the "new" badge stays rare enough to mean something', () => {
     .filter((s) => s.percent > 40)
     .map((s) => `${s.file}: ${s.percent}% of ${s.of} flagged new`);
   assert.deepEqual(loud, []);
+});
+
+test("no icon sits on disk that nothing points at", () => {
+  // The mirror of the check above: that one catches data pointing at a file
+  // that is gone, this one catches a file no data points at. They accumulate
+  // from renames — the wiki has renamed eight perks, two items and a set of
+  // offerings so far, and each rename leaves its old icon behind forever.
+  // 45 of them (385 KB) had built up before anyone looked.
+  //
+  // If this fails after a scrape, the rename is expected and the fix is one
+  // command: npx tsx scripts/prune-orphan-icons.ts --delete
+  const walk = (dir: string, prefix: string): string[] => {
+    const out: string[] = [];
+    for (const entry of readdirSync(join(ROOT, "public", dir), { withFileTypes: true })) {
+      const rel = `${prefix}/${entry.name}`;
+      if (entry.isDirectory()) out.push(...walk(join(dir, entry.name), rel));
+      else if (entry.name.endsWith(".webp")) out.push(rel);
+    }
+    return out;
+  };
+  const pointedAt = new Set(everyReference().map((r) => r.path));
+  const orphans = [
+    ...walk("perks", "/perks"),
+    ...walk("loadout", "/loadout"),
+    ...walk("characters", "/characters"),
+  ].filter((file) => !pointedAt.has(file));
+  assert.deepEqual(
+    orphans,
+    [],
+    `${orphans.length} icons nothing references — run scripts/prune-orphan-icons.ts --delete`,
+  );
 });

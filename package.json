@@ -20,7 +20,8 @@
     "capture:screenshots": "node scripts/capture-screenshots.mjs",
     "compare:sources": "tsx scripts/compare-sources.ts",
     "capture:fixture": "tsx scripts/capture-perk-fixture.ts",
-    "sync:author": "tsx scripts/sync-author.ts"
+    "sync:author": "tsx scripts/sync-author.ts",
+    "prune:icons": "tsx scripts/prune-orphan-icons.ts"
   },
   "dependencies": {
     "firebase": "^12.17.1",
