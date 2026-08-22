@@ -21,41 +21,21 @@ export interface ShareCardPiece {
 // to at runtime (Tailwind v4's palette is defined in oklch) — and either
 // throws or silently mis-renders when it hits one. Every color here is a
 // literal hex/rgba value via inline styles specifically so this component
-// never touches a Tailwind class or CSS custom property. Gradients and the
-// decorative SVGs below use the same literal-color rule and stick to plain
-// linear-/radial-gradient and SVG path syntax html2canvas has supported for
-// years (this isn't the oklch problem) — no CSS filters (blur/drop-shadow
-// on filter are flaky in 1.4.x), no external image files.
-const SURFACE = "#1e2228";
-const SURFACE_LIGHT = "#262b33";
-const BORDER = "rgba(255,255,255,0.08)";
-const FOREGROUND = "#edeef0";
-const MUTED = "#9096a3";
-
-// The site's own role accent (blue for survivor, rose for killer) stays on
-// every badge/border here — it's what the perk grid, pool manager, and
-// everything else already use, and a shareable card should still read as
-// "this site" at a glance. These are a separate, purely atmospheric mood
-// per role: warm campfire embers for Survivor (DBD's own camp-fire hub),
-// cold Entity dread for Killer — applied only to the background wash and
-// the low-opacity decorative shapes, never to text or icon borders.
-const MOOD: Record<
-  PerkRole,
-  { glow: string; glowSoft: string; ember: string; vignette: string }
-> = {
-  survivor: {
-    glow: "#ff7a3d",
-    glowSoft: "#ffb35c",
-    ember: "#ff9a4d",
-    vignette: "#2a1206",
-  },
-  killer: {
-    glow: "#7c2d5c",
-    glowSoft: "#b0203f",
-    ember: "#9b2848",
-    vignette: "#1a0912",
-  },
-};
+// never touches a Tailwind class or CSS custom property. Same rule applies
+// to layout: no CSS filters (blur/drop-shadow are flaky in 1.4.x), no CSS
+// grid (flex is far better supported), no external stylesheets.
+//
+// There is deliberately no illustration in this file. An earlier pass drew
+// a generator, a campfire, a hook and the Entity as hand-authored SVG paths
+// and they looked exactly like hand-authored SVG paths. The game already
+// ships 1478 pieces of professional line art and 96 character portraits;
+// the card's job is to frame that work and get out of its way. Everything
+// below is composition, type and hairlines.
+const GROUND = "#0b0d11";
+const BONE = "#e8e4dc";
+const HAIRLINE = "rgba(232,228,220,0.14)";
+const HAIRLINE_SOFT = "rgba(232,228,220,0.08)";
+const QUIET = "rgba(232,228,220,0.42)";
 
 const ROLE_LABEL: Record<PerkRole, { ru: string; en: string }> = {
   survivor: { ru: "Выживший", en: "Survivor" },
@@ -65,217 +45,116 @@ const ROLE_LABEL: Record<PerkRole, { ru: string; en: string }> = {
 export type ShareCardLayout = "landscape" | "story";
 
 // Real, fixed canvas dimensions instead of "however tall the content turns
-// out to be" — landscape is now a genuine 16:9 (what Discord/X crop link
-// previews to), matching the story format's already-fixed 1080x1920.
-const CANVAS_SIZE: Record<ShareCardLayout, { width: number; height: number }> =
-  {
-    landscape: { width: 1600, height: 900 },
-    story: { width: 1080, height: 1920 },
-  };
-
-// Perk icons are scraped/stored at a native 128x128 (see
-// scripts/scrape-perks.ts) — displaying them larger than that upscales a
-// fixed-detail bitmap, which is what actually caused the "blurry export"
-// complaint (no html2canvas `scale` setting can add detail that isn't in
-// the source file). These stay close enough to 128 that the stretch is
-// imperceptible; card size instead comes from padding/gaps/typography,
-// which are vector/text and render crisply at any size.
-const ICON_SIZE: Record<ShareCardLayout, number> = {
-  landscape: 132,
-  story: 160,
+// out to be" — landscape is a genuine 16:9 (what Discord/X crop link
+// previews to), story is 9:16 for Stories/TikTok/Reels.
+const CANVAS_SIZE: Record<ShareCardLayout, { width: number; height: number }> = {
+  landscape: { width: 1600, height: 900 },
+  story: { width: 1080, height: 1920 },
 };
 
-// A simple stylized flame — used low-opacity and off in a corner, so exact
-// fidelity matters less than a silhouette that reads as "fire" at a glance.
-function FlameShape({ style, color }: { style: CSSProperties; color: string }) {
+// Icons are scraped and stored at a native 256x256 (scripts/scrape-perks.ts).
+// They used to be 128, and display sizes were pinned just under that to
+// avoid upscaling a fixed-detail bitmap; 256 in the files is what allows the
+// sizes below without going soft. Nothing here may exceed it.
+const NATIVE_ICON = 256;
+
+/** One perk, framed.
+ *
+ *  A rotated square, because that is how the game itself presents a perk —
+ *  with two hairlines rather than one heavy border, so the frame reads as
+ *  drawn rather than as a default 2px stroke. The icon is counter-rotated so
+ *  the art stays upright, which is the single riskiest thing in this file
+ *  for html2canvas and the reason e2e downloads a real PNG and measures it
+ *  instead of trusting the DOM. */
+function Gem({
+  index,
+  src,
+  label,
+  gemSize,
+  iconSize,
+  slotWidth,
+  labelGap,
+  labelSize,
+  indexSize,
+  accent,
+}: {
+  index: number;
+  src: string;
+  label: string;
+  gemSize: number;
+  iconSize: number;
+  slotWidth: number;
+  labelGap: number;
+  labelSize: number;
+  indexSize: number;
+  accent: string;
+}) {
+  const inset = Math.round(gemSize * 0.055);
   return (
-    <svg viewBox="0 0 100 130" style={style}>
-      <path
-        fill={color}
-        d="M50 128C24 128 6 108 6 82C6 60 20 42 27 26C30 42 39 43 36 27C33 11 45 -2 58 4C49 21 58 31 68 22C77 35 74 49 63 56C87 59 97 79 84 101C89 83 68 78 61 93C70 76 51 70 51 100C51 112 59 118 50 128Z"
-      />
-    </svg>
-  );
-}
-
-// A trio of claw-like slash marks for the Killer theme.
-function ClawMarks({ style, color }: { style: CSSProperties; color: string }) {
-  return (
-    <svg viewBox="0 0 120 120" style={style}>
-      <path
-        d="M6 20 Q 55 5 114 60"
-        stroke={color}
-        strokeWidth="4"
-        fill="none"
-        strokeLinecap="round"
-        opacity={0.9}
-      />
-      <path
-        d="M2 42 Q 52 26 110 82"
-        stroke={color}
-        strokeWidth="4"
-        fill="none"
-        strokeLinecap="round"
-        opacity={0.65}
-      />
-      <path
-        d="M0 66 Q 48 50 104 104"
-        stroke={color}
-        strokeWidth="4"
-        fill="none"
-        strokeLinecap="round"
-        opacity={0.4}
-      />
-    </svg>
-  );
-}
-
-// A gnarled vine/tendril, standing in for the Entity's tendrils without
-// needing a literal (and much harder to draw well at this scale) creature
-// shape.
-function VineShape({ style, color }: { style: CSSProperties; color: string }) {
-  return (
-    <svg viewBox="0 0 100 200" style={style}>
-      <path
-        d="M50 4 C 20 30, 78 55, 34 82 C -6 106, 66 118, 40 150 C 20 174, 62 182, 46 200"
-        stroke={color}
-        strokeWidth="5"
-        fill="none"
-        strokeLinecap="round"
-      />
-      <path
-        d="M46 60 C 60 54, 68 44, 66 32"
-        stroke={color}
-        strokeWidth="3.5"
-        fill="none"
-        strokeLinecap="round"
-      />
-      <path
-        d="M32 118 C 16 116, 6 106, 8 94"
-        stroke={color}
-        strokeWidth="3.5"
-        fill="none"
-        strokeLinecap="round"
-      />
-      <path
-        d="M42 160 C 58 158, 68 148, 66 136"
-        stroke={color}
-        strokeWidth="3.5"
-        fill="none"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-// Rising embers for Survivor — a fixed, hand-placed constellation rather
-// than randomized, so the export is deterministic and nothing overlaps the
-// card grid in the middle of the canvas.
-const EMBER_SPOTS: readonly {
-  left: string;
-  top: string;
-  size: number;
-  opacity: number;
-}[] = [
-  { left: "6%", top: "88%", size: 10, opacity: 0.8 },
-  { left: "10%", top: "74%", size: 6, opacity: 0.6 },
-  { left: "4%", top: "60%", size: 5, opacity: 0.45 },
-  { left: "13%", top: "48%", size: 4, opacity: 0.3 },
-  { left: "94%", top: "90%", size: 9, opacity: 0.75 },
-  { left: "90%", top: "76%", size: 6, opacity: 0.55 },
-  { left: "96%", top: "62%", size: 5, opacity: 0.4 },
-  { left: "88%", top: "50%", size: 4, opacity: 0.28 },
-];
-
-function ThemeDecor({ role, isStory }: { role: PerkRole; isStory: boolean }) {
-  const mood = MOOD[role];
-  const flameSize = isStory ? 220 : 150;
-  const clawSize = isStory ? 200 : 150;
-  const vineSize = isStory ? 200 : 150;
-
-  return (
-    <div
-      aria-hidden
-      style={{
-        position: "absolute",
-        inset: 0,
-        overflow: "hidden",
-        pointerEvents: "none",
-      }}
-    >
-      {role === "survivor" ? (
-        <>
-          <FlameShape
-            color={`${mood.glow}33`}
-            style={{
-              position: "absolute",
-              left: -flameSize * 0.25,
-              bottom: -flameSize * 0.15,
-              width: flameSize,
-              height: flameSize * 1.3,
-            }}
-          />
-          <FlameShape
-            color={`${mood.glowSoft}26`}
-            style={{
-              position: "absolute",
-              right: -flameSize * 0.3,
-              bottom: -flameSize * 0.2,
-              width: flameSize * 0.8,
-              height: flameSize * 1.04,
-            }}
-          />
-          {EMBER_SPOTS.map((spot, i) => (
-            <div
-              key={i}
-              style={{
-                position: "absolute",
-                left: spot.left,
-                top: spot.top,
-                width: spot.size,
-                height: spot.size,
-                borderRadius: "50%",
-                background: `radial-gradient(circle, ${mood.ember} 0%, ${mood.ember}00 75%)`,
-                opacity: spot.opacity,
-              }}
-            />
-          ))}
-        </>
-      ) : (
-        <>
-          <ClawMarks
-            color={`${mood.glowSoft}30`}
-            style={{
-              position: "absolute",
-              top: isStory ? "4%" : "-6%",
-              right: isStory ? "-8%" : "-4%",
-              width: clawSize,
-              height: clawSize,
-            }}
-          />
-          <VineShape
-            color={`${mood.glow}2e`}
-            style={{
-              position: "absolute",
-              left: isStory ? "-6%" : "-3%",
-              bottom: isStory ? "6%" : "-4%",
-              width: vineSize,
-              height: vineSize * 2,
-            }}
-          />
-          <VineShape
-            color={`${mood.glowSoft}20`}
-            style={{
-              position: "absolute",
-              right: isStory ? "2%" : "8%",
-              bottom: isStory ? "-4%" : "-8%",
-              width: vineSize * 0.7,
-              height: vineSize * 1.4,
-              transform: "scaleX(-1)",
-            }}
-          />
-        </>
-      )}
+    <div style={{ width: slotWidth, textAlign: "center" }}>
+      <div
+        style={{
+          position: "relative",
+          width: gemSize,
+          height: gemSize,
+          margin: `0 auto ${labelGap}px`,
+          transform: "rotate(45deg)",
+          border: `1px solid ${HAIRLINE}`,
+          background: "linear-gradient(160deg, rgba(255,255,255,0.055), rgba(255,255,255,0.012))",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <div
+          style={{
+            position: "absolute",
+            left: inset,
+            top: inset,
+            right: inset,
+            bottom: inset,
+            border: `1px solid ${HAIRLINE_SOFT}`,
+          }}
+        />
+        {/* eslint-disable-next-line @next/next/no-img-element -- captured by html2canvas, not rendered as a normal page image */}
+        <img
+          src={withBasePath(src)}
+          alt=""
+          width={iconSize}
+          height={iconSize}
+          style={{
+            width: iconSize,
+            height: iconSize,
+            transform: "rotate(-45deg)",
+            display: "block",
+          }}
+        />
+      </div>
+      {/* The slot number is real information, not ornament: it is the same
+          number that rerolls this slot from the keyboard. */}
+      <div
+        style={{
+          fontSize: indexSize,
+          letterSpacing: "0.2em",
+          color: accent,
+          marginBottom: Math.round(labelGap * 0.34),
+          fontWeight: 700,
+        }}
+      >
+        {String(index + 1).padStart(2, "0")}
+      </div>
+      <div
+        style={{
+          fontSize: labelSize,
+          lineHeight: 1.28,
+          letterSpacing: "0.06em",
+          textTransform: "uppercase",
+          fontWeight: 600,
+          color: BONE,
+        }}
+      >
+        {label}
+      </div>
     </div>
   );
 }
@@ -291,252 +170,300 @@ export function ShareCard({
 }: {
   ref?: Ref<HTMLDivElement>;
   pieces: ShareCardPiece[];
-  /** Drives the subtitle under "Dead by Daylight" — "all" mode's pieces
-   *  are perks and loadout pieces concatenated into one list (same as the
-   *  OBS overlay does), so this is the only way to tell that apart from a
-   *  plain perks-only build for wording purposes ("N perks" reads oddly
-   *  once the count also includes an Offering). */
+  /** Drives the line under the role — "all" mode's pieces are perks and
+   *  loadout pieces concatenated into one list, so this is the only way to
+   *  tell that apart from a plain perks-only build for wording purposes. */
   mode: "perks" | "loadout" | "all";
   role: PerkRole;
   language: "en" | "ru";
   /** The build's character, if one is known — either explicitly chosen via
-   *  the character picker, or (killer only) inferred from the rolled
-   *  Power add-ons, same as the main site's own loadout HUD badge (see
-   *  loadout-grid.tsx's PowerSlot). `null`/absent renders no badge at all,
-   *  same as a survivor build with no character forced. */
+   *  the character picker, or (killer only) inferred from the rolled Power
+   *  add-ons. `null`/absent is the common case for a survivor perk roll, and
+   *  the layout treats it as a first-class state: the title block simply
+   *  takes the space the portrait would have had. */
   character?: string | null;
-  /** "landscape" (default): fixed 1600x900 (16:9) — used for the regular
-   *  "Download Image" option. "story": fixed 1080x1920 (9:16), for
-   *  Instagram/TikTok Stories. */
+  /** "landscape" (default): fixed 1600x900 (16:9). "story": 1080x1920 (9:16),
+   *  laid out to keep everything clear of the caption and button furniture
+   *  TikTok/Reels draw over the edges. */
   layout?: ShareCardLayout;
 }) {
   const accent = ROLE_COLOR[role].solid;
-  const mood = MOOD[role];
   const roleName = ROLE_LABEL[role][language];
-  const characterPortrait = character
-    ? getCharacterPortrait(character)
-    : undefined;
+  const portrait = character ? getCharacterPortrait(character) : undefined;
   const isStory = layout === "story";
-  const columns = isStory
-    ? Math.min(Math.max(pieces.length, 1), 2)
-    : Math.max(pieces.length, 1);
-  const iconSize = ICON_SIZE[layout];
-  // "N perks" only reads sensibly when every card actually is a perk — once
-  // Loadout pieces are mixed in (or it's the only thing shown), a bare
-  // count is either misleading ("4 perks" when 2 are add-ons) or pointless
-  // (a loadout is always up to 4 fixed slots, not a count worth stating).
+  const { width, height } = CANVAS_SIZE[layout];
+
+  const count = Math.max(pieces.length, 1);
+  const perRow = isStory ? 2 : Math.min(count, 4);
+  const rows = Math.ceil(count / perRow);
+  // Shrink only when there are MORE rows than the layout intends — story is
+  // meant to be two-by-two, landscape a single row. Shrinking merely because
+  // a second row exists is self-defeating: the smaller slots then fit on one
+  // row, and story rendered four tiny diamonds in a line instead of a grid.
+  const intendedRows = isStory ? 2 : 1;
+  const shrink = rows > intendedRows ? 0.66 : 1;
+
+  const gemSize = Math.round((isStory ? 200 : 158) * shrink);
+  const iconSize = Math.min(NATIVE_ICON, Math.round((isStory ? 150 : 126) * shrink));
+  // A square rotated 45 degrees needs 1.414x its own width; laying slots out
+  // at the square's width is what made neighbouring diamonds collide.
+  const slotWidth = Math.round(gemSize * 1.4143) + Math.round((isStory ? 34 : 22) * shrink);
+  const labelGap = Math.round((isStory ? 38 : 30) * shrink);
+  const labelSize = Math.round((isStory ? 25 : 17) * shrink);
+  const indexSize = Math.round((isStory ? 19 : 12) * shrink);
+  const rowGap = isStory ? 54 : 48;
+
+  const margin = isStory ? 84 : 88;
+
   const subtitle =
     mode === "loadout"
       ? language === "ru"
-        ? "Экипировка"
-        : "Loadout"
+        ? "экипировка"
+        : "loadout"
       : mode === "all"
         ? language === "ru"
-          ? "Перки и экипировка"
-          : "Perks & Loadout"
-        : `${pieces.length} ${language === "ru" ? ruPlural(pieces.length, "перк", "перка", "перков") : "perks"}`;
-  const { width, height } = CANVAS_SIZE[layout];
-  const padding = isStory ? 64 : 56;
-  const blockGap = isStory ? 72 : 40;
+          ? "перки и экипировка"
+          : "perks & loadout"
+        : `${count} ${language === "ru" ? ruPlural(count, "перк", "перка", "перков") : count === 1 ? "perk" : "perks"}`;
 
-  // Survivor: a warm glow rising from below, like camp firelight. Killer:
-  // a cold glow pressing down from above, like the Entity's fog descending
-  // — plus a second, off-center smear of the deep-purple/blood tone so it
-  // doesn't read as a plain single-color vignette.
-  const moodGradient =
-    role === "survivor"
-      ? `radial-gradient(ellipse 90% 60% at 50% 115%, ${mood.glow}3d, transparent 60%), radial-gradient(ellipse 120% 55% at 50% 0%, ${accent}22, transparent 65%)`
-      : `radial-gradient(ellipse 100% 65% at 50% -10%, ${mood.glow}40, transparent 62%), radial-gradient(ellipse 70% 50% at 85% 90%, ${mood.glowSoft}2b, transparent 60%)`;
+  const title = character
+    ? getCharacterName(character, language)
+    : language === "ru"
+      ? "Случайный билд"
+      : "Random build";
 
-  return (
-    <div
-      ref={ref}
-      style={{
-        position: "relative",
-        width,
-        height,
-        overflow: "hidden",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        gap: blockGap,
-        padding,
-        // Layered: role-tinted mood glow(s) on top of a plain dark vertical
-        // gradient base — flat color alone read as sterile at this size.
-        background: `${moodGradient}, linear-gradient(180deg, #181b22 0%, #0d0e12 100%)`,
-        color: FOREGROUND,
-        fontFamily: "Arial, Helvetica, sans-serif",
-      }}
-    >
-      <ThemeDecor role={role} isStory={isStory} />
+  // One quiet role-tinted wash on the side opposite the portrait. It is the
+  // only colour on the card besides the accent rule, and it exists so the
+  // ground does not read as flat black.
+  const tint = role === "survivor" ? "76,194,241" : "242,100,122";
+  const wash = `radial-gradient(ellipse 82% 74% at ${isStory ? "50% 30%" : "76% 42%"}, rgba(${tint},0.11), rgba(${tint},0) 70%)`;
 
+  const gems = pieces.slice(0, 8).map((piece, i) => (
+    <Gem
+      key={piece.slug}
+      index={i}
+      src={piece.icon}
+      label={piece.name[language]}
+      gemSize={gemSize}
+      iconSize={iconSize}
+      slotWidth={slotWidth}
+      labelGap={labelGap}
+      labelSize={labelSize}
+      indexSize={indexSize}
+      accent={accent}
+    />
+  ));
+
+  const titleBlock = (
+    <div style={{ maxWidth: isStory ? 820 : 520 }}>
       <div
         style={{
-          position: "relative",
-          display: "flex",
-          flexDirection: isStory ? "column" : "row",
-          alignItems: "center",
-          gap: isStory ? 22 : 18,
+          fontSize: isStory ? 27 : 16,
+          letterSpacing: "0.34em",
+          textTransform: "uppercase",
+          color: accent,
+          fontWeight: 700,
+          marginBottom: isStory ? 22 : 20,
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            width: isStory ? 100 : 64,
-            height: isStory ? 100 : 64,
-            alignItems: "center",
-            justifyContent: "center",
-            borderRadius: isStory ? 24 : 16,
-            background: `linear-gradient(180deg, ${SURFACE_LIGHT} 0%, ${SURFACE} 100%)`,
-            border: `1px solid ${BORDER}`,
-          }}
-        >
-          <div
-            style={{
-              width: isStory ? 44 : 30,
-              height: isStory ? 44 : 30,
-              borderRadius: isStory ? 13 : 9,
-              border: `${isStory ? 4 : 3}px solid ${accent}`,
-            }}
-          />
-        </div>
-        <div style={{ textAlign: isStory ? "center" : "left" }}>
-          <div
-            style={{
-              fontSize: isStory ? 46 : 30,
-              fontWeight: 700,
-              lineHeight: 1.2,
-            }}
-          >
-            Dead by Daylight
-          </div>
-          <div
-            style={{
-              fontSize: isStory ? 30 : 19,
-              fontWeight: 600,
-              color: accent,
-            }}
-          >
-            {roleName} · {subtitle}
-          </div>
-        </div>
-
-        {character && characterPortrait && (
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: isStory ? 16 : 12,
-              // Landscape: pushed to the row's far end, away from the title
-              // block. Story: no "auto" side to push toward in a centered
-              // column, so it just stacks below instead.
-              marginLeft: isStory ? undefined : "auto",
-            }}
-          >
-            <span
-              style={{
-                display: "block",
-                width: isStory ? 90 : 58,
-                height: isStory ? 90 : 58,
-                borderRadius: "50%",
-                overflow: "hidden",
-                border: `${isStory ? 3 : 2}px solid ${accent}`,
-                flexShrink: 0,
-              }}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element -- captured by html2canvas, not rendered as a normal page image */}
-              <img
-                src={withBasePath(characterPortrait)}
-                alt={getCharacterName(character, language)}
-                width={isStory ? 90 : 58}
-                height={isStory ? 90 : 58}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  display: "block",
-                }}
-              />
-            </span>
-            <div
-              style={{
-                fontSize: isStory ? 24 : 16,
-                fontWeight: 600,
-                color: MUTED,
-              }}
-            >
-              {getCharacterName(character, language)}
-            </div>
-          </div>
-        )}
+        {roleName}
       </div>
-
+      <div style={{ width: isStory ? 104 : 88, height: 2, background: accent, marginBottom: isStory ? 30 : 26 }} />
       <div
         style={{
-          position: "relative",
-          display: "grid",
-          gridTemplateColumns: isStory
-            ? `repeat(${columns}, 1fr)`
-            : `repeat(${columns}, minmax(0, 300px))`,
-          justifyContent: isStory ? "stretch" : "center",
-          gap: isStory ? 44 : 28,
+          fontFamily: 'Georgia, "Times New Roman", serif',
+          fontSize: isStory ? 92 : 62,
+          lineHeight: 1.0,
+          letterSpacing: "-0.015em",
+          color: BONE,
         }}
       >
-        {pieces.map((piece) => (
-          <div
-            key={piece.slug}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: isStory ? 22 : 16,
-              padding: isStory ? 48 : 36,
-              background: `linear-gradient(180deg, ${SURFACE_LIGHT} 0%, ${SURFACE} 100%)`,
-              border: `1px solid ${BORDER}`,
-              borderRadius: isStory ? 28 : 20,
-              boxShadow: "0 10px 26px rgba(0,0,0,0.35)",
-            }}
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element -- captured by html2canvas, not rendered as a normal page image */}
+        {title}
+      </div>
+      <div
+        style={{
+          fontSize: isStory ? 26 : 18,
+          letterSpacing: "0.16em",
+          textTransform: "uppercase",
+          color: QUIET,
+          marginTop: isStory ? 22 : 18,
+        }}
+      >
+        {subtitle}
+      </div>
+    </div>
+  );
+
+  /** A hairline with the wordmark sitting on it — the only footer furniture. */
+  const footer = (
+    <div style={{ position: "absolute", left: margin, right: margin, bottom: isStory ? 380 : 62 }}>
+      <div style={{ height: 1, background: HAIRLINE_SOFT, marginBottom: isStory ? 22 : 18 }} />
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          fontSize: isStory ? 22 : 14,
+          letterSpacing: "0.22em",
+          textTransform: "uppercase",
+          color: QUIET,
+        }}
+      >
+        <span>dbd-randomizer</span>
+        <span>{roleName}</span>
+      </div>
+    </div>
+  );
+
+  const shell: CSSProperties = {
+    position: "relative",
+    width,
+    height,
+    overflow: "hidden",
+    // Flat ground, not a vertical gradient: the portrait veil is a
+    // horizontal gradient that must end in the background colour, and
+    // against a vertical gradient it can only match at one height —
+    // everywhere else it shows as a hard vertical seam down the card.
+    background: `${wash}, ${GROUND}`,
+    color: BONE,
+    fontFamily: "Arial, Helvetica, sans-serif",
+    textAlign: "left",
+  };
+
+  if (isStory) {
+    const artHeight = Math.round(height * 0.46);
+    return (
+      <div ref={ref} style={shell}>
+        {portrait ? (
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element -- captured by html2canvas */}
             <img
-              src={withBasePath(piece.icon)}
-              alt={piece.name[language]}
-              width={iconSize}
-              height={iconSize}
+              src={withBasePath(portrait)}
+              alt=""
               style={{
-                width: iconSize,
-                height: iconSize,
-                borderRadius: isStory ? 20 : 14,
-                display: "block",
+                position: "absolute",
+                left: 0,
+                top: 0,
+                width,
+                height: artHeight,
                 objectFit: "cover",
+                objectPosition: "50% 18%",
+                display: "block",
               }}
             />
             <div
               style={{
-                fontSize: isStory ? 26 : 19,
-                fontWeight: 600,
-                textAlign: "center",
-                lineHeight: 1.3,
+                position: "absolute",
+                left: 0,
+                top: 0,
+                width,
+                height: artHeight + 200,
+                background: `linear-gradient(180deg, rgba(11,13,17,0.45) 0%, rgba(11,13,17,0) 22%, rgba(11,13,17,0.78) 76%, ${GROUND} 100%)`,
               }}
-            >
-              {piece.name[language]}
-            </div>
-          </div>
-        ))}
+            />
+          </>
+        ) : null}
+
+        {/* Clear of the top 8% and bottom 20% that TikTok and Reels cover
+            with their own furniture, and the right 13% where the buttons are. */}
+        <div style={{ position: "absolute", left: margin, right: 200, top: portrait ? "40%" : "13%" }}>
+          {titleBlock}
+        </div>
+
+        <div
+          style={{
+            position: "absolute",
+            left: margin,
+            right: 150,
+            top: portrait ? "60%" : "40%",
+            display: "flex",
+            flexWrap: "wrap",
+            gap: `${rowGap}px 0px`,
+            justifyContent: "center",
+          }}
+        >
+          {gems}
+        </div>
+
+        {footer}
+      </div>
+    );
+  }
+
+  const artWidth = Math.round(width * 0.3);
+  const veilWidth = Math.round(width * 0.44);
+  const rowWidth = perRow * slotWidth;
+
+  return (
+    <div ref={ref} style={shell}>
+      {portrait ? (
+        <>
+          {/* eslint-disable-next-line @next/next/no-img-element -- captured by html2canvas */}
+          <img
+            src={withBasePath(portrait)}
+            alt=""
+            style={{
+              position: "absolute",
+              left: 0,
+              top: 0,
+              width: artWidth,
+              height,
+              objectFit: "cover",
+              objectPosition: "50% 16%",
+              display: "block",
+            }}
+          />
+          <div
+            style={{
+              position: "absolute",
+              left: 0,
+              top: 0,
+              width: veilWidth,
+              height,
+              background: `linear-gradient(90deg, rgba(11,13,17,0) 0%, rgba(11,13,17,0.1) 30%, rgba(11,13,17,0.88) 72%, ${GROUND} 94%, ${GROUND} 100%)`,
+            }}
+          />
+          <div
+            style={{
+              position: "absolute",
+              left: 0,
+              bottom: 0,
+              width: veilWidth,
+              height: Math.round(height * 0.66),
+              background: `linear-gradient(180deg, rgba(11,13,17,0) 0%, rgba(11,13,17,0.72) 46%, rgba(11,13,17,0.96) 100%)`,
+            }}
+          />
+        </>
+      ) : null}
+
+      <div
+        style={{
+          position: "absolute",
+          left: margin,
+          // With a portrait the type sits low, under the face; without one it
+          // takes the middle of the column and carries the left half itself.
+          ...(portrait ? { bottom: 148 } : { top: "50%", transform: "translateY(-50%)" }),
+        }}
+      >
+        {titleBlock}
       </div>
 
       <div
         style={{
-          position: "relative",
-          paddingTop: isStory ? 36 : 24,
-          borderTop: `1px solid ${BORDER}`,
-          textAlign: "center",
-          fontSize: isStory ? 20 : 14,
-          color: MUTED,
+          position: "absolute",
+          right: margin,
+          top: "50%",
+          transform: "translateY(-50%)",
+          display: "flex",
+          flexWrap: "wrap",
+          gap: `${rowGap}px 0px`,
+          justifyContent: "flex-end",
+          width: rowWidth,
         }}
       >
-        DBD Perk Randomizer by flexeykinDev
+        {gems}
       </div>
+
+      {footer}
     </div>
   );
 }
