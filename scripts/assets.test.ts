@@ -122,3 +122,26 @@ test("every curated preset is built from perks that still exist", () => {
       if (!slugs.has(slug)) broken.push(`${preset.id ?? "preset"} → ${slug}`);
   assert.deepEqual(broken, []);
 });
+
+test('the "new" badge stays rare enough to mean something', () => {
+  // Every loadout piece carried a NEW badge at once: the whole set was
+  // bulk-imported on one day, inside the 30-day window, so 979 of 979 were
+  // "new". A badge on everything says nothing, and it claims the game just
+  // added content it did not. Perks already avoided this by backdating their
+  // first import to a sentinel; the loadout files now do the same.
+  //
+  // The threshold is the invariant, not the sentinel: whatever a future
+  // import does, "new" has to stay unusual or the badge is noise.
+  const NEW_WINDOW_MS = 30 * 24 * 60 * 60 * 1000;
+  const now = Date.now();
+  const share = (file: string) => {
+    const rows = read<Array<{ addedAt: string }>>(file);
+    const fresh = rows.filter((r) => now - new Date(r.addedAt).getTime() < NEW_WINDOW_MS);
+    return { file, percent: Math.round((fresh.length / rows.length) * 100), of: rows.length };
+  };
+  const loud = ["perks.json", "items.json", "addons.json", "offerings.json"]
+    .map(share)
+    .filter((s) => s.percent > 40)
+    .map((s) => `${s.file}: ${s.percent}% of ${s.of} flagged new`);
+  assert.deepEqual(loud, []);
+});

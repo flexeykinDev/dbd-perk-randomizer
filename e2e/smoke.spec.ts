@@ -664,7 +664,7 @@ test.describe("Character picker", () => {
     page,
   }) => {
     await page.goto("/?role=survivor");
-    const toggle = page.getByRole("switch", { name: "Гарантировать тичеблы" });
+    const toggle = page.getByRole("switch", { name: "Гарантировать личные перки" });
     await expect(toggle).not.toBeVisible();
 
     await page.getByRole("button", { name: "Выбрать персонажа" }).click();
@@ -1691,5 +1691,45 @@ test.describe("Shortcut discoverability", () => {
     await expect(page.locator("[data-perk-card]")).toHaveCount(4);
     const keys = await page.locator("kbd").allInnerTexts();
     expect(keys.map((k) => k.trim())).toEqual(["Space", "C", "S"]);
+  });
+});
+
+test.describe("Role from the URL", () => {
+  // `r` is the short parameter the site writes into every share link, so a
+  // link that loses its `p=` — truncated by a chat client, shortened by
+  // hand — still has to open the side it names. It used to be discarded
+  // unless a build or an explicit mode came with it, which meant `?r=k`
+  // quietly showed Survivor.
+  for (const [url, expected] of [
+    ["/?r=k", "убийцы"],
+    ["/?r=s", "выжившего"],
+    ["/?role=killer", "убийцы"],
+    ["/?role=survivor", "выжившего"],
+    ["/?r=k&mode=all", "убийцы"],
+  ] as const) {
+    test(`${url} opens ${expected}`, async ({ page }) => {
+      await page.goto(url);
+      await expect(page.locator("[data-perk-card]").first()).toBeVisible();
+      await expect(page.locator("main")).toContainText(`для ${expected}`);
+    });
+  }
+
+  test("a bare role is not treated as a shared build", async ({ page }) => {
+    // Applying the role must not make the roll a fixed one: a shared build
+    // hides the rerolls, and that would be a worse bug than the one fixed.
+    await page.goto("/?r=k");
+    await expect(page.locator("[data-perk-card]")).toHaveCount(4);
+    await expect(
+      page.getByRole("button", { name: "Перебросить этот перк" }).first(),
+    ).toBeAttached();
+    const before = await boardPerks(page);
+    await page.getByRole("button", { name: "Сгенерировать новый билд" }).click();
+    await expect.poll(() => boardPerks(page).then((p) => p.join())).not.toBe(before.join());
+  });
+
+  test("an unknown role is ignored rather than obeyed", async ({ page }) => {
+    await page.goto("/?r=zzz");
+    await expect(page.locator("[data-perk-card]").first()).toBeVisible();
+    await expect(page.locator("main")).toContainText("для выжившего");
   });
 });

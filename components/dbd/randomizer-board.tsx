@@ -202,9 +202,13 @@ interface InitialUrlState {
  *  seed is enough to re-derive the build client-side. `?mode=loadout` plus
  *  `?lp=id1,id2,...` mirrors `?p=` for sharing a specific Full Loadout roll;
  *  `?mode=all` carries both `?p=` and `?lp=` together for the combined view.
- *  Mirrors the existing rule that a bare role with no seed/build attached
- *  isn't treated as "shared state" at all — mode only takes effect when it
- *  comes with content, same as role always has. */
+ *
+ *  A bare role (`?r=k`) is honoured on its own: it sets the side and nothing
+ *  else. It used to be discarded unless a build or an explicit mode came
+ *  with it, which meant the very parameter the site writes into its own
+ *  share links opened the wrong role when a link got truncated. Applying it
+ *  does not mark anything as a shared build — that still requires `p`/`lp`
+ *  or a seed — so the visitor gets a normal rerollable roll. */
 function readInitialUrlState(): InitialUrlState | null {
   if (typeof window === "undefined") return null;
   const params = new URLSearchParams(window.location.search);
@@ -291,7 +295,13 @@ function readInitialUrlState(): InitialUrlState | null {
   const perks = readPerks();
   if (perks.length > 0) return { role, mode, perks };
 
-  return null;
+  // A role with nothing attached is still intent worth honouring. `r` is the
+  // short parameter the site writes into every share link it generates, so
+  // `?r=k` on its own — a link truncated in a chat client, or shortened by
+  // hand — used to open the Survivor side without a word. Only the role and
+  // mode are applied here; nothing is marked as a shared build, so the
+  // visitor gets a normal, rerollable roll for the side they asked for.
+  return { role, mode };
 }
 
 export function RandomizerBoard() {
@@ -1462,8 +1472,12 @@ export function RandomizerBoard() {
           <ToggleSwitch
             checked={guaranteeTeachables}
             onChange={toggleGuaranteeTeachables}
+            // "Тичеблы" was the English term in Cyrillic letters and read as
+            // nonsense to anyone who had not seen "teachables" written down.
+            // The tooltip right beside it already said "собственные перки
+            // этого персонажа"; the label now uses the same words.
             label={t({
-              ru: "Гарантировать тичеблы",
+              ru: "Гарантировать личные перки",
               en: "Guarantee teachables",
             })}
             tooltip={t({
