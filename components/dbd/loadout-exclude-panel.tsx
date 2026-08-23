@@ -437,9 +437,17 @@ export function LoadoutExcludePanel({
                         <span className="absolute top-1 left-1 rounded-full bg-black/60 px-1.5 py-0.5 text-[0.5625rem] font-bold text-white/90">
                           {t(KIND_LABEL[piece.kind])}
                         </span>
+                        {/* Lazy, because this list is ~880 rows long. Loading
+                            it eagerly pulled 883 images and 18.9 MB the moment
+                            the panel opened -- against 0.23 MB for the page
+                            itself -- which on mobile data is the worst thing
+                            the site does. The panel scrolls inside the
+                            viewport, so the viewport is the right root. */}
                         {/* eslint-disable-next-line @next/next/no-img-element -- next/image ignores basePath for unoptimized runtime src, see lib/asset-path.ts */}
                         <img
                           src={withBasePath(piece.icon)}
+                          loading="lazy"
+                          decoding="async"
                           alt={piece.name[language]}
                           width={48}
                           height={48}

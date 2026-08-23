@@ -383,9 +383,14 @@ export function ExcludePanel({
                             fill={favoriteSlugs.has(perk.slug) ? "currentColor" : "none"}
                           />
                         </button>
+                        {/* Lazy for the same reason as the loadout pool: a
+                            few hundred rows, each with its own icon, none of
+                            them visible until scrolled to. */}
                         {/* eslint-disable-next-line @next/next/no-img-element -- next/image ignores basePath for unoptimized runtime src, see lib/asset-path.ts */}
                         <img
                           src={withBasePath(perk.icon)}
+                          loading="lazy"
+                          decoding="async"
                           alt={perk.name[language]}
                           width={48}
                           height={48}

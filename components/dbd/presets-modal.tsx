@@ -115,6 +115,8 @@ export function PresetsModal({
                           {/* eslint-disable-next-line @next/next/no-img-element -- next/image ignores basePath for unoptimized runtime src, see lib/asset-path.ts */}
                           <img
                             src={withBasePath(perk.icon)}
+                            loading="lazy"
+                            decoding="async"
                             alt=""
                             width={48}
                             height={48}
