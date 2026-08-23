@@ -12,6 +12,7 @@ import { ROLE_COLOR } from "@/lib/role-color";
 import { getCharacterName } from "@/lib/character-name";
 import { useT } from "@/lib/i18n";
 import { useModal } from "@/lib/use-modal";
+import { MultiDropdown } from "./dropdown";
 
 type StatusFilter = "all" | "active" | "disabled";
 
@@ -164,6 +165,15 @@ export function LoadoutExcludePanel({
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<StatusFilter>("all");
   const [category, setCategory] = useState<string>("all");
+  /* Characters filter as a SET, and alongside the category chips rather than
+   * instead of them.
+   *
+   * They used to write into `category`, which made "Nurse" and "Add-ons"
+   * mutually exclusive and allowed exactly one character at a time — so
+   * comparing two killers' add-ons meant opening the list, picking one,
+   * reading, and picking the other. Now the chip says what KIND of thing to
+   * show and this says WHOSE, which are two different questions. */
+  const [characterFilter, setCharacterFilter] = useState<string[]>([]);
 
   const poolForRole = useMemo(() => getLoadoutPoolForRole(role, character), [role, character]);
   const roleColor = ROLE_COLOR[role];
@@ -175,14 +185,13 @@ export function LoadoutExcludePanel({
   // exists self-heals that without an effect that could flash the old
   // filter for a frame first.
   const activeCategory =
-    category !== "all" &&
-    (categories.some((c) => c.id === category) ||
-      characters.some((c) => `character:${c.name}` === category))
-      ? category
-      : "all";
-  const selectedCharacter = activeCategory.startsWith("character:")
-    ? activeCategory.slice("character:".length)
-    : "";
+    category !== "all" && categories.some((c) => c.id === category) ? category : "all";
+  // Same self-healing for the characters: a killer-specific name means
+  // nothing once the pool is the survivor side.
+  const activeCharacters = useMemo(
+    () => characterFilter.filter((name) => characters.some((c) => c.name === name)),
+    [characterFilter, characters],
+  );
 
   const keyOf = (piece: LoadoutPiece) => `${piece.kind}:${piece.slug}`;
   const activeCount = poolForRole.filter((p) => !excludedKeys.has(keyOf(p))).length;
@@ -194,13 +203,18 @@ export function LoadoutExcludePanel({
       if (status === "active" && excludedKeys.has(key)) return false;
       if (status === "disabled" && !excludedKeys.has(key)) return false;
       if (activeCategory !== "all" && !matchesCategory(piece, activeCategory)) return false;
+      if (
+        activeCharacters.length > 0 &&
+        !activeCharacters.some((name) => matchesCategory(piece, `character:${name}`))
+      )
+        return false;
       if (query) {
         const haystack = `${piece.name.en} ${piece.name.ru}`.toLowerCase();
         if (!haystack.includes(query)) return false;
       }
       return true;
     });
-  }, [poolForRole, status, activeCategory, search, excludedKeys]);
+  }, [poolForRole, status, activeCategory, activeCharacters, search, excludedKeys]);
 
   const filteredKeys = filtered.map(keyOf);
 
@@ -301,7 +315,13 @@ export function LoadoutExcludePanel({
                 <div className="flex flex-wrap items-center gap-1.5">
                   <button
                     type="button"
-                    onClick={() => setCategory("all")}
+                    // Clears the characters too. The chip says "All", and
+                    // leaving a character filter running behind it would show
+                    // a filtered list under a label promising everything.
+                    onClick={() => {
+                      setCategory("all");
+                      setCharacterFilter([]);
+                    }}
                     className={cn(
                       "rounded-full border px-3 py-1 text-[0.6875rem] font-medium transition-colors",
                       activeCategory === "all"
@@ -329,31 +349,31 @@ export function LoadoutExcludePanel({
                     </button>
                   ))}
 
-                  {/* The killer roster — a dropdown rather than 40 more
-                      chips. Writes the same "character:<name>" id the chips
-                      use, so there's still exactly one selected filter and
-                      one filtering path. */}
+                  {/* The killer roster — a dropdown rather than 40 more chips,
+                      and multi-select because comparing two killers' add-ons
+                      is the reason anyone opens it. */}
                   {characters.length > 0 && (
-                    <select
-                      value={selectedCharacter}
-                      onChange={(e) =>
-                        setCategory(e.target.value ? `character:${e.target.value}` : "all")
+                    <MultiDropdown
+                      values={activeCharacters}
+                      onChange={setCharacterFilter}
+                      label={t({ ru: "Фильтр по персонажу", en: "Filter by character" })}
+                      placeholder={t({ ru: "Персонаж…", en: "Character…" })}
+                      summary={(n) =>
+                        t({ ru: `Персонажей: ${n}`, en: `${n} characters` })
                       }
-                      aria-label={t({ ru: "Фильтр по персонажу", en: "Filter by character" })}
+                      testId="character-filter"
                       className={cn(
-                        "rounded-full border px-3 py-1 text-[0.6875rem] font-medium transition-colors focus:ring-2 focus:ring-accent/40 focus:outline-none",
-                        selectedCharacter
+                        "px-3 py-1 text-[0.6875rem] font-medium",
+                        activeCharacters.length > 0
                           ? cn(roleColor.border, roleColor.bg, roleColor.text)
                           : "border-border bg-transparent text-muted hover:bg-surface-hover hover:text-foreground",
                       )}
-                    >
-                      <option value="">{t({ ru: "Персонаж…", en: "Character…" })}</option>
-                      {characters.map((c) => (
-                        <option key={c.name} value={c.name}>
-                          {getCharacterName(c.name, language)} ({c.count})
-                        </option>
-                      ))}
-                    </select>
+                      options={characters.map((c) => ({
+                        value: c.name,
+                        label: getCharacterName(c.name, language),
+                        count: c.count,
+                      }))}
+                    />
                   )}
                 </div>
 

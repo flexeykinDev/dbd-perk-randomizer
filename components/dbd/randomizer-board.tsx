@@ -98,6 +98,7 @@ import { RitualStage } from "./ritual-stage";
 import { SlotsStage } from "./slots-stage";
 import { useIsDesktop } from "@/lib/use-is-desktop";
 import { isAvailable, usePresentation } from "@/lib/use-presentation";
+import { Dropdown } from "./dropdown";
 
 const MAX_PERK_COUNT = 4;
 const DEFAULT_PERK_COUNT = 4;
@@ -1402,19 +1403,19 @@ export function RandomizerBoard() {
             <span className="text-muted">
               {t({ ru: "Тема:", en: "Theme:" })}
             </span>
-            <select
+            <Dropdown
               value={themeTag ?? ""}
-              onChange={(e) => selectTheme(e.target.value || null)}
-              aria-label={t({ ru: "Тема билда", en: "Build theme" })}
-              className="rounded-full border border-border bg-background px-3 py-1 text-xs text-foreground focus:ring-2 focus:ring-accent/40 focus:outline-none"
-            >
-              <option value="">{t({ ru: "Любая", en: "Any" })}</option>
-              {getTagsForRole(role).map((tag) => (
-                <option key={tag.id} value={tag.id}>
-                  {t({ ru: tag.ru, en: tag.en })}
-                </option>
-              ))}
-            </select>
+              onChange={(v) => selectTheme(v || null)}
+              label={t({ ru: "Тема билда", en: "Build theme" })}
+              className="border-border bg-background text-foreground"
+              options={[
+                { value: "", label: t({ ru: "Любая", en: "Any" }) },
+                ...getTagsForRole(role).map((tag) => ({
+                  value: tag.id,
+                  label: t({ ru: tag.ru, en: tag.en }),
+                })),
+              ]}
+            />
           </div>
         )}
 

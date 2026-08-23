@@ -22,6 +22,7 @@ import { useT } from "@/lib/i18n";
 import { useModal } from "@/lib/use-modal";
 import { getCharacterName } from "@/lib/character-name";
 import { getTagsForPerk, getTagsForRole } from "@/lib/perk-tags";
+import { Dropdown } from "./dropdown";
 
 type StatusFilter = "all" | "active" | "disabled" | "favorite";
 type SortField = "name" | "character" | "date";
@@ -215,16 +216,17 @@ export function ExcludePanel({
                       className="w-full rounded-full border border-border bg-background py-1.5 pr-3 pl-8 text-xs text-foreground placeholder:text-muted/60 focus:ring-2 focus:ring-accent/40 focus:outline-none"
                     />
                   </div>
-                  <select
+                  <Dropdown<SortField>
                     value={sortField}
-                    onChange={(e) => setSortField(e.target.value as SortField)}
-                    aria-label={t({ ru: "Сортировка", en: "Sort by" })}
-                    className="rounded-full border border-border bg-background px-3 py-1.5 text-xs text-foreground focus:ring-2 focus:ring-accent/40 focus:outline-none"
-                  >
-                    <option value="name">{t({ ru: "По названию", en: "By Name" })}</option>
-                    <option value="character">{t({ ru: "По персонажу", en: "By Character" })}</option>
-                    <option value="date">{t({ ru: "По дате добавления", en: "By Date Added" })}</option>
-                  </select>
+                    onChange={setSortField}
+                    label={t({ ru: "Сортировка", en: "Sort by" })}
+                    className="border-border bg-background text-foreground"
+                    options={[
+                      { value: "name", label: t({ ru: "По названию", en: "By Name" }) },
+                      { value: "character", label: t({ ru: "По персонажу", en: "By Character" }) },
+                      { value: "date", label: t({ ru: "По дате добавления", en: "By Date Added" }) },
+                    ]}
+                  />
                   <button
                     type="button"
                     onClick={() => setSortDir((d) => (d === "asc" ? "desc" : "asc"))}
