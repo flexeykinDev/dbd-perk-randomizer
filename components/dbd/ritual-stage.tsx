@@ -181,6 +181,8 @@ export function RitualStage({
   }, [role]);
 
   const state = useRef({
+    /** Cards whose landing cue has already fired, so a paused-and-resumed
+     *  loop cannot replay the whole deal. */
     motes: [] as Mote[],
     hand: [] as Mote[],
     spin: 1,
@@ -199,6 +201,8 @@ export function RitualStage({
     shown: [] as string[],
     /** Slots to swap in place, when only some of the build changed. */
     swap: [] as number[],
+    /** Cards the draw loop last painted — see the draw loop. */
+    drawnCards: -1,
     W: 0,
     H: 0,
   });
@@ -301,10 +305,23 @@ export function RitualStage({
         const at = next.indexOf(replacement);
         if (at >= 0) next[at] = incoming;
         else next.push(incoming);
+        taken.add(incoming);
+        /* Both objects written into `next` below have to be claimed.
+         *
+         * takeMote picks its spare with `!taken.has(m)`, and these are brand
+         * new objects — `taken` holds the ones they replaced. So on the next
+         * slot of the same reroll, the card just dealt here was a candidate
+         * spare: it got repointed to a different perk and overwritten in
+         * `next`, while `hand` went on referencing the object that was no
+         * longer there. The draw loop iterates `s.motes`, so that card was
+         * simply never drawn — three cards on the table instead of four.
+         *
+         * Only pinning could trigger it: this whole branch runs when SOME
+         * slots changed, which is exactly what a locked perk produces. */
         // The card being replaced drops out of the hand and out of the funnel.
         const oldAt = next.indexOf(old);
         if (oldAt >= 0) {
-          next[oldAt] = {
+          const leaving: Mote = {
             ...old,
             from: { x: centre.x, y: centre.y, s: centre.s, a: 1 },
             to: { x: centre.x, y: centre.y - slot.h * 0.4, s: centre.s * 0.9, a: 0 },
@@ -312,6 +329,8 @@ export function RitualStage({
             dur: 0.3,
             card: true,
           };
+          next[oldAt] = leaving;
+          taken.add(leaving);
         }
         hand[i] = incoming;
       });
@@ -611,6 +630,21 @@ export function RitualStage({
         }
       }
       list.sort((a, b) => a.z - b.z);
+      /* What the loop is really about to draw, published for the tests.
+       *
+       * Not derived from props or from `hand` — both of those have claimed
+       * four cards while the canvas drew three. This counts the motes that
+       * will actually be painted as cards this frame, which is the thing a
+       * person is complaining about when a slot comes up empty. Written only
+       * when it changes; this runs every frame. */
+      // Alpha matters: a card being swapped out finishes its tween at a = 0
+      // and stays flagged as a card forever, so counting the flag alone
+      // reported seven cards on a four-card table.
+      const cardCount = list.reduce((n, d) => n + (d.card && d.p.a > 0.05 ? 1 : 0), 0);
+      if (cardCount !== s.drawnCards && hostRef.current) {
+        s.drawnCards = cardCount;
+        hostRef.current.dataset.cards = String(cardCount);
+      }
       for (const d of list) {
         if (d.card) {
           drawCard(d.m, d.p);

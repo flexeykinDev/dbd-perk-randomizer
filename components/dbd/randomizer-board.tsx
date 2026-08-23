@@ -92,10 +92,13 @@ import { ObsOverlayModal, type PieceVisibility } from "./obs-overlay-modal";
 import { CharacterPickerModal } from "./character-picker-modal";
 import { MoreMenu } from "./more-menu";
 import { PresentationPicker } from "./presentation-picker";
+import { SoundControl } from "./sound-control";
+import { playSound, setSoundSurface } from "@/lib/sound";
 import { RitualStage } from "./ritual-stage";
 import { SlotsStage } from "./slots-stage";
 import { useIsDesktop } from "@/lib/use-is-desktop";
 import { isAvailable, usePresentation } from "@/lib/use-presentation";
+import { Dropdown } from "./dropdown";
 
 const MAX_PERK_COUNT = 4;
 const DEFAULT_PERK_COUNT = 4;
@@ -389,6 +392,12 @@ export function RandomizerBoard() {
   const effectivePresentation = isAvailable(presentation, isDesktop)
     ? presentation
     : "classic";
+  // The one switch that decides whether the site may make a sound at all.
+  // Driven by what is actually on screen rather than by the saved choice, so
+  // a phone falling back from Ritual to Classic is silent too.
+  useEffect(() => {
+    setSoundSurface(effectivePresentation === "casino");
+  }, [effectivePresentation]);
   // Card text is no longer part of the page's own payload (see
   // lib/descriptions.ts). Warming it once the browser is idle means the
   // first card someone opens already has its text, without any of it
@@ -833,6 +842,7 @@ export function RandomizerBoard() {
   });
 
   const regenerate = useCallback(() => {
+    playSound("roll");
     // Battle Royale's whole premise is elimination — the pool should shrink
     // every round regardless of *how* you moved on, not only when you
     // happened to copy a perk first. Without this, spamming Generate (or
@@ -1393,19 +1403,19 @@ export function RandomizerBoard() {
             <span className="text-muted">
               {t({ ru: "Тема:", en: "Theme:" })}
             </span>
-            <select
+            <Dropdown
               value={themeTag ?? ""}
-              onChange={(e) => selectTheme(e.target.value || null)}
-              aria-label={t({ ru: "Тема билда", en: "Build theme" })}
-              className="rounded-full border border-border bg-background px-3 py-1 text-xs text-foreground focus:ring-2 focus:ring-accent/40 focus:outline-none"
-            >
-              <option value="">{t({ ru: "Любая", en: "Any" })}</option>
-              {getTagsForRole(role).map((tag) => (
-                <option key={tag.id} value={tag.id}>
-                  {t({ ru: tag.ru, en: tag.en })}
-                </option>
-              ))}
-            </select>
+              onChange={(v) => selectTheme(v || null)}
+              label={t({ ru: "Тема билда", en: "Build theme" })}
+              className="border-border bg-background text-foreground"
+              options={[
+                { value: "", label: t({ ru: "Любая", en: "Any" }) },
+                ...getTagsForRole(role).map((tag) => ({
+                  value: tag.id,
+                  label: t({ ru: tag.ru, en: tag.en }),
+                })),
+              ]}
+            />
           </div>
         )}
 
@@ -1888,6 +1898,9 @@ export function RandomizerBoard() {
           onChange={setPresentation}
           isDesktop={isDesktop}
         />
+        {/* Only where there is something to hear. Sound is the slot
+            machine's, not the site's — see lib/sound.ts. */}
+        {effectivePresentation === "casino" && <SoundControl />}
       </div>
 
       {/* Off-screen — exists only so html2canvas has real, laid-out DOM to

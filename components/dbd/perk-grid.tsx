@@ -104,10 +104,20 @@ export function PerkGrid({
             return (
               <motion.div
                 key={perk.slug}
-                initial={{ opacity: 0, scale: 0.85, y: 8 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.85 }}
-                transition={{ duration: 0.25, delay: index * 0.05 }}
+                /* The same reveal the loadout row uses: a spring so each
+                   card lands rather than fades in, a small rotation so it
+                   reads as being set down, and a stagger left to right. The
+                   two halves of a build should not animate differently. */
+                initial={{ opacity: 0, scale: 0.62, y: -14, rotate: -7 }}
+                animate={{ opacity: 1, scale: 1, y: 0, rotate: 0 }}
+                exit={{ opacity: 0, scale: 0.86, y: 8, transition: { duration: 0.14 } }}
+                transition={{
+                  type: "spring",
+                  stiffness: 430,
+                  damping: 27,
+                  mass: 0.7,
+                  delay: index * 0.075,
+                }}
                 role="button"
                 tabIndex={0}
                 // Marks the card itself for the e2e suite, which has to tell
@@ -132,6 +142,16 @@ export function PerkGrid({
                   roleColor.hoverBorder,
                 )}
               >
+                <motion.span
+                  aria-hidden
+                  className={cn(
+                    "pointer-events-none absolute inset-0 rounded-2xl",
+                    roleColor.glow,
+                  )}
+                  initial={{ opacity: 0.55 }}
+                  animate={{ opacity: 0 }}
+                  transition={{ duration: 0.55, delay: index * 0.075, ease: "easeOut" }}
+                />
                 {isNewPerk(perk) && (
                   <span
                     className={cn(

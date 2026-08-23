@@ -7,6 +7,7 @@ import { useT } from "@/lib/i18n";
 import type { CopyFeedback } from "@/lib/use-copy-feedback";
 import type { TwitchConnectionState, TwitchPermission } from "@/lib/twitch-chat";
 import type { TwitchSettings } from "@/lib/use-twitch-settings";
+import { Dropdown } from "./dropdown";
 
 const STATE_LABEL: Record<TwitchConnectionState, { ru: string; en: string }> = {
   disconnected: { ru: "Отключено", en: "Disconnected" },
@@ -245,17 +246,15 @@ function PermissionSelect({
 }) {
   const t = useT();
   return (
-    <select
+    <Dropdown<TwitchPermission>
       value={value}
-      onChange={(e) => onChange(e.target.value as TwitchPermission)}
-      aria-label={t({ ru: "Кому разрешена команда", en: "Who may use this command" })}
-      className="rounded-full border border-border bg-background px-2.5 py-1 text-[0.6875rem] text-foreground focus:ring-2 focus:ring-accent/40 focus:outline-none"
-    >
-      {(["everyone", "subs_vips", "mods"] as const).map((option) => (
-        <option key={option} value={option}>
-          {t(PERMISSION_LABEL[option])}
-        </option>
-      ))}
-    </select>
+      onChange={onChange}
+      label={t({ ru: "Кому разрешена команда", en: "Who may use this command" })}
+      className="border-border bg-background text-foreground"
+      options={(["everyone", "subs_vips", "mods"] as const).map((option) => ({
+        value: option,
+        label: t(PERMISSION_LABEL[option]),
+      }))}
+    />
   );
 }
