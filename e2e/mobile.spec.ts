@@ -299,3 +299,26 @@ test("a dismissed share sheet is not reported as a success", async ({ page }) =>
   }
   expect([...seen], "a dismissed share sheet should say nothing at all").toEqual([]);
 });
+
+test("Ritual is offered only where it can actually run", async ({ page }) => {
+  // It drives a WebGL loop and deals four cards across a row; a phone pays
+  // the battery for something it has no room to show. The picker still lists
+  // it — hiding the option entirely would leave a saved desktop choice
+  // looking like it had been forgotten — but it cannot be selected here.
+  await page.goto("/?role=survivor");
+  await expect(page.locator("[data-perk-card]")).toHaveCount(4);
+
+  await page.getByTestId("presentation-picker").click();
+  const ritual = page.getByRole("menuitemradio", { name: /Ритуал/ });
+  await expect(ritual).toBeVisible();
+  await expect(ritual).toBeDisabled();
+
+  // Slots has no such constraint — and must not blow the page out sideways
+  // the way a fixed-size canvas would.
+  await page.getByRole("menuitemradio", { name: /Слоты/ }).click();
+  await expect(page.getByTestId("slots-stage")).toBeVisible();
+  expect(
+    await horizontalOverflow(page),
+    "the Slots stage makes the page scroll sideways",
+  ).toBeLessThanOrEqual(2);
+});

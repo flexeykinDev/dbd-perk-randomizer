@@ -91,6 +91,11 @@ import { canvasToPngBlob, saveImage } from "@/lib/save-image";
 import { ObsOverlayModal, type PieceVisibility } from "./obs-overlay-modal";
 import { CharacterPickerModal } from "./character-picker-modal";
 import { MoreMenu } from "./more-menu";
+import { PresentationPicker } from "./presentation-picker";
+import { RitualStage } from "./ritual-stage";
+import { SlotsStage } from "./slots-stage";
+import { useIsDesktop } from "@/lib/use-is-desktop";
+import { isAvailable, usePresentation } from "@/lib/use-presentation";
 
 const MAX_PERK_COUNT = 4;
 const DEFAULT_PERK_COUNT = 4;
@@ -377,6 +382,13 @@ export function RandomizerBoard() {
   // otherwise the server-rendered HTML and the client's first render would
   // pick different perks and React would flag a hydration mismatch.
   const mounted = useMounted();
+  const isDesktop = useIsDesktop();
+  const [presentation, setPresentation] = usePresentation();
+  // A saved choice is kept, but never *rendered* where it does not fit:
+  // Ritual on a phone would run a WebGL loop with nowhere to deal to.
+  const effectivePresentation = isAvailable(presentation, isDesktop)
+    ? presentation
+    : "classic";
   // Card text is no longer part of the page's own payload (see
   // lib/descriptions.ts). Warming it once the browser is idle means the
   // first card someone opens already has its text, without any of it
@@ -488,9 +500,11 @@ export function RandomizerBoard() {
     return merged;
   }, [excludedSlugs, battleRoyale, battleRoyaleUsed, themeExcluded]);
 
-  const availableCount = mounted
-    ? getAvailablePool(role, combinedExcluded).length
-    : 0;
+  const availablePool = useMemo(
+    () => (mounted ? getAvailablePool(role, combinedExcluded) : []),
+    [mounted, role, combinedExcluded],
+  );
+  const availableCount = availablePool.length;
   // Applies to both causes of a too-small pool: Battle Royale attrition and
   // the player just manually excluding too many perks in Manage Pool. Either
   // way, getRandomPerks() refuses to top up from excluded perks (see
@@ -1761,6 +1775,26 @@ export function RandomizerBoard() {
                 : t({ ru: "Открыть пул перков", en: "Open perk pool" })}
             </button>
           </div>
+        ) : effectivePresentation !== "classic" && perks.length > 0 ? (
+          /* Same build, shown differently. The stages are fed `perks` and
+             never roll anything themselves — see lib/use-presentation.ts.
+             Pinning and per-slot reroll are grid affordances, so they stay
+             with the grid rather than being reinvented on a canvas. */
+          effectivePresentation === "ritual" ? (
+            <RitualStage
+              pool={availablePool}
+              perks={perks}
+              role={role}
+              language={language}
+            />
+          ) : (
+            <SlotsStage
+              pool={availablePool}
+              perks={perks}
+              role={role}
+              language={language}
+            />
+          )
         ) : (
           <PerkGrid
             perks={perks}
@@ -1832,6 +1866,11 @@ export function RandomizerBoard() {
           onSelect={handleDownloadImage}
           generating={generatingImage}
           disabled={sharePieces.length === 0}
+        />
+        <PresentationPicker
+          value={presentation}
+          onChange={setPresentation}
+          isDesktop={isDesktop}
         />
       </div>
 
