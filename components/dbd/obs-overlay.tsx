@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { entranceMotion } from "@/lib/obs-entrance";
 import { withBasePath } from "@/lib/asset-path";
 import { getCharacterName } from "@/lib/character-name";
 import { cn } from "@/lib/cn";
@@ -201,15 +202,18 @@ export function ObsOverlay() {
     return (
       <motion.div
         key={perk.slug}
-        initial={{ opacity: 0, scale: 0.75, y: 16 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.75, y: -16 }}
-        transition={{ duration: 0.35, delay: index * 0.06, ease: "easeOut" }}
+        {...entranceMotion(options.entrance, index)}
         className={cn(
           "flex flex-col items-center gap-1.5",
           pos && "absolute -translate-x-1/2 -translate-y-1/2",
         )}
-        style={pos ? { left: `${pos.x}%`, top: `${pos.y}%` } : undefined}
+        style={{
+          ...(pos ? { left: `${pos.x}%`, top: `${pos.y}%` } : {}),
+          // Without this the "flip" entrance rotates in an orthographic
+          // projection, which looks like the card is being squashed
+          // horizontally rather than turned over.
+          ...(options.entrance === "flip" ? { perspective: 700 } : {}),
+        }}
       >
         <span
           // Soft, low-contrast card instead of a bright neon-style ring —

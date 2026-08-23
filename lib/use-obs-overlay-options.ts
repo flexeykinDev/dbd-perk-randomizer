@@ -20,6 +20,7 @@ import {
   MAX_CHARACTER_SCALE,
   MIN_CHARACTER_SCALE,
   obsOverlayUrl,
+  type ObsEntrance,
   type ObsIconPosition,
 } from "./use-obs-mode";
 
@@ -146,6 +147,8 @@ export function useObsOverlayOptions(open: boolean) {
   // rather than by the shared "Card size" slider.
   const [characterPosition, setCharacterPosition] = useState<ObsIconPosition | null>(null);
   const [characterScale, setCharacterScale] = useState(DEFAULT_OBS_OPTIONS.characterScale);
+  // How a new build enters the scene — see lib/obs-entrance.ts.
+  const [entrance, setEntrance] = useState<ObsEntrance>(DEFAULT_OBS_OPTIONS.entrance);
 
   // A callback ref rather than an exposed RefObject: the preview canvas
   // only ever needs to *hand over* its element, and passing a ref object
@@ -167,6 +170,7 @@ export function useObsOverlayOptions(open: boolean) {
         positions: positions ?? undefined,
         characterPosition: characterPosition ?? undefined,
         characterScale,
+        entrance,
       })
     : "";
 
@@ -183,6 +187,8 @@ export function useObsOverlayOptions(open: boolean) {
 
   return {
     styleMode,
+    entrance,
+    setEntrance,
     scale,
     nameScale,
     canvasWidth,

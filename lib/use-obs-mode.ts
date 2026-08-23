@@ -53,7 +53,26 @@ export interface ObsOverlayOptions {
    *  `scale` — set via scroll-wheel while hovering it in the modal
    *  preview, same as dragging sets `characterPosition`. */
   characterScale: number;
+  /** How a newly-arrived build enters the scene.
+   *
+   *  Streams are watched, not operated, so the entrance is the only motion
+   *  the overlay has and it carries the whole "a new build just landed"
+   *  moment. `rise` is the long-standing behaviour and stays the default;
+   *  the rest exist because a 0.35s fade is right for some scenes and far
+   *  too polite for others. `none` is not a cop-out — a fixed camera on a
+   *  busy layout is a real reason to want nothing moving. */
+  entrance: ObsEntrance;
 }
+
+export type ObsEntrance = "rise" | "drop" | "flip" | "glide" | "none";
+
+export const OBS_ENTRANCES: readonly ObsEntrance[] = [
+  "rise",
+  "drop",
+  "flip",
+  "glide",
+  "none",
+];
 
 // Matches the "Roomy" style preset (see obs-overlay-modal.tsx) — testing
 // showed the old 100/100 default looked cramped in actual OBS scenes, so
@@ -76,6 +95,7 @@ export const DEFAULT_OBS_OPTIONS: ObsOverlayOptions = {
   positions: null,
   characterPosition: null,
   characterScale: 100,
+  entrance: "rise",
 };
 
 export const MIN_OBS_SCALE = 50;
@@ -89,6 +109,13 @@ export const MIN_CHARACTER_SCALE = 40;
 export const MAX_CHARACTER_SCALE = 250;
 
 const BACKGROUNDS: readonly ObsBackground[] = ["transparent", "dark"];
+
+function parseEntrance(params: URLSearchParams): ObsEntrance {
+  const raw = params.get("anim");
+  return raw && (OBS_ENTRANCES as readonly string[]).includes(raw)
+    ? (raw as ObsEntrance)
+    : DEFAULT_OBS_OPTIONS.entrance;
+}
 
 // Pre-slider releases used a three-tier `size` param (sm/md/lg) instead of a
 // continuous `scale` — a URL already pasted into someone's OBS Browser
@@ -198,6 +225,7 @@ export function useObsOverlayOptions(): ObsOverlayOptions {
         positions: parsePositions(params),
         characterPosition: parseCharacterPosition(params),
         characterScale: parseCharacterScale(params),
+        entrance: parseEntrance(params),
       });
     }
     applyFromUrl();
@@ -296,6 +324,9 @@ export function obsOverlayUrl(
   const params = new URLSearchParams();
   params.set("room", getOrCreateRoomCode());
   params.set("obs", "1");
+  if (options.entrance && options.entrance !== DEFAULT_OBS_OPTIONS.entrance) {
+    params.set("anim", options.entrance);
+  }
   if (options.scale && options.scale !== DEFAULT_OBS_OPTIONS.scale) {
     params.set("scale", String(Math.round(options.scale)));
   }

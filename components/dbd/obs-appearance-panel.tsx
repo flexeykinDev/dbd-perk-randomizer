@@ -1,6 +1,9 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/cn";
+import { entranceMotion } from "@/lib/obs-entrance";
 import { useT } from "@/lib/i18n";
 import type { PieceVisibility } from "@/lib/types";
 import {
@@ -16,8 +19,104 @@ import {
   MAX_OBS_SCALE,
   MIN_OBS_NAME_SCALE,
   MIN_OBS_SCALE,
+  OBS_ENTRANCES,
+  type ObsEntrance,
 } from "@/lib/use-obs-mode";
 import { ToggleSwitch } from "./toggle-switch";
+
+/** What the motion actually does, for the preview caption. The chip names
+ *  are nouns and three of them just mean "it moves". */
+const ENTRANCE_HINT: Record<ObsEntrance, { ru: string; en: string }> = {
+  rise: { ru: "Всплывает снизу и увеличивается", en: "Floats up and grows into place" },
+  drop: { ru: "Падает сверху с отскоком", en: "Falls from above and bounces" },
+  flip: { ru: "Переворачивается, как карта", en: "Turns over like a card" },
+  glide: { ru: "Выезжает слева, без масштаба", en: "Slides in from the left, no scaling" },
+  none: { ru: "Только плавное появление", en: "Crossfade only, nothing moves" },
+};
+
+const ENTRANCE_LABEL: Record<ObsEntrance, { ru: string; en: string }> = {
+  rise: { ru: "Всплытие", en: "Rise" },
+  drop: { ru: "Падение", en: "Drop" },
+  flip: { ru: "Переворот", en: "Flip" },
+  glide: { ru: "Сдвиг", en: "Glide" },
+  none: { ru: "Без анимации", en: "None" },
+};
+
+/* A live preview of what an entrance actually looks like.
+ *
+ * The five names are the problem this solves: "Rise", "Drop", "Glide" all
+ * mean roughly "it moves", and picking between them meant choosing one,
+ * closing the modal, rolling a build, and watching the overlay — per option.
+ *
+ * The motion is read from entranceMotion, the same function the overlay
+ * itself uses, rather than being reimplemented here. A hand-drawn imitation
+ * would be a second definition of each animation and would drift away from
+ * the real one the first time either changed.
+ */
+const PREVIEW_CARDS = 3;
+const PREVIEW_LOOP_MS = 1900;
+
+function EntrancePreview({ entrance }: { entrance: ObsEntrance }) {
+  const t = useT();
+  const [tick, setTick] = useState(0);
+  const reduced = useReducedMotion();
+
+  useEffect(() => {
+    if (reduced) return;
+    // Named for the same reason as the restores in lib/ — the compiler's lint
+    // rejects a bare setState in an effect body.
+    function replay() {
+      setTick((n) => n + 1);
+    }
+    const id = setInterval(replay, PREVIEW_LOOP_MS);
+    return () => clearInterval(id);
+  }, [reduced]);
+
+  return (
+    <div
+      className="mt-2 overflow-hidden rounded-lg border border-border bg-background/40"
+      // Decorative: the chips carry the names and the caption repeats the
+      // description, so a screen reader gains nothing from the rectangles.
+      aria-hidden
+      data-testid="entrance-preview"
+      data-entrance={entrance}
+    >
+      <div
+        className="flex h-20 items-center justify-center gap-2"
+        style={{ perspective: entrance === "flip" ? 700 : undefined }}
+      >
+        {reduced ? (
+          <span className="text-[0.6875rem] text-muted">
+            {t({ ru: "Анимация отключена в системе", en: "Motion is off in your system settings" })}
+          </span>
+        ) : (
+          Array.from({ length: PREVIEW_CARDS }, (_, i) => {
+            const motion_ = entranceMotion(entrance, i);
+            return (
+              <motion.span
+                // Re-keyed each loop so the entrance replays from the start.
+                key={`${entrance}-${tick}-${i}`}
+                initial={motion_.initial}
+                animate={motion_.animate}
+                transition={motion_.transition}
+                // Shaped like the overlay's own cards — a portrait tile with a
+                // name bar under it — so the preview reads as "a build
+                // arriving" rather than as three abstract squares.
+                className="flex h-14 w-11 flex-col overflow-hidden rounded-md border border-accent/50 bg-accent/10 shadow-sm"
+              >
+                <span className="flex-1 bg-gradient-to-b from-accent/35 to-accent/10" />
+                <span className="h-2.5 border-t border-accent/30 bg-surface/70" />
+              </motion.span>
+            );
+          })
+        )}
+      </div>
+      <p className="border-t border-border/60 px-2.5 py-1.5 text-center text-[0.625rem] text-muted">
+        {t(ENTRANCE_HINT[entrance])}
+      </p>
+    </div>
+  );
+}
 
 /** Everything under "Appearance": the style presets, the custom dials they
  *  stand in for, the three display toggles, and which piece kinds reach the
@@ -34,6 +133,8 @@ export function ObsAppearancePanel({
   onPieceVisibilityChange: (kind: keyof PieceVisibility, value: boolean) => void;
 }) {
   const t = useT();
+  /** Which entrance the preview is showing, when it is not the chosen one. */
+  const [previewing, setPreviewing] = useState<ObsEntrance | null>(null);
 
   return (
     <div className="mt-5 flex flex-col gap-3">
@@ -120,6 +221,45 @@ export function ObsAppearancePanel({
           />
         </div>
       )}
+
+      {/* The overlay's only motion, so it gets a real choice rather than
+          being fixed. Named for what a viewer sees, not for the transform. */}
+      <div className="mt-1" onMouseLeave={() => setPreviewing(null)}>
+        <span className="text-xs font-medium text-muted">
+          {t({ ru: "Появление билда", en: "Build entrance" })}
+        </span>
+        <div
+          role="radiogroup"
+          aria-label={t({ ru: "Появление билда", en: "Build entrance" })}
+          className="mt-1.5 flex flex-wrap gap-1.5"
+        >
+          {OBS_ENTRANCES.map((id) => (
+            <button
+              key={id}
+              type="button"
+              role="radio"
+              aria-checked={options.entrance === id}
+              data-testid={`obs-entrance-${id}`}
+              onClick={() => options.setEntrance(id)}
+              onMouseEnter={() => setPreviewing(id)}
+              onFocus={() => setPreviewing(id)}
+              onBlur={() => setPreviewing(null)}
+              className={cn(
+                "rounded-full border px-3 py-1 text-xs font-medium transition-colors",
+                options.entrance === id
+                  ? "border-accent bg-accent/10 text-accent"
+                  : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
+              )}
+            >
+              {t(ENTRANCE_LABEL[id])}
+            </button>
+          ))}
+        </div>
+        {/* Shows whatever is under the cursor, falling back to the chosen
+            one — so the panel always answers "what does mine look like?"
+            without needing a hover. */}
+        <EntrancePreview entrance={previewing ?? options.entrance} />
+      </div>
 
       <div className="mt-1 flex flex-col gap-3">
         <ToggleSwitch
