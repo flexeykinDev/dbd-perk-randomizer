@@ -202,6 +202,10 @@ export function ObsOverlay() {
     return (
       <motion.div
         key={perk.slug}
+        // The only handle on the rendered overlay. Nothing could address a
+        // piece before this, which is why the surface that goes out live on
+        // a stream was the one with no test looking at it.
+        data-obs-piece={perk.slug}
         {...entranceMotion(options.entrance, index)}
         className={cn(
           "flex flex-col items-center gap-1.5",
