@@ -23,6 +23,12 @@ import { StageControls } from "./stage-controls";
 
 const TAU = Math.PI * 2;
 const ICON_PX = 112;
+
+/** The game's own role emblems, scraped by scripts/scrape-role-icons.ts. */
+const ROLE_EMBLEM: Record<PerkRole, string> = {
+  survivor: "/roles/survivor.png",
+  killer: "/roles/killer.png",
+};
 const MAX_MOTES = 22;
 
 const MOOD: Record<PerkRole, [number, number, number]> = {
@@ -164,6 +170,15 @@ export function RitualStage({
     langRef.current = language;
     themeRef.current = theme;
   }, [role, language, theme]);
+
+  /** The role emblem for the card backs, kept out of the mote list because
+   *  it belongs to the stage rather than to any one perk. */
+  const emblemRef = useRef<HTMLImageElement | null>(null);
+  useEffect(() => {
+    const img = new Image();
+    img.src = withBasePath(ROLE_EMBLEM[role]);
+    emblemRef.current = img;
+  }, [role]);
 
   const state = useRef({
     motes: [] as Mote[],
@@ -510,18 +525,19 @@ export function RitualStage({
         while (ctx!.measureText(line).width > cw * 0.86 && line.length > 4) line = line.slice(0, -1);
         ctx!.fillText(line === name ? name : `${line}…`, 0, ch / 2 - cw * 0.12);
       } else {
-        // The Entity's mark — the one place gold is spent.
-        ctx!.strokeStyle = "#c9a227";
-        ctx!.globalAlpha *= 0.7;
-        ctx!.lineWidth = 1.3;
-        const r = cw * 0.19;
-        ctx!.beginPath();
-        for (let i = 0; i < 4; i++) {
-          const a = (i / 4) * TAU - Math.PI / 4;
-          ctx!.moveTo(0, 0);
-          ctx!.lineTo(Math.cos(a) * r, Math.sin(a) * r);
+        // The role's own emblem from the game — the skull for Killer, the
+        // gear for Survivor — rather than the drawn cross that used to sit
+        // here, which read as a placeholder because it was one.
+        const emblem = emblemRef.current;
+        if (emblem?.complete && emblem.naturalWidth) {
+          const e = cw * 0.46;
+          ctx!.globalAlpha *= 0.85;
+          // White line art, like the perk icons: inverted on the light theme
+          // exactly as .icon-art does for the rest of the page.
+          if (th.isLight) ctx!.filter = "invert(0.92)";
+          ctx!.drawImage(emblem, -e / 2, -e / 2, e, e);
+          ctx!.filter = "none";
         }
-        ctx!.stroke();
       }
       ctx!.restore();
     }
