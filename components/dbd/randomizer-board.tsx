@@ -1115,18 +1115,37 @@ export function RandomizerBoard() {
     if (!target || sharePieces.length === 0 || generatingImage) return;
     setGeneratingImage(layout);
     try {
+      // html2canvas draws text with canvas fillText using each element's
+      // computed font-family. If a webfont has not finished loading it does
+      // not fall back gracefully — it bakes the fallback face into the PNG
+      // and nothing reports a problem. The card is set in Oswald and IBM Plex
+      // Mono (lib/export-fonts.ts), so wait for them before rasterising.
+      // Cheap in practice: by the time anyone clicks, they are long loaded.
+      if (typeof document !== "undefined" && document.fonts?.ready) {
+        await document.fonts.ready;
+      }
       const { default: html2canvas } = await import("html2canvas");
       const canvas = await html2canvas(target, {
         // Background is baked into ShareCard's own gradient now (see
         // share-card.tsx), not a flat fill — this backgroundColor is just
         // the fallback if that CSS somehow fails to paint.
         backgroundColor: "#0d0e12",
-        // 3x renders crisp text/vector edges (borders, icon rounding) at
-        // typical viewing sizes. It can't fix the perk icons themselves —
-        // those are capped by their 128x128 source resolution, which is
-        // why ShareCard keeps icon display size close to that instead of
-        // relying on this to compensate.
-        scale: 3,
+        // 2x, not 3x. Two reasons, both measured rather than assumed.
+        //
+        // Resolution: the card draws each icon at ~122px from a 256px source,
+        // so 2x renders it at 244px — just under native. 3x asked for 366px
+        // from the same 256px file, which is upscaling: more pixels, no more
+        // detail.
+        //
+        // Weight: the film grain is high-frequency noise, which is close to
+        // the worst case for PNG. At 3x the landscape export was 15 MB and
+        // the story export 22 MB — over what Discord accepts from a free
+        // account. 2x brings both back under control while still being far
+        // larger than anything a feed displays.
+        //
+        // (The note that used to sit here said the icons were capped at
+        // 128x128. That has been wrong since the 256px re-scrape.)
+        scale: 2,
         useCORS: true,
       });
       const suffix = layout === "story" ? "-story" : "";

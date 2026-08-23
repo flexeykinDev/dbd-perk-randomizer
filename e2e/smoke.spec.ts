@@ -305,8 +305,13 @@ test.describe("Full Loadout", () => {
     // Killers don't carry an Item — the Item column is replaced by the
     // Power the rolled add-ons belong to (see the killer-power-icons.json
     // dataset built by scripts/scrape-loadout.ts).
-    await expect(page.getByText("Сила", { exact: true })).toBeVisible();
-    await expect(page.getByText("Предмет", { exact: true })).not.toBeVisible();
+    //
+    // Asserted against the slot itself rather than against the words "Сила"
+    // and "Предмет" appearing anywhere on the page: the off-screen share card
+    // labels its own slots the same way, so a bare text query matches twice
+    // and says nothing about which one the player can see.
+    await expect(page.getByTestId("loadout-slot-power")).toBeVisible();
+    await expect(page.getByTestId("loadout-slot-item")).toHaveCount(0);
   });
 
   test("turning off a slot rolls an empty HUD placeholder for it", async ({

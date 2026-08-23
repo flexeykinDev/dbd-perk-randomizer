@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { oswald, plexMono } from "@/lib/export-fonts";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 import { THEME_STORAGE_KEY } from "@/lib/theme";
@@ -55,7 +56,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="ru"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      // Oswald and IBM Plex Mono are used only by the off-screen export card,
+      // but their @font-face rules have to exist in the document for the
+      // browser to load them at all — so the variables ride here with the
+      // site's own faces. See lib/export-fonts.ts.
+      className={`${geistSans.variable} ${geistMono.variable} ${oswald.variable} ${plexMono.variable} h-full antialiased`}
       // data-theme is set by the inline script in <head> below, outside
       // React's render — without this, React "fixes" the attribute away
       // (since its own JSX never sets it) on the next re-render, e.g. a
