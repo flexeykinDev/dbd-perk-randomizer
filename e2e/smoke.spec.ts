@@ -189,7 +189,12 @@ test.describe("DBD randomizer", () => {
     await page.locator("[data-piece-kind]").first().click();
 
     const modal = page.locator(".modal-card");
-    await expect(modal.getByRole("listitem").first()).not.toBeEmpty();
+    // Core Effect is a single summarised line now, not a bullet list — see
+    // coreSummary in lib/perk-description.ts. Still the same question: did
+    // prose actually arrive, or is the tab showing a skeleton?
+    await expect
+      .poll(async () => (await modal.locator("p").allTextContents()).join(" ").trim().length)
+      .toBeGreaterThan(10);
     await modal.getByRole("button", { name: "Подробно" }).click();
     // Any real sentence will do — what's being checked is that prose
     // reached the modal at all, not which piece happened to be rolled.

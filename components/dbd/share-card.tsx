@@ -971,6 +971,16 @@ export function ShareCard({
     const bandLeft = Math.round(
       regionL + Math.max(0, (regionR - regionL - bandW) / 2),
     );
+    // The name gets whatever the band leaves, and shrinks if its longest WORD
+    // will not fit that — a two-word name wraps, but "Демогоргон" has nowhere
+    // to break and simply ran past the cap. Same per-character factor as
+    // fitLabelSize, calibrated against real exports.
+    const nameMax = bandLeft - margin - 40;
+    const longestNameWord = Math.max(1, ...title.split(/\s+/).map((w) => w.length));
+    const nameSize = Math.max(
+      52,
+      Math.min(104, Math.floor(nameMax / (longestNameWord * 0.62))),
+    );
     return (
       <div ref={ref} style={shell}>
         {/* eslint-disable-next-line @next/next/no-img-element -- captured by html2canvas */}
@@ -1032,16 +1042,18 @@ export function ShareCard({
             title sat only 9px below the band's bottom edge in "all" mode, so
             it was one slightly taller band away from printing through it.
             Capped, a long name wraps instead, and since the block is anchored
-            from the bottom it grows up into empty frame. */}
+            from the bottom it grows up into empty frame — except a name that
+            is one long WORD ("Демогоргон") has nowhere to wrap, so the size
+            comes down to meet the space as well. */}
         <div
           style={{
             position: "absolute",
             left: margin,
             bottom: 132,
-            maxWidth: bandLeft - margin - 40,
+            maxWidth: nameMax,
           }}
         >
-          {nameBlock("left", 104)}
+          {nameBlock("left", nameSize)}
         </div>
 
         {footer}

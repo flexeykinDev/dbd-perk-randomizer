@@ -364,7 +364,7 @@ function stripLoreIntro(sentences: string[]): string[] {
 // leaving a stray unhighlighted "." stranded between two separate bold
 // spans instead of one clean "10/12.5/15 seconds".
 const VALUE_RE =
-  /\d+(?:[.,]\d+)?(?:\/\d+(?:[.,]\d+)?)+(?:\s?(?:metres?|meters?|m|seconds?|sec|s|%))?|\d+(?:[.,]\d+)?\s?(?:metres?|meters?|m\b|seconds?|sec\b|секунд[а-я]*|метр[а-я]*|%)|\d+(?:[.,]\d+)?%/gi;
+  /\d+(?:[.,]\d+)?(?:\/\d+(?:[.,]\d+)?)+(?:\s?(?:metres?|meters?|m|seconds?|sec|s|%))?|\d+(?:[.,]\d+)?\s?(?:metres?|meters?|m\b|seconds?|sec\b|секунд[а-я]*|сек\.?|метр[а-я]*|мин\.?|м\b|%)|\d+(?:[.,]\d+)?%/gi;
 
 function autoHighlight(text: string): string {
   return text
@@ -417,6 +417,69 @@ function describe(entity: DescribableEntity, lang: Lang): PerkDescriptionView {
     quote,
     curated: false,
   };
+}
+
+/* The RU wiki writes add-on text as run-on clauses with no full stop between
+ * them — "…увеличивается на 50% Дальность растёт… максимум Эффект
+ * сбрасывается, когда…" arrives as ONE sentence, so splitSentences above has
+ * nothing to split on and the Core Effect tab printed a 355-character wall
+ * where it promised a summary. Measured across the 1382 add-on core bullets:
+ * 558 ran past 80 characters and 175 past 120.
+ *
+ * This finds the seam the punctuation does not mark: a clause ending — a
+ * value, a closing quote, a colon, or just a lowercase word — followed by a
+ * capital that starts a new statement. `*` is in the set because highlighting
+ * has already wrapped values as `**50%**` by this point, so the character
+ * before the gap is an asterisk rather than the percent sign.
+ *
+ * A comma is deliberately NOT a boundary: "Пока собака бежит…, Егерь
+ * получает…" is one thought, and splitting there would cut an effect in half
+ * rather than shorten it.
+ *
+ * The lookahead deliberately does NOT allow an opening quote before the
+ * capital. Named terms are quoted inline — «Кары обреченных», "Дикого
+ * бешенства" — so permitting one split "Сокращает дальность «Кары
+ * обреченных» на 50%" into a useless "Сокращает дальность", deleting the
+ * effect it was supposed to summarise. 152 of 912 summaries came out under
+ * 25 characters that way. */
+const RU_RUN_ON_RE = /(?<=[%»"*:;\p{Ll}\d])\s+(?=\p{Lu}\p{Ll})/gu;
+
+/** The first complete clause of a description, for the Core Effect tab.
+ *
+ *  Everything dropped here is still one tab away under Full Text, which is
+ *  what makes trimming safe: the summary's job is to answer "what does this
+ *  do" at a glance, not to be complete. */
+export function coreSummary(view: PerkDescriptionView, maxChars = 120): string | null {
+  const first = view.core.find((b) => b.trim().length > 0);
+  if (!first) return null;
+  /* No attempt to strip a trailing flavour quote. One was tried and cut real
+   * effects in half: the RU text mixes «», "" and "" for named terms, so a
+   * "quote to end of string" match opened on a term like «Кары обреченных»
+   * and never found its partner, leaving "Сокращает дальность" — the effect
+   * deleted and the flavour it was meant to remove not even present. Flavour
+   * sits at the END of a description, and this only ever takes the FIRST
+   * clause, so it is nearly always out of range anyway. */
+  /* Not simply the first piece. Plenty of sentences carry a capitalised word
+   * that is not a new statement — "При Ударе…", "Если Выживший…" — and taking
+   * the split at face value produced summaries reading "При" and "Если". So
+   * pieces are rejoined until there is enough of a sentence to be worth
+   * showing, and only then does the next boundary end it. */
+  const MIN_CLAUSE = 40;
+  const parts = first.split(RU_RUN_ON_RE);
+  let clause = "";
+  for (const part of parts) {
+    clause = clause ? `${clause} ${part}` : part;
+    if (clause.trim().length >= MIN_CLAUSE) break;
+  }
+  clause = clause.trim();
+  if (clause.length <= maxChars) return clause || first.slice(0, maxChars);
+  // Clamp on a word boundary, and never leave a `**` span half-open — an
+  // unterminated marker renders as literal asterisks.
+  let cut = clause.slice(0, maxChars);
+  const lastSpace = cut.lastIndexOf(" ");
+  if (lastSpace > maxChars * 0.6) cut = cut.slice(0, lastSpace);
+  if ((cut.match(/\*\*/g) ?? []).length % 2 === 1) cut = cut.slice(0, cut.lastIndexOf("**"));
+  return `${cut.trim()}…`;
 }
 
 export function getPerkDescription(perk: DescribableEntity, lang: Lang): PerkDescriptionView {

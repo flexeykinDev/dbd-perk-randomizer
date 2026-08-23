@@ -5,10 +5,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Copy, X } from "lucide-react";
 import type { Addon, LoadoutPiece, PerkRole } from "@/lib/types";
 import { withBasePath } from "@/lib/asset-path";
+import { isKeyboardFocused } from "@/lib/focus";
 import { getKillerPowerIcon, isNewLoadoutPiece, ITEM_TYPE_LABEL } from "@/lib/loadout";
 import { getCharacterPortrait } from "@/lib/perks";
 import { getCharacterName } from "@/lib/character-name";
-import { getLoadoutPieceDescription } from "@/lib/perk-description";
+import { coreSummary, getLoadoutPieceDescription } from "@/lib/perk-description";
 import { useDescription } from "@/lib/descriptions";
 import { DescriptionSkeleton } from "./perk-grid";
 import { useModal } from "@/lib/use-modal";
@@ -240,6 +241,10 @@ function PieceSlot({
               data-character={piece.kind === "addon" ? piece.character : undefined}
               onClick={() => onOpenDetail(piece)}
               onKeyDown={(e) => {
+                // Keyboard focus only — see the same guard on the perk cards
+                // and lib/focus.ts for why a clicked slot must let Space
+                // through to the page's reroll shortcut.
+                if (!isKeyboardFocused(e.currentTarget)) return;
                 if (e.key === "Enter" || e.key === " ") {
                   e.preventDefault();
                   onOpenDetail(piece);
@@ -611,19 +616,21 @@ function LoadoutDescriptionPanel({
       </div>
 
       {tab === "core" ? (
-        <ul className="mt-3 space-y-1.5 text-sm leading-relaxed text-muted">
-          {description.core.map((bullet, i) => (
-            <li key={i} className="flex gap-2">
-              <span
-                className="mt-1.5 size-1.5 shrink-0 rounded-full bg-accent"
-                aria-hidden
-              />
-              <span>
-                <Highlighted text={bullet} role={role} />
-              </span>
-            </li>
-          ))}
-        </ul>
+        /* One clause, not the whole description. Add-on text from the RU wiki
+           runs several effects together without punctuation, so this tab was
+           printing the same wall of words as Full Text and the toggle above it
+           did nothing — see coreSummary in lib/perk-description.ts. The role
+           tint on the values is what makes the number findable at a glance,
+           which is the entire point of the short view. */
+        <p className="mt-3 flex gap-2 text-sm leading-relaxed text-foreground">
+          <span
+            className="mt-1.5 size-1.5 shrink-0 rounded-full bg-accent"
+            aria-hidden
+          />
+          <span className="min-w-0">
+            <Highlighted text={coreSummary(description) ?? description.full} role={role} />
+          </span>
+        </p>
       ) : (
         <div className="mt-3 space-y-3">
           <p className="text-sm leading-relaxed text-muted">

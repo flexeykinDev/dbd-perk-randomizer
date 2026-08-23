@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Copy, Dices, Info, Lock, LockOpen, X } from "lucide-react";
 import type { Perk } from "@/lib/types";
 import { withBasePath } from "@/lib/asset-path";
+import { isKeyboardFocused } from "@/lib/focus";
 import { isNewPerk, getCharacterPortrait } from "@/lib/perks";
 import { ROLE_COLOR } from "@/lib/role-color";
 import { cn } from "@/lib/cn";
@@ -115,6 +116,11 @@ export function PerkGrid({
                 data-perk-card="1"
                 onClick={() => setDetailPerk(perk)}
                 onKeyDown={(e) => {
+                  // Only when the card was reached by keyboard. Clicked, it
+                  // keeps focus afterwards, and this handler was then eating
+                  // every Space the player meant as a reroll and reopening
+                  // the description instead. See lib/focus.ts.
+                  if (!isKeyboardFocused(e.currentTarget)) return;
                   if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
                     setDetailPerk(perk);

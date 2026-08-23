@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { isKeyboardFocused } from "./focus";
 import type { BuildMode } from "./types";
 
 /**
@@ -63,13 +64,22 @@ export function useBoardShortcuts({
       // rather than each one re-deriving them.
       const target = e.target as HTMLElement | null;
       const tag = target?.tagName;
-      const typingOrInteractive =
+      // A text field owns the keyboard however focus got there.
+      const typing =
         tag === "INPUT" ||
         tag === "TEXTAREA" ||
         tag === "SELECT" ||
-        tag === "BUTTON" ||
-        tag === "A" ||
-        target?.isContentEditable;
+        !!target?.isContentEditable;
+      /* A button or link is different: Space means "press me" only to
+       * someone who TABBED to it. After a click, focus is just left behind —
+       * and treating that as ownership silently disabled the reroll key for
+       * the rest of the session. Copy a build, alt-tab to the game, come
+       * back, press Space, and nothing happened. See lib/focus.ts for how
+       * the two kinds of focus are told apart. */
+      const activatable =
+        tag === "BUTTON" || tag === "A" || target?.getAttribute("role") === "button";
+      const typingOrInteractive =
+        typing || (activatable && isKeyboardFocused(target));
       // Never swallow a real browser shortcut — Ctrl/Cmd+C in particular
       // has to keep copying whatever the user actually selected.
       const modified = e.ctrlKey || e.metaKey || e.altKey;
