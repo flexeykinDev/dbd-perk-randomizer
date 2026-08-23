@@ -25,7 +25,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { getPerkDescription } from "./perk-description";
+import { coreSummary, getPerkDescription } from "./perk-description";
 import type { Lang } from "./i18n";
 import type { LocalizedDescription } from "./types";
 
@@ -366,4 +366,63 @@ forEveryEntry("the lore quote is never also left in the body", (view) => {
   const inner = view.quote.replace(/^[“«]|[”»].*$/g, "").trim();
   if (inner.length < 12) return null; // too short to match meaningfully
   return view.full.includes(inner) ? `quote duplicated in full text` : null;
+});
+
+/* The Core Effect tab, on the loadout side.
+ *
+ * Three complaints, all the same complaint: summaries were cut off
+ * mid-thought, they carried the wiki's glossary asides, and some of them
+ * were pure flavour. The numbers below are what those looked like when
+ * measured across every shipped item, add-on and offering — 78 of 979
+ * truncated — so they are the thing worth pinning, not one example.
+ */
+const describe = (piece: Entry, lang: Lang) => getPerkDescription(piece, lang);
+const describeLoadout = (ru: string) => {
+  const piece = [...items, ...addons, ...offerings].find((p) => p.name?.ru === ru);
+  assert.ok(piece, `no shipped piece named ${ru} — the fixture has drifted`);
+  return getPerkDescription(piece, "ru");
+};
+
+test("a status definition is cut, not the effect that mentions it", () => {
+  // The RU wiki explains a status right after using it, inside the same
+  // sentence. That explanation is not what this add-on does.
+  const view = describeLoadout("Масляные краски");
+  const summary = coreSummary(view);
+  assert.ok(summary, "no summary");
+  assert.ok(
+    summary.includes("радиус обнаружения"),
+    `the add-on's own effect was dropped: ${summary}`,
+  );
+  assert.ok(
+    !summary.includes("периодически показывает"),
+    `the glossary aside survived: ${summary}`,
+  );
+});
+
+test("a quoted term inside an effect is not mistaken for a definition", () => {
+  /* The mirror image, and the reason the exclusion list exists: «Кары
+   * обреченных» на 50% opens exactly like a definition and is the mechanic.
+   * Guarding this because the boundary in that list was written with \b,
+   * which JavaScript defines against ASCII only — so after a Cyrillic word
+   * it never matched and the whole list was silently inert. */
+  const view = describeLoadout("Мензурка с отбеливателем");
+  const summary = coreSummary(view);
+  assert.ok(summary, "no summary");
+  assert.ok(summary.includes("2%"), `the value was cut away: ${summary}`);
+});
+
+test("summaries stop at a clause rather than mid-sentence", () => {
+  const pieces = [...items, ...addons, ...offerings];
+  const truncated = pieces
+    .map((p) => ({ name: p.name?.ru ?? p.slug, s: coreSummary(describe(p, "ru")) }))
+    .filter((x) => x.s?.endsWith("\u2026"));
+  // A hard cap has to exist for the rare single clause that runs past it,
+  // but it should be the exception. It was 78 of 979.
+  assert.ok(
+    truncated.length <= 20,
+    `${truncated.length} summaries end mid-thought:\n${truncated
+      .slice(0, 6)
+      .map((x) => `  ${x.name}: ${x.s}`)
+      .join("\n")}`,
+  );
 });

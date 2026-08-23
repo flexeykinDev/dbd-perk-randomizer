@@ -444,14 +444,52 @@ function describe(entity: DescribableEntity, lang: Lang): PerkDescriptionView {
  * 25 characters that way. */
 const RU_RUN_ON_RE = /(?<=[%»"*:;\p{Ll}\d])\s+(?=\p{Lu}\p{Ll})/gu;
 
+/** Below this, a "clause" is a fragment like "При" or "Если" rather than a
+ *  summary of anything. */
+const MIN_CLAUSE = 40;
+
+/* A wiki habit that turns a summary into a paragraph: having named a status,
+ * the RU text goes on to explain it — "…ещё на 2% «Замедление» снижает
+ * скорость передвижения…". That definition is part of the same sentence
+ * grammatically, and RU_RUN_ON_RE cannot split it off, because the clause
+ * begins with a quote rather than a capital and the lookahead deliberately
+ * excludes quotes.
+ *
+ * So it is found directly: a quoted term followed by a word that is not a
+ * preposition. That exclusion list is the whole safety margin — "«Кары
+ * обреченных» НА 50%" is an add-on's own mechanic and starts identically,
+ * and the earlier attempt at trimming quotes cut 152 summaries down to their
+ * first three words. */
+/* `\b` is deliberately absent. JavaScript defines a word boundary against
+ * [A-Za-z0-9_] even under the `u` flag, so "для\b" can never match after a
+ * Cyrillic letter — the boundary simply is not there. Written with `\b` this
+ * whole exclusion list was inert, the tail matched on the FIRST quoted term
+ * instead of the definition, and the summary lost its own effect. A
+ * negative lookahead for another letter is the boundary this needs. */
+const RU_DEFINITION_TAIL_RE =
+  /\s+\*{0,2}[«"“][^«»"“”]{2,40}[»"”]\*{0,2}\s+(?!(?:на|в|во|до|от|за|и|или|с|со|к|по|при|для|над|под|через|после|перед|из|о|об)(?!\p{L}))\p{Ll}{3,}/u;
+
 /** The first complete clause of a description, for the Core Effect tab.
  *
  *  Everything dropped here is still one tab away under Full Text, which is
  *  what makes trimming safe: the summary's job is to answer "what does this
  *  do" at a glance, not to be complete. */
-export function coreSummary(view: PerkDescriptionView, maxChars = 120): string | null {
-  const first = view.core.find((b) => b.trim().length > 0);
+export function coreSummary(view: PerkDescriptionView, maxChars = 150): string | null {
+  const filled = view.core.filter((b) => b.trim().length > 0);
+  /* The first bullet that says what the thing DOES, not simply the first.
+   *
+   * Some add-ons open with flavour and put the mechanic in the next bullet —
+   * "Челюсть с длинными зубами, которые вгрызаются в плоть…" is a sentence
+   * about teeth and tells a player nothing they can act on. stripLoreIntro
+   * already handles this within a bullet; this is the same rule one level up.
+   * Falls back to the first bullet when nothing looks mechanical, rather than
+   * guessing — a few add-ons genuinely are described only in prose. */
+  const first = filled.find(isMechanical) ?? filled[0];
   if (!first) return null;
+  // Cut the trailing status definition before anything else looks at this,
+  // so it can never be the thing that pushes the summary over budget.
+  const tail = first.search(RU_DEFINITION_TAIL_RE);
+  const bullet = tail > MIN_CLAUSE ? first.slice(0, tail).trim() : first;
   /* No attempt to strip a trailing flavour quote. One was tried and cut real
    * effects in half: the RU text mixes «», "" and "" for named terms, so a
    * "quote to end of string" match opened on a term like «Кары обреченных»
@@ -464,17 +502,26 @@ export function coreSummary(view: PerkDescriptionView, maxChars = 120): string |
    * the split at face value produced summaries reading "При" and "Если". So
    * pieces are rejoined until there is enough of a sentence to be worth
    * showing, and only then does the next boundary end it. */
-  const MIN_CLAUSE = 40;
-  const parts = first.split(RU_RUN_ON_RE);
+  const parts = bullet.split(RU_RUN_ON_RE);
   let clause = "";
   for (const part of parts) {
-    clause = clause ? `${clause} ${part}` : part;
+    const next = clause ? `${clause} ${part}` : part;
+    /* Stop BEFORE a clause that would overrun rather than taking it and
+     * cutting it in half. A summary ending "…получают эффект «Замедление» и
+     * двигаются…" tells a reader less than stopping a clause earlier would,
+     * because it looks like the answer and is not one. Unless nothing has
+     * been kept yet — half an answer still beats none. */
+    if (clause && next.trim().length > maxChars) break;
+    clause = next;
     if (clause.trim().length >= MIN_CLAUSE) break;
   }
   clause = clause.trim();
-  if (clause.length <= maxChars) return clause || first.slice(0, maxChars);
-  // Clamp on a word boundary, and never leave a `**` span half-open — an
-  // unterminated marker renders as literal asterisks.
+  if (clause.length <= maxChars) return clause || bullet.slice(0, maxChars);
+  /* One clause, over budget on its own — there is no seam to stop at, so cut
+   * at a word boundary and mark it. This is what the ellipsis is actually
+   * for, and it is now the exception rather than the routine case. Never
+   * leave a `**` span half-open; an unterminated marker renders as literal
+   * asterisks. */
   let cut = clause.slice(0, maxChars);
   const lastSpace = cut.lastIndexOf(" ");
   if (lastSpace > maxChars * 0.6) cut = cut.slice(0, lastSpace);
