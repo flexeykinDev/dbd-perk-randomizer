@@ -143,7 +143,12 @@ function StageButton({
       aria-label={label}
       title={label}
       className={cn(
-        "flex shrink-0 items-center justify-center rounded-full border transition-colors focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:outline-none",
+        // tap-square grows this to a thumb-sized target under a coarse
+        // pointer. Unreachable today -- the stages are gated to desktop with
+        // a fine pointer -- but the sizes here are set from the canvas
+        // geometry and came out at 26px on a narrow viewport, so whoever
+        // loosens that gate should not also have to rediscover this.
+        "tap-square flex shrink-0 items-center justify-center rounded-full border transition-colors focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:outline-none",
         active
           ? "border-accent/60 bg-accent/15 text-accent"
           : "border-border bg-surface/70 text-muted hover:bg-surface-hover hover:text-foreground",

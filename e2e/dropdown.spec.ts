@@ -90,3 +90,58 @@ test("several characters can be filtered at once, and the list is not clipped", 
   const oneChar = await page.locator('div.fixed.inset-0 [role="button"]:has(img)').count();
   expect(twoChars, "deselecting a character did not narrow the list").toBeGreaterThan(oneChar);
 });
+
+test("typing jumps to a match, the way the native select did", async ({ page }) => {
+  /* The killer roster is forty-odd names. Replacing the native select left
+   * arrow keys as the only way through it, which quietly removed a
+   * capability rather than adding one.
+   *
+   * Driven in English on purpose: Playwright's keyboard dispatches no
+   * keydown at all for characters outside the layout, so typing a Cyrillic
+   * name reaches the page as an input event with no key -- the handler under
+   * test would never run and the test would pass or fail for the wrong
+   * reason. The behaviour is not language-specific. */
+  await page.addInitScript(() =>
+    localStorage.setItem("dbd-randomizer:language", "en"),
+  );
+  await page.goto("/?role=killer&mode=loadout");
+  await expect.poll(() => page.locator("[data-piece-slug]").count()).toBeGreaterThan(2);
+  await page.getByRole("button", { name: /^Pool( \d+)?$/ }).click();
+  const trigger = page.getByTestId("character-filter");
+  await expect(trigger).toBeVisible();
+  await trigger.click();
+  const list = page.getByRole("listbox", { name: "Filter by character" });
+  await expect(list).toBeVisible();
+
+  const labels = await list.getByRole("option").evaluateAll((els) =>
+    els.map((e) => (e.textContent ?? "").trim()),
+  );
+  // A letter at least two options share, so the search is doing something a
+  // single arrow press would not.
+  const letter = labels
+    .map((l) => l[0])
+    .find((c, _, all) => all.filter((x) => x === c).length > 1)!;
+  expect(letter, "no two characters share a first letter").toBeTruthy();
+
+  const activeLabel = async () => {
+    const id = await list.getAttribute("aria-activedescendant");
+    return (await page.locator(`[id="${id}"]`).textContent())?.trim();
+  };
+
+  await page.keyboard.press(letter.toUpperCase());
+  const first = await activeLabel();
+  expect(
+    first?.toLocaleLowerCase().startsWith(letter.toLocaleLowerCase()),
+    `typing "${letter}" landed on "${first}"`,
+  ).toBe(true);
+
+  // Typing it again walks to the next match rather than sticking.
+  await page.keyboard.press(letter.toUpperCase());
+  const second = await activeLabel();
+  expect(second, "repeating the letter stayed on the same option").not.toBe(first);
+  expect(second?.toLocaleLowerCase().startsWith(letter.toLocaleLowerCase())).toBe(true);
+
+  // And Enter takes the highlighted one.
+  await page.keyboard.press("Enter");
+  await expect(trigger).toHaveAttribute("data-selected-count", "1");
+});

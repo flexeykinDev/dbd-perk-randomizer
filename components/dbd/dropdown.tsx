@@ -127,6 +127,7 @@ function Panel({
   pos,
   labelledBy,
   multiple,
+  activeId,
   children,
   onKeyDown,
 }: {
@@ -134,6 +135,9 @@ function Panel({
   pos: (PanelPosition & { above: boolean }) | null;
   labelledBy?: string;
   multiple: boolean;
+  /** The option the arrow keys are on. Focus stays on the panel, so this is
+   *  how a screen reader is told what is highlighted. */
+  activeId?: string;
   children: React.ReactNode;
   onKeyDown: (e: React.KeyboardEvent) => void;
 }) {
@@ -143,6 +147,7 @@ function Panel({
       ref={panelRef}
       role="listbox"
       aria-multiselectable={multiple || undefined}
+      aria-activedescendant={activeId}
       aria-label={labelledBy}
       tabIndex={-1}
       onKeyDown={onKeyDown}
@@ -176,8 +181,21 @@ function Option({
   onPick: () => void;
   id: string;
 }) {
+  const ref = useRef<HTMLButtonElement>(null);
+  /* Keep the highlight on screen. Typeahead can jump to the fortieth killer
+   * in a list that shows eight, and a highlight nobody can see is the same
+   * as no highlight. `nearest` so arrowing down one row nudges rather than
+   * recentring the whole list under the cursor. */
+  useEffect(() => {
+    function revealActiveOption() {
+      ref.current?.scrollIntoView({ block: "nearest" });
+    }
+    if (active) revealActiveOption();
+  }, [active]);
+
   return (
     <button
+      ref={ref}
       id={id}
       type="button"
       role="option"
@@ -216,6 +234,11 @@ function Option({
 
 /** Arrow-key navigation shared by both variants. Returns the key handler and
  *  the index the list should highlight. */
+/** How long typed letters keep accumulating into one search. Matches the
+ *  native select's own behaviour closely enough that nobody notices the
+ *  difference, which is the point. */
+const TYPEAHEAD_MS = 800;
+
 function useRoving(
   options: DropdownOption<string>[],
   open: boolean,
@@ -223,6 +246,12 @@ function useRoving(
   onClose: () => void,
 ) {
   const [active, setActive] = useState(0);
+  /* Typed letters jump to a match, the way the native select this replaced
+   * did. Not a nicety on the killer roster: it is forty-odd names, and arrow
+   * keys were the only way through them after the swap -- so replacing the
+   * select had quietly taken a capability away. In a ref rather than state
+   * because nothing renders from it. */
+  const typed = useRef({ buffer: "", at: 0 });
   // Named for the same reason as the restores in lib/ — see use-obs-hold.ts:
   // the compiler's lint rejects a bare setState in an effect body.
   useEffect(() => {
@@ -250,6 +279,31 @@ function useRoving(
     } else if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
       if (!options[active]?.disabled) onPick(active);
+    } else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      // Space is a selection key above; anything else printable searches.
+      const now = Date.now();
+      const buffer =
+        now - typed.current.at > TYPEAHEAD_MS ? e.key : typed.current.buffer + e.key;
+      typed.current = { buffer, at: now };
+      const needle = buffer.toLocaleLowerCase();
+      const hit = options.findIndex(
+        (o) => !o.disabled && o.label.toLocaleLowerCase().startsWith(needle),
+      );
+      /* Repeating one letter walks through the options starting with it,
+       * rather than sticking on the first -- "п", "п", "п" should be three
+       * different killers, not the same one three times. */
+      const repeated = buffer.length > 1 && new Set(buffer).size === 1;
+      if (repeated) {
+        const letter = needle[0];
+        const matches = options
+          .map((o, i) => ({ o, i }))
+          .filter(({ o }) => !o.disabled && o.label.toLocaleLowerCase().startsWith(letter));
+        if (matches.length > 0) {
+          setActive(matches[(buffer.length - 1) % matches.length].i);
+          return;
+        }
+      }
+      if (hit >= 0) setActive(hit);
     } else if (e.key === "Escape" || e.key === "Tab") {
       // Three of these live inside modals that close on Escape from a
       // document-level listener, so without this one press shut the dropdown
@@ -330,7 +384,14 @@ export function Dropdown<T extends string>({
         <ChevronDown className={cn("size-3.5 shrink-0 transition-transform", open && "rotate-180")} />
       </button>
       {open && (
-        <Panel panelRef={panelRef} pos={pos} labelledBy={label} multiple={false} onKeyDown={onKeyDown}>
+        <Panel
+          panelRef={panelRef}
+          pos={pos}
+          labelledBy={label}
+          multiple={false}
+          activeId={`${listId}-${active}`}
+          onKeyDown={onKeyDown}
+        >
           {options.map((option, i) => (
             <Option
               key={option.value}
@@ -425,7 +486,14 @@ export function MultiDropdown<T extends string>({
         <ChevronDown className={cn("size-3.5 shrink-0 transition-transform", open && "rotate-180")} />
       </button>
       {open && (
-        <Panel panelRef={panelRef} pos={pos} labelledBy={label} multiple onKeyDown={onKeyDown}>
+        <Panel
+          panelRef={panelRef}
+          pos={pos}
+          labelledBy={label}
+          multiple
+          activeId={`${listId}-${active}`}
+          onKeyDown={onKeyDown}
+        >
           {options.map((option, i) => (
             <Option
               key={option.value}
