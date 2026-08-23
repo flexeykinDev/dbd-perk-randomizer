@@ -106,6 +106,38 @@
   -webkit-overflow-scrolling: touch;
 }
 
+/* Buttons look clickable again.
+   Tailwind v4 dropped the v3 preflight rule that gave `button` a pointer
+   cursor, matching the browser default. Measured after that change: 41
+   buttons on the main board and 72 in the OBS overlay dialog computed
+   `cursor: default` — which is to say almost nothing on this site advertised
+   itself as clickable, and the six explicit `cursor-pointer` classes were
+   covering for it in six places.
+
+   In `@layer base` on purpose. These selectors outrank a bare `.cursor-grab`
+   utility on specificity, so at the top level they would silently beat the
+   deliberate `grab` on the OBS constructor's draggable pieces. Inside the
+   base layer Tailwind's utilities win regardless, and a component can still
+   override this by saying so. */
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  summary,
+  label:has(> input[type="checkbox"]) {
+    cursor: pointer;
+  }
+
+  /* A control that cannot be used should say so rather than silently
+     ignoring the click. */
+  button:disabled,
+  input:disabled,
+  select:disabled,
+  textarea:disabled,
+  [aria-disabled="true"] {
+    cursor: not-allowed;
+  }
+}
+
 /* A control sized for a mouse is not sized for a thumb. Applied to the
    buttons that are comfortable at 24-30px with a cursor and are not with a
    fingertip — the toolbars and the per-card actions.
