@@ -94,6 +94,7 @@ export function LoadoutGrid({
             label={t({ ru: "Предмет", en: "Item" })}
           >
             <PieceSlot
+              slot={0}
               piece={itemPiece}
               size="lg"
               roleColor={roleColor}
@@ -123,6 +124,7 @@ export function LoadoutGrid({
         >
           <div className="flex gap-2">
             <PieceSlot
+              slot={1}
               piece={addonPieces[0] ?? null}
               size="sm"
               roleColor={roleColor}
@@ -132,6 +134,7 @@ export function LoadoutGrid({
               onCopy={onCopy}
             />
             <PieceSlot
+              slot={2}
               piece={addonPieces[1] ?? null}
               size="sm"
               roleColor={roleColor}
@@ -148,6 +151,7 @@ export function LoadoutGrid({
           label={t({ ru: "Подношение", en: "Offering" })}
         >
           <PieceSlot
+            slot={3}
             piece={offeringPiece}
             size="lg"
             roleColor={roleColor}
@@ -199,9 +203,12 @@ function PieceSlot({
   t,
   onOpenDetail,
   onCopy,
+  slot = 0,
 }: {
   piece: LoadoutPiece | null;
   size: "lg" | "sm";
+  /** Position in the row, left to right, purely for the reveal stagger. */
+  slot?: number;
   roleColor: (typeof ROLE_COLOR)[PerkRole];
   language: "en" | "ru";
   t: TFn;
@@ -221,10 +228,21 @@ function PieceSlot({
           {piece ? (
             <motion.div
               key={`${piece.kind}:${piece.slug}`}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              transition={{ duration: 0.2 }}
+              /* A loadout is assembled, not revealed all at once: each slot
+                 drops in slightly after the one to its left, with a spring
+                 rather than a linear fade so it lands instead of arriving.
+                 The rotation is small on purpose — enough to read as a card
+                 being set down, not enough to notice as a spin. */
+              initial={{ opacity: 0, scale: 0.62, y: -14, rotate: -7 }}
+              animate={{ opacity: 1, scale: 1, y: 0, rotate: 0 }}
+              exit={{ opacity: 0, scale: 0.86, y: 8, transition: { duration: 0.14 } }}
+              transition={{
+                type: "spring",
+                stiffness: 430,
+                damping: 27,
+                mass: 0.7,
+                delay: slot * 0.075,
+              }}
               role="button"
               tabIndex={0}
               /* What a piece actually is, published on the element itself.
@@ -260,6 +278,16 @@ function PieceSlot({
                 roleColor.hoverBorder,
               )}
             >
+              <motion.span
+                aria-hidden
+                className={cn(
+                  "pointer-events-none absolute inset-0 rounded-xl",
+                  roleColor.glow,
+                )}
+                initial={{ opacity: 0.55 }}
+                animate={{ opacity: 0 }}
+                transition={{ duration: 0.55, delay: slot * 0.075, ease: "easeOut" }}
+              />
               {isNewLoadoutPiece(piece) && (
                 <span className="absolute top-0.5 left-0.5 z-10 rounded-full bg-black/60 px-1 py-px text-[0.5625rem] font-bold text-white/90 shadow">
                   {t({ ru: "НОВОЕ", en: "NEW" })}
