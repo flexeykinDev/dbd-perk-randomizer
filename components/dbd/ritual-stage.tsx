@@ -56,8 +56,8 @@ void main(){
   vec2 warp = vec2(cos(twist), sin(twist)) * r;
   float d = fbm(warp * 2.6 + vec2(uTime * 0.06, -uTime * 0.04));
   d = fbm(warp * 3.4 + d * 1.6 + vec2(0.0, uTime * 0.03));
-  float funnel = smoothstep(0.05, 0.72, r) * (1.0 - smoothstep(0.85, 1.5, r));
-  float dens = pow(d, 1.7) * funnel;
+  float funnel = smoothstep(0.02, 0.66, r) * (1.0 - smoothstep(0.9, 1.6, r));
+  float dens = pow(d, 1.45) * funnel;
   // Ground and haze come from the page's own tokens, so the fog is light on
   // the light theme and dark on the dark one instead of always near-black.
   vec3 col = mix(uGround, uHaze, clamp(dens * 1.5, 0.0, 1.0));
@@ -72,12 +72,46 @@ void main(){
  *  in the DOM on top of the canvas and has to line up with what is painted;
  *  two copies of this arithmetic would drift the first time either changed. */
 export function ritualCardRect(W: number, H: number, i: number, n: number) {
-  const cw = Math.min(132, Math.max(72, W / (n + 2.4)));
+  // Cards were sized for a stage that turned out to sit in a lot of empty
+  // page in perks-only mode; the same four cards read fine next to the
+  // loadout row and small on their own.
+  const cw = Math.min(170, Math.max(72, W / (n + 2.1)));
   const ch = cw * 1.4143 * 0.99;
   const gap = cw * 0.3;
   const total = n * cw + (n - 1) * gap;
   const cx = W / 2 - total / 2 + i * (cw + gap) + cw / 2;
   return { x: cx - cw / 2, y: H * 0.52 - ch / 2, w: cw, h: ch };
+}
+
+/** Where a mote sits in the funnel at a given moment.
+ *
+ *  Module scope on purpose: the draw loop and the single-slot swap both need
+ *  it, and a second copy of this arithmetic would drift the first time either
+ *  changed — the swap would then fly a card in from a point the vortex is not
+ *  actually at. */
+function funnelPoint(
+  m: { seed: number; lane: number; bob: number },
+  W: number,
+  H: number,
+  time: number,
+  spin: number,
+  dim: number,
+) {
+  const radius = Math.min(W * 0.46, H * 0.95) * (0.34 + 0.5 * m.seed * m.seed);
+  // Roughly half the old rate. At the previous speed the icons crossed the
+  // frame fast enough to strobe rather than drift, which read as "not
+  // smooth" — the frames were fine, the motion was just too quick for the
+  // eye to track anything.
+  const speed = (0.2 + 0.24 * (1 - m.seed)) * (0.4 + 0.6 * spin);
+  const ang = m.lane + time * speed;
+  const depth = Math.sin(ang) * 0.5 + 0.5;
+  return {
+    x: W / 2 + Math.cos(ang) * radius * (0.92 + 0.16 * depth),
+    y: H * 0.5 - (m.seed - 0.5) * H * 0.62 + Math.sin(time * 0.7 + m.bob) * 6,
+    s: (0.3 + 0.34 * depth) * (Math.min(W, H) / 620 + 0.4),
+    a: (0.28 + 0.72 * (depth * depth * (3 - 2 * depth))) * dim,
+    z: Math.sin(ang),
+  };
 }
 
 interface Mote {
@@ -137,6 +171,14 @@ export function RitualStage({
     spin: 1,
     spinTarget: 1,
     dealAt: 0,
+    /** How visible the funnel behind the hand is: 1 while rolling, less
+     *  once a hand is on the table. It is never 0 — a dealt stage with the
+     *  vortex switched off is just fog, which is what "lost the background"
+     *  meant. */
+    dim: 1,
+    dimTarget: 1,
+    /** When to let the fog settle again after a one-slot swap. */
+    calmAt: 0,
     /** Slugs the current hand was dealt for, so a single-slot reroll can be
      *  told apart from a whole new build. */
     shown: [] as string[],
@@ -230,14 +272,15 @@ export function RitualStage({
         const old = hand[i];
         const slot = ritualCardRect(s.W, s.H, i, perks.length);
         const centre = { x: slot.x + slot.w / 2, y: slot.y + slot.h / 2, s: slot.w / ICON_PX };
+        // Comes in off the funnel ring rather than from nowhere, so a
+        // single-slot reroll still reads as "pulled out of the vortex".
+        const entry = funnelPoint(replacement, s.W, s.H, now, s.spin, 1);
         const incoming: Mote = {
           ...replacement,
-          // Rises from just below the row rather than from across the frame:
-          // a swap is a small gesture and a long flight would read as a deal.
-          from: { x: centre.x, y: centre.y + slot.h * 0.55, s: centre.s * 0.82, a: 0 },
+          from: { x: entry.x, y: entry.y, s: centre.s * 0.55, a: 0.2 },
           to: { x: centre.x, y: centre.y, s: centre.s, a: 1 },
           t0: now,
-          dur: 0.42,
+          dur: 0.58,
           card: true,
         };
         const at = next.indexOf(replacement);
@@ -260,6 +303,12 @@ export function RitualStage({
       s.motes = next;
       s.hand = hand;
       s.shown = perks.map((p) => p.slug);
+      // The fog wakes up for the swap and settles again. Without this the
+      // background sat perfectly still while a card changed, which read as
+      // nothing having happened.
+      s.spinTarget = 0.95;
+      s.dimTarget = 0.75;
+      s.calmAt = performance.now() / 1000 + 0.8;
       if (hostRef.current) {
         hostRef.current.dataset.shown = hand.map((m) => m.perk.slug).join(",");
       }
@@ -291,6 +340,9 @@ export function RitualStage({
       hostRef.current.dataset.shown = hand.map((m) => m.perk.slug).join(",");
     }
     s.spinTarget = 1.5;
+    s.dim = 1;
+    s.dimTarget = 1;
+    s.calmAt = 0;
     s.dealAt = performance.now() / 1000 + 0.45;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [perkKey]);
@@ -381,23 +433,8 @@ export function RitualStage({
       return { x: r.x + r.w / 2, y: r.y + r.h / 2, s: r.w / ICON_PX };
     }
 
-    function funnel(m: Mote, time: number) {
-      const radius = Math.min(s.W * 0.46, s.H * 0.95) * (0.34 + 0.5 * m.seed * m.seed);
-      // Roughly half the old rate. At the previous speed the icons crossed
-      // the frame fast enough to strobe rather than drift, which read as
-      // "not smooth" — the frames were fine, the motion was just too quick
-      // for the eye to track anything.
-      const speed = (0.2 + 0.24 * (1 - m.seed)) * (0.4 + 0.6 * s.spin);
-      const ang = m.lane + time * speed;
-      const depth = Math.sin(ang) * 0.5 + 0.5;
-      return {
-        x: s.W / 2 + Math.cos(ang) * radius * (0.92 + 0.16 * depth),
-        y: s.H * 0.5 - (m.seed - 0.5) * s.H * 0.62 + Math.sin(time * 0.7 + m.bob) * 6,
-        s: (0.3 + 0.34 * depth) * (Math.min(s.W, s.H) / 620 + 0.4),
-        a: 0.28 + 0.72 * (depth * depth * (3 - 2 * depth)),
-        z: Math.sin(ang),
-      };
-    }
+    const funnel = (m: Mote, time: number) =>
+      funnelPoint(m, s.W, s.H, time, s.spin, s.dim);
 
     function beginDeal(time: number) {
       s.spinTarget = 0.22;
@@ -410,18 +447,14 @@ export function RitualStage({
         m.dur = reduced ? 0.01 : 0.66;
         m.card = true;
       });
+      // Everything not in the hand stays in the funnel and keeps turning —
+      // it just steps back. Tweening it to zero alpha, as this used to, left
+      // the stage with nothing but fog the moment the first hand landed.
+      s.dimTarget = 0.5;
       for (const m of s.motes) {
         if (s.hand.includes(m)) continue;
-        const now = funnel(m, time);
-        m.from = { x: now.x, y: now.y, s: now.s, a: now.a };
-        m.to = {
-          x: s.W / 2 + (now.x - s.W / 2) * 2.2,
-          y: now.y + (now.y - s.H / 2) * 0.7,
-          s: now.s * 0.6,
-          a: 0,
-        };
-        m.t0 = time;
-        m.dur = reduced ? 0.01 : 0.45;
+        m.from = null;
+        m.to = null;
         m.card = false;
       }
     }
@@ -513,6 +546,12 @@ export function RitualStage({
       const dt = Math.min(0.05, time - last);
       last = time;
       s.spin += (s.spinTarget - s.spin) * Math.min(1, dt * 2.6);
+      s.dim += (s.dimTarget - s.dim) * Math.min(1, dt * 3);
+      if (s.calmAt && time >= s.calmAt) {
+        s.spinTarget = 0.22;
+        s.dimTarget = 0.5;
+        s.calmAt = 0;
+      }
 
       if (s.dealAt && time >= s.dealAt) {
         beginDeal(time);
@@ -532,7 +571,7 @@ export function RitualStage({
         gl.uniform3f(uni.haze, th.hazeRgb[0], th.hazeRgb[1], th.hazeRgb[2]);
         // The tint has to be gentler on a light ground: the same amount that
         // reads as ember on near-black turns a white page pink.
-        gl.uniform1f(uni.tintAmt, th.isLight ? 0.16 : 0.5);
+        gl.uniform1f(uni.tintAmt, th.isLight ? 0.18 : 0.85);
         gl.drawArrays(gl.TRIANGLES, 0, 3);
       }
 
@@ -588,7 +627,14 @@ export function RitualStage({
     <div
       ref={hostRef}
       data-testid="ritual-stage"
-      className="relative aspect-[16/7] w-full max-w-4xl overflow-hidden rounded-2xl border border-border bg-background"
+      /* Intrinsic width, not `w-full`. The board nests the stage inside a
+         shrink-to-fit `items-center` column, so a percentage width was
+         circular — the column sized itself to its widest child (the
+         toolbar) and the stage then took 100% of that, coming out 559px
+         wide on a 1920 screen no matter what max-width it was given.
+         The viewport term keeps it inside the page padding on a phone. */
+      className="relative aspect-[16/7] w-[min(64rem,calc(100vw-3rem))] overflow-hidden rounded-2xl border border-border"
+      style={{ background: theme.stageGround }}
     >
       <canvas ref={fogRef} className="absolute inset-0 size-full" aria-hidden />
       <canvas ref={spriteRef} className="absolute inset-0 size-full" aria-hidden />

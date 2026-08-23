@@ -142,3 +142,52 @@ for (const vp of VIEWPORTS) {
     console.log(`\n[${vp.name}]\n${rows.join("\n")}`);
   });
 }
+
+/* The canvas presentations were never in this sweep, and they are the part
+ * most able to come out too small: they size off their own box rather than
+ * off the type scale, so a stage that looks right at 1440 can put four
+ * unreadable cards on a phone. Slots is checked everywhere (no desktop gate);
+ * Ritual only where it is actually offered. */
+for (const vp of VIEWPORTS) {
+  test(`stages: ${vp.name}`, async ({ page }) => {
+    test.setTimeout(120_000);
+    await page.setViewportSize({ width: vp.width, height: vp.height });
+    await page.goto("/?role=killer");
+    await page.locator("[data-perk-card]").first().waitFor({ state: "visible" });
+
+    const rows: string[] = [];
+    for (const stage of ["Слоты", "Ритуал"] as const) {
+      await page.getByTestId("presentation-picker").click();
+      const option = page.getByRole("menuitemradio", { name: new RegExp(stage) });
+      if (await option.isDisabled()) {
+        await page.keyboard.press("Escape");
+        rows.push(`  ${stage.padEnd(8)} not offered at this size`);
+        continue;
+      }
+      await option.click();
+      const testId = stage === "Слоты" ? "slots-stage" : "ritual-stage";
+      const host = page.getByTestId(testId);
+      await host.waitFor({ state: "visible" });
+      await page.waitForTimeout(1500);
+
+      const box = (await host.boundingBox())!;
+      const card = await page.getByRole("button", { name: /^Описание:/ }).first().boundingBox();
+      const ctrl = await page.getByRole("button", { name: /^Копировать$/ }).first().boundingBox();
+      rows.push(
+        `  ${stage.padEnd(8)} stage ${Math.round(box.width)}x${Math.round(box.height)}` +
+          `  card ${Math.round(card?.width ?? 0)}x${Math.round(card?.height ?? 0)}` +
+          `  control ${Math.round(ctrl?.width ?? 0)}px`,
+      );
+
+      const a = await audit(page, vp);
+      expect(a.sideways, `${vp.name} ${stage}: page scrolls sideways`).toBe(false);
+      expect(a.overflowers, `${vp.name} ${stage}: elements past the viewport`).toEqual([]);
+      // Below this a perk is a thumbnail, not a presentation.
+      expect(
+        card?.width ?? 0,
+        `${vp.name} ${stage}: perk card too small to read`,
+      ).toBeGreaterThanOrEqual(56);
+    }
+    console.log(`\n[stages @ ${vp.name}]\n${rows.join("\n")}`);
+  });
+}

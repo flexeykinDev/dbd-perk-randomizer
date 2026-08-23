@@ -282,9 +282,9 @@ export function SlotsStage({
         // on a dark page, and the reverse on a light one, so the shading is
         // shadow either way rather than a black tube dropped into white.
         const well = ctx!.createLinearGradient(0, top, 0, top + rh);
-        well.addColorStop(0, th.background);
+        well.addColorStop(0, th.stageGround);
         well.addColorStop(0.5, th.surface);
-        well.addColorStop(1, th.background);
+        well.addColorStop(1, th.stageGround);
         ctx!.fillStyle = well;
         roundRect(ctx!, x, top, rw, rh, 14);
         ctx!.fill();
@@ -296,7 +296,8 @@ export function SlotsStage({
           const img = reel.strip[idx];
           const y = top + (row + 1 - frac) * cell + cell / 2;
           if (!img?.complete || !img.naturalWidth) continue;
-          const size = Math.min(cell * 0.78, rw * 0.66);
+          // Symbols were sitting in a lot of empty well.
+          const size = Math.min(cell * 0.95, rw * 0.84);
           // Symbols away from the pay line sit back in the well.
           const centreness = 1 - Math.min(1, Math.abs(y - (top + rh / 2)) / (rh / 2));
           ctx!.globalAlpha = 0.14 + 0.86 * Math.pow(centreness, 1.6);
@@ -351,7 +352,14 @@ export function SlotsStage({
     <div
       ref={hostRef}
       data-testid="slots-stage"
-      className="relative aspect-[16/7] w-full max-w-4xl overflow-hidden rounded-2xl border border-border bg-background"
+      /* Intrinsic width, not `w-full`. The board nests the stage inside a
+         shrink-to-fit `items-center` column, so a percentage width was
+         circular — the column sized itself to its widest child (the
+         toolbar) and the stage then took 100% of that, coming out 559px
+         wide on a 1920 screen no matter what max-width it was given.
+         The viewport term keeps it inside the page padding on a phone. */
+      className="relative aspect-[16/7] w-[min(64rem,calc(100vw-3rem))] overflow-hidden rounded-2xl border border-border"
+      style={{ background: theme.stageGround }}
     >
       <canvas ref={canvasRef} className="absolute inset-0 size-full" aria-hidden />
       <ul className="sr-only">

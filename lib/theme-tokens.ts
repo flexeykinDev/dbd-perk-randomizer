@@ -26,6 +26,8 @@ export interface ThemeTokens {
   /** Ground and haze as 0..1 RGB triples, for shader uniforms. */
   groundRgb: [number, number, number];
   hazeRgb: [number, number, number];
+  /** The ground a full-bleed effect should paint, as a CSS colour. */
+  stageGround: string;
 }
 
 function readVar(styles: CSSStyleDeclaration, name: string, fallback: string): string {
@@ -78,15 +80,25 @@ export function readThemeTokens(): ThemeTokens {
       border: "#30353d",
       foreground: "#edeef0",
       muted: "#9096a3",
-      groundRgb: [0.07, 0.07, 0.07],
+      groundRgb: [0.05, 0.052, 0.062],
       hazeRgb: [0.12, 0.13, 0.15],
+      stageGround: "#0d0d10",
     };
   }
   const styles = getComputedStyle(document.documentElement);
   const isLight = document.documentElement.dataset.theme === "light";
   const background = readVar(styles, "--background", isLight ? "#f7f8f9" : "#121212");
   const surface = readVar(styles, "--surface", isLight ? "#ffffff" : "#1e2228");
-  const groundRgb = toRgb(background);
+  /* The stage sinks slightly below the page it sits in.
+   *
+   * --background on the dark theme is #121212 — a light, neutral grey by the
+   * standards of a fog effect, and painting the vortex straight onto it left
+   * nothing for the haze to be brighter *than*: the whole thing washed out to
+   * flat grey and read as no background at all. A few points down gives the
+   * fog somewhere to sit while still being derived from the theme, so the
+   * light variant stays light. */
+  const rawGround = toRgb(background);
+  const groundRgb = shade(rawGround, isLight ? 0.012 : -0.045);
   return {
     isLight,
     background,
@@ -95,10 +107,17 @@ export function readThemeTokens(): ThemeTokens {
     foreground: readVar(styles, "--foreground", isLight ? "#14161b" : "#edeef0"),
     muted: readVar(styles, "--muted", isLight ? "#62697a" : "#9096a3"),
     groundRgb,
-    // Haze reads as light on a dark page and as shadow on a light one. Using
-    // --surface for both gives almost no contrast on light, where background
-    // and surface are #f7f8f9 and #ffffff.
-    hazeRgb: shade(groundRgb, isLight ? -0.1 : 0.055),
+    stageGround: `rgb(${groundRgb.map((c) => Math.round(c * 255)).join(",")})`,
+    /* Haze reads as light on a dark page and as shadow on a light one.
+     *
+     * The amount matters more than it looks: --background on the dark theme
+     * is #121212, considerably lighter and greyer than the near-black the fog
+     * was originally drawn against, so a small delta washed the whole vortex
+     * into flat grey and the effect was reported as simply gone. The cool
+     * lift on dark puts back the blue the neutral ground does not carry. */
+    hazeRgb: isLight
+      ? shade(groundRgb, -0.13)
+      : [groundRgb[0] + 0.1, groundRgb[1] + 0.125, groundRgb[2] + 0.175],
   };
 }
 
