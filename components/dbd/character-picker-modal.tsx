@@ -168,7 +168,7 @@ export function CharacterPickerModal({
                             <span className="flex size-12 items-center justify-center bg-surface text-muted">?</span>
                           )}
                         </span>
-                        <span className="text-[10px] leading-tight text-foreground">
+                        <span className="text-[0.625rem] leading-tight text-foreground">
                           {getCharacterName(character, language)}
                         </span>
                       </button>

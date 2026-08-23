@@ -248,7 +248,7 @@ export function ExcludePanel({
                   </button>
                 </div>
                 {sortField === "date" && dateSortIsCurrentlyMeaningless && (
-                  <p className="text-[11px] text-muted">
+                  <p className="text-[0.6875rem] text-muted">
                     {t({
                       ru: "Пока не сортирует — у всех перков одна и та же дата первого добавления в базу сайта. Заработает, когда скрапер найдёт новый перк.",
                       en: "Doesn't reorder anything yet — every perk currently shares the same first-added-to-the-site date. Starts working once the scraper picks up a genuinely new perk.",
@@ -263,7 +263,7 @@ export function ExcludePanel({
                       type="button"
                       onClick={() => setStatus(option)}
                       className={cn(
-                        "flex items-center gap-1 rounded-full border px-3 py-1 text-[11px] font-medium transition-colors",
+                        "flex items-center gap-1 rounded-full border px-3 py-1 text-[0.6875rem] font-medium transition-colors",
                         status === option
                           ? cn(roleColor.border, roleColor.bg, roleColor.text)
                           : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
@@ -286,7 +286,7 @@ export function ExcludePanel({
                       type="button"
                       onClick={() => toggleTag(tag.id)}
                       className={cn(
-                        "rounded-full border px-3 py-1 text-[11px] font-medium transition-colors",
+                        "rounded-full border px-3 py-1 text-[0.6875rem] font-medium transition-colors",
                         selectedTags.has(tag.id)
                           ? "border-accent/50 bg-accent/15 text-accent"
                           : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
@@ -302,7 +302,7 @@ export function ExcludePanel({
                     type="button"
                     onClick={() => onBulkSet(filteredSlugs, false)}
                     disabled={filteredSlugs.length === 0}
-                    className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-[11px] font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
+                    className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-[0.6875rem] font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
                   >
                     <CheckCheck className="size-3.5" />
                     {t({ ru: "Включить все", en: "Enable All" })}
@@ -311,12 +311,12 @@ export function ExcludePanel({
                     type="button"
                     onClick={() => onBulkSet(filteredSlugs, true)}
                     disabled={filteredSlugs.length === 0}
-                    className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-[11px] font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
+                    className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-[0.6875rem] font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
                   >
                     <Ban className="size-3.5" />
                     {t({ ru: "Отключить все", en: "Disable All" })}
                   </button>
-                  <span className="text-[11px] text-muted">
+                  <span className="text-[0.6875rem] text-muted">
                     {t({ ru: "Показано:", en: "Showing:" })} {filtered.length}
                   </span>
                 </div>
@@ -389,7 +389,7 @@ export function ExcludePanel({
                           height={48}
                           className="size-12 rounded-lg icon-art object-cover"
                         />
-                        <span className="text-[10px] leading-tight text-foreground">
+                        <span className="text-[0.625rem] leading-tight text-foreground">
                           {perk.name[language]}
                         </span>
                       </div>

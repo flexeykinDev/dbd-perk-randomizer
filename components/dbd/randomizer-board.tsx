@@ -1460,7 +1460,7 @@ export function RandomizerBoard() {
                     className="size-7 object-cover"
                   />
                 ) : (
-                  <span className="text-[10px] text-muted">?</span>
+                  <span className="text-[0.625rem] text-muted">?</span>
                 )}
               </span>
               <span className="text-xs font-medium text-foreground">
@@ -1899,7 +1899,7 @@ export function RandomizerBoard() {
           grows with every shortcut added while a label on the control does
           not — and this row reading as the complete set while omitting
           them was the actual problem. */}
-      <p className="-mt-1 flex flex-wrap items-center justify-center gap-x-1 gap-y-1 text-[11px] text-muted pointer-coarse:hidden">
+      <p className="-mt-1 flex flex-wrap items-center justify-center gap-x-1 gap-y-1 text-[0.6875rem] text-muted pointer-coarse:hidden">
         <kbd className="rounded border border-border bg-surface px-1 py-0.5 font-sans">
           Space
         </kbd>

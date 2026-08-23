@@ -18,14 +18,20 @@ export function Nav() {
   return (
     <header className="border-b border-border/60">
       <nav className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-2.5">
-        <Link href="/" className="flex items-center gap-2 text-sm font-semibold text-foreground">
+        {/* `tap` on both: these are the first two things a thumb reaches for,
+            and they measured 20px and 34px tall on a phone. The utility only
+            applies under `pointer: coarse`, so the desktop nav is unchanged. */}
+        <Link
+          href="/"
+          className="tap flex items-center gap-2 text-sm font-semibold text-foreground"
+        >
           <Dices className="size-5 text-accent" strokeWidth={2} />
           {t({ ru: "Рандомайзер перков DBD", en: "DBD Perk Randomizer" })}
         </Link>
         <div className="flex items-center gap-2">
           <a
             href={HUB_URL}
-            className="flex items-center gap-1.5 rounded-full border border-border px-3 py-2 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+            className="tap flex items-center gap-1.5 rounded-full border border-border px-3 py-2 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
           >
             <ArrowLeft className="size-3.5" />
             {t({ ru: "Vortex Hub", en: "Vortex Hub" })}

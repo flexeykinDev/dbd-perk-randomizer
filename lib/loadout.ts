@@ -1,7 +1,6 @@
 import itemsData from "@/data/items.json";
 import addonsData from "@/data/addons.json";
 import offeringsData from "@/data/offerings.json";
-import loadoutMetaData from "@/data/loadout-meta.json";
 import killerPowerIconsData from "@/data/killer-power-icons.json";
 import { GENERAL_CHARACTER } from "./types";
 import type {
@@ -10,7 +9,6 @@ import type {
   ItemType,
   Loadout,
   LoadoutKind,
-  LoadoutMeta,
   LoadoutPiece,
   LoadoutSlots,
   Offering,
@@ -33,7 +31,6 @@ export const ITEM_TYPE_LABEL: Record<ItemType, { ru: string; en: string }> = {
 export const items: Item[] = itemsData as Item[];
 export const addons: Addon[] = addonsData as Addon[];
 export const offerings: Offering[] = offeringsData as Offering[];
-export const loadoutMeta: LoadoutMeta = loadoutMetaData as LoadoutMeta;
 const killerPowerIcons: Record<string, string> = killerPowerIconsData;
 
 /** A killer's Power icon (e.g. Bear Trap for The Trapper), scraped from
@@ -52,10 +49,6 @@ const NEW_WINDOW_MS = 30 * 24 * 60 * 60 * 1000;
 
 export function isNewLoadoutPiece(piece: { addedAt: string }): boolean {
   return Date.now() - new Date(piece.addedAt).getTime() < NEW_WINDOW_MS;
-}
-
-export function getItems(): Item[] {
-  return items;
 }
 
 export function getLoadoutPiece(kind: LoadoutKind, slug: string): LoadoutPiece | undefined {

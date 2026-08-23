@@ -214,7 +214,7 @@ function PoolCoverage({ seen, poolSize }: { seen: number; poolSize: number }) {
       >
         <div className="h-full rounded-full bg-accent transition-[width]" style={{ width: `${percent}%` }} />
       </div>
-      <p className="mt-1.5 text-[11px] text-muted">
+      <p className="mt-1.5 text-[0.6875rem] text-muted">
         {left > 0
           ? t({
               ru: `Ещё ${left} ни разу не выпадали.`,

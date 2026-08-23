@@ -61,13 +61,13 @@ export function ObsAppearancePanel({
         />
       </div>
       {options.activePresetDescription && (
-        <p className="-mt-1 text-[11px] text-muted">{t(options.activePresetDescription)}</p>
+        <p className="-mt-1 text-[0.6875rem] text-muted">{t(options.activePresetDescription)}</p>
       )}
 
       {options.styleMode === "custom" && (
         <div className="flex flex-col gap-4 rounded-lg border border-border bg-background/40 p-3">
           <div className="flex flex-wrap items-center gap-1.5">
-            <label htmlFor={options.canvasWidthId} className="text-[11px] text-muted">
+            <label htmlFor={options.canvasWidthId} className="text-[0.6875rem] text-muted">
               {t({ ru: "Холст OBS:", en: "OBS canvas:" })}
             </label>
             <input
@@ -78,7 +78,7 @@ export function ObsAppearancePanel({
               value={options.canvasWidth}
               onChange={(e) => options.updateCanvasWidth(Number(e.target.value))}
               aria-label={t({ ru: "Ширина холста, пикселей", en: "Canvas width, pixels" })}
-              className="w-16 rounded-full border border-border bg-background px-2 py-0.5 text-[11px] text-foreground focus:ring-2 focus:ring-accent/40 focus:outline-none"
+              className="w-16 rounded-full border border-border bg-background px-2 py-0.5 text-[0.6875rem] text-foreground focus:ring-2 focus:ring-accent/40 focus:outline-none"
             />
             <span className="text-muted" aria-hidden>
               ×
@@ -90,7 +90,7 @@ export function ObsAppearancePanel({
               value={options.canvasHeight}
               onChange={(e) => options.updateCanvasHeight(Number(e.target.value))}
               aria-label={t({ ru: "Высота холста, пикселей", en: "Canvas height, pixels" })}
-              className="w-16 rounded-full border border-border bg-background px-2 py-0.5 text-[11px] text-foreground focus:ring-2 focus:ring-accent/40 focus:outline-none"
+              className="w-16 rounded-full border border-border bg-background px-2 py-0.5 text-[0.6875rem] text-foreground focus:ring-2 focus:ring-accent/40 focus:outline-none"
             />
           </div>
 
@@ -170,7 +170,7 @@ function PresetButton({
       onClick={onClick}
       aria-pressed={active}
       className={cn(
-        "rounded-full border px-2 py-1.5 text-[11px] font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:outline-none",
+        "rounded-full border px-2 py-1.5 text-[0.6875rem] font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:outline-none",
         active
           ? "border-accent/50 bg-accent/15 text-accent"
           : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
@@ -208,7 +208,7 @@ function SliderRow({
         <label htmlFor={id} className={cn("text-xs font-medium text-muted", disabled && "opacity-40")}>
           {label}
         </label>
-        <span className={cn("text-[11px] tabular-nums text-muted", disabled && "opacity-40")}>
+        <span className={cn("text-[0.6875rem] tabular-nums text-muted", disabled && "opacity-40")}>
           {value}%
         </span>
       </div>
@@ -224,7 +224,7 @@ function SliderRow({
         aria-label={label}
         className="w-full accent-accent"
       />
-      {hint && <p className="text-[11px] text-muted">{hint}</p>}
+      {hint && <p className="text-[0.6875rem] text-muted">{hint}</p>}
     </div>
   );
 }
@@ -268,7 +268,7 @@ function PieceVisibilityChips({
             aria-pressed={pieceVisibility[kind]}
             onClick={() => onChange(kind, !pieceVisibility[kind])}
             className={cn(
-              "rounded-full border px-2.5 py-1 text-[11px] font-medium transition-colors",
+              "rounded-full border px-2.5 py-1 text-[0.6875rem] font-medium transition-colors",
               pieceVisibility[kind]
                 ? "border-accent/50 bg-accent/15 text-accent"
                 : "border-border text-muted/50 hover:bg-surface-hover hover:text-foreground",
@@ -278,7 +278,7 @@ function PieceVisibilityChips({
           </button>
         ))}
       </div>
-      <p className="text-[11px] text-muted">
+      <p className="text-[0.6875rem] text-muted">
         {t({
           ru: "Не влияет на то, что реально выпадает — только на то, что видно в оверлее и на картинке.",
           en: "Doesn't change what actually gets rolled — only what's visible in the overlay and the downloaded image.",

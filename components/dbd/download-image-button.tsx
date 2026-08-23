@@ -93,7 +93,7 @@ export function DownloadImageButton({
               className="flex w-full flex-col items-start gap-0.5 px-3 py-2 text-left transition-colors hover:bg-surface-hover focus-visible:bg-surface-hover focus-visible:outline-none"
             >
               <span className="text-xs font-medium text-foreground">{t(option.label)}</span>
-              <span className="text-[11px] text-muted">{t(option.hint)}</span>
+              <span className="text-[0.6875rem] text-muted">{t(option.hint)}</span>
             </button>
           ))}
         </div>

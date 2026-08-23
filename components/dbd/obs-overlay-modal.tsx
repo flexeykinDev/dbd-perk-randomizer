@@ -230,7 +230,7 @@ export function ObsOverlayModal({
                     was invisible: the preview keeps updating over
                     BroadcastChannel regardless, so everything looked fine
                     while the Browser Source on stream sat frozen. */}
-                <p className="mt-4 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[11px] text-muted">
+                <p className="mt-4 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[0.6875rem] text-muted">
                   <span
                     className={cn(
                       "size-1.5 shrink-0 rounded-full",
@@ -245,7 +245,7 @@ export function ObsOverlayModal({
                   )}
                 </p>
                 {publishStatus.state === "error" && (
-                  <p className="mt-1 text-[11px] text-red-400">
+                  <p className="mt-1 text-[0.6875rem] text-red-400">
                     {t({
                       ru: "Проверьте интернет и блокировщики. Оверлей в той же вкладке браузера продолжит работать.",
                       en: "Check your connection and any blockers. An overlay in this same browser keeps working.",

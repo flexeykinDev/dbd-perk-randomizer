@@ -37,7 +37,7 @@ export function Footer() {
           href={`https://github.com/${author.login}`}
           target="_blank"
           rel="noreferrer"
-          className="font-medium text-foreground transition-colors hover:text-accent"
+          className="tap flex items-center font-medium text-foreground transition-colors hover:text-accent"
         >
           {t({ ru: "Автор сайта:", en: "Site by:" })} {author.name}
         </a>

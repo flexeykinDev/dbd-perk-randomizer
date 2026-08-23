@@ -99,6 +99,36 @@ test("toolbar controls are big enough to hit with a thumb", async ({ page }) => 
   expect(tooSmall, `${tooSmall.length} controls below ${MIN_TAP_TARGET_PX}px`).toEqual([]);
 });
 
+test("navigation links are big enough to hit with a thumb", async ({ page }) => {
+  // The check above walks buttons only, so every <a> on the page — the nav
+  // links, the wordmark, the wiki credit — went unmeasured. They are the
+  // controls a visitor hits first.
+  await page.goto("/?role=survivor");
+  await expect(page.locator("[data-perk-card]")).toHaveCount(4);
+
+  const tooSmall: string[] = [];
+  for (const link of await page.getByRole("link").all()) {
+    if (!(await link.isVisible())) continue;
+    const box = await link.boundingBox();
+    if (!box) continue;
+    // An inline link inside a running sentence is part of the paragraph, not
+    // a control on its own: padding it to 44px would break the line it sits
+    // in. Only standalone links are held to the thumb standard.
+    const inline = await link.evaluate((el) => {
+      const parent = el.parentElement;
+      if (!parent) return false;
+      const text = (parent.textContent ?? "").trim().length;
+      const own = (el.textContent ?? "").trim().length;
+      return text > own + 12;
+    });
+    if (inline) continue;
+    if (box.height >= MIN_TAP_TARGET_PX) continue;
+    const label = (await link.getAttribute("aria-label")) ?? (await link.innerText()).trim();
+    tooSmall.push(`${label || "(unlabelled)"} — ${Math.round(box.width)}x${Math.round(box.height)}`);
+  }
+  expect(tooSmall, `${tooSmall.length} links below ${MIN_TAP_TARGET_PX}px tall`).toEqual([]);
+});
+
 test("a modal fits the screen and its close button is reachable", async ({ page }) => {
   await page.goto("/?role=survivor");
   // Wait for the settled build rather than for the first image: the cards

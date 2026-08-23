@@ -71,7 +71,7 @@ export function ObsPreviewCanvas({
         <button
           type="button"
           onClick={resetLayout}
-          className="absolute top-2 right-2 z-20 flex items-center gap-1 rounded-full border border-white/15 bg-black/60 px-2.5 py-1 text-[11px] font-medium text-white/80 backdrop-blur-sm transition-colors hover:bg-black/80 hover:text-white focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:outline-none"
+          className="absolute top-2 right-2 z-20 flex items-center gap-1 rounded-full border border-white/15 bg-black/60 px-2.5 py-1 text-[0.6875rem] font-medium text-white/80 backdrop-blur-sm transition-colors hover:bg-black/80 hover:text-white focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:outline-none"
         >
           <RotateCcw className="size-3" />
           {t({ ru: "Сбросить", en: "Reset" })}
@@ -115,7 +115,7 @@ export function ObsPreviewCanvas({
               </span>
               {showNames && piece && (
                 <span
-                  className="line-clamp-2 pointer-events-none inline-block rounded-md bg-black/70 px-1.5 py-0.5 text-center text-[9px] leading-tight font-bold break-words text-white"
+                  className="line-clamp-2 pointer-events-none inline-block rounded-md bg-black/70 px-1.5 py-0.5 text-center text-[0.5625rem] leading-tight font-bold break-words text-white"
                   style={{ maxWidth: nameMaxWidthPx }}
                 >
                   {piece.name[language]}
@@ -168,7 +168,7 @@ export function ObsPreviewCanvas({
         )}
       </div>
 
-      <p className="mt-1.5 text-[11px] text-muted">
+      <p className="mt-1.5 text-[0.6875rem] text-muted">
         {t({
           ru: "Позиции сохраняются в самой ссылке — «Сбросить» вернёт стандартный ряд по центру. Портрет персонажа: перетащи, чтобы переместить, крути колесо мыши над ним, чтобы изменить размер.",
           en: "Positions are saved right in the link — “Reset” restores the default centered row. Character portrait: drag to move it, scroll over it to resize.",

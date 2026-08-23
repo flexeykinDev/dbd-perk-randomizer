@@ -211,3 +211,33 @@ svg {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--accent);
 }
+
+/* Very large displays: scale the whole interface, don't just widen it.
+ *
+ * The layout caps at max-w-6xl (72rem), stepping to 100rem past Tailwind's
+ * 2xl. In rem terms that is generous; in pixels on a big panel it is not —
+ * measured at a fixed 16px root, the app occupied 63% of a 2560px monitor and
+ * 42% of a 3840px TV, leaving the interface as a small island in the middle.
+ *
+ * Growing the container alone would be the wrong fix for a TV: the problem
+ * there is viewing distance, not column count — 10px labels do not become
+ * readable from a sofa by having more space around them. Scaling the root
+ * font size instead moves everything at once, because the layout is built in
+ * rem throughout: type, spacing, control sizes, and the max-width cap itself
+ * (100rem becomes 2100px at a 21px root). The px-valued font sizes that used
+ * to sit in the components were converted to rem for exactly this reason —
+ * they were the only things that would have stayed put.
+ *
+ * Breakpoints are chosen above the common desktop sizes so nothing changes
+ * for a normal 1080p or 1440p screen. */
+@media (min-width: 2200px) {
+  :root {
+    font-size: 18px;
+  }
+}
+
+@media (min-width: 3000px) {
+  :root {
+    font-size: 21px;
+  }
+}

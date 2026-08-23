@@ -1026,7 +1026,21 @@ export function ShareCard({
           })}
         </div>
 
-        <div style={{ position: "absolute", left: margin, bottom: 132 }}>
+        {/* Bounded by where the band starts. Unbounded, the block was as wide
+            as its widest line, which for a long killer name ("Торговка
+            черепами" sets ~880px at 104px) reached under the band — and the
+            title sat only 9px below the band's bottom edge in "all" mode, so
+            it was one slightly taller band away from printing through it.
+            Capped, a long name wraps instead, and since the block is anchored
+            from the bottom it grows up into empty frame. */}
+        <div
+          style={{
+            position: "absolute",
+            left: margin,
+            bottom: 132,
+            maxWidth: bandLeft - margin - 40,
+          }}
+        >
           {nameBlock("left", 104)}
         </div>
 

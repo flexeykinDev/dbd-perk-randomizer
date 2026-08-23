@@ -180,7 +180,7 @@ function SlotGroup({
 }) {
   return (
     <div data-testid={testId} className="flex flex-col items-center gap-1.5">
-      <span className="text-[10px] font-semibold tracking-wide text-muted uppercase">
+      <span className="text-[0.625rem] font-semibold tracking-wide text-muted uppercase">
         {label}
       </span>
       <div className="flex items-start gap-2">{children}</div>
@@ -256,7 +256,7 @@ function PieceSlot({
               )}
             >
               {isNewLoadoutPiece(piece) && (
-                <span className="absolute top-0.5 left-0.5 z-10 rounded-full bg-black/60 px-1 py-px text-[7px] font-bold text-white/90 shadow">
+                <span className="absolute top-0.5 left-0.5 z-10 rounded-full bg-black/60 px-1 py-px text-[0.5625rem] font-bold text-white/90 shadow">
                   {t({ ru: "НОВОЕ", en: "NEW" })}
                 </span>
               )}
@@ -282,7 +282,7 @@ function PieceSlot({
       </div>
       <span
         className={cn(
-          "text-center text-[10px] leading-tight text-foreground",
+          "text-center text-[0.625rem] leading-tight text-foreground",
           labelWidth,
         )}
       >
@@ -312,7 +312,7 @@ function PieceCopyButton({
       onClick={onClick}
       className={cn(
         "tap flex items-center justify-center gap-1 rounded-md border border-border text-muted transition-colors hover:border-accent/50 hover:bg-accent/10 hover:text-accent",
-        size === "lg" ? "w-24 py-1 text-[10px] sm:w-28 lg:w-32" : "w-16 py-0.5 text-[9px] sm:w-20 lg:w-24",
+        size === "lg" ? "w-24 py-1 text-[0.625rem] sm:w-28 lg:w-32" : "w-16 py-0.5 text-[0.5625rem] sm:w-20 lg:w-24",
       )}
     >
       <Copy className={size === "lg" ? "size-3" : "size-2.5"} />
@@ -374,7 +374,7 @@ function PowerSlot({
           </span>
         )}
       </div>
-      <span className="w-24 text-center text-[10px] leading-tight text-foreground sm:w-28 lg:w-32">
+      <span className="w-24 text-center text-[0.625rem] leading-tight text-foreground sm:w-28 lg:w-32">
         {character ? getCharacterName(character, language) : " "}
       </span>
     </div>
@@ -518,7 +518,7 @@ function LoadoutDetailModal({
                     )}
                   </span>
                   <div>
-                    <p className="text-[11px] text-muted">
+                    <p className="text-[0.6875rem] text-muted">
                       {t({ ru: "Убийца", en: "Killer" })}
                     </p>
                     <p className="text-sm font-medium text-foreground">
@@ -638,7 +638,7 @@ function LoadoutDescriptionPanel({
       )}
 
       {untranslated && (
-        <p className="mt-2 text-[11px] text-muted">
+        <p className="mt-2 text-[0.6875rem] text-muted">
           {t({
             ru: "Перевод для этого предмета пока не добавлен — название и/или описание показаны на английском.",
             en: "No RU translation yet for this piece — the name and/or description are shown in English.",

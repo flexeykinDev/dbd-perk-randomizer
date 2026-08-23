@@ -184,14 +184,14 @@ export function HistoryModal({
                             </p>
                           </div>
                           <div className="flex shrink-0 flex-col items-end gap-1">
-                            <span className="flex items-center gap-1 text-[10px] text-muted">
+                            <span className="flex items-center gap-1 text-[0.625rem] text-muted">
                               <Clock className="size-2.5" />
                               {formatRelativeTime(entry.at, language)}
                             </span>
                             <button
                               type="button"
                               onClick={() => onRestore(entry)}
-                              className="flex items-center gap-1 rounded-full border border-border px-2 py-0.5 text-[11px] font-medium text-muted transition-colors hover:border-accent/50 hover:bg-accent/10 hover:text-accent"
+                              className="flex items-center gap-1 rounded-full border border-border px-2 py-0.5 text-[0.6875rem] font-medium text-muted transition-colors hover:border-accent/50 hover:bg-accent/10 hover:text-accent"
                             >
                               <RotateCcw className="size-2.5" />
                               {t({ ru: "Открыть", en: "View" })}

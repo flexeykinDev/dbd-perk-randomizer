@@ -266,7 +266,7 @@ right inside the modal, or clear the selection.
   an internal random pick. The portrait and Power in the HUD always
   match (the portrait rides along as a small badge on the Power icon).
   The pool management panel also narrows down to that killer's own
-  add-ons once one is picked, instead of showing all ~750 add-ons at
+  add-ons once one is picked, instead of showing all ~900 add-ons at
   once. For survivors, items/add-ons aren't tied to a specific
   character (same as in the game itself), so there it's purely a
   visual choice.

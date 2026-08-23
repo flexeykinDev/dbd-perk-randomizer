@@ -120,7 +120,7 @@ export function PresetsModal({
                             height={48}
                             className="icon-art size-11 rounded-lg object-cover"
                           />
-                          <span className="w-full truncate text-center text-[10px] leading-tight text-muted">
+                          <span className="w-full truncate text-center text-[0.625rem] leading-tight text-muted">
                             {perk.name[language]}
                           </span>
                         </span>
