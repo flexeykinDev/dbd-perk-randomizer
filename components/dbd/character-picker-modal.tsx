@@ -161,6 +161,8 @@ export function CharacterPickerModal({
                             // eslint-disable-next-line @next/next/no-img-element -- next/image ignores basePath for unoptimized runtime src, see lib/asset-path.ts
                             <img
                               src={withBasePath(portrait)}
+                              loading="lazy"
+                              decoding="async"
                               alt={getCharacterName(character, language)}
                               className="size-12 object-cover"
                             />

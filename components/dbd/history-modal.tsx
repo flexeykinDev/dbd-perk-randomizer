@@ -159,6 +159,8 @@ export function HistoryModal({
                               <img
                                 key={`${entry.id}-${i}`}
                                 src={withBasePath(piece.icon)}
+                                loading="lazy"
+                                decoding="async"
                                 alt=""
                                 aria-hidden
                                 width={32}
