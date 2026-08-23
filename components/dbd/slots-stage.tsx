@@ -51,6 +51,9 @@ interface Reel {
   speed: number;
   stopAt: number;
   settled: boolean;
+  /** Whether this reel has already fired its ratchet, so becoming the last
+   *  reel turning announces itself once rather than every frame. */
+  ticked: number;
 }
 
 export function SlotsStage({
@@ -147,6 +150,7 @@ export function SlotsStage({
         speed: 26 + i * 2,
         stopAt: now + delay,
         settled: false,
+        ticked: -1,
       };
     });
     s.shown = perks.map((p) => p.slug);
@@ -265,7 +269,26 @@ export function SlotsStage({
             // the part that reads as a slot machine.
             const distance = (reel.target - reel.offset) % STRIP;
             const wrapped = distance < 0 ? distance + STRIP : distance;
-            reel.offset += Math.max(wrapped, 0.0001) * Math.min(1, dt * 6);
+            /* The last reel still turning takes noticeably longer to settle.
+             * Four reels braking at the same rate land in a clump and the
+             * result is over before anyone has looked at it; letting the last
+             * one hang is the whole shape of a slot machine. */
+            const alone = s.reels.filter((r) => !r.settled).length === 1;
+            reel.offset += Math.max(wrapped, 0.0001) * Math.min(1, dt * (alone ? 2.6 : 6));
+
+            /* The near miss.
+             *
+             * Only the last reel still turning, and only while it is slowing:
+             * one tick per symbol crossing the line. At full speed this would
+             * be a buzz, and on every reel at once it would be a rattle --
+             * the drama is one reel, decelerating, while the other three are
+             * already showing what you got. */
+            // Once, when this becomes the only reel still turning.
+            if (alone && reel.ticked === -1) {
+              reel.ticked = 1;
+              playSound("ratchet");
+            }
+
             if (wrapped < 0.012) {
               reel.offset = reel.target;
               reel.settled = true;

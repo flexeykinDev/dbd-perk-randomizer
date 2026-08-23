@@ -34,7 +34,7 @@ import { safeGet, safeSet } from "./safe-storage";
 const MUTED_KEY = "dbd-randomizer:sound-muted";
 const VOLUME_KEY = "dbd-randomizer:sound-volume";
 
-export type SoundName = "roll" | "deal" | "settle" | "toggle";
+export type SoundName = "roll" | "ratchet" | "deal" | "settle" | "toggle";
 
 /* Sound belongs to the slot machine, and nowhere else.
  *
@@ -333,17 +333,61 @@ export function playSound(name: SoundName): void {
        beep: a resonant sweep for the movement, a sub for the weight, and a
        bright transient at the front so it has an attack worth noticing. */
     case "roll":
+      /* The lever.
+       *
+       * Three things in sequence, because a slot machine's opening sound is
+       * mechanical and then electrical: the throw (a hard, short transient),
+       * the weight behind it (a sub dropping), and the reels picking up
+       * speed (a filter opening upward rather than the downward sweep this
+       * used to have). The old version swept DOWN throughout, which read as
+       * something powering off at the exact moment the reels start. */
       air(context, out, send, {
-        at: t, peak: 0.2, decay: 0.4, cutoff: 2600, sweepTo: 260,
-        q: 3.2, type: "bandpass", space: 0.4,
+        at: t, peak: 0.22, decay: 0.06, cutoff: 2100, sweepTo: 700,
+        q: 1.4, type: "bandpass", space: 0.2,
       });
       tone(context, out, send, {
-        at: t, freq: 300, endFreq: 92, peak: 0.16, decay: 0.36, type: "sine", space: 0.2,
+        at: t, freq: 260, endFreq: 78, peak: 0.17, decay: 0.28, attack: 0.004,
+        type: "sine", space: 0.25,
       });
       air(context, out, send, {
-        at: t, peak: 0.07, decay: 0.05, cutoff: 5200, q: 0.8, space: 0.15,
+        at: t + 0.05, peak: 0.12, decay: 0.42, cutoff: 420, sweepTo: 2600,
+        q: 2.2, type: "bandpass", space: 0.45,
       });
       break;
+
+    /* The near miss: the last reel ratcheting down to its stop.
+     *
+     * Scheduled here as one burst rather than fired per frame from the draw
+     * loop. Two reasons, and the first is the important one. Musically, the
+     * drama is entirely in the RHYTHM -- ticks that start fast and pull
+     * apart -- and a frame-driven tick inherits the frame rate, so it
+     * stutters exactly where it should be tightening. Practically, ticking on
+     * symbol crossings tied the count to how far that reel happened to have
+     * left to travel, which is random: measured, it produced one tick most
+     * rolls and none the rest.
+     *
+     * The gaps widen geometrically and the level falls with them, so it
+     * settles rather than stopping. Everything is placed on the audio clock,
+     * so it is sample-accurate no matter what the main thread is doing. */
+    case "ratchet": {
+      let at = t;
+      let gap = 0.055;
+      for (let i = 0; i < 9; i++) {
+        air(context, out, send, {
+          at,
+          peak: 0.075 * (1 - i * 0.06),
+          decay: 0.024,
+          cutoff: 3200 - i * 90,
+          q: 3,
+          type: "bandpass",
+          space: 0.1 + i * 0.02,
+          pan: (i % 2 === 0 ? 1 : -1) * 0.12,
+        });
+        at += gap;
+        gap *= 1.19;
+      }
+      break;
+    }
 
     /* A card set down: a short knock with air on it. Panned slightly at
        random so four in a row do not stack into one identical sound. */

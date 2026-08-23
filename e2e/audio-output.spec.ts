@@ -150,3 +150,34 @@ test("muting is real silence, not merely quiet", async ({ page }) => {
   await page.waitForTimeout(900);
   expect(await peak(page), "a muted site still emitted signal").toBeLessThan(0.0005);
 });
+
+test("the last reel ratchets down to its stop", async ({ page }) => {
+  /* The near miss. Counted rather than measured: each tick is one short
+   * transient, far too quiet to separate from the reel stops around it by
+   * peak alone, but the ratchet is the only cue that fires many voices in a
+   * single roll. */
+  await page.addInitScript(() => {
+    const w = window as unknown as { __starts: number };
+    w.__starts = 0;
+    const real = AudioBufferSourceNode.prototype.start;
+    AudioBufferSourceNode.prototype.start = function (this: AudioBufferSourceNode, ...args: unknown[]) {
+      w.__starts++;
+      return (real as unknown as (...a: unknown[]) => unknown).apply(this, args);
+    } as typeof AudioBufferSourceNode.prototype.start;
+  });
+  await page.goto("/?role=killer");
+  await expect(page.locator("[data-perk-card]")).toHaveCount(4);
+  await chooseSlots(page);
+
+  await page.evaluate(() => ((window as unknown as { __starts: number }).__starts = 0));
+  await page.getByRole("button", { name: "Сгенерировать новый билд" }).click();
+  // Long enough for all four reels to land, ticks and all.
+  await page.waitForTimeout(4000);
+
+  const starts = await page.evaluate(() => (window as unknown as { __starts: number }).__starts);
+  console.log("noise voices in one roll:", starts);
+  /* A roll without ticks is: two for the lever, one per reel stop, one for
+   * the settle — around six. Ticking the last reel adds one per symbol
+   * crossing the line, which is many more. */
+  expect(starts, "the last reel never ratcheted").toBeGreaterThan(12);
+});
