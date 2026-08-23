@@ -92,6 +92,8 @@ import { ObsOverlayModal, type PieceVisibility } from "./obs-overlay-modal";
 import { CharacterPickerModal } from "./character-picker-modal";
 import { MoreMenu } from "./more-menu";
 import { PresentationPicker } from "./presentation-picker";
+import { SoundControl } from "./sound-control";
+import { playSound, setSoundSurface } from "@/lib/sound";
 import { RitualStage } from "./ritual-stage";
 import { SlotsStage } from "./slots-stage";
 import { useIsDesktop } from "@/lib/use-is-desktop";
@@ -389,6 +391,12 @@ export function RandomizerBoard() {
   const effectivePresentation = isAvailable(presentation, isDesktop)
     ? presentation
     : "classic";
+  // The one switch that decides whether the site may make a sound at all.
+  // Driven by what is actually on screen rather than by the saved choice, so
+  // a phone falling back from Ritual to Classic is silent too.
+  useEffect(() => {
+    setSoundSurface(effectivePresentation === "casino");
+  }, [effectivePresentation]);
   // Card text is no longer part of the page's own payload (see
   // lib/descriptions.ts). Warming it once the browser is idle means the
   // first card someone opens already has its text, without any of it
@@ -833,6 +841,7 @@ export function RandomizerBoard() {
   });
 
   const regenerate = useCallback(() => {
+    playSound("roll");
     // Battle Royale's whole premise is elimination — the pool should shrink
     // every round regardless of *how* you moved on, not only when you
     // happened to copy a perk first. Without this, spamming Generate (or
@@ -1888,6 +1897,9 @@ export function RandomizerBoard() {
           onChange={setPresentation}
           isDesktop={isDesktop}
         />
+        {/* Only where there is something to hear. Sound is the slot
+            machine's, not the site's — see lib/sound.ts. */}
+        {effectivePresentation === "casino" && <SoundControl />}
       </div>
 
       {/* Off-screen — exists only so html2canvas has real, laid-out DOM to

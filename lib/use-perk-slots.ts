@@ -2,6 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { getPerkBySlug, getRandomPerks, getTeachablePerks } from "./perks";
+import { playSound } from "./sound";
 import type { Perk, PerkRole } from "./types";
 
 /**
@@ -188,6 +189,9 @@ export function usePerkSlots({
       // A pinned slot is the one thing that outranks this. Rerolling it
       // would make the padlock a lie.
       if (pinnedPerkSlots[slot]) return;
+      // After the guards, not before: pressing "3" on a pinned slot, or on a
+      // slot that does not exist, must not click as though something rolled.
+      playSound("deal");
 
       const blocked = new Set(combinedExcluded);
       for (const p of basePerks) blocked.add(p.slug);

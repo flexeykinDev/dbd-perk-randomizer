@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { withBasePath } from "@/lib/asset-path";
 import { ROLE_COLOR } from "@/lib/role-color";
+import { playSound } from "@/lib/sound";
 import { useThemeTokens, type ThemeTokens } from "@/lib/theme-tokens";
 import type { Perk, PerkRole } from "@/lib/types";
 import { PerkDetailModal } from "./perk-grid";
@@ -269,6 +270,8 @@ export function SlotsStage({
               reel.offset = reel.target;
               reel.settled = true;
               s.flash = 1;
+              // The last reel to stop is the result; the rest are clicks.
+              playSound(s.reels.every((r) => r.settled) ? "settle" : "deal");
             }
           } else {
             reel.offset = (reel.offset + reel.speed * dt) % STRIP;
