@@ -208,14 +208,14 @@ test("no keyboard hint is shown to a device with no keyboard", async ({ page }) 
   expect(await digits.evaluateAll((els) => els.filter((e) => e.checkVisibility()).length)).toBe(0);
 });
 
-test("on a phone, Download Image hands a real PNG to the share sheet", async ({ page }) => {
+test("on a phone, Download Image hands a real image to the share sheet", async ({ page }) => {
   // Reported from an iPhone 17 Pro: the button did nothing, and the toast
   // still said the image had been saved. The old path was an <a download>
   // pointed at a multi-megabyte data: URL — which iOS ignores on both
   // counts — and the success toast fired unconditionally.
   //
   // The share sheet cannot be driven from a test, so it is stubbed here and
-  // the assertions are about what the site hands it: a real PNG file, of
+  // the assertions are about what the site hands it: a real image file, of
   // non-zero size, named after the build. That is the part this code owns.
   await page.addInitScript(() => {
     const shared: Array<{ name: string; type: string; size: number }> = [];
@@ -249,8 +249,8 @@ test("on a phone, Download Image hands a real PNG to the share sheet", async ({ 
   const [file] = await page.evaluate(
     () => (window as unknown as { __shared: Array<{ name: string; type: string; size: number }> }).__shared,
   );
-  expect(file.type).toBe("image/png");
-  expect(file.name).toMatch(/^dbd-survivor-build-.+\.png$/);
+  expect(file.type).toBe("image/jpeg");
+  expect(file.name).toMatch(/^dbd-survivor-build-.+\.jpg$/);
   // A blob that exists but is empty would still "share" — and would still
   // be a broken feature.
   expect(file.size).toBeGreaterThan(10_000);

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { withBasePath } from "@/lib/asset-path";
 import { ROLE_COLOR } from "@/lib/role-color";
+import { RITUAL_FRAG, RITUAL_VERT } from "@/lib/ritual-fog";
 import { useThemeTokens, type ThemeTokens } from "@/lib/theme-tokens";
 import type { Perk, PerkRole } from "@/lib/types";
 import { PerkDetailModal } from "./perk-grid";
@@ -36,43 +37,6 @@ const MOOD: Record<PerkRole, [number, number, number]> = {
   survivor: [0.345, 0.698, 0.886],
 };
 
-const VERT = "attribute vec2 p; void main(){ gl_Position = vec4(p, 0.0, 1.0); }";
-
-const FRAG = `
-precision highp float;
-uniform vec2 uRes; uniform float uTime; uniform float uSpin; uniform vec3 uTint;
-uniform vec3 uGround; uniform vec3 uHaze; uniform float uTintAmt;
-float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
-float noise(vec2 p){
-  vec2 i = floor(p), f = fract(p);
-  vec2 u = f * f * (3.0 - 2.0 * f);
-  return mix(mix(hash(i), hash(i + vec2(1,0)), u.x),
-             mix(hash(i + vec2(0,1)), hash(i + vec2(1,1)), u.x), u.y);
-}
-float fbm(vec2 p){
-  float v = 0.0, a = 0.5;
-  for (int i = 0; i < 5; i++){ v += a * noise(p); p *= 2.02; a *= 0.5; }
-  return v;
-}
-void main(){
-  vec2 uv = (gl_FragCoord.xy - 0.5 * uRes) / uRes.y;
-  float r = length(uv);
-  float ang = atan(uv.y, uv.x);
-  float twist = ang + uSpin * (0.55 / (r + 0.22)) + uTime * 0.05;
-  vec2 warp = vec2(cos(twist), sin(twist)) * r;
-  float d = fbm(warp * 2.6 + vec2(uTime * 0.06, -uTime * 0.04));
-  d = fbm(warp * 3.4 + d * 1.6 + vec2(0.0, uTime * 0.03));
-  float funnel = smoothstep(0.02, 0.66, r) * (1.0 - smoothstep(0.9, 1.6, r));
-  float dens = pow(d, 1.45) * funnel;
-  // Ground and haze come from the page's own tokens, so the fog is light on
-  // the light theme and dark on the dark one instead of always near-black.
-  vec3 col = mix(uGround, uHaze, clamp(dens * 1.5, 0.0, 1.0));
-  col += uTint * uTintAmt * dens * (0.55 + 0.45 * uSpin);
-  col += uTint * uTintAmt * 0.5 * smoothstep(0.4, 0.0, r) * (0.4 + 0.6 * uSpin);
-  col = mix(col, uGround, 0.4 * smoothstep(0.62, 1.5, r));
-  col += (hash(gl_FragCoord.xy + fract(uTime) * 91.0) - 0.5) * 0.018;
-  gl_FragColor = vec4(col, 1.0);
-}`;
 
 /** Where the dealt cards land. Exported because the interaction layer sits
  *  in the DOM on top of the canvas and has to line up with what is painted;
@@ -401,8 +365,8 @@ export function RitualStage({
         return sh;
       };
       const prog = gl.createProgram()!;
-      gl.attachShader(prog, compile(gl.VERTEX_SHADER, VERT));
-      gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FRAG));
+      gl.attachShader(prog, compile(gl.VERTEX_SHADER, RITUAL_VERT));
+      gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, RITUAL_FRAG));
       gl.linkProgram(prog);
       gl.useProgram(prog);
       const buf = gl.createBuffer();

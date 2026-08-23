@@ -292,6 +292,7 @@ export function ShareCard({
   language,
   character,
   layout = "landscape",
+  backdrop,
 }: {
   ref?: Ref<HTMLDivElement>;
   pieces: ShareCardPiece[];
@@ -304,6 +305,10 @@ export function ShareCard({
    *  of the frame empty. */
   character?: string | null;
   layout?: ShareCardLayout;
+  /** A pre-rendered vortex for this build, as a data URI — see
+   *  lib/ritual-backdrop.ts. Absent is a first-class case: WebGL can be
+   *  unavailable, and the card is composed to look finished without it. */
+  backdrop?: string | null;
 }) {
   const accent = ROLE_COLOR[role].solid;
   const mood = MOOD[role];
@@ -775,6 +780,47 @@ export function ShareCard({
     </>
   );
 
+  /* The vortex, if one was rendered, sitting under every other layer.
+   *
+   * Two deliberate choices. It is an <img> rather than a CSS background,
+   * because html2canvas resolves an img's data URI reliably and is fussier
+   * about background-image sizing. And it carries its own scrim: the fog has
+   * a bright eye, and card text is bone-on-near-black that stops being
+   * readable the moment anything luminous sits behind it.
+   *
+   * The scrim is darkest in the middle and thins towards the corners, which
+   * is the opposite of the obvious vignette and the right way round for this
+   * layout: every word on the card sits in the central band, and the empty
+   * corners are the only place the fog can be seen without fighting
+   * anything. A flat wash at a strength that protected the text hid the
+   * vortex so thoroughly that two different builds were indistinguishable
+   * unless compared side by side -- which defeats the point of generating
+   * one per build. */
+  const backdropLayer = backdrop ? (
+    <>
+      {/* eslint-disable-next-line @next/next/no-img-element -- captured by html2canvas */}
+      <img
+        src={backdrop}
+        alt=""
+        style={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          opacity: 0.92,
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: `radial-gradient(ellipse 72% 64% at 50% 45%, rgba(10,12,16,0.90) 0%, rgba(10,12,16,0.84) 46%, rgba(10,12,16,0.55) 78%, rgba(10,12,16,0.34) 100%)`,
+        }}
+      />
+    </>
+  ) : null;
+
   const shell: CSSProperties = {
     position: "relative",
     width,
@@ -848,6 +894,7 @@ export function ShareCard({
     const storyBandW = storyContentW + BAND_PAD_L + BAND_PAD_R;
     return (
       <div ref={ref} style={shell}>
+        {backdropLayer}
         {portrait ? (
           <>
             {/* eslint-disable-next-line @next/next/no-img-element -- captured by html2canvas */}
@@ -983,6 +1030,7 @@ export function ShareCard({
     );
     return (
       <div ref={ref} style={shell}>
+        {backdropLayer}
         {/* eslint-disable-next-line @next/next/no-img-element -- captured by html2canvas */}
         <img
           src={withBasePath(portrait)}
@@ -1066,6 +1114,7 @@ export function ShareCard({
   const centeredUnit = mode === "all" ? 80 : 150;
   return (
     <div ref={ref} style={shell}>
+      {backdropLayer}
       {/* Title and band are one centred stack. Pinned separately — title at a
           fixed top, band at a percentage — the band's top hairline cut across
           the bottom of the title as soon as the title wrapped or the band grew.

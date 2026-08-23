@@ -25,14 +25,20 @@ async function tapOutput(page: Page) {
     ) {
       if (String(target?.constructor?.name ?? "").includes("Destination") && !w.__tapped) {
         w.__tapped = 1;
+        /* A deliberately huge window. At 2048 samples the analyser holds
+         * ~42ms of audio, so catching a cue's peak depended on a JS timer
+         * firing inside that window — fine alone, and flaky under parallel
+         * workers where timers are throttled and the browser is serialising
+         * GPU work. 32768 samples is ~0.7s, so a single read covers the whole
+         * cue and the sampling rate stops mattering. */
         const analyser = (this.context as AudioContext).createAnalyser();
-        analyser.fftSize = 2048;
-        const buf = new Float32Array(2048);
+        analyser.fftSize = 32768;
+        const buf = new Float32Array(32768);
         (origConnect as unknown as (...a: unknown[]) => unknown).call(this, analyser);
         setInterval(() => {
           analyser.getFloatTimeDomainData(buf);
           for (const v of buf) w.__peak = Math.max(w.__peak as number, Math.abs(v));
-        }, 6);
+        }, 25);
       }
       return (origConnect as unknown as (...a: unknown[]) => unknown).call(this, target, ...rest);
     };
@@ -133,8 +139,14 @@ test("muting is real silence, not merely quiet", async ({ page }) => {
   await expect(page.getByTestId("sound-control")).toHaveAttribute("data-muted", "1");
   await page.keyboard.press("Escape");
 
+  /* Let the tap drain before measuring silence.
+   *
+   * The analyser holds ~0.7s of audio and the reverb tail runs 1.1s, so
+   * arming immediately after muting measures the cue from BEFORE the mute
+   * and reports the feature broken when it is working. */
+  await page.waitForTimeout(2200);
   await arm(page);
   await page.getByRole("button", { name: "Сгенерировать новый билд" }).click();
-  await page.waitForTimeout(800);
+  await page.waitForTimeout(900);
   expect(await peak(page), "a muted site still emitted signal").toBeLessThan(0.0005);
 });

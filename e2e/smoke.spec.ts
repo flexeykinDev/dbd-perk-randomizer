@@ -1502,13 +1502,24 @@ test.describe("Battle Royale", () => {
 });
 
 test.describe("Download Image", () => {
-  /** Width and height straight out of a PNG's IHDR chunk, which sits at a
-   *  fixed offset — cheaper and more trustworthy than decoding the image. */
-  function pngSize(buffer: Buffer): { width: number; height: number } {
-    expect(buffer.subarray(0, 8).toString("hex"), "not a PNG").toBe(
-      "89504e470d0a1a0a",
-    );
-    return { width: buffer.readUInt32BE(16), height: buffer.readUInt32BE(20) };
+  /** Width and height read out of the JPEG's SOF marker.
+   *
+   *  The export was a PNG, whose size sits at a fixed offset; a JPEG's does
+   *  not, so this walks the segment chain to the start-of-frame. Still
+   *  cheaper and more trustworthy than decoding the image. */
+  function jpegSize(buffer: Buffer): { width: number; height: number } {
+    expect(buffer.subarray(0, 2).toString("hex"), "not a JPEG").toBe("ffd8");
+    let at = 2;
+    while (at < buffer.length) {
+      if (buffer[at] !== 0xff) throw new Error(`lost the segment chain at ${at}`);
+      const marker = buffer[at + 1];
+      // SOF0/1/2 carry the dimensions; SOF4 and SOFC are not frame headers.
+      if (marker >= 0xc0 && marker <= 0xcf && marker !== 0xc4 && marker !== 0xcc) {
+        return { height: buffer.readUInt16BE(at + 5), width: buffer.readUInt16BE(at + 7) };
+      }
+      at += 2 + buffer.readUInt16BE(at + 2);
+    }
+    throw new Error("no start-of-frame marker in the file");
   }
 
   async function grab(page: Page, format: RegExp) {
@@ -1520,7 +1531,7 @@ test.describe("Download Image", () => {
     return { name: file.suggestedFilename(), buffer: await readFile(path) };
   }
 
-  test("each format produces a real PNG in its own shape", async ({ page }) => {
+  test("each format produces a real image in its own shape", async ({ page }) => {
     // Untested end to end until now: the button rasterises a hidden
     // off-screen ShareCard through html2canvas, and a failure in there is
     // caught and turned into a toast — so a completely broken export still
@@ -1529,14 +1540,14 @@ test.describe("Download Image", () => {
     await expect(page.locator("[data-perk-card]").first()).toBeVisible();
 
     const landscape = await grab(page, /Стандартный/);
-    expect(landscape.name).toMatch(/^dbd-survivor-build-.+\.png$/);
+    expect(landscape.name).toMatch(/^dbd-survivor-build-.+\.jpg$/);
     expect(landscape.name).not.toContain("-story");
-    const wide = pngSize(landscape.buffer);
+    const wide = jpegSize(landscape.buffer);
     expect(wide.width).toBeGreaterThan(wide.height);
 
     const story = await grab(page, /История/);
-    expect(story.name).toMatch(/^dbd-survivor-build-.+-story\.png$/);
-    const tall = pngSize(story.buffer);
+    expect(story.name).toMatch(/^dbd-survivor-build-.+-story\.jpg$/);
+    const tall = jpegSize(story.buffer);
     // The two formats exist to be different shapes; asking for the story
     // card and getting the landscape one is the bug this guards.
     expect(tall.height).toBeGreaterThan(tall.width);

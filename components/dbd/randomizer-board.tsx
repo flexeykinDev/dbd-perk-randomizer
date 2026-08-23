@@ -87,13 +87,14 @@ import {
   type ShareCardPiece,
 } from "./share-card";
 import { DownloadImageButton } from "./download-image-button";
-import { canvasToPngBlob, saveImage } from "@/lib/save-image";
+import { canvasToShareBlob, EXPORT_EXTENSION, saveImage } from "@/lib/save-image";
 import { ObsOverlayModal, type PieceVisibility } from "./obs-overlay-modal";
 import { CharacterPickerModal } from "./character-picker-modal";
 import { MoreMenu } from "./more-menu";
 import { PresentationPicker } from "./presentation-picker";
 import { SoundControl } from "./sound-control";
 import { playSound, setSoundSurface } from "@/lib/sound";
+import { renderRitualBackdrop } from "@/lib/ritual-backdrop";
 import { RitualStage } from "./ritual-stage";
 import { SlotsStage } from "./slots-stage";
 import { useIsDesktop } from "@/lib/use-is-desktop";
@@ -1133,6 +1134,22 @@ export function RandomizerBoard() {
       );
   }
 
+  /* One vortex per build, per layout.
+   *
+   * useMemo rather than state: it is a pure function of the build and the
+   * shape of the card, and recomputing it on an unrelated render would hand
+   * back a different picture for the same build. Both layouts are prepared up
+   * front because the off-screen cards are always mounted -- the work is a
+   * single shader draw, not something worth deferring to the click. */
+  const shareBackdrops = useMemo(() => {
+    const parts = sharePieces.map((p) => p.slug);
+    if (parts.length === 0) return { landscape: null, story: null };
+    return {
+      landscape: renderRitualBackdrop({ width: 1600, height: 900, role, parts }),
+      story: renderRitualBackdrop({ width: 1080, height: 1920, role, parts }),
+    };
+  }, [sharePieces, role]);
+
   async function handleDownloadImage(layout: ShareCardLayout) {
     const target =
       layout === "story" ? storyShareCardRef.current : shareCardRef.current;
@@ -1173,11 +1190,11 @@ export function RandomizerBoard() {
         useCORS: true,
       });
       const suffix = layout === "story" ? "-story" : "";
-      const filename = `dbd-${role}-build-${sharePieces.map((p) => p.slug).join("-")}${suffix}.png`;
+      const filename = `dbd-${role}-build-${sharePieces.map((p) => p.slug).join("-")}${suffix}.${EXPORT_EXTENSION}`;
       // See lib/save-image.ts: this used to be an <a download> pointed at a
       // data: URL, which does nothing whatsoever on iOS and reported success
       // anyway.
-      const outcome = await saveImage(await canvasToPngBlob(canvas), filename);
+      const outcome = await saveImage(await canvasToShareBlob(canvas), filename);
       if (outcome === "shared") {
         showToast(t({ ru: "Картинка билда готова!", en: "Build image ready!" }));
       } else if (outcome === "downloaded") {
@@ -1921,6 +1938,7 @@ export function RandomizerBoard() {
           role={role}
           language={language}
           character={shareCharacter}
+          backdrop={shareBackdrops.landscape}
         />
         <ShareCard
           ref={storyShareCardRef}
@@ -1930,6 +1948,7 @@ export function RandomizerBoard() {
           language={language}
           character={shareCharacter}
           layout="story"
+          backdrop={shareBackdrops.story}
         />
       </div>
 
