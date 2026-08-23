@@ -1,9 +1,12 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { withBasePath } from "@/lib/asset-path";
 import { ROLE_COLOR } from "@/lib/role-color";
+import { useThemeTokens, type ThemeTokens } from "@/lib/theme-tokens";
 import type { Perk, PerkRole } from "@/lib/types";
+import { PerkDetailModal } from "./perk-grid";
+import { StageControls } from "./stage-controls";
 
 /* "Slots": one reel per perk slot, spun up together and stopped left to
  * right, landing on the build the board rolled.
@@ -21,6 +24,18 @@ import type { Perk, PerkRole } from "@/lib/types";
  */
 
 const STRIP = 14; // symbols per reel — enough that the loop never shows a seam
+
+/** Where each reel well sits. Shared with the DOM interaction layer for the
+ *  same reason as ritualCardRect. */
+export function reelRect(W: number, H: number, i: number, n: number) {
+  const gap = Math.max(8, W * 0.018);
+  const rw = Math.min(150, (W - gap * (n + 1)) / n);
+  const labelH = Math.max(18, rw * 0.26);
+  const rh = Math.min(H * 0.6 - labelH, rw * 1.5);
+  const top = (H - (rh + labelH)) / 2;
+  const startX = (W - (n * rw + (n - 1) * gap)) / 2;
+  return { x: startX + i * (rw + gap), y: top, w: rw, h: rh, labelH, gap };
+}
 
 interface Reel {
   strip: HTMLImageElement[];
@@ -42,20 +57,42 @@ export function SlotsStage({
   perks,
   role,
   language,
+  pinnedSlots,
+  onCopy,
+  onTogglePin,
+  onRerollSlot,
 }: {
   pool: Perk[];
   perks: Perk[];
   role: PerkRole;
   language: "en" | "ru";
+  /** Slot index -> pinned perk slug, exactly as PerkGrid receives it. */
+  pinnedSlots?: Record<number, string>;
+  onCopy: (perk: Perk) => void;
+  onTogglePin?: (slot: number, slug: string) => void;
+  onRerollSlot?: (slot: number) => void;
 }) {
+  const [size, setSize] = useState({ w: 0, h: 0 });
+  const [detail, setDetail] = useState<Perk | null>(null);
   const hostRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   // Read live by the draw loop; written in an effect, never during render.
   const roleRef = useRef(role);
+  const theme = useThemeTokens();
+  const themeRef = useRef<ThemeTokens>(theme);
   useEffect(() => {
     roleRef.current = role;
-  }, [role]);
-  const state = useRef({ reels: [] as Reel[], W: 0, H: 0, flash: 0 });
+    themeRef.current = theme;
+  }, [role, theme]);
+  const state = useRef({
+    reels: [] as Reel[],
+    W: 0,
+    H: 0,
+    flash: 0,
+    /** Slugs the reels were last built for, to tell a single-slot reroll
+     *  apart from a whole new build. */
+    shown: [] as string[],
+  });
 
   const perkKey = perks.map((p) => p.slug).join(",");
   const poolKey = pool.length;
@@ -70,7 +107,18 @@ export function SlotsStage({
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const filler = pool.length > 0 ? pool : perks;
 
+    /* Which slots actually changed. Pressing 1-4 rerolls ONE perk, and
+       replaying the full four-reel spin for it overstated what happened —
+       the machine looked like it had done a whole new pull. Only the reels
+       whose perk changed are respun; the rest keep the offset they settled
+       on, so they read as held. */
+    const changed = perks.map((p, i) => s.shown[i] !== p.slug);
+    const everything = s.reels.length !== perks.length || changed.every(Boolean);
+    let order = 0;
+
     s.reels = perks.map((perk, i) => {
+      const previous = s.reels[i];
+      if (!changed[i] && previous) return previous;
       const names: string[] = [];
       const slugs: string[] = [];
       const strip: HTMLImageElement[] = [];
@@ -84,19 +132,23 @@ export function SlotsStage({
         names.push(p.name[language]);
         slugs.push(p.slug);
       }
+      // A full pull staggers left to right — the last reel landing is what
+      // makes it a result. A single respun reel has nothing to stagger
+      // against, so it just goes.
+      const delay = reduced ? 0.01 : everything ? 0.55 + order * 0.32 : 0.42;
+      order++;
       return {
         strip,
         names,
         slugs,
         target: 0,
-        offset: 0,
+        offset: previous && !everything ? previous.offset : 0,
         speed: 26 + i * 2,
-        // Staggered stops: the last reel is what makes it feel like a result
-        // rather than four things ending at once.
-        stopAt: now + (reduced ? 0.01 : 0.55 + i * 0.32),
+        stopAt: now + delay,
         settled: false,
       };
     });
+    s.shown = perks.map((p) => p.slug);
     s.flash = 0;
     /* What the reels will actually stop on, read back off the strips the
        canvas draws from rather than off the props. A stage that quietly
@@ -127,6 +179,8 @@ export function SlotsStage({
       canvas.width = Math.max(1, Math.round(s.W * dpr));
       canvas.height = Math.max(1, Math.round(s.H * dpr));
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      // Mirrored into React state for the DOM control layer.
+      setSize({ w: s.W, h: s.H });
     };
     measure();
     const ro = new ResizeObserver(measure);
@@ -182,6 +236,7 @@ export function SlotsStage({
       const dt = Math.min(0.05, time - last);
       last = time;
       const accent = ROLE_COLOR[roleRef.current].solid;
+      const th = themeRef.current;
 
       ctx!.clearRect(0, 0, s.W, s.H);
       const n = s.reels.length;
@@ -190,16 +245,14 @@ export function SlotsStage({
         return;
       }
 
-      const gap = Math.max(8, s.W * 0.018);
-      const rw = Math.min(150, (s.W - gap * (n + 1)) / n);
       // The name gets its own band under the well. Drawn inside it, the label
       // printed straight over whichever symbol happened to be on the bottom
       // row.
-      const labelH = Math.max(18, rw * 0.26);
-      const rh = Math.min(s.H * 0.74 - labelH, rw * 1.5);
-      const top = (s.H - (rh + labelH)) / 2;
+      const base = reelRect(s.W, s.H, 0, n);
+      const { w: rw, h: rh, labelH, gap } = base;
+      const top = base.y;
       const cell = rh / 3; // three symbols visible per reel
-      const startX = (s.W - (n * rw + (n - 1) * gap)) / 2;
+      const startX = base.x;
 
       let allSettled = true;
       for (let i = 0; i < n; i++) {
@@ -225,10 +278,13 @@ export function SlotsStage({
         const x = startX + i * (rw + gap);
         // Reel well
         ctx!.save();
+        // A reel well reads as depth: darker at the lips than in the middle
+        // on a dark page, and the reverse on a light one, so the shading is
+        // shadow either way rather than a black tube dropped into white.
         const well = ctx!.createLinearGradient(0, top, 0, top + rh);
-        well.addColorStop(0, "rgba(8,10,14,0.98)");
-        well.addColorStop(0.5, "rgba(20,23,30,0.95)");
-        well.addColorStop(1, "rgba(8,10,14,0.98)");
+        well.addColorStop(0, th.background);
+        well.addColorStop(0.5, th.surface);
+        well.addColorStop(1, th.background);
         ctx!.fillStyle = well;
         roundRect(ctx!, x, top, rw, rh, 14);
         ctx!.fill();
@@ -244,18 +300,22 @@ export function SlotsStage({
           // Symbols away from the pay line sit back in the well.
           const centreness = 1 - Math.min(1, Math.abs(y - (top + rh / 2)) / (rh / 2));
           ctx!.globalAlpha = 0.14 + 0.86 * Math.pow(centreness, 1.6);
+          // Same inversion the page applies to perk art on the light theme
+          // (.icon-art); a canvas gets no cascade.
+          if (th.isLight) ctx!.filter = "invert(0.92)";
           ctx!.drawImage(img, x + rw / 2 - size / 2, y - size / 2, size, size);
+          ctx!.filter = "none";
         }
         ctx!.restore();
 
         // Frame + pay line
-        ctx!.strokeStyle = reel.settled ? `${accent}88` : "rgba(232,228,220,0.14)";
+        ctx!.strokeStyle = reel.settled ? `${accent}aa` : th.border;
         ctx!.lineWidth = 1;
         roundRect(ctx!, x, top, rw, rh, 14);
         ctx!.stroke();
 
         if (reel.settled) {
-          ctx!.fillStyle = "#e8e4dc";
+          ctx!.fillStyle = th.foreground;
           ctx!.font = `500 ${Math.max(9, rw * 0.093)}px Oswald, "Arial Narrow", sans-serif`;
           ctx!.textAlign = "center";
           let line = reel.names[reel.target].toUpperCase();
@@ -269,9 +329,9 @@ export function SlotsStage({
       if (s.flash > 0) s.flash = Math.max(0, s.flash - dt * 1.6);
       const lineAlpha = 0.1 + (allSettled ? 0.28 : 0.06) + s.flash * 0.3;
       const grad = ctx!.createLinearGradient(startX, 0, startX + n * rw + (n - 1) * gap, 0);
-      grad.addColorStop(0, "rgba(232,228,220,0)");
+      grad.addColorStop(0, "rgba(127,127,127,0)");
       grad.addColorStop(0.5, `${accent}${Math.round(lineAlpha * 255).toString(16).padStart(2, "0")}`);
-      grad.addColorStop(1, "rgba(232,228,220,0)");
+      grad.addColorStop(1, "rgba(127,127,127,0)");
       ctx!.fillStyle = grad;
       ctx!.fillRect(startX - gap, s.H / 2 - 0.5, n * rw + (n - 1) * gap + gap * 2, 1);
 
@@ -291,7 +351,7 @@ export function SlotsStage({
     <div
       ref={hostRef}
       data-testid="slots-stage"
-      className="relative aspect-[16/7] w-full max-w-4xl overflow-hidden rounded-2xl border border-border bg-[#0a0c10]"
+      className="relative aspect-[16/7] w-full max-w-4xl overflow-hidden rounded-2xl border border-border bg-background"
     >
       <canvas ref={canvasRef} className="absolute inset-0 size-full" aria-hidden />
       <ul className="sr-only">
@@ -299,6 +359,27 @@ export function SlotsStage({
           <li key={p.slug}>{p.name[language]}</li>
         ))}
       </ul>
+      <StageControls
+        perks={perks}
+        language={language}
+        rects={perks.map((_, i) => {
+          const r = reelRect(size.w, size.h, i, perks.length);
+          // The well plus its name band: the controls belong under the label,
+          // not on top of it.
+          return { x: r.x, y: r.y, w: r.w, h: r.h + r.labelH };
+        })}
+        pinnedSlots={pinnedSlots}
+        onOpenDetail={setDetail}
+        onCopy={onCopy}
+        onTogglePin={onTogglePin}
+        onRerollSlot={onRerollSlot}
+      />
+      <PerkDetailModal
+        perk={detail}
+        language={language}
+        onCopy={onCopy}
+        onClose={() => setDetail(null)}
+      />
     </div>
   );
 }

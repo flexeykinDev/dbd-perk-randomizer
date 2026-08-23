@@ -111,3 +111,47 @@ test("the choice survives a reload", async ({ page }) => {
   await expect(page.getByTestId("slots-stage")).toBeVisible();
   await expect(page.getByTestId("presentation-picker")).toContainText("Слоты");
 });
+
+/* A theme may change how a build looks. It may not make the build do less.
+ *
+ * The first version of the stages dropped per-perk copy, the description
+ * modal and the pin toggle, because a canvas has no buttons — the picture was
+ * right and the page had quietly lost three controls. */
+for (const [label, testId, name] of [
+  [/Слоты/, "slots-stage", "slots"],
+  [/Ритуал/, "ritual-stage", "ritual"],
+] as const) {
+  test(`${name} keeps every per-perk control the grid has`, async ({ page }) => {
+    await page.goto("/?role=killer");
+    await expect(page.locator("[data-perk-card]")).toHaveCount(4);
+    await choose(page, label);
+    await expect(page.getByTestId(testId)).toBeVisible();
+
+    await expect(page.getByRole("button", { name: /^Копировать$/ })).toHaveCount(4);
+    await expect(page.getByRole("button", { name: /Закрепить|Открепить/ })).toHaveCount(4);
+    await expect(page.getByRole("button", { name: /Переролл слота/ })).toHaveCount(4);
+
+    // And the description is the same one a grid card opens.
+    await page.getByRole("button", { name: /^Описание:/ }).first().click();
+    await expect(page.getByRole("dialog")).toBeVisible();
+  });
+
+  test(`${name} rerolls one slot without redealing the rest`, async ({ page }) => {
+    await page.goto("/?role=killer");
+    await expect(page.locator("[data-perk-card]")).toHaveCount(4);
+    await choose(page, label);
+    await expect(page.getByTestId(testId)).toBeVisible();
+
+    const before = await painted(page, testId);
+    expect(before).toHaveLength(4);
+    await page.keyboard.press("2");
+    await expect.poll(() => painted(page, testId)).not.toEqual(before);
+
+    const after = await painted(page, testId);
+    const moved = before.filter((slug, i) => slug !== after[i]);
+    // Exactly the pressed slot. Replaying the whole sequence for one perk
+    // claimed far more had happened than actually did.
+    expect(moved, "only the rerolled slot changed").toHaveLength(1);
+    expect(after[1]).not.toBe(before[1]);
+  });
+}

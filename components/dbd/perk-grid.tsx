@@ -271,7 +271,10 @@ export function PerkGrid({
   );
 }
 
-function PerkDetailModal({
+/** Exported so the canvas presentations can open the same description a
+ *  grid card opens — a stage must not come with a lesser perk modal of
+ *  its own. */
+export function PerkDetailModal({
   perk,
   language,
   onCopy,

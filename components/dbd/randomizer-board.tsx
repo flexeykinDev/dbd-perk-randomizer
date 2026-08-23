@@ -1786,6 +1786,14 @@ export function RandomizerBoard() {
               perks={perks}
               role={role}
               language={language}
+              onCopy={handleCopy}
+              {...(sharedBuild || activeSeed
+                ? {}
+                : {
+                    pinnedSlots: pinnedPerkSlots,
+                    onTogglePin: togglePin,
+                    onRerollSlot: rerollSlot,
+                  })}
             />
           ) : (
             <SlotsStage
@@ -1793,6 +1801,14 @@ export function RandomizerBoard() {
               perks={perks}
               role={role}
               language={language}
+              onCopy={handleCopy}
+              {...(sharedBuild || activeSeed
+                ? {}
+                : {
+                    pinnedSlots: pinnedPerkSlots,
+                    onTogglePin: togglePin,
+                    onRerollSlot: rerollSlot,
+                  })}
             />
           )
         ) : (

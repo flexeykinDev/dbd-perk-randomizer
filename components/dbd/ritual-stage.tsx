@@ -1,9 +1,12 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { withBasePath } from "@/lib/asset-path";
 import { ROLE_COLOR } from "@/lib/role-color";
+import { useThemeTokens, type ThemeTokens } from "@/lib/theme-tokens";
 import type { Perk, PerkRole } from "@/lib/types";
+import { PerkDetailModal } from "./perk-grid";
+import { StageControls } from "./stage-controls";
 
 /* "Ritual": the pool swirls as a funnel of perk icons, and a roll deals the
  * build that came out into a hand of cards.
@@ -32,6 +35,7 @@ const VERT = "attribute vec2 p; void main(){ gl_Position = vec4(p, 0.0, 1.0); }"
 const FRAG = `
 precision highp float;
 uniform vec2 uRes; uniform float uTime; uniform float uSpin; uniform vec3 uTint;
+uniform vec3 uGround; uniform vec3 uHaze; uniform float uTintAmt;
 float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
 float noise(vec2 p){
   vec2 i = floor(p), f = fract(p);
@@ -54,13 +58,27 @@ void main(){
   d = fbm(warp * 3.4 + d * 1.6 + vec2(0.0, uTime * 0.03));
   float funnel = smoothstep(0.05, 0.72, r) * (1.0 - smoothstep(0.85, 1.5, r));
   float dens = pow(d, 1.7) * funnel;
-  vec3 col = mix(vec3(0.027, 0.031, 0.043), vec3(0.078, 0.094, 0.133), dens * 1.5);
-  col += uTint * dens * (0.55 + 0.45 * uSpin);
-  col += uTint * 0.14 * smoothstep(0.4, 0.0, r) * (0.4 + 0.6 * uSpin);
-  col *= 1.0 - 0.45 * smoothstep(0.62, 1.5, r);
-  col += (hash(gl_FragCoord.xy + fract(uTime) * 91.0) - 0.5) * 0.02;
+  // Ground and haze come from the page's own tokens, so the fog is light on
+  // the light theme and dark on the dark one instead of always near-black.
+  vec3 col = mix(uGround, uHaze, clamp(dens * 1.5, 0.0, 1.0));
+  col += uTint * uTintAmt * dens * (0.55 + 0.45 * uSpin);
+  col += uTint * uTintAmt * 0.5 * smoothstep(0.4, 0.0, r) * (0.4 + 0.6 * uSpin);
+  col = mix(col, uGround, 0.4 * smoothstep(0.62, 1.5, r));
+  col += (hash(gl_FragCoord.xy + fract(uTime) * 91.0) - 0.5) * 0.018;
   gl_FragColor = vec4(col, 1.0);
 }`;
+
+/** Where the dealt cards land. Exported because the interaction layer sits
+ *  in the DOM on top of the canvas and has to line up with what is painted;
+ *  two copies of this arithmetic would drift the first time either changed. */
+export function ritualCardRect(W: number, H: number, i: number, n: number) {
+  const cw = Math.min(132, Math.max(72, W / (n + 2.4)));
+  const ch = cw * 1.4143 * 0.99;
+  const gap = cw * 0.3;
+  const total = n * cw + (n - 1) * gap;
+  const cx = W / 2 - total / 2 + i * (cw + gap) + cw / 2;
+  return { x: cx - cw / 2, y: H * 0.52 - ch / 2, w: cw, h: ch };
+}
 
 interface Mote {
   perk: Perk;
@@ -80,12 +98,23 @@ export function RitualStage({
   perks,
   role,
   language,
+  pinnedSlots,
+  onCopy,
+  onTogglePin,
+  onRerollSlot,
 }: {
   pool: Perk[];
   perks: Perk[];
   role: PerkRole;
   language: "en" | "ru";
+  /** Slot index -> pinned perk slug, exactly as PerkGrid receives it. */
+  pinnedSlots?: Record<number, string>;
+  onCopy: (perk: Perk) => void;
+  onTogglePin?: (slot: number, slug: string) => void;
+  onRerollSlot?: (slot: number) => void;
 }) {
+  const [size, setSize] = useState({ w: 0, h: 0 });
+  const [detail, setDetail] = useState<Perk | null>(null);
   const hostRef = useRef<HTMLDivElement>(null);
   const fogRef = useRef<HTMLCanvasElement>(null);
   const spriteRef = useRef<HTMLCanvasElement>(null);
@@ -94,10 +123,13 @@ export function RitualStage({
   // safe under concurrent rendering, and the compiler rejects it.
   const roleRef = useRef(role);
   const langRef = useRef(language);
+  const theme = useThemeTokens();
+  const themeRef = useRef<ThemeTokens>(theme);
   useEffect(() => {
     roleRef.current = role;
     langRef.current = language;
-  }, [role, language]);
+    themeRef.current = theme;
+  }, [role, language, theme]);
 
   const state = useRef({
     motes: [] as Mote[],
@@ -105,6 +137,11 @@ export function RitualStage({
     spin: 1,
     spinTarget: 1,
     dealAt: 0,
+    /** Slugs the current hand was dealt for, so a single-slot reroll can be
+     *  told apart from a whole new build. */
+    shown: [] as string[],
+    /** Slots to swap in place, when only some of the build changed. */
+    swap: [] as number[],
     W: 0,
     H: 0,
   });
@@ -136,13 +173,99 @@ export function RitualStage({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [poolKey]);
 
-  // A new build arrived — spin up, then deal exactly it.
+  // A new build arrived. A whole new one spins the funnel up and redeals; a
+  // single changed slot swaps just that card, because replaying the full
+  // ritual for one perk claimed far more had happened than actually did.
   useEffect(() => {
     const s = state.current;
     if (perks.length === 0 || s.motes.length === 0) {
       s.hand = [];
+      s.shown = [];
       return;
     }
+    const changed = perks.map((p, i) => s.shown[i] !== p.slug);
+    const partial =
+      s.hand.length === perks.length && !changed.every(Boolean) && changed.some(Boolean);
+
+    /** Claims a mote for `perk`, reusing the funnel's own copy where it has
+     *  one and otherwise repointing a spare.
+     *
+     *  It writes the repointed mote back into `arr` itself, which is the
+     *  whole point: an earlier version returned a fresh object and left the
+     *  caller to insert it, the caller looked it up by slug, found nothing
+     *  (the slug was new to the funnel) and dropped it — so two of four cards
+     *  were in the hand, counted, announced, and never drawn. */
+    function takeMote(
+      perk: (typeof perks)[number],
+      arr: Mote[],
+      taken: Set<Mote>,
+    ): Mote | null {
+      const own = arr.find((m) => m.perk.slug === perk.slug && !taken.has(m));
+      if (own) {
+        taken.add(own);
+        return own;
+      }
+      const spareAt = arr.findIndex((m) => !taken.has(m));
+      if (spareAt < 0) return null;
+      const img = new Image();
+      img.src = withBasePath(perk.icon);
+      const repointed: Mote = { ...arr[spareAt], perk, img };
+      arr[spareAt] = repointed;
+      taken.add(repointed);
+      return repointed;
+    }
+
+    if (partial) {
+      // Keep every settled card exactly where it is; only the changed slots
+      // move. The outgoing card is not animated away — the incoming one flips
+      // over it, which is what a swap looks like at a table.
+      const next = [...s.motes];
+      const hand = [...s.hand];
+      const taken = new Set<Mote>(hand);
+      const now = performance.now() / 1000;
+      changed.forEach((didChange, i) => {
+        if (!didChange) return;
+        const replacement = takeMote(perks[i], next, taken);
+        if (!replacement) return;
+        const old = hand[i];
+        const slot = ritualCardRect(s.W, s.H, i, perks.length);
+        const centre = { x: slot.x + slot.w / 2, y: slot.y + slot.h / 2, s: slot.w / ICON_PX };
+        const incoming: Mote = {
+          ...replacement,
+          // Rises from just below the row rather than from across the frame:
+          // a swap is a small gesture and a long flight would read as a deal.
+          from: { x: centre.x, y: centre.y + slot.h * 0.55, s: centre.s * 0.82, a: 0 },
+          to: { x: centre.x, y: centre.y, s: centre.s, a: 1 },
+          t0: now,
+          dur: 0.42,
+          card: true,
+        };
+        const at = next.indexOf(replacement);
+        if (at >= 0) next[at] = incoming;
+        else next.push(incoming);
+        // The card being replaced drops out of the hand and out of the funnel.
+        const oldAt = next.indexOf(old);
+        if (oldAt >= 0) {
+          next[oldAt] = {
+            ...old,
+            from: { x: centre.x, y: centre.y, s: centre.s, a: 1 },
+            to: { x: centre.x, y: centre.y - slot.h * 0.4, s: centre.s * 0.9, a: 0 },
+            t0: now,
+            dur: 0.3,
+            card: true,
+          };
+        }
+        hand[i] = incoming;
+      });
+      s.motes = next;
+      s.hand = hand;
+      s.shown = perks.map((p) => p.slug);
+      if (hostRef.current) {
+        hostRef.current.dataset.shown = hand.map((m) => m.perk.slug).join(",");
+      }
+      return;
+    }
+
     // Rebuilt rather than reset in place. Every mote starts a roll with no
     // tween on it, and a fresh array is both clearer than clearing three
     // fields on each one and the shape the compiler can actually verify.
@@ -155,28 +278,19 @@ export function RitualStage({
     const taken = new Set<Mote>();
     const hand: Mote[] = [];
     for (const perk of perks) {
-      let mote = fresh.find((m) => m.perk.slug === perk.slug && !taken.has(m));
-      if (!mote) {
-        // The rolled perk is outside the funnel's sample — repoint a spare so
-        // the hand always shows the real build rather than a subset of it.
-        const spare = fresh.find((m) => !taken.has(m));
-        if (!spare) break;
-        const img = new Image();
-        img.src = withBasePath(perk.icon);
-        mote = { ...spare, perk, img };
-        fresh[fresh.indexOf(spare)] = mote;
-      }
-      taken.add(mote);
+      const mote = takeMote(perk, fresh, taken);
+      if (!mote) break;
       hand.push(mote);
     }
     s.motes = fresh;
     s.hand = hand;
+    s.shown = perks.map((p) => p.slug);
     /* The perks this stage will actually deal, taken from the hand it built
        rather than from the props — see the same attribute on SlotsStage. */
     if (hostRef.current) {
       hostRef.current.dataset.shown = hand.map((m) => m.perk.slug).join(",");
     }
-    s.spinTarget = 1.9;
+    s.spinTarget = 1.5;
     s.dealAt = performance.now() / 1000 + 0.45;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [perkKey]);
@@ -215,6 +329,9 @@ export function RitualStage({
       uni.time = gl.getUniformLocation(prog, "uTime");
       uni.spin = gl.getUniformLocation(prog, "uSpin");
       uni.tint = gl.getUniformLocation(prog, "uTint");
+      uni.ground = gl.getUniformLocation(prog, "uGround");
+      uni.haze = gl.getUniformLocation(prog, "uHaze");
+      uni.tintAmt = gl.getUniformLocation(prog, "uTintAmt");
     }
 
     let dpr = 1;
@@ -228,6 +345,9 @@ export function RitualStage({
       }
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       if (gl) gl.viewport(0, 0, fog.width, fog.height);
+      // Mirrored into React state so the DOM control layer can be laid out
+      // from the same numbers the canvas paints with.
+      setSize({ w: s.W, h: s.H });
     };
     measure();
     const ro = new ResizeObserver(measure);
@@ -257,22 +377,24 @@ export function RitualStage({
     const easeOut = (x: number) => 1 - Math.pow(1 - x, 3);
 
     function slotFor(i: number, n: number) {
-      const cw = Math.min(132, Math.max(72, s.W / (n + 2.4)));
-      const gap = cw * 0.3;
-      const total = n * cw + (n - 1) * gap;
-      return { x: s.W / 2 - total / 2 + i * (cw + gap) + cw / 2, y: s.H * 0.52, s: cw / ICON_PX };
+      const r = ritualCardRect(s.W, s.H, i, n);
+      return { x: r.x + r.w / 2, y: r.y + r.h / 2, s: r.w / ICON_PX };
     }
 
     function funnel(m: Mote, time: number) {
       const radius = Math.min(s.W * 0.46, s.H * 0.95) * (0.34 + 0.5 * m.seed * m.seed);
-      const speed = (0.42 + 0.5 * (1 - m.seed)) * (0.35 + 0.65 * s.spin);
+      // Roughly half the old rate. At the previous speed the icons crossed
+      // the frame fast enough to strobe rather than drift, which read as
+      // "not smooth" — the frames were fine, the motion was just too quick
+      // for the eye to track anything.
+      const speed = (0.2 + 0.24 * (1 - m.seed)) * (0.4 + 0.6 * s.spin);
       const ang = m.lane + time * speed;
       const depth = Math.sin(ang) * 0.5 + 0.5;
       return {
         x: s.W / 2 + Math.cos(ang) * radius * (0.92 + 0.16 * depth),
         y: s.H * 0.5 - (m.seed - 0.5) * s.H * 0.62 + Math.sin(time * 0.7 + m.bob) * 6,
         s: (0.3 + 0.34 * depth) * (Math.min(s.W, s.H) / 620 + 0.4),
-        a: 0.2 + 0.8 * depth,
+        a: 0.28 + 0.72 * (depth * depth * (3 - 2 * depth)),
         z: Math.sin(ang),
       };
     }
@@ -316,6 +438,7 @@ export function RitualStage({
 
     function drawCard(m: Mote, p: { x: number; y: number; s: number; a: number; flip: number }) {
       const accent = ROLE_COLOR[roleRef.current].solid;
+      const th = themeRef.current;
       const size = ICON_PX * p.s;
       const cw = size * 1.06;
       const ch = cw * 1.4;
@@ -328,22 +451,25 @@ export function RitualStage({
       ctx!.shadowColor = "rgba(0,0,0,0.6)";
       ctx!.shadowBlur = 22;
       ctx!.shadowOffsetY = 8;
-      const grad = ctx!.createLinearGradient(0, -ch / 2, 0, ch / 2);
-      grad.addColorStop(0, faceUp ? "rgba(30,34,44,0.96)" : "rgba(22,25,33,0.98)");
-      grad.addColorStop(1, faceUp ? "rgba(12,14,19,0.98)" : "rgba(9,11,15,0.99)");
-      ctx!.fillStyle = grad;
+      // The card is the site's own surface, not a fixed dark slab.
+      ctx!.fillStyle = faceUp ? th.surface : th.background;
       roundRect(ctx!, -cw / 2, -ch / 2, cw, ch, cw * 0.09);
       ctx!.fill();
       ctx!.restore();
-      ctx!.strokeStyle = faceUp ? `${accent}66` : "rgba(232,228,220,0.14)";
+      ctx!.strokeStyle = faceUp ? `${accent}88` : th.border;
       ctx!.lineWidth = 1;
       roundRect(ctx!, -cw / 2, -ch / 2, cw, ch, cw * 0.09);
       ctx!.stroke();
       if (faceUp) {
         if (m.img.complete && m.img.naturalWidth) {
+          // Perk art is white line work. On the light theme the page inverts
+          // it with CSS (.icon-art); a canvas gets no cascade, so it does the
+          // same inversion here at the same strength.
+          if (th.isLight) ctx!.filter = "invert(0.92)";
           ctx!.drawImage(m.img, -size / 2, -ch / 2 + cw * 0.12, size, size);
+          ctx!.filter = "none";
         }
-        ctx!.fillStyle = "#e8e4dc";
+        ctx!.fillStyle = th.foreground;
         ctx!.font = `500 ${Math.max(9, cw * 0.1)}px Oswald, "Arial Narrow", sans-serif`;
         ctx!.textAlign = "center";
         const name = m.perk.name[langRef.current].toUpperCase();
@@ -400,7 +526,13 @@ export function RitualStage({
         gl.uniform1f(uni.time, time);
         gl.uniform1f(uni.spin, s.spin);
         const tint = MOOD[roleRef.current];
-        gl.uniform3f(uni.tint, tint[0] * 0.5, tint[1] * 0.5, tint[2] * 0.5);
+        const th = themeRef.current;
+        gl.uniform3f(uni.tint, tint[0], tint[1], tint[2]);
+        gl.uniform3f(uni.ground, th.groundRgb[0], th.groundRgb[1], th.groundRgb[2]);
+        gl.uniform3f(uni.haze, th.hazeRgb[0], th.hazeRgb[1], th.hazeRgb[2]);
+        // The tint has to be gentler on a light ground: the same amount that
+        // reads as ember on near-black turns a white page pink.
+        gl.uniform1f(uni.tintAmt, th.isLight ? 0.16 : 0.5);
         gl.drawArrays(gl.TRIANGLES, 0, 3);
       }
 
@@ -431,6 +563,7 @@ export function RitualStage({
           const size = ICON_PX * d.p.s;
           ctx!.save();
           ctx!.globalAlpha = Math.max(0, Math.min(1, d.p.a));
+          if (themeRef.current.isLight) ctx!.filter = "invert(0.92)";
           ctx!.drawImage(d.m.img, d.p.x - size / 2, d.p.y - size / 2, size, size);
           ctx!.restore();
         }
@@ -455,7 +588,7 @@ export function RitualStage({
     <div
       ref={hostRef}
       data-testid="ritual-stage"
-      className="relative aspect-[16/7] w-full max-w-4xl overflow-hidden rounded-2xl border border-border bg-[#07080b]"
+      className="relative aspect-[16/7] w-full max-w-4xl overflow-hidden rounded-2xl border border-border bg-background"
     >
       <canvas ref={fogRef} className="absolute inset-0 size-full" aria-hidden />
       <canvas ref={spriteRef} className="absolute inset-0 size-full" aria-hidden />
@@ -465,6 +598,22 @@ export function RitualStage({
           <li key={p.slug}>{p.name[language]}</li>
         ))}
       </ul>
+      <StageControls
+        perks={perks}
+        language={language}
+        rects={perks.map((_, i) => ritualCardRect(size.w, size.h, i, perks.length))}
+        pinnedSlots={pinnedSlots}
+        onOpenDetail={setDetail}
+        onCopy={onCopy}
+        onTogglePin={onTogglePin}
+        onRerollSlot={onRerollSlot}
+      />
+      <PerkDetailModal
+        perk={detail}
+        language={language}
+        onCopy={onCopy}
+        onClose={() => setDetail(null)}
+      />
     </div>
   );
 }
