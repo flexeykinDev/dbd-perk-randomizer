@@ -1,0 +1,61 @@
+{
+  "_comment": "Hand-authored Core Effect lines for loadout pieces, keyed \"<kind>:<slug>\". EDIT THIS FILE DIRECTLY — unlike data/items.json and friends, the scrapers never write here. Used only where the wiki's own prose cannot be summarised into a mechanic by lib/perk-description.ts, which is almost always one of two cases: the RU wiki describes an offering qualitatively (\"слегка сгущает\") while the EN entry for the same piece carries the number, or the RU text is generic filler about the Bloodweb instead of the effect. The rule for an entry here is the same rule the parser tries to follow — the action, the thing it acts on, and the values, with `**` around anything numeric — and nothing else: no lore, no where-to-find-it, no status glossary. It replaces `core` only; Full Text still shows the wiki verbatim, so nothing is hidden. lib/perk-description.test.ts resolves every key against the shipped data, so a renamed slug fails CI instead of quietly orphaning its override.",
+
+  "item:sport-flashlight": {
+    "en": "Lights for up to **8 seconds**. Aim accuracy +**20 %**, Depletion rate -**11 %**.",
+    "ru": "Светит до **8 сек.** Точность наведения +**20 %**, расход заряда -**11 %**."
+  },
+  "item:festive-toolbox": {
+    "en": "Repair speed +**50 %**. Unlocks Sabotage, Sabotage speed +**50 %**. **32** Charges.",
+    "ru": "Скорость ремонта +**50 %**. Открывает саботаж, скорость саботажа +**50 %**. Зарядов: **32**."
+  },
+
+  "offering:faint-reagent": {
+    "en": "Dark Mist thickness +**25 %**.",
+    "ru": "Плотность Тёмного тумана +**25 %**."
+  },
+  "offering:hazy-reagent": {
+    "en": "Dark Mist thickness +**50 %**.",
+    "ru": "Плотность Тёмного тумана +**50 %**."
+  },
+  "offering:murky-reagent": {
+    "en": "Dark Mist thickness +**75 %**.",
+    "ru": "Плотность Тёмного тумана +**75 %**."
+  },
+
+  "offering:petrified-oak": {
+    "en": "Minimum distance between Hook spawns +**1 metre**.",
+    "ru": "Минимальное расстояние между крюками +**1 м**."
+  },
+  "offering:rotten-oak": {
+    "en": "Minimum distance between Hook spawns -**2.5 metres**.",
+    "ru": "Минимальное расстояние между крюками -**2.5 м**."
+  },
+  "offering:putrid-oak": {
+    "en": "Minimum distance between Hook spawns -**3.5 metres**.",
+    "ru": "Минимальное расстояние между крюками -**3.5 м**."
+  },
+
+  "offering:vigo-s-blueprint": {
+    "en": "Chance of the Hatch spawning by the Landmark Building +**100 %**, where one exists.",
+    "ru": "Шанс появления люка у основного здания +**100 %**, если оно есть на карте."
+  },
+  "offering:alien-flora": {
+    "en": "Chance of loading into Toba Landing raised to **20 %**. Does not stack.",
+    "ru": "Шанс попасть на «Площадку Тоба» — **20 %**. Не суммируется."
+  },
+  "offering:ebony-memento-mori": {
+    "en": "Kill any Survivor who has reached **2 Hook Stages**, once they are in the Dying State.",
+    "ru": "Позволяет добить любого выжившего, прошедшего **2 стадии** на крюке, в предсмертном состоянии."
+  },
+
+  "offering:white-ward": {
+    "_why": "The RU text ships a half-translated fragment — \"защиту от потери your item and[1] улучшений\" — English words and a footnote marker included.",
+    "en": "Your held Item is not lost on death. Its Add-ons are not consumed on death or escape.",
+    "ru": "Предмет не теряется при смерти. Его улучшения не расходуются при смерти или побеге."
+  },
+  "offering:black-ward": {
+    "en": "Your Add-ons are not consumed at the end of the Trial.",
+    "ru": "Улучшения не расходуются по окончании матча."
+  }
+}

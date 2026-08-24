@@ -1,6 +1,8 @@
 import type { LocalizedDescription } from "./types";
 import type { Lang } from "./i18n";
 
+import coreEffectOverrides from "@/data/core-effect-overrides.json";
+
 export interface PerkDescriptionView {
   /** Brief bulleted summary of the mechanical effect, "**"-highlighted. */
   core: string[];
@@ -11,6 +13,11 @@ export interface PerkDescriptionView {
   /** True when this came from a hand-authored translation rather than
    *  being auto-derived from the scraped English text. */
   curated: boolean;
+  /** True when `core` is a hand-written Core Effect that is already exactly
+   *  what should be shown. coreSummary returns it untouched — running the
+   *  clause splitter over curated text can only damage it, and did: it cut
+   *  "Плотность" off the front of "Плотность Тёмного тумана +25 %". */
+  coreFinal?: boolean;
 }
 
 // Scraped descriptions end with `"quote text" — Speaker Name` (perks,
@@ -381,7 +388,51 @@ interface DescribableEntity {
   descriptionRuRaw?: string;
 }
 
+/* A hand-written Core Effect, for the pieces no parser can rescue.
+ *
+ * Two situations produce them, and neither is the parser's fault. The RU wiki
+ * describes offerings qualitatively — "слегка сгущает Тёмный туман" — where
+ * the EN entry for the same offering says +25 %, so there is no number in the
+ * Russian text to find. And some RU item pages describe the Bloodweb instead
+ * of the item: the Festive Toolbox's Russian core opened with "Данный предмет
+ * обладает рядом особенностей" and never mentioned the +50 % repair speed at
+ * all. Measured across the shipped loadout, 2 items and 14 offerings stated
+ * no mechanic in one language or the other.
+ *
+ * Only `core` is replaced. Full Text still renders the wiki verbatim, so this
+ * shortens what is shown without hiding anything. */
+/** Marks an offering nobody else sees burn. Its own bullet, so it survives
+ *  a Core Effect override — the override replaces the mechanic, not the fact
+ *  that the offering is secret. */
+const SECRET_BULLET = "**Secret**.";
+
+const CORE_EFFECT_OVERRIDES = coreEffectOverrides as Record<
+  string,
+  { en?: string; ru?: string } | string
+>;
+
+function overriddenCore(entity: DescribableEntity, lang: Lang): string | null {
+  const kind = (entity as { kind?: string }).kind;
+  const slug = (entity as { slug?: string }).slug;
+  if (!kind || !slug) return null;
+  const entry = CORE_EFFECT_OVERRIDES[`${kind}:${slug}`];
+  if (!entry || typeof entry === "string") return null;
+  return entry[lang] ?? null;
+}
+
 function describe(entity: DescribableEntity, lang: Lang): PerkDescriptionView {
+  const override = overriddenCore(entity, lang);
+  if (override) {
+    // Full text is still derived the normal way — the override is a summary,
+    // not a replacement for the wiki's own words.
+    const base = describeFromSource(entity, lang);
+    const secret = base.core[0] === SECRET_BULLET ? [SECRET_BULLET] : [];
+    return { ...base, core: [...secret, override], curated: true, coreFinal: true };
+  }
+  return describeFromSource(entity, lang);
+}
+
+function describeFromSource(entity: DescribableEntity, lang: Lang): PerkDescriptionView {
   if (lang === "ru" && entity.descriptionRu) {
     return {
       full: entity.descriptionRu.full,
@@ -410,7 +461,7 @@ function describe(entity: DescribableEntity, lang: Lang): PerkDescriptionView {
   // already drops the verbose original wording from Core on its own, since
   // it has no number or named term) — the disclaimer itself carries a real,
   // worth-surfacing fact that'd otherwise disappear from Core entirely.
-  if (isSecret) core.unshift("**Secret**.");
+  if (isSecret) core.unshift(SECRET_BULLET);
   return {
     full: autoHighlight(body),
     core,
@@ -500,6 +551,11 @@ const RU_DEFINITION_TAIL_RE =
  *  what makes trimming safe: the summary's job is to answer "what does this
  *  do" at a glance, not to be complete. */
 export function coreSummary(view: PerkDescriptionView, maxChars = 150): string | null {
+  if (view.coreFinal) {
+    // Past the Secret marker, which is a badge rather than the effect.
+    const written = view.core.find((b) => b !== SECRET_BULLET);
+    if (written) return written;
+  }
   const filled = view.core.filter((b) => b.trim().length > 0 && !LEAD_IN_RE.test(b.trim()));
   /* The first bullet that says what the thing DOES, not simply the first.
    *
@@ -536,7 +592,14 @@ export function coreSummary(view: PerkDescriptionView, maxChars = 150): string |
    * is mechanical, so prose-only descriptions are left alone rather than
    * emptied. */
   const firstReal = split.findIndex(isMechanical);
-  const parts = firstReal > 0 ? split.slice(firstReal) : split;
+  /* Long enough to actually be flavour. The splitter breaks before any
+   * capitalised term, so a perfectly ordinary opening — "Плотность Тёмного
+   * тумана" — arrives as a one-word part that fails isMechanical, and
+   * dropping it silently deleted the subject of the sentence. Lore is a
+   * clause, not a word. */
+  const droppedIsLore =
+    firstReal > 0 && split.slice(0, firstReal).join(" ").trim().length >= MIN_CLAUSE;
+  const parts = droppedIsLore ? split.slice(firstReal) : split;
   let clause = "";
   for (const part of parts) {
     const next = clause ? `${clause} ${part}` : part;

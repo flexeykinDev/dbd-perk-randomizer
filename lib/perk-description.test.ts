@@ -26,6 +26,7 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { coreSummary, getPerkDescription } from "./perk-description";
+import coreOverrides from "../data/core-effect-overrides.json";
 import type { Lang } from "./i18n";
 import type { LocalizedDescription } from "./types";
 
@@ -488,4 +489,55 @@ test("English summaries are not truncated more often than Russian ones", () => {
   const [en, ru] = counts;
   assert.ok(en <= 25, `${en} English summaries end mid-thought`);
   assert.ok(ru <= 20, `${ru} Russian summaries end mid-thought`);
+});
+
+/* data/core-effect-overrides.json — hand-written Core Effect lines.
+ *
+ * Hand-maintained content next to a scheduled scraper is exactly the setup
+ * that rots: a renamed slug leaves the override pointing at nothing, and the
+ * piece silently goes back to whatever prose it had before. Same guard the
+ * build presets get.
+ */
+test("every Core Effect override points at a piece that still exists", () => {
+  const keys = Object.keys(coreOverrides).filter((k) => !k.startsWith("_"));
+  assert.ok(keys.length > 0, "the override file is empty");
+  const shipped = new Set(
+    [...items, ...addons, ...offerings].map((p) => `${(p as { kind?: string }).kind}:${p.slug}`),
+  );
+  const orphans = keys.filter((k) => !shipped.has(k));
+  assert.deepEqual(orphans, [], `overrides point at pieces that no longer exist: ${orphans}`);
+});
+
+test("an override is shown exactly as written", () => {
+  /* Deliberately NOT re-parsed. The clause splitter breaks before any
+   * capitalised term, so running it over curated text cut "Плотность" off
+   * the front of "Плотность Тёмного тумана +25 %" — the subject of the
+   * sentence, deleted. Curated text is already the answer. */
+  const reagent = offerings.find((p) => p.slug === "faint-reagent");
+  assert.ok(reagent, "fixture drifted");
+  for (const lang of ["ru", "en"] as const) {
+    const expected = (coreOverrides as unknown as Record<string, Record<string, string>>)[
+      "offering:faint-reagent"
+    ][lang];
+    assert.equal(coreSummary(getPerkDescription(reagent, lang)), expected);
+  }
+});
+
+test("overrides state a mechanic, which is the whole point of having them", () => {
+  const keys = Object.keys(coreOverrides).filter((k) => !k.startsWith("_"));
+  const silent: string[] = [];
+  for (const key of keys) {
+    const [kind, slug] = key.split(":");
+    const piece = [...items, ...addons, ...offerings].find(
+      (p) => p.slug === slug && (p as { kind?: string }).kind === kind,
+    );
+    if (!piece) continue;
+    for (const lang of ["ru", "en"] as const) {
+      const s = coreSummary(getPerkDescription(piece, lang));
+      // A few mechanics genuinely carry no number (Black Ward, the Shrouds);
+      // what must never happen is an override that reads like lore.
+      if (!s || /вики|Bloodweb|кровавой паутине|сундук/i.test(s)) silent.push(`${key} [${lang}]: ${s}`);
+    }
+  }
+  assert.deepEqual(silent, [], `overrides that still describe the Bloodweb: ${silent}`);
 });
