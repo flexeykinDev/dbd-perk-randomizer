@@ -44,17 +44,7 @@ jobs:
             echo "For the loadout data specifically, also spot-check that any *new* killer's add-ons resolved to the right character name (see \`resolvePowerToCharacter\` in \`scripts/scrape-loadout.ts\`) — it falls back to \`.All\` and logs a warning if it can't, so check the workflow log for \`Could not resolve a killer for power heading\` too. A new killer should also pick up a Power icon automatically (\`scrapeKillerPowerIcons\`) — check the log for \`No Power icon found on <killer>'s wiki page\` if one's missing from \`data/killer-power-icons.json\`."
           } > pr-body.md
 
-      - name: Check for changes
-        id: git-check
-        run: |
-          if git diff --quiet; then
-            echo "changed=false" >> $GITHUB_OUTPUT
-          else
-            echo "changed=true" >> $GITHUB_OUTPUT
-          fi
-
       - name: Open PR with updated perk + loadout data
-        if: steps.git-check.outputs.changed == 'true'
         id: cpr
         uses: peter-evans/create-pull-request@v6
         with:
@@ -86,8 +76,8 @@ jobs:
             public/characters/**
             public/loadout/**
 
-      - name: Auto-merge (only when nothing pre-existing changed)
-        if: steps.git-check.outputs.changed == 'true' && steps.cpr.outputs.pull-request-number != '' && steps.classify.outputs.safe == 'true'
+      - name: Auto-merge (only when PR created & nothing pre-existing changed)
+        if: steps.cpr.outputs.pull-request-operation == 'created' && steps.classify.outputs.safe == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
