@@ -51,6 +51,7 @@ jobs:
           title: "Update DBD perk and loadout data"
           body-path: pr-body.md
           branch: auto/update-perks
+          skip-when-empty: true
           add-paths: |
             data/perks.json
             data/meta.json
