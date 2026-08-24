@@ -536,7 +536,10 @@ test("overrides state a mechanic, which is the whole point of having them", () =
       const s = coreSummary(getPerkDescription(piece, lang));
       // A few mechanics genuinely carry no number (Black Ward, the Shrouds);
       // what must never happen is an override that reads like lore.
-      if (!s || /вики|Bloodweb|кровавой паутине|сундук/i.test(s)) silent.push(`${key} [${lang}]: ${s}`);
+      // Where-to-find-it prose, not the word "сундук" on its own: the keys
+      // legitimately say "Открывает запертые сундуки", which is the mechanic.
+      const bloodweb = /кровавой паутине|очков крови|можно найти в сундук|found in (?:a )?[Cc]hest|Bloodweb/;
+      if (!s || bloodweb.test(s)) silent.push(`${key} [${lang}]: ${s}`);
     }
   }
   assert.deepEqual(silent, [], `overrides that still describe the Bloodweb: ${silent}`);
@@ -554,10 +557,58 @@ test("every override line is a mechanic, not a paragraph", () => {
   for (const [key, value] of entries) {
     for (const [lang, line] of Object.entries(value as Record<string, string>)) {
       if (lang.startsWith("_")) continue;
-      if (line.length > 160) bad.push(`${key} [${lang}] runs to ${line.length} chars`);
+      // Matches MAX_JOINED in perk-description.ts — a Core Effect line
+      // should never be longer than what the parser would assemble itself.
+      if (line.length > 200) bad.push(`${key} [${lang}] runs to ${line.length} chars`);
       if (line.endsWith("\u2026")) bad.push(`${key} [${lang}] ends mid-thought`);
       if (/[:—-]\s*$/.test(line)) bad.push(`${key} [${lang}] is a lead-in`);
     }
   }
   assert.deepEqual(bad, [], bad.join("\n"));
+});
+
+test("an add-on that does two things says both, downside included", () => {
+  /* A pick-one summary showed whichever bullet ranked highest, so an add-on
+   * with a cost read as pure upside: the Trapper's Sack said traps start in
+   * your inventory and not that placed traps can only be reset, and the
+   * Unique Wedding Ring said -100 % Obsession chance and not that it reveals
+   * your Aura to the Obsession. Losing a downside is the worst way for this
+   * to be wrong — it makes the card actively misleading rather than merely
+   * thin. */
+  const cases: Array<[string, string, RegExp[]]> = [
+    ["trapper-sack", "en", [/inventory/i, /only reset|no longer pick up/i]],
+    ["lab-photo", "en", [/break/i, /no longer vault/i]],
+    ["never-sleep-pills", "en", [/\+\*\*10 seconds\*\*/, /4\.6/]],
+    ["rusty-shackles", "en", [/tripped/i, /Mud Phantasms/i]],
+    ["unique-wedding-ring", "ru", [/ауры друг друга/i, /100 %/]],
+  ];
+  for (const [slug, lang, expected] of cases) {
+    const piece = addons.find((p) => p.slug === slug);
+    assert.ok(piece, `fixture drifted: ${slug}`);
+    const summary = coreSummary(getPerkDescription(piece, lang as Lang));
+    assert.ok(summary, `${slug}: no summary`);
+    for (const re of expected) {
+      assert.match(summary, re, `${slug} [${lang}] dropped an effect: ${summary}`);
+    }
+  }
+});
+
+test("every item states its numbers, in both languages", () => {
+  /* Items are the 24 pieces a player picks deliberately, so "what does this
+   * one actually do" is the whole question. The RU wiki answered it with
+   * Bloodweb prices and usage notes — the Camping Aid Kit's Core Effect read
+   * "При самолечении данный предмет нельзя использовать сидя или в
+   * движении", which is a restriction on how you hold it and says nothing
+   * about healing anyone. Every item is hand-written now, so this asserts
+   * the floor: a value, in both languages. */
+  const silent: string[] = [];
+  for (const item of items) {
+    for (const lang of ["ru", "en"] as const) {
+      const summary = coreSummary(getPerkDescription(item, lang));
+      if (!summary || !/\*\*/.test(summary)) {
+        silent.push(`${item.name?.[lang] ?? item.slug} [${lang}]: ${summary}`);
+      }
+    }
+  }
+  assert.deepEqual(silent, [], `items with no value in their Core Effect:\n${silent.join("\n")}`);
 });

@@ -540,7 +540,7 @@ const LEAD_IN_RE = /[:—-]\s*$/;
  * проверки реакции не появляются"), and excluding it on the same suspicion
  * left almost every Russian add-on still showing its flavour. */
 const EFFECT_OPENER_RE =
-  /^(?:Increases|Reduces|Grants|Causes|Extends|Modifies|Unlocks|Suppresses|Disables|Switches|Prevents|Allows|Applies|Removes|Adds|Nullifies|Kills|While|When|After|Whenever|Press|Hold|Each time|При|Когда|После|Нажмите|Удерживайте|Каждый|Успешн|Увеличивает|Уменьшает|Снижает|Повышает|Сокращает|Расширяет|Открывает|Позволяет|Да[её]т|Дарует|Отмен[яе]|Убирает|Скрывает|Продлевает|Ускоряет|Замедляет|Заменяет|Применяет|Накладывает)/;
+  /^(?:Increases|Reduces|Grants|Causes|Extends|Modifies|Unlocks|Suppresses|Disables|Switches|Prevents|Allows|Applies|Removes|Adds|Nullifies|Kills|While|When|After|Whenever|Press|Hold|Each time|You can no longer|You are no longer|При|Когда|После|Нажмите|Удерживайте|Каждый|Вы больше не|Вы не можете|Установленные|Нельзя|Успешн|Увеличивает|Уменьшает|Снижает|Повышает|Сокращает|Расширяет|Открывает|Позволяет|Да[её]т|Дарует|Отмен[яе]|Убирает|Скрывает|Продлевает|Ускоряет|Замедляет|Заменяет|Применяет|Накладывает)/;
 
 /* A wiki habit that turns a summary into a paragraph: having named a status,
  * the RU text goes on to explain it — "…ещё на 2% «Замедление» снижает
@@ -591,7 +591,55 @@ function tighten(text: string): string {
     .trim();
 }
 
-export function coreSummary(view: PerkDescriptionView, maxChars = 150): string | null {
+
+/** Appends the piece's remaining effects to a summary that has room. */
+function joinFurtherEffects(
+  summary: string,
+  bullets: string[],
+  used: string,
+  maxChars: number,
+): string {
+  let out = summary;
+  /* Every other bullet, in document order — not just the ones after the
+   * ranked pick. The Unique Wedding Ring's -100 % ranks highest and sits
+   * LAST, so joining forward from it reached nothing and the two Aura
+   * effects above it stayed invisible. */
+  for (const bullet of bullets) {
+    if (bullet === used) continue;
+    const next = tighten(bullet).trim();
+    if (!next || !statesAnEffect(next)) continue;
+    // Already said, in the clause taken from the first bullet.
+    if (out.includes(next)) continue;
+    if (out.length + 1 + next.length > maxChars) break;
+    out = `${out.replace(/[.\s]*$/, ".")} ${next}`;
+  }
+  return out;
+}
+
+/** A bullet that plainly states an effect: it carries a value, a highlighted
+ *  term, or opens the way the wiki opens an effect. Used to decide what may
+ *  be appended to a summary, so a downside cannot be quietly dropped. */
+function statesAnEffect(text: string): boolean {
+  const t = text.trim();
+  return HIGHLIGHTED_VALUE_RE.test(t) || t.includes("**") || EFFECT_OPENER_RE.test(t);
+}
+
+/* Add-ons that do two things were only ever showing one of them.
+ *
+ * The Unique Wedding Ring reveals the Obsession's Aura to you, reveals yours
+ * to them, AND removes your chance of being the Obsession — four bullets on
+ * the wiki, of which a pick-one summary showed exactly one. Worse, the one
+ * it showed was whichever ranked highest, so a downside like "You can no
+ * longer vault Pallets" or "Placed Traps can only be reset" simply vanished:
+ * the summary read as pure upside for an add-on that has a cost.
+ *
+ * So the effects are joined rather than chosen between, up to the budget.
+ * Only bullets that plainly state an effect are appended — the wiki's own
+ * asides ("can be combined with any other Mix Tape Add-on") are not effects
+ * and were never the thing anyone opened the card to read. */
+const MAX_JOINED = 200;
+
+export function coreSummary(view: PerkDescriptionView, maxChars = MAX_JOINED): string | null {
   if (view.coreFinal) {
     // Past the Secret marker, which is a badge rather than the effect.
     const written = view.core.find((b) => b !== SECRET_BULLET);
@@ -675,7 +723,9 @@ export function coreSummary(view: PerkDescriptionView, maxChars = 150): string |
     if (clause.trim().length >= MIN_CLAUSE) break;
   }
   clause = clause.trim();
-  if (clause.length <= maxChars) return clause || bullet.slice(0, maxChars);
+  if (clause.length <= maxChars) {
+    return joinFurtherEffects(clause || bullet.slice(0, maxChars), filled, first, maxChars);
+  }
   /* Over budget, but often only because of a preamble. The EN wiki front-
    * loads a condition before the colon — "While repairing a Generator with a
    * Toolbox, you benefit from the following effect: …" — which is the same

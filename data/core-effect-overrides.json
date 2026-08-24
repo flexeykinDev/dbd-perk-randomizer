@@ -1,12 +1,12 @@
 {
   "_comment": "Hand-authored Core Effect lines for loadout pieces, keyed \"<kind>:<slug>\". EDIT THIS FILE DIRECTLY — unlike data/items.json and friends, the scrapers never write here. Used only where the wiki's own prose cannot be summarised into a mechanic by lib/perk-description.ts, which is almost always one of two cases: the RU wiki describes an offering qualitatively (\"слегка сгущает\") while the EN entry for the same piece carries the number, or the RU text is generic filler about the Bloodweb instead of the effect. The rule for an entry here is the same rule the parser tries to follow — the action, the thing it acts on, and the values, with `**` around anything numeric — and nothing else: no lore, no where-to-find-it, no status glossary. It replaces `core` only; Full Text still shows the wiki verbatim, so nothing is hidden. lib/perk-description.test.ts resolves every key against the shipped data, so a renamed slug fails CI instead of quietly orphaning its override.",
   "item:sport-flashlight": {
-    "en": "Lights for up to **8 seconds**. Aim accuracy +**20 %**, Depletion rate -**11 %**.",
-    "ru": "Светит до **8 сек.** Точность наведения +**20 %**, расход заряда -**11 %**."
+    "ru": "Светит до **8 сек.** Точность наведения +**20 %**, расход заряда -**11 %**.",
+    "en": "Lights for up to **8 seconds**. Aim accuracy +**20 %**, Depletion rate -**11 %**."
   },
   "item:festive-toolbox": {
-    "en": "Repair speed +**50 %**. Unlocks Sabotage, Sabotage speed +**50 %**. **32** Charges.",
-    "ru": "Скорость ремонта +**50 %**. Открывает саботаж, скорость саботажа +**50 %**. Зарядов: **32**."
+    "ru": "Скорость ремонта +**50 %**. Открывает саботаж, скорость саботажа +**50 %**. Зарядов: **32**.",
+    "en": "Repair speed +**50 %**. Unlocks Sabotage, Sabotage speed +**50 %**. **32** Charges."
   },
   "offering:faint-reagent": {
     "en": "Dark Mist thickness +**25 %**.",
@@ -54,7 +54,8 @@
     "ru": "Улучшения не расходуются по окончании матча."
   },
   "addon:unique-wedding-ring": {
-    "ru": "Шанс стать первой Одержимостью -**100 %**."
+    "en": "You and the Obsession permanently see each other's Auras. Chance of becoming the initial Obsession -**100 %**.",
+    "ru": "Вы и Одержимость постоянно видите ауры друг друга. Шанс стать первой Одержимостью -**100 %**."
   },
   "addon:sharpened-flint": {
     "ru": "Карта отслеживает тотемы и показывает их ауры."
@@ -66,10 +67,10 @@
     "ru": "Выживший, освободившийся из медвежьего капкана, переходит в предсмертное состояние."
   },
   "addon:trapper-sack": {
-    "ru": "Все медвежьи капканы находятся в инвентаре с начала матча."
+    "ru": "Все медвежьи капканы в инвентаре с начала матча. Установленные капканы нельзя подобрать — только перезарядить."
   },
   "addon:rusty-shackles": {
-    "ru": "Выжившие не получают уведомления о срабатывании ловушки-фантома."
+    "ru": "Выжившие не получают уведомления о срабатывании ловушки-фантома. Грязевые фантомы не появляются."
   },
   "addon:chipped-monocle": {
     "ru": "Показывает точку приземления удара."
@@ -117,7 +118,7 @@
     "ru": "Добавляет музыкальный слой в радиус террора."
   },
   "addon:never-sleep-pills": {
-    "ru": "Длительность «Дикого бешенства» +**10 сек.**"
+    "ru": "Длительность «Дикого бешенства» +**10 сек.** Начальная скорость в бешенстве снижена до **4.6 м/с**."
   },
   "addon:joey-s-mix-tape": {
     "ru": "После перевязки выживший получает «Кровотечение» до полного излечения."
@@ -201,7 +202,7 @@
     "ru": "Накладывает «Глубокую рану»."
   },
   "addon:discarded-milk-carton": {
-    "ru": "Сила отскока снаряда UVX +**8 %**."
+    "ru": "Сила отскока снаряда UVX +**8 %**, трение -**15 %**."
   },
   "addon:iridescent-ring-of-vlad": {
     "ru": "Столпы пламени наводятся на ближайших выживших."
@@ -210,13 +211,13 @@
     "ru": "Раненные ядовитым прыжком выжившие получают «Кровотечение» до полного излечения."
   },
   "addon:lab-photo": {
-    "ru": "В прыжке вы ломаете разрушаемые стены и доски при столкновении."
+    "ru": "В прыжке вы ломаете разрушаемые стены и доски при столкновении, но больше не можете перепрыгивать через доски."
   },
   "addon:the-hound-soot": {
     "ru": "В невидимости лужи крови видны ярко-красными."
   },
   "addon:bone-clapper": {
-    "ru": "Звук колокола искажается и звучит хаотично."
+    "ru": "Выжившие не могут определить направление и расстояние до колокола. Звук колокола искажается."
   },
   "addon:furin": {
     "ru": "Все выжившие слышат звук фазового перехода."
@@ -237,5 +238,93 @@
   "offering:shroud-of-separation": {
     "en": "All Survivors start the Trial separated from one another.",
     "ru": "Все выжившие начинают матч порознь."
+  },
+  "item:flashlight": {
+    "ru": "Светит до **8 сек.**",
+    "en": "Lights for up to **8 seconds**."
+  },
+  "item:utility-flashlight": {
+    "ru": "Светит до **12 сек.** Яркость луча +**30 %**, длительность «Слепоты» +**15 %**, точность наведения -**20 %**.",
+    "en": "Lights for up to **12 seconds**. Beam brightness +**30 %**, Blindness duration +**15 %**, Aim accuracy -**20 %**."
+  },
+  "item:apprentice-s-fog-vial": {
+    "ru": "Облако тумана до **8 м**: разрастается за **2 сек.**, держится **8 сек.** Непрозрачность **33 %**, скрывает ауры и следы. Зарядов: **4**.",
+    "en": "Fog Cloud up to **8 metres**: expands over **2 seconds**, lasts **8 seconds**. Opacity **33 %**, suppresses Auras and Scratch Marks. **4** Charges."
+  },
+  "item:artisan-s-fog-vial": {
+    "ru": "Облако тумана до **8 м**: разрастается за **1.5 сек.**, держится **10 сек.** Непрозрачность **33 %**, скрывает ауры и следы. Зарядов: **4**.",
+    "en": "Fog Cloud up to **8 metres**: expands over **1.5 seconds**, lasts **10 seconds**. Opacity **33 %**, suppresses Auras and Scratch Marks. **4** Charges."
+  },
+  "item:vigo-s-fog-vial": {
+    "ru": "Облако тумана до **8 м**: разрастается за **1.2 сек.**, держится **12 сек.** Непрозрачность **33 %**, скрывает ауры и следы. Зарядов: **4**.",
+    "en": "Fog Cloud up to **8 metres**: expands over **1.2 seconds**, lasts **12 seconds**. Opacity **33 %**, suppresses Auras and Scratch Marks. **4** Charges."
+  },
+  "item:broken-key": {
+    "ru": "Показывает ауры выживших в радиусе **48 м** на **8 сек.** Зарядов: **6**, по одному за использование.",
+    "en": "Reveals the Auras of Survivors within **48 metres** for **8 seconds**. **6** Charges, one per use."
+  },
+  "item:dull-key": {
+    "ru": "Показывает ауры выживших в радиусе **56 м** на **9 сек.** Открывает запертые сундуки. Зарядов: **5**.",
+    "en": "Reveals the Auras of Survivors within **56 metres** for **9 seconds**. Opens locked Chests. **5** Charges."
+  },
+  "item:skeleton-key": {
+    "ru": "Показывает ауры выживших в радиусе **64 м** на **10 сек.** Открывает запертые сундуки. Зарядов: **6**.",
+    "en": "Reveals the Auras of Survivors within **64 metres** for **10 seconds**. Opens locked Chests. **6** Charges."
+  },
+  "item:cryptic-map": {
+    "ru": "Ауры досок и окон в радиусе **24 м** на **10 сек.** Вспомогательное действие ставит луч света на **16 сек.**: генераторы в **32 м** видны всем. Зарядов: **4**.",
+    "en": "Auras of Pallets and Windows within **24 metres** for **10 seconds**. Secondary Action plants a Beam of Light for **16 seconds**, revealing Generators within **32 metres**. **4** Charges."
+  },
+  "item:scribbled-map": {
+    "ru": "Показывает ауры досок и окон в радиусе **32 м** на **12 сек.** Вспомогательное действие ставит луч света для всех выживших. Зарядов: **5**.",
+    "en": "Reveals the Auras of Pallets and Windows within **32 metres** for **12 seconds**. Secondary Action plants a Beam of Light for all Survivors. **5** Charges."
+  },
+  "item:annotated-map": {
+    "ru": "Показывает ауры досок и окон в радиусе **40 м** на **14 сек.** Вспомогательное действие ставит луч света для всех выживших. Зарядов: **6**.",
+    "en": "Reveals the Auras of Pallets and Windows within **40 metres** for **14 seconds**. Secondary Action plants a Beam of Light for all Survivors. **6** Charges."
+  },
+  "item:bloodsense-map": {
+    "ru": "Показывает ауры досок, окон и раненых выживших в радиусе **48 м** на **14 сек.** Лужи крови видны ярче. Зарядов: **8**.",
+    "en": "Reveals the Auras of Pallets, Windows and injured Survivors within **48 metres** for **14 seconds**. Pools of Blood stand out. **8** Charges."
+  },
+  "item:camping-aid-kit": {
+    "ru": "Лечение союзника +**35 %**. Открывает самолечение: скорость -**33 %**, расход предмета -**33 %**. Зарядов: **24**.",
+    "en": "Altruistic Healing speed +**35 %**. Unlocks Self-Heal: speed -**33 %**, Item efficiency -**33 %**. **24** Charges."
+  },
+  "item:first-aid-kit": {
+    "ru": "Лечение союзника +**40 %**. Открывает самолечение: скорость -**33 %**, расход предмета -**33 %**. Зарядов: **24**.",
+    "en": "Altruistic Healing speed +**40 %**. Unlocks Self-Heal: speed -**33 %**, Item efficiency -**33 %**. **24** Charges."
+  },
+  "item:emergency-med-kit": {
+    "ru": "Лечение союзника +**45 %**. Открывает самолечение: скорость -**33 %**, расход предмета -**33 %**. Зарядов: **24**.",
+    "en": "Altruistic Healing speed +**45 %**. Unlocks Self-Heal: speed -**33 %**, Item efficiency -**33 %**. **24** Charges."
+  },
+  "item:ranger-med-kit": {
+    "ru": "Лечение союзника +**50 %**. Открывает самолечение: скорость -**33 %**, расход предмета -**33 %**. Зарядов: **24**.",
+    "en": "Altruistic Healing speed +**50 %**. Unlocks Self-Heal: speed -**33 %**, Item efficiency -**33 %**. **24** Charges."
+  },
+  "item:worn-out-tools": {
+    "ru": "Скорость ремонта +**50 %**, зона «Хорошо» в проверках реакции -**10 %**. Открывает саботаж. Зарядов: **16**.",
+    "en": "Repair speed +**50 %**, Good Skill Check zone -**10 %**. Unlocks Sabotage. **16** Charges."
+  },
+  "item:toolbox": {
+    "ru": "Скорость ремонта +**50 %**. Открывает саботаж, скорость саботажа +**15 %**. Зарядов: **20**.",
+    "en": "Repair speed +**50 %**. Unlocks Sabotage, Sabotage speed +**15 %**. **20** Charges."
+  },
+  "item:commodious-toolbox": {
+    "ru": "Скорость ремонта +**50 %**. Открывает саботаж, скорость саботажа +**50 %**. Зарядов: **32**.",
+    "en": "Repair speed +**50 %**. Unlocks Sabotage, Sabotage speed +**50 %**. **32** Charges."
+  },
+  "item:mechanic-s-toolbox": {
+    "ru": "Скорость ремонта +**75 %**. Открывает саботаж, скорость саботажа +**25 %**. Зарядов: **16**.",
+    "en": "Repair speed +**75 %**. Unlocks Sabotage, Sabotage speed +**25 %**. **16** Charges."
+  },
+  "item:alex-s-toolbox": {
+    "ru": "Скорость ремонта +**10 %**. Открывает саботаж, скорость саботажа +**100 %**. Зарядов: **18**.",
+    "en": "Repair speed +**10 %**. Unlocks Sabotage, Sabotage speed +**100 %**. **18** Charges."
+  },
+  "item:engineer-s-toolbox": {
+    "ru": "Скорость ремонта +**100 %**. Открывает саботаж, скорость саботажа +**10 %**. Зарядов: **16**.",
+    "en": "Repair speed +**100 %**. Unlocks Sabotage, Sabotage speed +**10 %**. **16** Charges."
   }
 }
