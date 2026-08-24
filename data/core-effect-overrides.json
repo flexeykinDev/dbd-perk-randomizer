@@ -217,7 +217,8 @@
     "ru": "В невидимости лужи крови видны ярко-красными."
   },
   "addon:bone-clapper": {
-    "ru": "Выжившие не могут определить направление и расстояние до колокола. Звук колокола искажается."
+    "ru": "Выжившие не могут определить направление и расстояние до колокола. Звук колокола искажается.",
+    "en": "Survivors cannot discern the distance or direction of the Wailing Bell. Its sound echoes and warps."
   },
   "addon:furin": {
     "ru": "Все выжившие слышат звук фазового перехода."
@@ -326,5 +327,87 @@
   "item:engineer-s-toolbox": {
     "ru": "Скорость ремонта +**100 %**. Открывает саботаж, скорость саботажа +**10 %**. Зарядов: **16**.",
     "en": "Repair speed +**100 %**. Unlocks Sabotage, Sabotage speed +**10 %**. **16** Charges."
+  },
+  "addon:makeshift-wrap": {
+    "ru": "Вы больше не попадаете в собственные медвежьи капканы — они обезвреживаются сами.",
+    "en": "You are no longer caught in your own Bear Traps; they disarm themselves instead."
+  },
+  "addon:class-photo": {
+    "ru": "Позволяет наводить «Проекцию сна» на рубильники выходных ворот. Открытие ворот выжившим вызывает «Инстинкт убийцы»."
+  },
+  "addon:shotgun-speakers": {
+    "ru": "Выжившие с когтем больше не слышат предупреждение перед проверкой реакции.",
+    "en": "Claw-Trapped Survivors no longer receive a warning sound before Skill Checks."
+  },
+  "addon:video-tape": {
+    "ru": "Все выжившие начинают матч с обратным медвежьим капканом на голове.",
+    "en": "All Survivors start the Trial with a Reverse Bear Trap attached."
+  },
+  "addon:eleven-s-soda": {
+    "ru": "Пока вы в Изнанке, ауры ремонтируемых генераторов подсвечены жёлтым.",
+    "en": "Auras of Generators being repaired are highlighted yellow while traversing the Upside Down."
+  },
+  "addon:caffeine-tablets": {
+    "ru": "Ауры запертых шкафчиков подсвечены жёлтым при зарядке «Сумрака» и телепортации.",
+    "en": "Auras of locked Lockers are highlighted yellow while charging The Gloaming or teleporting."
+  },
+  "addon:follower-s-cowl": {
+    "ru": "Возвращение в Остаток днём вызывает «Инстинкт убийцы».",
+    "en": "Returning to the Remnant triggers Killer Instinct during Daytime."
+  },
+  "addon:mortar-and-pestle": {
+    "ru": "Вы выходите из Остатка в ту сторону, куда смотрите, а не куда смотрели при установке.",
+    "en": "You emerge from the Remnant facing your current direction, not the one you placed it in."
+  },
+  "addon:memento-blades": {
+    "ru": "Показывает прицел при замахе ножом.",
+    "en": "Displays a Reticule while aiming Blades."
+  },
+  "addon:queen-s-sceptre": {
+    "ru": "Успешный удар кишечным хлыстом оставляет на месте выжившего кровососущую железу."
+  },
+  "addon:incensed-ointment": {
+    "ru": "Поглощение Скверны заставляет выживших в радиусе террора закричать и раскрыть себя.",
+    "en": "Ingesting Corruption makes all Survivors in your Terror Radius scream and reveal their locations."
+  },
+  "addon:uchiwa": {
+    "ru": "Мгновенно перезаряжает «Наваждение Ямаока» после оглушения доской.",
+    "en": "Instantly recharges Yamaoka's Haunting after being stunned by a Pallet."
+  },
+  "addon:wakizashi-saya": {
+    "ru": "Кнопка активной способности во время фазового перехода мгновенно возвращает вас к оболочке."
+  },
+  "addon:kintsugi-teacup": {
+    "ru": "Мгновенно перезаряжает «Наваждение Ямаока» после слома доски или разрушаемой стены.",
+    "en": "Instantly recharges Yamaoka's Haunting after breaking a Breakable Wall or a Pallet."
+  },
+  "addon:olsen-s-wallet": {
+    "ru": "Мгновенно перезаряжает «Ночной покров» после слома доски или разрушаемой стены.",
+    "en": "Instantly recharges Night Shroud after breaking a Breakable Wall or a Pallet."
+  },
+  "addon:tablet-of-the-oppressor": {
+    "ru": "Во время «Обрядов осуждения» даёт «Незаметность»."
+  },
+  "addon:bffs": {
+    "ru": "Попадания в «Диком бешенстве» дают жетоны: 2-е — **2**, 3-е — **3**. При **15** жетонах и запитанных воротах вне бешенства даёт «Спешку» +**6 %**.",
+    "en": "Chained Feral Slashes grant Tokens: **2** for the second, **3** for the third. At **15** Tokens with the Exit Gates powered, grants +**6 %** Haste outside Feral Frenzy."
+  },
+  "addon:party-bottle": {
+    "ru": "Бутылки дополнительно разбрасывают конфетти. Прямое попадание прерывает действие выжившего и даёт **100** очков крови."
+  },
+  "addon:rotten-pumpkin": {
+    "ru": "Портал, из которого вы телепортируетесь, закрывается сам. За перемещения +**200** очков крови."
+  },
+  "addon:device-of-undisclosed-origin": {
+    "ru": "Выжившие, видящие ауру галлюцинации, получают «Забывчивость».",
+    "en": "Survivors within range of a Hallucination's Aura suffer the **Oblivious Status Effect**."
+  },
+  "addon:the-serpent-soot": {
+    "ru": "Слом досок и разрушаемых стен или повреждение генератора выводит вас из невидимости.",
+    "en": "Breaking Walls or Pallets, or damaging a Generator, automatically uncloaks you."
+  },
+  "addon:coxcombed-clapper": {
+    "ru": "Плачущий колокол становится полностью беззвучным.",
+    "en": "Silences the Wailing Bell."
   }
 }

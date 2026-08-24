@@ -538,7 +538,10 @@ test("overrides state a mechanic, which is the whole point of having them", () =
       // what must never happen is an override that reads like lore.
       // Where-to-find-it prose, not the word "сундук" on its own: the keys
       // legitimately say "Открывает запертые сундуки", which is the mechanic.
-      const bloodweb = /кровавой паутине|очков крови|можно найти в сундук|found in (?:a )?[Cc]hest|Bloodweb/;
+      // Narrow on purpose. "очков крови" alone is not Bloodweb prose --
+      // Party Bottle and Rotten Pumpkin GRANT Bloodpoints, which is their
+      // effect. What this is looking for is where-to-buy-it text.
+      const bloodweb = /кровавой паутине|можно найти в сундук|found in (?:a )?[Cc]hest|Bloodweb/;
       if (!s || bloodweb.test(s)) silent.push(`${key} [${lang}]: ${s}`);
     }
   }
