@@ -24,15 +24,26 @@ export const PRESENTATION_LABEL: Record<Presentation, { ru: string; en: string }
 export const PRESENTATION_HINT: Record<Presentation, { ru: string; en: string }> = {
   classic: { ru: "Карточки как сейчас", en: "Cards, as now" },
   ritual: { ru: "Вихрь Сущности — только ПК", en: "The Entity's vortex — PC only" },
-  casino: { ru: "Барабаны как в автомате", en: "Spinning reels" },
+  casino: { ru: "Барабаны автомата — только ПК", en: "Slot reels — PC only" },
 };
 
-/** Ritual runs a WebGL loop and reads best on a wide screen; it is offered
- *  only where both are true. Anything already saved still resolves — a
- *  desktop choice must not silently become Classic on the owner's phone and
- *  then get written back. */
+/* Both of these draw to a canvas sized for a wide screen, and neither
+ * survives a phone.
+ *
+ * Casino was added after this gate was written and never added to it, so it
+ * was offered on phones and rendered there: measured at 430px, the stage came
+ * out 382x167 with four reels about 85px wide — roughly 28px per symbol —
+ * and every copy/pin/reroll control overflowed the stage by 14px and was
+ * clipped. Ritual was excluded from the start for the same reason.
+ *
+ * A set rather than another `p !== …` so the next presentation has to make a
+ * decision here instead of inheriting "works everywhere" by omission. */
+const DESKTOP_ONLY: ReadonlySet<Presentation> = new Set<Presentation>(["ritual", "casino"]);
+
+/** Anything already saved still resolves — a desktop choice must not silently
+ *  become Classic on the owner's phone and then get written back. */
 export function isAvailable(p: Presentation, isDesktop: boolean): boolean {
-  return p !== "ritual" || isDesktop;
+  return !DESKTOP_ONLY.has(p) || isDesktop;
 }
 
 function parse(raw: string | null): Presentation | null {

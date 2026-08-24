@@ -300,25 +300,30 @@ test("a dismissed share sheet is not reported as a success", async ({ page }) =>
   expect([...seen], "a dismissed share sheet should say nothing at all").toEqual([]);
 });
 
-test("Ritual is offered only where it can actually run", async ({ page }) => {
-  // It drives a WebGL loop and deals four cards across a row; a phone pays
-  // the battery for something it has no room to show. The picker still lists
-  // it — hiding the option entirely would leave a saved desktop choice
-  // looking like it had been forgotten — but it cannot be selected here.
+test("the canvas presentations are offered only where they can run", async ({ page }) => {
+  /* Both drive a canvas sized for a wide screen and ask for a keypress; a
+   * phone pays the battery for something it has no room to show. The picker
+   * still LISTS them — hiding the options entirely would leave a saved
+   * desktop choice looking forgotten — but neither can be selected here.
+   *
+   * Slots used to be selectable, because it was added after the gate was
+   * written and never added to it, and this test asserted that as intended.
+   * What it actually produced at 430px: a 382x167 stage, reels ~85px wide at
+   * roughly 28px per symbol, and every copy/pin/reroll control overflowing
+   * the stage by 14px and clipped. Checking only for sideways page overflow
+   * missed all of it. */
   await page.goto("/?role=survivor");
   await expect(page.locator("[data-perk-card]")).toHaveCount(4);
-
   await page.getByTestId("presentation-picker").click();
-  const ritual = page.getByRole("menuitemradio", { name: /Ритуал/ });
-  await expect(ritual).toBeVisible();
-  await expect(ritual).toBeDisabled();
 
-  // Slots has no such constraint — and must not blow the page out sideways
-  // the way a fixed-size canvas would.
-  await page.getByRole("menuitemradio", { name: /Слоты/ }).click();
-  await expect(page.getByTestId("slots-stage")).toBeVisible();
-  expect(
-    await horizontalOverflow(page),
-    "the Slots stage makes the page scroll sideways",
-  ).toBeLessThanOrEqual(2);
+  for (const name of [/Ритуал/, /Слоты/]) {
+    const option = page.getByRole("menuitemradio", { name });
+    await expect(option).toBeVisible();
+    await expect(option, `${String(name)} is selectable on a phone`).toBeDisabled();
+  }
+
+  // And the fallback is a working board, not an empty stage.
+  await page.keyboard.press("Escape");
+  await expect(page.locator("[data-perk-card]")).toHaveCount(4);
+  expect(await horizontalOverflow(page)).toBeLessThanOrEqual(2);
 });

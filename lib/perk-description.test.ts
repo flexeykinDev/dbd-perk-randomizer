@@ -426,3 +426,66 @@ test("summaries stop at a clause rather than mid-sentence", () => {
       .join("\n")}`,
   );
 });
+
+/* The English side, which was worse than the Russian one and had no tests.
+ *
+ * All four of these were reported from the live site, and each is a
+ * different failure: a lore bullet chosen over the effect, a preamble
+ * returned as the whole answer, an English sentence split at a Title-Cased
+ * game term, and flavour fused to the effect inside one bullet.
+ */
+test("a Title-Cased term does not split an English sentence", () => {
+  // RU_RUN_ON_RE splits before a capital, which in English fires between
+  // "Increased" and "Altruistic Healing". The live summary read
+  // "Can be used to heal other Survivors: Increased".
+  const piece = [...items, ...addons].find((p) => p.name?.en === "Camping Aid Kit");
+  assert.ok(piece, "fixture drifted");
+  const summary = coreSummary(getPerkDescription(piece, "en"));
+  assert.ok(summary, "no summary");
+  assert.match(summary, /35/, `the value was split away: ${summary}`);
+});
+
+test("a preamble is never the whole summary", () => {
+  // "Modifies the Fog Vial with the following effect:" introduces an effect
+  // and states none of it.
+  for (const lang of ["en", "ru"] as const) {
+    const offenders = [...items, ...addons, ...offerings]
+      .map((p) => ({ name: p.name?.en ?? p.slug, s: coreSummary(getPerkDescription(p, lang)) }))
+      .filter((x) => x.s && /[:—-]\s*$/.test(x.s));
+    assert.equal(
+      offenders.length,
+      0,
+      `${lang}: ${offenders.length} summaries stop at a colon, e.g. ${offenders[0]?.name}: ${offenders[0]?.s}`,
+    );
+  }
+});
+
+test("the effect wins over the flavour, in either language", () => {
+  // Festive Toolbox opens with lore carrying a bare "32 Charges"; a plain
+  // digit test cannot tell that from a real value, and picked the lore.
+  const toolbox = [...items, ...addons].find((p) => p.name?.en === "Festive Toolbox");
+  assert.ok(toolbox, "fixture drifted");
+  const en = coreSummary(getPerkDescription(toolbox, "en"));
+  assert.ok(en && !en.includes("fireworks"), `flavour chosen over the effect: ${en}`);
+
+  // The compass fuses both into a single bullet with no punctuation.
+  const compass = [...addons].find((p) => p.name?.ru === "Погрызенный компас");
+  assert.ok(compass, "fixture drifted");
+  const ru = coreSummary(getPerkDescription(compass, "ru"));
+  assert.ok(ru && ru.startsWith("Увеличивает"), `flavour kept in front of the effect: ${ru}`);
+});
+
+test("English summaries are not truncated more often than Russian ones", () => {
+  /* The English wiki front-loads a condition before a colon inside the same
+   * sentence, so nothing could split it and the preamble ate the budget:
+   * 100 of 979 English summaries were cut, against 16 Russian. */
+  const counts = (["en", "ru"] as const).map(
+    (lang) =>
+      [...items, ...addons, ...offerings].filter((p) =>
+        coreSummary(getPerkDescription(p, lang))?.endsWith("\u2026"),
+      ).length,
+  );
+  const [en, ru] = counts;
+  assert.ok(en <= 25, `${en} English summaries end mid-thought`);
+  assert.ok(ru <= 20, `${ru} Russian summaries end mid-thought`);
+});

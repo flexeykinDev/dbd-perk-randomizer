@@ -448,6 +448,31 @@ const RU_RUN_ON_RE = /(?<=[%»"*:;\p{Ll}\d])\s+(?=\p{Lu}\p{Ll})/gu;
  *  summary of anything. */
 const MIN_CLAUSE = 40;
 
+/* RU_RUN_ON_RE exists because the Russian wiki runs clauses together with no
+ * punctuation between them. English has the opposite habit: it punctuates
+ * properly and Title-Cases every game term, so the same rule fires between
+ * "Increased" and "Altruistic Healing", and between "Great" and "Skill
+ * Check" — turning correct sentences into fragments. "Can be used to heal
+ * other Survivors: Increased" was a real summary on the live site.
+ *
+ * So the splitter is chosen by script, not applied to both. English is split
+ * on actual sentence ends, which is all it needs. */
+const CYRILLIC_RE = /\p{Script=Cyrillic}/u;
+const EN_SENTENCE_RE = /(?<=[.!?])\s+(?=\p{Lu})/gu;
+
+/* A highlighted number is the strongest available signal that a bullet
+ * states the effect rather than describing the object. autoHighlight only
+ * wraps a value once it carries a unit or a percent, so "32 Charges" in a
+ * flavour sentence stays bare while "+50 %" does not — which is exactly the
+ * difference between the Festive Toolbox's lore and its actual repair
+ * bonus. A bare `\d` test cannot tell those apart, and picked the lore. */
+const HIGHLIGHTED_VALUE_RE = /\*\*[^*]*\d[^*]*\*\*/;
+
+/** A lead-in, not an answer: "Modifies the Fog Vial with the following
+ *  effect:" and "Данный предмет обладает рядом особенностей:" are both
+ *  complete clauses over MIN_CLAUSE that say nothing at all. */
+const LEAD_IN_RE = /[:—-]\s*$/;
+
 /* A wiki habit that turns a summary into a paragraph: having named a status,
  * the RU text goes on to explain it — "…ещё на 2% «Замедление» снижает
  * скорость передвижения…". That definition is part of the same sentence
@@ -475,7 +500,7 @@ const RU_DEFINITION_TAIL_RE =
  *  what makes trimming safe: the summary's job is to answer "what does this
  *  do" at a glance, not to be complete. */
 export function coreSummary(view: PerkDescriptionView, maxChars = 150): string | null {
-  const filled = view.core.filter((b) => b.trim().length > 0);
+  const filled = view.core.filter((b) => b.trim().length > 0 && !LEAD_IN_RE.test(b.trim()));
   /* The first bullet that says what the thing DOES, not simply the first.
    *
    * Some add-ons open with flavour and put the mechanic in the next bullet —
@@ -484,7 +509,7 @@ export function coreSummary(view: PerkDescriptionView, maxChars = 150): string |
    * already handles this within a bullet; this is the same rule one level up.
    * Falls back to the first bullet when nothing looks mechanical, rather than
    * guessing — a few add-ons genuinely are described only in prose. */
-  const first = filled.find(isMechanical) ?? filled[0];
+  const first = filled.find((b) => HIGHLIGHTED_VALUE_RE.test(b)) ?? filled.find(isMechanical) ?? filled[0];
   if (!first) return null;
   // Cut the trailing status definition before anything else looks at this,
   // so it can never be the thing that pushes the summary over budget.
@@ -502,10 +527,25 @@ export function coreSummary(view: PerkDescriptionView, maxChars = 150): string |
    * the split at face value produced summaries reading "При" and "Если". So
    * pieces are rejoined until there is enough of a sentence to be worth
    * showing, and only then does the next boundary end it. */
-  const parts = bullet.split(RU_RUN_ON_RE);
+  const split = bullet.split(CYRILLIC_RE.test(bullet) ? RU_RUN_ON_RE : EN_SENTENCE_RE);
+  /* Flavour and effect are sometimes fused into one bullet with no
+   * punctuation between them — "Такое ощущение, что она сама отмеряет
+   * идеальное расстояние Увеличивает количество зарядов карты на 2" is a
+   * single string on the wiki. stripLoreIntro applies this rule across
+   * bullets; the same rule is needed inside one. Only when something later
+   * is mechanical, so prose-only descriptions are left alone rather than
+   * emptied. */
+  const firstReal = split.findIndex(isMechanical);
+  const parts = firstReal > 0 ? split.slice(firstReal) : split;
   let clause = "";
   for (const part of parts) {
     const next = clause ? `${clause} ${part}` : part;
+    // A clause that ends in a colon has introduced the effect without
+    // stating it. Keep going even though it is long enough to stop on.
+    if (LEAD_IN_RE.test(next.trim())) {
+      clause = next;
+      continue;
+    }
     /* Stop BEFORE a clause that would overrun rather than taking it and
      * cutting it in half. A summary ending "…получают эффект «Замедление» и
      * двигаются…" tells a reader less than stopping a clause earlier would,
@@ -517,11 +557,27 @@ export function coreSummary(view: PerkDescriptionView, maxChars = 150): string |
   }
   clause = clause.trim();
   if (clause.length <= maxChars) return clause || bullet.slice(0, maxChars);
-  /* One clause, over budget on its own — there is no seam to stop at, so cut
-   * at a word boundary and mark it. This is what the ellipsis is actually
-   * for, and it is now the exception rather than the routine case. Never
-   * leave a `**` span half-open; an unterminated marker renders as literal
-   * asterisks. */
+  /* Over budget, but often only because of a preamble. The EN wiki front-
+   * loads a condition before the colon — "While repairing a Generator with a
+   * Toolbox, you benefit from the following effect: …" — which is the same
+   * sentence, so nothing above can split it, and it swallowed the budget
+   * before the effect began. 100 of the 979 English summaries were truncated
+   * that way, against 16 in Russian.
+   *
+   * Dropped only when the text would otherwise be cut, and only when what
+   * follows is itself mechanical: on anything that already fits, the
+   * condition is worth keeping, since "heals faster" and "heals faster while
+   * injured" are different claims. */
+  const colon = clause.indexOf(": ");
+  if (colon > 0) {
+    const rest = clause.slice(colon + 2).trim();
+    if (rest.length >= MIN_CLAUSE && rest.length <= maxChars && isMechanical(rest)) return rest;
+  }
+
+  /* Genuinely one long clause — there is no seam to stop at, so cut at a
+   * word boundary and mark it. This is what the ellipsis is actually for.
+   * Never leave a `**` span half-open; an unterminated marker renders as
+   * literal asterisks. */
   let cut = clause.slice(0, maxChars);
   const lastSpace = cut.lastIndexOf(" ");
   if (lastSpace > maxChars * 0.6) cut = cut.slice(0, lastSpace);

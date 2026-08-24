@@ -155,3 +155,35 @@ for (const [label, testId, name] of [
     expect(after[1]).not.toBe(before[1]);
   });
 }
+
+test("stage controls sit inside their stage, not clipped by it", async ({ page }) => {
+  /* The failure this exists for: on a narrow screen the copy/pin/reroll
+   * buttons hung 14px below the stage box and were cut in half. They were the
+   * right size and the right place in the DOM, the page did not scroll
+   * sideways, and nothing else noticed — the container was simply sized for
+   * the canvas and not for what sits under it. */
+  await page.goto("/?role=killer");
+  await expect(page.locator("[data-perk-card]")).toHaveCount(4);
+
+  for (const label of [/Слоты/, /Ритуал/]) {
+    await page.getByTestId("presentation-picker").click();
+    await page.getByRole("menuitemradio", { name: label }).click();
+    await page.waitForTimeout(2200);
+
+    const overflow = await page.evaluate(() => {
+      const host = document.querySelector("[data-shown], [data-cards]") as HTMLElement | null;
+      if (!host) return ["no stage"];
+      const box = host.getBoundingClientRect();
+      return Array.from(host.querySelectorAll("button"))
+        .map((b) => {
+          const r = (b as HTMLElement).getBoundingClientRect();
+          const over = Math.round(Math.max(r.bottom - box.bottom, box.top - r.top));
+          return over > 1
+            ? `${b.getAttribute("aria-label") ?? b.textContent?.trim().slice(0, 16)} clipped by ${over}px`
+            : null;
+        })
+        .filter(Boolean);
+    });
+    expect(overflow, `${String(label)}: controls hang outside the stage`).toEqual([]);
+  }
+});

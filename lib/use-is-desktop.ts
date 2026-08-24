@@ -4,11 +4,12 @@ import { useEffect, useState } from "react";
 
 /** Wide screen AND a real pointer.
  *
- *  Both halves matter for the Ritual mode this gates. It runs a WebGL loop
- *  and asks for a keypress, so a phone would pay the battery for something it
- *  has no key to drive — and a narrow window has nowhere to deal four cards
- *  without them overlapping. A tablet reports a coarse pointer at desktop
- *  width, which is exactly the case width alone would get wrong.
+ *  Both halves matter for the presentations this gates — Ritual and Slots.
+ *  They run a WebGL or canvas loop and ask for a keypress, so a phone would
+ *  pay the battery for something it has no key to drive, and a narrow window
+ *  has nowhere to lay out four cards or four reels without them collapsing.
+ *  A tablet reports a coarse pointer at desktop width, which is exactly the
+ *  case width alone would get wrong.
  *
  *  Starts false and resolves after mount, so the server render and the first
  *  client render agree; a desktop-only control appearing a frame late is
