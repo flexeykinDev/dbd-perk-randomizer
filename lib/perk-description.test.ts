@@ -541,3 +541,23 @@ test("overrides state a mechanic, which is the whole point of having them", () =
   }
   assert.deepEqual(silent, [], `overrides that still describe the Bloodweb: ${silent}`);
 });
+
+test("every override line is a mechanic, not a paragraph", () => {
+  /* The file is hand-maintained, so the thing to guard is the habit that
+   * fills it: pasting the wiki sentence instead of writing the effect. A
+   * Core Effect line states the action, the thing it acts on and the values
+   * — it does not run to a paragraph, and it never ends mid-thought. */
+  const entries = Object.entries(coreOverrides as unknown as Record<string, unknown>).filter(
+    ([k]) => !k.startsWith("_"),
+  );
+  const bad: string[] = [];
+  for (const [key, value] of entries) {
+    for (const [lang, line] of Object.entries(value as Record<string, string>)) {
+      if (lang.startsWith("_")) continue;
+      if (line.length > 160) bad.push(`${key} [${lang}] runs to ${line.length} chars`);
+      if (line.endsWith("\u2026")) bad.push(`${key} [${lang}] ends mid-thought`);
+      if (/[:—-]\s*$/.test(line)) bad.push(`${key} [${lang}] is a lead-in`);
+    }
+  }
+  assert.deepEqual(bad, [], bad.join("\n"));
+});

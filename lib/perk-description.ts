@@ -524,6 +524,24 @@ const HIGHLIGHTED_VALUE_RE = /\*\*[^*]*\d[^*]*\*\*/;
  *  complete clauses over MIN_CLAUSE that say nothing at all. */
 const LEAD_IN_RE = /[:—-]\s*$/;
 
+/* How the wiki OPENS an effect, as opposed to describing the object.
+ *
+ * isMechanical asks whether a sentence mentions anything mechanical
+ * anywhere, which flavour text does constantly: "repair instructions on this
+ * piece of bark" contains a named term, so the bark scored the same as
+ * "Suppresses all regular Repair Skill Checks" and, being first, won. Where
+ * a bullet has no highlight to rank on, the reliable difference is
+ * structural — an effect leads with its verb or its condition, and flavour
+ * leads with the noun it is describing.
+ *
+ * "Если" is the one conditional left out. RU flavour opens with it happily
+ * — "Если зажечь рядом с картой…" is the Sharpened Flint's lore — whereas
+ * "При" is how most RU effects begin ("При починке с помощью инструментов
+ * проверки реакции не появляются"), and excluding it on the same suspicion
+ * left almost every Russian add-on still showing its flavour. */
+const EFFECT_OPENER_RE =
+  /^(?:Increases|Reduces|Grants|Causes|Extends|Modifies|Unlocks|Suppresses|Disables|Switches|Prevents|Allows|Applies|Removes|Adds|Nullifies|Kills|While|When|After|Whenever|Press|Hold|Each time|При|Когда|После|Нажмите|Удерживайте|Каждый|Успешн|Увеличивает|Уменьшает|Снижает|Повышает|Сокращает|Расширяет|Открывает|Позволяет|Да[её]т|Дарует|Отмен[яе]|Убирает|Скрывает|Продлевает|Ускоряет|Замедляет|Заменяет|Применяет|Накладывает)/;
+
 /* A wiki habit that turns a summary into a paragraph: having named a status,
  * the RU text goes on to explain it — "…ещё на 2% «Замедление» снижает
  * скорость передвижения…". That definition is part of the same sentence
@@ -550,6 +568,29 @@ const RU_DEFINITION_TAIL_RE =
  *  Everything dropped here is still one tab away under Full Text, which is
  *  what makes trimming safe: the summary's job is to answer "what does this
  *  do" at a glance, not to be complete. */
+/* Editorial connective tissue, in the Core Effect only.
+ *
+ * The wiki introduces an effect rather than stating it: "While repairing a
+ * Generator with a Toolbox, you benefit from the following effect:
+ * Suppresses all regular Repair Skill Checks." The condition is worth
+ * keeping — it says WHEN — but "you benefit from the following effect" is
+ * eleven words that carry none of it, and on a summary capped at 150
+ * characters they are eleven words that push the actual effect out.
+ *
+ * Collapsed to a colon rather than deleted, so the sentence still reads as
+ * condition-then-effect. Full Text keeps the wiki's own phrasing. */
+const CONNECTIVE_RE =
+  /,?\s*(?:you (?:benefit from|gain) the following effects?|(?:which )?grants? the following effects?|with the following effects?|triggers? the following effects?)\s*:?/gi;
+
+function tighten(text: string): string {
+  return text
+    .replace(CONNECTIVE_RE, ":")
+    .replace(/\s*:\s*:/g, ":")
+    .replace(/\s+:/g, ":")
+    .replace(/:\s*$/, "")
+    .trim();
+}
+
 export function coreSummary(view: PerkDescriptionView, maxChars = 150): string | null {
   if (view.coreFinal) {
     // Past the Secret marker, which is a badge rather than the effect.
@@ -565,12 +606,27 @@ export function coreSummary(view: PerkDescriptionView, maxChars = 150): string |
    * already handles this within a bullet; this is the same rule one level up.
    * Falls back to the first bullet when nothing looks mechanical, rather than
    * guessing — a few add-ons genuinely are described only in prose. */
-  const first = filled.find((b) => HIGHLIGHTED_VALUE_RE.test(b)) ?? filled.find(isMechanical) ?? filled[0];
+  /* Ranked, strongest signal first.
+   *
+   * A highlighted NUMBER is the surest sign a bullet states the effect.
+   * Failing that, any highlight at all: autoHighlight wraps the wiki's named
+   * terms, and the wiki capitalises them only when it means the game
+   * mechanic — "Suppresses all regular **Repair Skill Checks**" gets marked
+   * where the flavour sentence's lowercase "repair instructions on this
+   * piece of bark" does not. isMechanical cannot tell those apart, because
+   * it matches the bare word, and so it picked the bark. */
+  const first =
+    filled.find((b) => HIGHLIGHTED_VALUE_RE.test(b)) ??
+    filled.find((b) => b.includes("**")) ??
+    filled.find((b) => EFFECT_OPENER_RE.test(b.trim())) ??
+    filled.find(isMechanical) ??
+    filled[0];
   if (!first) return null;
   // Cut the trailing status definition before anything else looks at this,
   // so it can never be the thing that pushes the summary over budget.
-  const tail = first.search(RU_DEFINITION_TAIL_RE);
-  const bullet = tail > MIN_CLAUSE ? first.slice(0, tail).trim() : first;
+  const tidy = tighten(first);
+  const tail = tidy.search(RU_DEFINITION_TAIL_RE);
+  const bullet = tail > MIN_CLAUSE ? tidy.slice(0, tail).trim() : tidy;
   /* No attempt to strip a trailing flavour quote. One was tried and cut real
    * effects in half: the RU text mixes «», "" and "" for named terms, so a
    * "quote to end of string" match opened on a term like «Кары обреченных»
