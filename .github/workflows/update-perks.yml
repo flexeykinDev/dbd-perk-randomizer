@@ -13,8 +13,8 @@ jobs:
   scrape:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
@@ -46,7 +46,7 @@ jobs:
 
       - name: Open PR with updated perk + loadout data
         id: cpr
-        uses: peter-evans/create-pull-request@v8
+        uses: peter-evans/create-pull-request@v7
         with:
           commit-message: "chore: update DBD perk and loadout data from wiki"
           title: "Update DBD perk and loadout data"
@@ -61,10 +61,6 @@ jobs:
             data/items.json
             data/addons.json
             data/offerings.json
-            # Written by the same scrapes since descriptions were split out
-            # of the lists (see scripts/split-descriptions.ts). Left out,
-            # a scrape would ship renamed or reworded perks whose text
-            # still came from the previous run.
             data/perk-descriptions.json
             data/loadout-descriptions.json
             data/loadout-meta.json
@@ -77,7 +73,7 @@ jobs:
             public/loadout/**
 
       - name: Auto-merge (only when PR created & nothing pre-existing changed)
-        if: steps.cpr.outputs.pull-request-operation == 'created' && steps.classify.outputs.safe == 'true'
+        if: steps.cpr.outputs.pull-request-number != '' && steps.classify.outputs.safe == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
