@@ -396,7 +396,7 @@
     "role": "survivor",
     "name": {
       "en": "Boon: Steadfast",
-      "ru": "Boon: Steadfast"
+      "ru": "Дар: Непоколебимость"
     },
     "character": "Aurora",
     "icon": "/perks/survivor/boon-steadfast.webp",
@@ -1139,7 +1139,7 @@
     "role": "survivor",
     "name": {
       "en": "Fruits of Your Labor",
-      "ru": "Fruits of Your Labor"
+      "ru": "Плоды трудов"
     },
     "character": "Aurora",
     "icon": "/perks/survivor/fruits-of-your-labor.webp",
@@ -1935,7 +1935,7 @@
     "role": "survivor",
     "name": {
       "en": "Salvation's Cry",
-      "ru": "Salvation's Cry"
+      "ru": "Зов на помощь"
     },
     "character": "Aurora",
     "icon": "/perks/survivor/salvation-s-cry.webp",
@@ -2746,7 +2746,7 @@
     "role": "killer",
     "name": {
       "en": "Celestial Witness",
-      "ru": "Celestial Witness"
+      "ru": "Небесный свидетель"
     },
     "character": "Judgment",
     "icon": "/perks/killer/celestial-witness.webp",
@@ -3454,7 +3454,7 @@
     "role": "killer",
     "name": {
       "en": "Hex: Under Your Thumb",
-      "ru": "Hex: Under Your Thumb"
+      "ru": "Порча: В твоей власти"
     },
     "character": "Judgment",
     "icon": "/perks/killer/hex-under-your-thumb.webp",
@@ -3620,7 +3620,7 @@
     "role": "killer",
     "name": {
       "en": "Keep Them Waiting",
-      "ru": "Keep Them Waiting"
+      "ru": "Догонялки"
     },
     "character": "All",
     "icon": "/perks/killer/keep-them-waiting.webp",
@@ -3660,7 +3660,7 @@
     "role": "killer",
     "name": {
       "en": "Lay Waste",
-      "ru": "Lay Waste"
+      "ru": "Опустошение"
     },
     "character": "Judgment",
     "icon": "/perks/killer/lay-waste.webp",
