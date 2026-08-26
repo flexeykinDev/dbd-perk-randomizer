@@ -106,6 +106,112 @@
           "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_IridescentBoatMotor.png"
         }
       ]
+    },
+    {
+      "character": "Judgment",
+      "releasedAt": "2026-08-25",
+      "addons": [
+        {
+          "name": "Heretic's Mark",
+          "description": "\"Those who stray from the path shall never escape ostracization once they received the mark.\" When a cast Divine Light passes a Survivor within 1 metre without hitting them, they are revealed by Killer Instinct for 2 seconds.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_HereticsMark.png"
+        },
+        {
+          "name": "Koenrad's Gauntlet",
+          "description": "\"When darkness threatened to swallow his flock, he led them towards the light.\" Increases the maximum duration of Divine Light control duration by +25 %. Decreases the maximum speed of controlled Divine Light by -10 %",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_KoenradsGauntlet.png"
+        },
+        {
+          "name": "Prayer Kneeler",
+          "description": "\"Suffer the pain of prayer, for the suffering of unbelievers is far worse.\" While controlling an obstructed Divine Light: Decrease its maximum speed by -99 %.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_PrayerKneeler.png"
+        },
+        {
+          "name": "Searcher's Skull",
+          "description": "\"The skulls of the heretics shall be cleaned and displayed as a warning to others who might stray from the light.\" When a Survivor blinds you: The Survivor gains Heresy. If the Survivor is a Heretic, they become blinded themselves for 2.5 seconds.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_SearchersSkull.png"
+        },
+        {
+          "name": "Aurora's Telereceptor",
+          "description": "\"None should stare into the abyss with the wretched devices made by the heretics.\" Survivors who gain Heresy have their aura revealed for 4 seconds. They also see your aura for 4 seconds. Heretics see your aura for +2 seconds longer.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_AurorasTelereceptor.png"
+        },
+        {
+          "name": "Confessor's War Horn",
+          "description": "\"The sound of the horn shall strike fear into the hearts of unbelievers and muster the will of the faithful.\" Survivors who gain Heresy are inflicted Exhausted Status Effect for 10 seconds.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_ConfessorsWarHorn.png"
+        },
+        {
+          "name": "Magnetised Manacles",
+          "description": "\"Those who do not go into hiding will be locked deep underground, far from the guiding light of the stars.\" Gain +1 Token when you send a Survivor with the lowest amount of Hook States to the Exile, up to 5 Tokens. For each token, increase the duration of Zealous when activated by +10 %",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_MagnetisedManacles.png"
+        },
+        {
+          "name": "Mark of the Adherent",
+          "description": "\"Wear your faith proudly and permanently. Let it be a reminder to others that It is always present.\" While not Zealous, Divine Light's radius is +10 % larger.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_MarkOfTheAdherent.png"
+        },
+        {
+          "name": "Undying Flame",
+          "description": "\"The village of Dend was repentant in its last moments, but its remnants still burn to this day as a warning.\" While Zealous: Increase lifetime of the cast Divine Light by +200 %. Decrease the radius of Divine Light by -20 %. Increase Survivor Divine Light aura reading range by +200 %.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_UndyingFlame.png"
+        },
+        {
+          "name": "Blindfold of the Devoted",
+          "description": "\"Those who follow Gerhardt's path shall wear blindfolds, to remember the sacrifice he made for his prophecy.\" Sending a Survivor to the Exile with the lowest amount of Hook States reveals the auras of all other Survivors with the lowest amount of Hook States outside 32 metres for 5 seconds.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_BlindfoldOfTheDevoted.png"
+        },
+        {
+          "name": "Electric Torch",
+          "description": "\"The faithful shall go out in great numbers at night, searching for the heretics who hide in the dark.\" Increases the maximum speed of the controlled Divine Light by +25 %. Increases movement speed while controlling Divine Light by +10 %.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_ElectricTorch.png"
+        },
+        {
+          "name": "Holy Winged Icon",
+          "description": "\"Clutch it to your chest and pray, lest your heart appear untrue to It.\" While casting Divine Light, press the Secondary Power button to cast it back towards your location. When cast this way: Minimum delay before it deals damage and inflicts Heresy is set to 0.4 seconds. Increase its maximum speed by +10 %. It only damages Heretics",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_HolyWingedIcon.png"
+        },
+        {
+          "name": "Order of Inquisition",
+          "description": "\"All those who believe in Its glory are deputized to search for heretics. Trust not even your own neighbor.\" When Divine Light is cast, its radius starts -25 % smaller, but grows +50 % larger over a period of 1 second.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_OrderOfInquisition.png"
+        },
+        {
+          "name": "Superheated Glass",
+          "description": "\"The planet of Aleide was unrepentant; after their leader was Exiled, Its Divine Light turned the surface to glass.\" Decreases the duration of Zealous by -20 %. While Zealous, a cast Divine Light breaks all Breakable Walls and Pallets it passes through. Breaking an object this way causes Survivors within 12 metres to scream and gain Heresy.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_SuperheatedGlass.png"
+        },
+        {
+          "name": "Chains of the Heretic",
+          "description": "\"Examples shall be made of the loudest apostates. They shall be dragged through the streets in chains.\" While Zealous: Cast Divine Light will always be directed towards you. Minimum delay before cast Divine Light deals damage and inflicts Heresy is set to 0.35 seconds. Increases the maximum speed of controlled Divine Light by +100 %. Increases the maximum speed of cast Divine Light by +50 %.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_ChainsOfTheHeretic.png"
+        },
+        {
+          "name": "Crown of the Destroyer",
+          "description": "\"The Creators saw this and bestowed upon It a crown and said, use this to bring light to the darkness.\" When a Survivor is rescued from the Exile, for 20 seconds: Your Terror Radius is reduced by -70 %. Your Terror Radius is copied to all Shrines of Judgment. Grants the Undetectable Status Effect.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_CrownOfTheDestroyer.png"
+        },
+        {
+          "name": "Eyes of Gerhardt",
+          "description": "\"He rapturously tore the eyes from his face after seeing such brilliant visions of the future.\" When a Heretic completes a Generator, opens an Exit Gate or exits a Locker, all Heretics have their aura revealed for 5 seconds.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_EyesOfGerhardt.png"
+        },
+        {
+          "name": "Improvised Detonators",
+          "description": "\"Like cowards, they strike with bombs in the night, afraid to let the light of day illuminate their blackened souls.\" If no Survivors are dead, sending a Survivor with the lowest amount of Hook States to the Exile grants +1 Token. When you reach 4 Tokens, the Generator with the highest progress explodes and loses -20 % progress.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_ImprovisedDetonators.png"
+        },
+        {
+          "name": "Mirror of the Creators",
+          "description": "\"And They said unto It, take this mirror, and show them the error of their ways.\" Cast Divine Light reflects off the first 2 obstructions it would otherwise pass through. When reflecting, it pauses for 0.4 seconds before reflecting again.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_MirrorOfTheCreators.png"
+        },
+        {
+          "name": "Obsidian Feather",
+          "description": "\"Some villagers will carve feathers from rocks, hoping that their faith might protect them.\" You can no longer cancel nor manually cast the controlled Divine Light and it is automatically cast when it would instead time out. Increases movement speed while controlling Divine Light by +100 %. Decreases the maximum amount of time you can control Divine Light for by -25 %. Increases the recovery time after casting Divine Light by +10 %. Decreases the movement speed while recovering after casting Divine Light by -30 %.",
+          "iconSourceUrl": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_ObsidianFeather.png"
+        }
+      ]
     }
   ]
 }

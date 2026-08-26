@@ -10994,5 +10994,245 @@
       "ru": "Радужный лодочный мотор"
     },
     "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Judgment",
+    "icon": "/loadout/addon/heretic-s-mark.webp",
+    "slug": "heretic-s-mark",
+    "name": {
+      "en": "Heretic's Mark",
+      "ru": "Heretic's Mark"
+    },
+    "addedAt": "2026-08-26T14:13:11.867Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Judgment",
+    "icon": "/loadout/addon/koenrad-s-gauntlet.webp",
+    "slug": "koenrad-s-gauntlet",
+    "name": {
+      "en": "Koenrad's Gauntlet",
+      "ru": "Koenrad's Gauntlet"
+    },
+    "addedAt": "2026-08-26T14:13:11.867Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Judgment",
+    "icon": "/loadout/addon/prayer-kneeler.webp",
+    "slug": "prayer-kneeler",
+    "name": {
+      "en": "Prayer Kneeler",
+      "ru": "Prayer Kneeler"
+    },
+    "addedAt": "2026-08-26T14:13:11.867Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Judgment",
+    "icon": "/loadout/addon/searcher-s-skull.webp",
+    "slug": "searcher-s-skull",
+    "name": {
+      "en": "Searcher's Skull",
+      "ru": "Searcher's Skull"
+    },
+    "addedAt": "2026-08-26T14:13:11.867Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Judgment",
+    "icon": "/loadout/addon/aurora-s-telereceptor.webp",
+    "slug": "aurora-s-telereceptor",
+    "name": {
+      "en": "Aurora's Telereceptor",
+      "ru": "Aurora's Telereceptor"
+    },
+    "addedAt": "2026-08-26T14:13:11.867Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Judgment",
+    "icon": "/loadout/addon/confessor-s-war-horn.webp",
+    "slug": "confessor-s-war-horn",
+    "name": {
+      "en": "Confessor's War Horn",
+      "ru": "Confessor's War Horn"
+    },
+    "addedAt": "2026-08-26T14:13:11.867Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Judgment",
+    "icon": "/loadout/addon/magnetised-manacles.webp",
+    "slug": "magnetised-manacles",
+    "name": {
+      "en": "Magnetised Manacles",
+      "ru": "Magnetised Manacles"
+    },
+    "addedAt": "2026-08-26T14:13:11.867Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Judgment",
+    "icon": "/loadout/addon/mark-of-the-adherent.webp",
+    "slug": "mark-of-the-adherent",
+    "name": {
+      "en": "Mark of the Adherent",
+      "ru": "Mark of the Adherent"
+    },
+    "addedAt": "2026-08-26T14:13:11.867Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Judgment",
+    "icon": "/loadout/addon/undying-flame.webp",
+    "slug": "undying-flame",
+    "name": {
+      "en": "Undying Flame",
+      "ru": "Undying Flame"
+    },
+    "addedAt": "2026-08-26T14:13:11.867Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Judgment",
+    "icon": "/loadout/addon/blindfold-of-the-devoted.webp",
+    "slug": "blindfold-of-the-devoted",
+    "name": {
+      "en": "Blindfold of the Devoted",
+      "ru": "Blindfold of the Devoted"
+    },
+    "addedAt": "2026-08-26T14:13:11.867Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Judgment",
+    "icon": "/loadout/addon/electric-torch.webp",
+    "slug": "electric-torch",
+    "name": {
+      "en": "Electric Torch",
+      "ru": "Electric Torch"
+    },
+    "addedAt": "2026-08-26T14:13:11.867Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Judgment",
+    "icon": "/loadout/addon/holy-winged-icon.webp",
+    "slug": "holy-winged-icon",
+    "name": {
+      "en": "Holy Winged Icon",
+      "ru": "Holy Winged Icon"
+    },
+    "addedAt": "2026-08-26T14:13:11.867Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Judgment",
+    "icon": "/loadout/addon/order-of-inquisition.webp",
+    "slug": "order-of-inquisition",
+    "name": {
+      "en": "Order of Inquisition",
+      "ru": "Order of Inquisition"
+    },
+    "addedAt": "2026-08-26T14:13:11.867Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Judgment",
+    "icon": "/loadout/addon/superheated-glass.webp",
+    "slug": "superheated-glass",
+    "name": {
+      "en": "Superheated Glass",
+      "ru": "Superheated Glass"
+    },
+    "addedAt": "2026-08-26T14:13:11.867Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Judgment",
+    "icon": "/loadout/addon/chains-of-the-heretic.webp",
+    "slug": "chains-of-the-heretic",
+    "name": {
+      "en": "Chains of the Heretic",
+      "ru": "Chains of the Heretic"
+    },
+    "addedAt": "2026-08-26T14:13:11.867Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Judgment",
+    "icon": "/loadout/addon/crown-of-the-destroyer.webp",
+    "slug": "crown-of-the-destroyer",
+    "name": {
+      "en": "Crown of the Destroyer",
+      "ru": "Crown of the Destroyer"
+    },
+    "addedAt": "2026-08-26T14:13:11.867Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Judgment",
+    "icon": "/loadout/addon/eyes-of-gerhardt.webp",
+    "slug": "eyes-of-gerhardt",
+    "name": {
+      "en": "Eyes of Gerhardt",
+      "ru": "Eyes of Gerhardt"
+    },
+    "addedAt": "2026-08-26T14:13:11.867Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Judgment",
+    "icon": "/loadout/addon/improvised-detonators.webp",
+    "slug": "improvised-detonators",
+    "name": {
+      "en": "Improvised Detonators",
+      "ru": "Improvised Detonators"
+    },
+    "addedAt": "2026-08-26T14:13:11.867Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Judgment",
+    "icon": "/loadout/addon/mirror-of-the-creators.webp",
+    "slug": "mirror-of-the-creators",
+    "name": {
+      "en": "Mirror of the Creators",
+      "ru": "Mirror of the Creators"
+    },
+    "addedAt": "2026-08-26T14:13:11.867Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Judgment",
+    "icon": "/loadout/addon/obsidian-feather.webp",
+    "slug": "obsidian-feather",
+    "name": {
+      "en": "Obsidian Feather",
+      "ru": "Obsidian Feather"
+    },
+    "addedAt": "2026-08-26T14:13:11.867Z"
   }
 ]

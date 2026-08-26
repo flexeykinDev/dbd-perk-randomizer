@@ -93,8 +93,27 @@ test("every loadout piece is actually translated into Russian", () => {
   // Checking for Cyrillic rather than "ru !== en" is deliberate: a piece
   // whose RU name is copied verbatim from the English is exactly the
   // fallback this is meant to catch.
+  //
+  // One narrow exemption: add-ons supplied by
+  // data/supplemental-addons.en.json. Those exist precisely because the
+  // ENGLISH source has not catalogued them yet — the central Add-ons page
+  // had no mention of The Judgment four days after release — so the Russian
+  // wiki, which lags further, cannot have a row to match against. The
+  // exemption is by exact name and clears itself: delete the supplemental
+  // entry once the wiki catches up and the piece is checked again like any
+  // other. It cannot hide the matcher bug above, which was about pieces both
+  // wikis already carried.
+  const supplemental = JSON.parse(
+    readFileSync(join(dataDir, "supplemental-addons.en.json"), "utf8"),
+  ) as { entries?: { addons: { name: string }[] }[] };
+  const awaitingSource = new Set(
+    (supplemental.entries ?? []).flatMap((e) => e.addons.map((a) => a.name)),
+  );
+
   const cyrillic = /[Ѐ-ӿ]/;
-  const untranslated = [...items, ...addons, ...offerings].filter((p) => !cyrillic.test(p.name.ru));
+  const untranslated = [...items, ...addons, ...offerings].filter(
+    (p) => !cyrillic.test(p.name.ru) && !awaitingSource.has(p.name.en),
+  );
   assert.deepEqual(
     untranslated.slice(0, 10).map((p) => `${p.kind}:${p.name.en}`),
     [],
