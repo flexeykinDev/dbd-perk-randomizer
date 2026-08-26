@@ -21,13 +21,20 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { coreSummary, getPerkDescription, getLoadoutPieceDescription } from "../lib/perk-description";
 import type { Lang } from "../lib/i18n";
+import type { LoadoutKind } from "../lib/types";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const DATA = join(ROOT, "data");
 const read = <T>(f: string): T => JSON.parse(readFileSync(join(DATA, f), "utf8")) as T;
 
-type Row = { slug: string; kind?: string; name: { en: string; ru: string } };
-type Prose = Record<string, Record<string, unknown>>;
+type Row = { slug: string; name: { en: string; ru: string } };
+type LoadoutRow = Row & { kind: LoadoutKind };
+/* The prose files carry exactly the description fields the describe functions
+ * read. Typed as that rather than as a bag of unknowns, so composing a row
+ * with its prose still has to satisfy the identity contract — this script
+ * used to pass `as never`, which is the same cast that let the override
+ * lookup be handed identity-less objects for weeks. */
+type Prose = Record<string, { description: string; descriptionRuRaw?: string }>;
 
 function main(): void {
   const out = process.argv[2];
@@ -41,9 +48,9 @@ function main(): void {
   const loadoutProse = read<Prose>("loadout-descriptions.json");
   const perks = read<Row[]>("perks.json");
   const pieces = [
-    ...read<Row[]>("items.json"),
-    ...read<Row[]>("addons.json"),
-    ...read<Row[]>("offerings.json"),
+    ...read<LoadoutRow[]>("items.json"),
+    ...read<LoadoutRow[]>("addons.json"),
+    ...read<LoadoutRow[]>("offerings.json"),
   ];
 
   const lines: string[] = [];
@@ -57,14 +64,14 @@ function main(): void {
 
   for (const perk of perks) {
     for (const lang of ["en", "ru"] as const) {
-      record(`perk:${perk.slug}`, lang, getPerkDescription({ ...perk, ...perkProse[perk.slug] } as never, lang));
+      record(`perk:${perk.slug}`, lang, getPerkDescription({ ...perk, ...perkProse[perk.slug] }, lang));
     }
     lines.push(`perk:${perk.slug}\tname\t${perk.name.en}\t${perk.name.ru}`);
   }
   for (const piece of pieces) {
     const key = `${piece.kind}:${piece.slug}`;
     for (const lang of ["en", "ru"] as const) {
-      record(key, lang, getLoadoutPieceDescription({ ...piece, ...loadoutProse[key] } as never, lang));
+      record(key, lang, getLoadoutPieceDescription({ ...piece, ...loadoutProse[key] }, lang));
     }
     lines.push(`${key}\tname\t${piece.name.en}\t${piece.name.ru}`);
   }

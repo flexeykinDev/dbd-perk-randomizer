@@ -25,12 +25,16 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { coreSummary, getPerkDescription } from "./perk-description";
+import {
+  coreSummary,
+  getLoadoutPieceDescription,
+  getPerkDescription,
+} from "./perk-description";
 import loadoutOverrides from "../data/overrides/loadout.json";
 import perkOverrides from "../data/overrides/perks.json";
 const coreOverrides = loadoutOverrides.entries;
 import type { Lang } from "./i18n";
-import type { LocalizedDescription } from "./types";
+import type { LoadoutKind, LocalizedDescription } from "./types";
 
 const dataDir = join(dirname(fileURLToPath(import.meta.url)), "..", "data");
 const load = <T>(file: string): T[] =>
@@ -41,11 +45,29 @@ const load = <T>(file: string): T[] =>
  *  change there fails here instead of quietly diverging. */
 interface Entry {
   slug: string;
+  /** Present on loadout rows (items/addons/offerings), absent on perks. The
+   *  fixture join has always carried it — items.json and friends all have a
+   *  `kind`, and join2 spreads the whole row — but this type did not say so,
+   *  which is the same hole DescribableEntity used to have: identity that
+   *  exists at runtime and is invisible to the compiler. Declared here so the
+   *  dispatch below can be checked rather than assumed. */
+  kind?: LoadoutKind;
   name?: { en: string; ru: string };
   description: string;
   descriptionRu?: LocalizedDescription;
   descriptionRuRaw?: string;
 }
+
+/** Describes an entry exactly the way the app does: loadout rows go through
+ *  the loadout entry point — which is what applies the Core Effect overrides
+ *  — and perks through the perk one. Routing a loadout piece through
+ *  getPerkDescription is invisible at runtime; it just silently returns every
+ *  override as absent, which is precisely the bug the suite exists to catch.
+ *  So the dispatch lives in exactly one place. */
+const describeEntry = (entry: Entry, lang: Lang) =>
+  entry.kind
+    ? getLoadoutPieceDescription({ ...entry, kind: entry.kind }, lang)
+    : getPerkDescription(entry, lang);
 
 const loadMap = <T>(file: string): Record<string, T> =>
   JSON.parse(readFileSync(join(dataDir, file), "utf8")) as Record<string, T>;
@@ -116,7 +138,7 @@ test("an attributed lore quote is split off and never left in the body", () => {
   assert.ok(withSpeaker.length > 0, "no perk carries an attributed quote any more");
 
   for (const perk of withSpeaker.slice(0, 25)) {
-    const view = getPerkDescription(perk, "en");
+    const view = describeEntry(perk, "en");
     assert.ok(view.quote, `${perk.slug}: expected a quote to be extracted`);
     const speaker = view.quote!.split("—").pop()!.trim();
     assert.ok(
@@ -128,14 +150,14 @@ test("an attributed lore quote is split off and never left in the body", () => {
 
 test("quotes use the typographic marks of the language being rendered", () => {
   const entry = bySlug("ace-in-the-hole");
-  assert.match(getPerkDescription(entry, "en").quote!, /^“/);
+  assert.match(describeEntry(entry, "en").quote!, /^“/);
 
   // RU only takes the « » path when it actually has RU text to render;
   // otherwise it falls back to the English source and the English marks.
   const ru = everything.find(
     (e) => e.descriptionRuRaw && /"[^"]+"\s*$/.test(e.descriptionRuRaw),
   );
-  if (ru) assert.match(getPerkDescription(ru, "ru").quote!, /^«/);
+  if (ru) assert.match(describeEntry(ru, "ru").quote!, /^«/);
 });
 
 test("the Entity boilerplate is stripped from both core and full", () => {
@@ -147,7 +169,7 @@ test("the Entity boilerplate is stripped from both core and full", () => {
     "no entry carries the Entity boilerplate any more — has the source changed?",
   );
   for (const entry of withEntity) {
-    const view = getPerkDescription(entry, "en");
+    const view = describeEntry(entry, "en");
     assert.doesNotMatch(view.full, /Calls upon The Entity/i, entry.slug);
     for (const bullet of view.core) {
       assert.doesNotMatch(bullet, /Calls upon The Entity/i, entry.slug);
@@ -161,7 +183,7 @@ test("a secret offering keeps its one real fact as the first bullet", () => {
   );
   assert.ok(secret.length > 0, "no secret offerings in the data any more");
   for (const offering of secret) {
-    assert.equal(getPerkDescription(offering, "en").core[0], "**Secret**.");
+    assert.equal(describeEntry(offering, "en").core[0], "**Secret**.");
   }
 });
 
@@ -184,7 +206,7 @@ test("tiered and decimal values highlight as one span, not several", () => {
     if (!match) continue;
     // A split would render "**20**/**25**/**30**", where no single span
     // contains the run — which is exactly what this catches.
-    const spans = highlightSpans(getPerkDescription(entry, "en").full).spans;
+    const spans = highlightSpans(describeEntry(entry, "en").full).spans;
     if (!spans.some((span) => span.includes(match[0]))) {
       failures.push(`${entry.slug}: ${JSON.stringify(match[0])}`);
     }
@@ -195,7 +217,7 @@ test("tiered and decimal values highlight as one span, not several", () => {
 test("a lore intro is dropped from Core but kept in the full text", () => {
   // Ace in the Hole opens on "Lady Luck always seems to be throwing
   // something good your way." — flavour, no number, no named term.
-  const view = getPerkDescription(bySlug("ace-in-the-hole"), "en");
+  const view = describeEntry(bySlug("ace-in-the-hole"), "en");
   assert.match(view.full, /Lady Luck/);
   assert.ok(
     !view.core.some((b) => b.includes("Lady Luck")),
@@ -208,7 +230,7 @@ test("Core is never emptied out by the lore heuristic", () => {
   // anywhere must be left alone rather than stripped to nothing.
   for (const entry of everything) {
     for (const lang of LANGS) {
-      const view = getPerkDescription(entry, lang);
+      const view = describeEntry(entry, lang);
       if (entry.description.trim() === "") continue;
       assert.ok(
         view.core.length > 0,
@@ -222,7 +244,7 @@ test("the RU quote convention (period outside, attribution after) is split off",
   // `"...нож моей любви". Песня "Сквозь тебя" группы "БЕЗ ПРИКРАС"` — the
   // period sits outside the closing mark and the credit follows with no
   // dash, which none of the EN-shaped patterns can see.
-  const view = getPerkDescription(bySlug("cut-thru-u-single"), "ru");
+  const view = describeEntry(bySlug("cut-thru-u-single"), "ru");
   assert.match(view.quote!, /^«Этих чувств не остановишь/);
   assert.match(view.quote!, /Песня "Сквозь тебя"/, "the credit line was dropped");
   assert.ok(
@@ -239,7 +261,7 @@ test("a quoted term against a period is not mistaken for a lore quote", () => {
   // The counterweight to the test above. RU descriptions quote Status
   // Effect names inline, and those routinely land against a period
   // mid-paragraph — acting on that would cut the description in half.
-  const view = getPerkDescription(bySlug("adrenaline"), "ru");
+  const view = describeEntry(bySlug("adrenaline"), "ru");
   assert.match(view.full, /Усталость/);
   assert.ok(
     view.full.length > 200,
@@ -258,7 +280,7 @@ test("RU glossary asides stay out of Core but remain in the full text", () => {
     "no perk carries the Haste glossary aside any more — has the RU wiki changed?",
   );
   for (const perk of withAside) {
-    const view = getPerkDescription(perk, "ru");
+    const view = describeEntry(perk, "ru");
     if (view.curated) continue; // hand-written translations aren't derived
     assert.ok(
       !view.core.some((b) => /^«Спешка»\s+ускоряет/.test(b)),
@@ -284,7 +306,7 @@ function forEveryEntry(
     const failures: string[] = [];
     for (const entry of everything) {
       for (const lang of LANGS) {
-        const problem = check(getPerkDescription(entry, lang), entry, lang);
+        const problem = check(describeEntry(entry, lang), entry, lang);
         if (problem) failures.push(`${entry.slug} (${lang}): ${problem}`);
       }
     }
@@ -379,11 +401,11 @@ forEveryEntry("the lore quote is never also left in the body", (view) => {
  * measured across every shipped item, add-on and offering — 78 of 979
  * truncated — so they are the thing worth pinning, not one example.
  */
-const describe = (piece: Entry, lang: Lang) => getPerkDescription(piece, lang);
+const describe = (piece: Entry, lang: Lang) => describeEntry(piece, lang);
 const describeLoadout = (ru: string) => {
   const piece = [...items, ...addons, ...offerings].find((p) => p.name?.ru === ru);
   assert.ok(piece, `no shipped piece named ${ru} — the fixture has drifted`);
-  return getPerkDescription(piece, "ru");
+  return describeEntry(piece, "ru");
 };
 
 test("a status definition is cut, not the effect that mentions it", () => {
@@ -443,7 +465,7 @@ test("a Title-Cased term does not split an English sentence", () => {
   // "Can be used to heal other Survivors: Increased".
   const piece = [...items, ...addons].find((p) => p.name?.en === "Camping Aid Kit");
   assert.ok(piece, "fixture drifted");
-  const summary = coreSummary(getPerkDescription(piece, "en"));
+  const summary = coreSummary(describeEntry(piece, "en"));
   assert.ok(summary, "no summary");
   assert.match(summary, /35/, `the value was split away: ${summary}`);
 });
@@ -453,7 +475,7 @@ test("a preamble is never the whole summary", () => {
   // and states none of it.
   for (const lang of ["en", "ru"] as const) {
     const offenders = [...items, ...addons, ...offerings]
-      .map((p) => ({ name: p.name?.en ?? p.slug, s: coreSummary(getPerkDescription(p, lang)) }))
+      .map((p) => ({ name: p.name?.en ?? p.slug, s: coreSummary(describeEntry(p, lang)) }))
       .filter((x) => x.s && /[:—-]\s*$/.test(x.s));
     assert.equal(
       offenders.length,
@@ -468,13 +490,13 @@ test("the effect wins over the flavour, in either language", () => {
   // digit test cannot tell that from a real value, and picked the lore.
   const toolbox = [...items, ...addons].find((p) => p.name?.en === "Festive Toolbox");
   assert.ok(toolbox, "fixture drifted");
-  const en = coreSummary(getPerkDescription(toolbox, "en"));
+  const en = coreSummary(describeEntry(toolbox, "en"));
   assert.ok(en && !en.includes("fireworks"), `flavour chosen over the effect: ${en}`);
 
   // The compass fuses both into a single bullet with no punctuation.
   const compass = [...addons].find((p) => p.name?.ru === "Погрызенный компас");
   assert.ok(compass, "fixture drifted");
-  const ru = coreSummary(getPerkDescription(compass, "ru"));
+  const ru = coreSummary(describeEntry(compass, "ru"));
   assert.ok(ru && ru.startsWith("Увеличивает"), `flavour kept in front of the effect: ${ru}`);
 });
 
@@ -485,7 +507,7 @@ test("English summaries are not truncated more often than Russian ones", () => {
   const counts = (["en", "ru"] as const).map(
     (lang) =>
       [...items, ...addons, ...offerings].filter((p) =>
-        coreSummary(getPerkDescription(p, lang))?.endsWith("\u2026"),
+        coreSummary(describeEntry(p, lang))?.endsWith("\u2026"),
       ).length,
   );
   const [en, ru] = counts;
@@ -521,7 +543,7 @@ test("an override is shown exactly as written", () => {
     const expected = (coreOverrides as unknown as Record<string, Record<string, string>>)[
       "offering:faint-reagent"
     ][lang];
-    assert.equal(coreSummary(getPerkDescription(reagent, lang)), expected);
+    assert.equal(coreSummary(describeEntry(reagent, lang)), expected);
   }
 });
 
@@ -535,7 +557,7 @@ test("overrides state a mechanic, which is the whole point of having them", () =
     );
     if (!piece) continue;
     for (const lang of ["ru", "en"] as const) {
-      const s = coreSummary(getPerkDescription(piece, lang));
+      const s = coreSummary(describeEntry(piece, lang));
       // A few mechanics genuinely carry no number (Black Ward, the Shrouds);
       // what must never happen is an override that reads like lore.
       // Where-to-find-it prose, not the word "сундук" on its own: the keys
@@ -596,7 +618,7 @@ test("an add-on that does two things says both, downside included", () => {
   for (const [slug, lang, expected] of cases) {
     const piece = addons.find((p) => p.slug === slug);
     assert.ok(piece, `fixture drifted: ${slug}`);
-    const summary = coreSummary(getPerkDescription(piece, lang as Lang));
+    const summary = coreSummary(describeEntry(piece, lang as Lang));
     assert.ok(summary, `${slug}: no summary`);
     for (const re of expected) {
       assert.match(summary, re, `${slug} [${lang}] dropped an effect: ${summary}`);
@@ -615,7 +637,7 @@ test("every item states its numbers, in both languages", () => {
   const silent: string[] = [];
   for (const item of items) {
     for (const lang of ["ru", "en"] as const) {
-      const summary = coreSummary(getPerkDescription(item, lang));
+      const summary = coreSummary(describeEntry(item, lang));
       if (!summary || !/\*\*/.test(summary)) {
         silent.push(`${item.name?.[lang] ?? item.slug} [${lang}]: ${summary}`);
       }
@@ -729,16 +751,21 @@ test("a Core Effect override actually reaches the card", () => {
   const inert: string[] = [];
   for (const [key, override] of overridden) {
     const [kind, slug] = key.split(":");
-    const piece = pieces.find(
-      (p) => p.slug === slug && (p as { kind?: string }).kind === kind,
-    );
+    // `kind` is narrowed by the match rather than cast in — these rows all
+    // carry one, and a row that somehow does not is skipped rather than
+    // quietly described as something it is not.
+    const piece = pieces.find((p) => p.slug === slug && p.kind === kind);
     const entry = bundle[key];
-    if (!piece || !entry) continue;
+    if (!piece?.kind || !entry) continue;
     for (const lang of ["ru", "en"] as const) {
       const expected = override[lang];
       if (!expected) continue;
-      // Exactly how components/dbd/loadout-grid.tsx builds it.
-      const view = getPerkDescription({ ...piece, ...entry } as never, lang);
+      // Exactly how components/dbd/loadout-grid.tsx builds it — including
+      // calling the loadout entry point rather than the perk one. This used
+      // to say getPerkDescription and pass `as never`, which was wrong on
+      // both counts and only harmless while the two functions were the same
+      // call and the cast hid the difference.
+      const view = getLoadoutPieceDescription({ ...piece, ...entry, kind: piece.kind }, lang);
       if (coreSummary(view) !== expected) inert.push(`${key} [${lang}]`);
     }
   }

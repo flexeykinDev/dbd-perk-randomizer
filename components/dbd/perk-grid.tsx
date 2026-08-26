@@ -489,7 +489,9 @@ function PerkDescriptionPanel({
   const entry = useDescription("perks", perk.slug);
 
   if (!entry) return <DescriptionSkeleton />;
-  const description = getPerkDescription(entry, language);
+  // `entry` is description TEXT only — the override lookup is keyed on
+  // identity, so the perk has to come with it. See DescribableEntity.
+  const description = getPerkDescription({ ...perk, ...entry }, language);
 
   return (
     <div className="mt-4">

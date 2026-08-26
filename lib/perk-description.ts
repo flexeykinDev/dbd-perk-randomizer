@@ -1,4 +1,4 @@
-import type { LocalizedDescription } from "./types";
+import type { LoadoutPiece, LocalizedDescription } from "./types";
 import type { Lang } from "./i18n";
 
 import loadoutOverrides from "@/data/overrides/loadout.json";
@@ -379,13 +379,31 @@ function autoHighlight(text: string): string {
     .replace(NAMED_TERM_REPLACE_RE, (match) => `**${match}**`);
 }
 
-/** Shape both Perk and LoadoutPiece share (see LoadoutPieceBase in
- *  lib/types.ts, deliberately mirroring Perk's description fields) — this
+/** The description text both Perk and LoadoutPiece carry (see LoadoutPieceBase
+ *  in lib/types.ts, deliberately mirroring Perk's description fields) — this
  *  module works on either without needing to know which one it's given. */
-interface DescribableEntity {
+interface DescriptionText {
   description: string;
   descriptionRu?: LocalizedDescription;
   descriptionRuRaw?: string;
+}
+
+/** Which override table a piece is looked up in. */
+type DescribableKind = "perk" | LoadoutPiece["kind"];
+
+/** Text PLUS the identity the override lookup is keyed on.
+ *
+ * Identity is required, and that is the whole point of this type. It used to
+ * hold description fields only, and `overriddenCore` cast its way to `kind`
+ * and `slug` — which made "pass an object with no identity" a legal call that
+ * silently returned every override as absent. loadout-grid.tsx did exactly
+ * that, and all 118 hand-written Core Effects were dead in the UI for weeks
+ * while every unit test passed, because the tests composed an identity the
+ * component never did. Requiring the fields here is what turns that from a
+ * silent runtime no-op into a compile error. */
+interface DescribableEntity extends DescriptionText {
+  kind: DescribableKind;
+  slug: string;
 }
 
 /* A hand-written Core Effect, for the pieces no parser can rescue.
@@ -412,10 +430,7 @@ const CORE_EFFECT_OVERRIDES = loadoutOverrides.entries as Record<
 >;
 
 function overriddenCore(entity: DescribableEntity, lang: Lang): string | null {
-  const kind = (entity as { kind?: string }).kind;
-  const slug = (entity as { slug?: string }).slug;
-  if (!kind || !slug) return null;
-  const entry = CORE_EFFECT_OVERRIDES[`${kind}:${slug}`];
+  const entry = CORE_EFFECT_OVERRIDES[`${entity.kind}:${entity.slug}`];
   if (!entry || typeof entry === "string") return null;
   return entry[lang] ?? null;
 }
@@ -754,13 +769,25 @@ export function coreSummary(view: PerkDescriptionView, maxChars = MAX_JOINED): s
   return `${cut.trim()}…`;
 }
 
-export function getPerkDescription(perk: DescribableEntity, lang: Lang): PerkDescriptionView {
-  return describe(perk, lang);
+/* Both entry points ask for identity as well as text, so a caller that has
+ * only the description bundle cannot compile. `kind` is the one part a perk
+ * has no field for, so it is supplied here — in the single place that knows
+ * the answer — rather than at each call site, where it could be forgotten
+ * exactly the way it was before. */
+
+export function getPerkDescription(
+  perk: DescriptionText & { slug: string },
+  lang: Lang,
+): PerkDescriptionView {
+  return describe({ ...perk, kind: "perk" }, lang);
 }
 
 /** Same derivation as getPerkDescription, just named for its actual callers
  *  (Item/Addon/Offering detail modals) — LoadoutPiece has the identical
  *  description shape, so there's nothing to duplicate here. */
-export function getLoadoutPieceDescription(piece: DescribableEntity, lang: Lang): PerkDescriptionView {
+export function getLoadoutPieceDescription(
+  piece: DescriptionText & { kind: LoadoutPiece["kind"]; slug: string },
+  lang: Lang,
+): PerkDescriptionView {
   return describe(piece, lang);
 }

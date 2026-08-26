@@ -5,6 +5,7 @@ import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 import { THEME_STORAGE_KEY } from "@/lib/theme";
 import { LanguageProvider } from "@/lib/i18n";
+import { MotionProvider } from "@/components/motion-provider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -104,20 +105,22 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       </head>
       <body className="flex min-h-full flex-col bg-background text-foreground">
         <LanguageProvider>
-          <div className="app-shell flex min-h-full flex-1 flex-col">
-            <Nav />
-            {/* max-w-6xl reads comfortably up to a normal 1080p/1440p
-                screen, but on anything wider than 16:9 (ultrawide, 4K) it
-                left a huge dead margin on both sides with the whole app
-                looking small in the middle — the 2xl step gives large
-                monitors meaningfully more room without going full-bleed
-                (which would stretch card grids and text lines too wide to
-                read comfortably). */}
-            <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-4 2xl:max-w-[100rem]">
-              {children}
-            </main>
-            <Footer />
-          </div>
+          <MotionProvider>
+            <div className="app-shell flex min-h-full flex-1 flex-col">
+              <Nav />
+              {/* max-w-6xl reads comfortably up to a normal 1080p/1440p
+                  screen, but on anything wider than 16:9 (ultrawide, 4K) it
+                  left a huge dead margin on both sides with the whole app
+                  looking small in the middle — the 2xl step gives large
+                  monitors meaningfully more room without going full-bleed
+                  (which would stretch card grids and text lines too wide to
+                  read comfortably). */}
+              <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-4 2xl:max-w-[100rem]">
+                {children}
+              </main>
+              <Footer />
+            </div>
+          </MotionProvider>
         </LanguageProvider>
       </body>
     </html>

@@ -357,7 +357,13 @@ export function RitualStage({
 
     const gl = fog.getContext("webgl", { antialias: false, alpha: false });
     const uni: Record<string, WebGLUniformLocation | null> = {};
-    if (gl) {
+
+    /* Every GPU-side resource, in one function, because a lost context
+       destroys all of them at once and restoring means building them again
+       from nothing. The WebGLRenderingContext object itself survives a loss —
+       its shaders, programs, buffers and uniform locations do not, so none of
+       this can be hoisted out and reused. */
+    function buildGL(gl: WebGLRenderingContext) {
       const compile = (type: number, src: string) => {
         const sh = gl.createShader(type)!;
         gl.shaderSource(sh, src);
@@ -384,6 +390,34 @@ export function RitualStage({
       uni.tintAmt = gl.getUniformLocation(prog, "uTintAmt");
     }
 
+    /* Gates the fog draw. The browser can take the GPU context away at any
+       time — a driver reset, a laptop switching GPUs, too many live contexts
+       on the page — and drawing with the dead one throws on every frame.
+       False means "skip the fog"; the 2D sprite layer is a separate context
+       and keeps animating, so the cards still deal against the flat stage
+       ground instead of the whole stage freezing. */
+    let glReady = false;
+    if (gl) {
+      buildGL(gl);
+      glReady = true;
+    }
+
+    /* Without preventDefault the browser never fires `webglcontextrestored`,
+       so the canvas stays dead for the life of the page. That default is what
+       makes context loss look permanent. */
+    const onContextLost = (e: Event) => {
+      e.preventDefault();
+      glReady = false;
+    };
+    const onContextRestored = () => {
+      if (!gl) return;
+      buildGL(gl);
+      gl.viewport(0, 0, fog.width, fog.height);
+      glReady = true;
+    };
+    fog.addEventListener("webglcontextlost", onContextLost);
+    fog.addEventListener("webglcontextrestored", onContextRestored);
+
     let dpr = 1;
     const measure = () => {
       dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -394,7 +428,7 @@ export function RitualStage({
         c.height = Math.max(1, Math.round(s.H * dpr));
       }
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      if (gl) gl.viewport(0, 0, fog.width, fog.height);
+      if (gl && glReady) gl.viewport(0, 0, fog.width, fog.height);
       // Mirrored into React state so the DOM control layer can be laid out
       // from the same numbers the canvas paints with.
       setSize({ w: s.W, h: s.H });
@@ -559,7 +593,7 @@ export function RitualStage({
       }
       void dealt;
 
-      if (gl) {
+      if (gl && glReady) {
         gl.uniform2f(uni.res, fog!.width, fog!.height);
         gl.uniform1f(uni.time, time);
         gl.uniform1f(uni.spin, s.spin);
@@ -630,6 +664,8 @@ export function RitualStage({
       ro.disconnect();
       io.disconnect();
       document.removeEventListener("visibilitychange", onVisibility);
+      fog.removeEventListener("webglcontextlost", onContextLost);
+      fog.removeEventListener("webglcontextrestored", onContextRestored);
       // Release the GPU context rather than waiting for the collector — a
       // handful of theme switches otherwise hits the browser's live-context
       // cap and every later canvas silently fails to get one.

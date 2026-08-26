@@ -97,6 +97,7 @@ import { playSound, setSoundSurface } from "@/lib/sound";
 import { renderRitualBackdrop } from "@/lib/ritual-backdrop";
 import { RitualStage } from "./ritual-stage";
 import { SlotsStage } from "./slots-stage";
+import { ErrorBoundary } from "../error-boundary";
 import { useIsDesktop } from "@/lib/use-is-desktop";
 import { isAvailable, usePresentation } from "@/lib/use-presentation";
 import { Dropdown } from "./dropdown";
@@ -645,6 +646,44 @@ export function RandomizerBoard() {
     () => loadoutPieces.filter((p) => pieceVisibility[p.kind]),
     [pieceVisibility, loadoutPieces],
   );
+
+  /* What a screen reader is told when a build lands.
+   *
+   * Rolling replaces every card at once. Visually that is the whole point;
+   * without a live region it is also completely silent — the button says
+   * "Generate a new build", and then nothing, because swapping card contents
+   * moves no focus and fires no announcement of its own. This is the site's
+   * primary action producing no perceivable result (WCAG 2.2 §4.1.3).
+   *
+   * `perks` is already empty in loadout-only mode and `loadoutPieces` in
+   * perks-only mode, so concatenating both covers all three modes without a
+   * mode check here. */
+  const buildAnnouncement = useMemo(
+    () =>
+      [...perks.map((p) => p.name[language]), ...loadoutPieces.map((p) => p.name[language])].join(
+        ", ",
+      ),
+    [perks, loadoutPieces, language],
+  );
+  const [announced, setAnnounced] = useState("");
+  const skipFirstAnnouncement = useRef(true);
+  useEffect(() => {
+    // Nothing rolled yet. The first render is always empty — `mounted` is
+    // false until hydration — so this is also what keeps the count below
+    // from spending its one skip on the empty string.
+    if (!buildAnnouncement) return;
+    /* The build that is simply *there* on arrival is not an event, and a live
+     * region with content at mount gets read out over the top of the page
+     * load, ahead of its own heading. Skipping "the first render" is not
+     * enough to catch that: hydration fills an empty board, so the initial
+     * build arrives as a CHANGE and was being announced. What has to be
+     * skipped is the first build, not the first render. */
+    if (skipFirstAnnouncement.current) {
+      skipFirstAnnouncement.current = false;
+      return;
+    }
+    setAnnounced(buildAnnouncement);
+  }, [buildAnnouncement]);
   const sharePieces: ShareCardPiece[] = useMemo(() => {
     return mode === "loadout"
       ? visibleLoadoutPieces
@@ -1318,9 +1357,41 @@ export function RandomizerBoard() {
       ? `${t(ROLE_NAME[role])} · ${t({ ru: "Экипировка", en: "Loadout" })} — ${t({ ru: "Рандомайзер перков DBD", en: "DBD Perk Randomizer" })}`
       : `${t(ROLE_NAME[role])} · ${t({ ru: "Перков", en: "Perks" })}: ${perkCount} — ${t({ ru: "Рандомайзер перков DBD", en: "DBD Perk Randomizer" })}`;
 
+  /* The plain grid, named once because it is used twice: as the classic
+     presentation, and as what a failed WebGL stage degrades to. */
+  const perkGridView = (
+    <PerkGrid
+      perks={perks}
+      language={language}
+      loading={!mounted}
+      emptyMessage={
+        perkCount === 0
+          ? t({
+              ru: "Ноль перков — режим испытания",
+              en: "Zero perks — challenge mode",
+            })
+          : undefined
+      }
+      onCopy={handleCopy}
+      {...(sharedBuild || activeSeed
+        ? {}
+        : {
+            pinnedSlots: pinnedPerkSlots,
+            onTogglePin: togglePin,
+            onRerollSlot: rerollSlot,
+          })}
+    />
+  );
+
   return (
     <div className="flex flex-col items-center gap-3">
       <title>{pageTitle}</title>
+      {/* Polite, so it waits for the reader to finish rather than cutting in;
+          the build is not urgent enough for assertive. Empty until the first
+          roll — see buildAnnouncement above. */}
+      <div aria-live="polite" aria-atomic="true" className="sr-only">
+        {announced && `${t({ ru: "Новый билд", en: "New build" })}: ${announced}`}
+      </div>
       <div className="flex flex-wrap items-center justify-center gap-3">
         <div className="flex flex-wrap items-center justify-center gap-2">
           {(Object.keys(ROLE_LABEL) as PerkRole[]).map((r) => {
@@ -1807,59 +1878,50 @@ export function RandomizerBoard() {
              never roll anything themselves — see lib/use-presentation.ts.
              Pinning and per-slot reroll are grid affordances, so they stay
              with the grid rather than being reinvented on a canvas. */
-          effectivePresentation === "ritual" ? (
-            <RitualStage
-              pool={availablePool}
-              perks={perks}
-              role={role}
-              language={language}
-              onCopy={handleCopy}
-              {...(sharedBuild || activeSeed
-                ? {}
-                : {
-                    pinnedSlots: pinnedPerkSlots,
-                    onTogglePin: togglePin,
-                    onRerollSlot: rerollSlot,
-                  })}
-            />
-          ) : (
-            <SlotsStage
-              pool={availablePool}
-              perks={perks}
-              role={role}
-              language={language}
-              onCopy={handleCopy}
-              {...(sharedBuild || activeSeed
-                ? {}
-                : {
-                    pinnedSlots: pinnedPerkSlots,
-                    onTogglePin: togglePin,
-                    onRerollSlot: rerollSlot,
-                  })}
-            />
-          )
+          /* Both stages draw to a canvas, and Ritual's fog is WebGL on top of
+             that. Canvases fail for reasons that have nothing to do with this
+             code: a blocklisted driver, a GPU reset, a context the browser
+             declines to hand out. The build itself is fine in all of those
+             cases, so a failed stage falls back to the plain grid — the same
+             cards, no presentation — rather than taking the page down with
+             it. (Ritual additionally recovers from a *lost* GL context on its
+             own; this catches the harder failures, where there is nothing to
+             recover.) */
+          <ErrorBoundary label={effectivePresentation} fallback={perkGridView}>
+            {effectivePresentation === "ritual" ? (
+              <RitualStage
+                pool={availablePool}
+                perks={perks}
+                role={role}
+                language={language}
+                onCopy={handleCopy}
+                {...(sharedBuild || activeSeed
+                  ? {}
+                  : {
+                      pinnedSlots: pinnedPerkSlots,
+                      onTogglePin: togglePin,
+                      onRerollSlot: rerollSlot,
+                    })}
+              />
+            ) : (
+              <SlotsStage
+                pool={availablePool}
+                perks={perks}
+                role={role}
+                language={language}
+                onCopy={handleCopy}
+                {...(sharedBuild || activeSeed
+                  ? {}
+                  : {
+                      pinnedSlots: pinnedPerkSlots,
+                      onTogglePin: togglePin,
+                      onRerollSlot: rerollSlot,
+                    })}
+              />
+            )}
+          </ErrorBoundary>
         ) : (
-          <PerkGrid
-            perks={perks}
-            language={language}
-            loading={!mounted}
-            emptyMessage={
-              perkCount === 0
-                ? t({
-                    ru: "Ноль перков — режим испытания",
-                    en: "Zero perks — challenge mode",
-                  })
-                : undefined
-            }
-            onCopy={handleCopy}
-            {...(sharedBuild || activeSeed
-              ? {}
-              : {
-                  pinnedSlots: pinnedPerkSlots,
-                  onTogglePin: togglePin,
-                  onRerollSlot: rerollSlot,
-                })}
-          />
+          perkGridView
         ))}
 
       {/* Secondary toolbar — sleek, compact, sits right under the cards it
