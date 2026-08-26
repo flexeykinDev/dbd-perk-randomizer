@@ -46,8 +46,8 @@ import { usePersistedSet } from "@/lib/use-persisted-set";
 import { useBuildClipboard } from "@/lib/use-build-clipboard";
 import { ROLE_COLOR } from "@/lib/role-color";
 import { useLanguage, useT } from "@/lib/i18n";
-import { dailyChallengeSeed } from "@/lib/seeded-random";
-import { recordDailyParticipation } from "@/lib/daily-count";
+import { useSeed } from "@/lib/use-seed";
+import { useBattleRoyale } from "@/lib/use-battle-royale";
 import { recordRoll } from "@/lib/stats";
 import {
   parseLoadoutKey,
@@ -107,7 +107,6 @@ const DEFAULT_PERK_COUNT = 4;
 const EXCLUDED_STORAGE_KEY = "dbd-randomizer:excluded-perks";
 const FAVORITE_STORAGE_KEY = "dbd-randomizer:favorite-perks";
 const PERK_COUNT_STORAGE_KEY = "dbd-randomizer:perk-count";
-const BR_STORAGE_KEY = "dbd-randomizer:battle-royale";
 const MODE_STORAGE_KEY = "dbd-randomizer:mode";
 const EXCLUDED_LOADOUT_STORAGE_KEY = "dbd-randomizer:excluded-loadout";
 const LOADOUT_SLOT_ITEM_STORAGE_KEY = "dbd-randomizer:loadout-slot-item";
@@ -145,7 +144,6 @@ const ROLE_FROM_SHORT: Record<string, PerkRole> = {
   k: "killer",
 };
 
-type SeedMode = "none" | "daily" | "custom";
 
 function loadPerkCount(): number {
   const n = parseInt(safeGet("local", PERK_COUNT_STORAGE_KEY) ?? "", 10);
@@ -173,29 +171,6 @@ function loadLoadoutSlots(): LoadoutSlots {
   };
 }
 
-
-interface BattleRoyaleState {
-  active: boolean;
-  used: string[];
-}
-
-function loadBattleRoyale(): BattleRoyaleState {
-  const stored = safeGetJSON<Partial<BattleRoyaleState>>(
-    "session",
-    BR_STORAGE_KEY,
-    {},
-  );
-  return {
-    active: stored.active === true,
-    used: Array.isArray(stored.used)
-      ? stored.used.filter((s) => typeof s === "string")
-      : [],
-  };
-}
-
-function persistBattleRoyale(state: BattleRoyaleState) {
-  safeSetJSON("session", BR_STORAGE_KEY, state);
-}
 
 interface InitialUrlState {
   role: PerkRole;
@@ -373,16 +348,13 @@ export function RandomizerBoard() {
   const [presetsModalOpen, setPresetsModalOpen] = useState(false);
   const [obsModalOpen, setObsModalOpen] = useState(false);
   const [statsVersion, setStatsVersion] = useState(0);
-  const [battleRoyale, setBattleRoyale] = useState(false);
-  const [battleRoyaleUsed, setBattleRoyaleUsed] = useState<Set<string>>(
-    new Set(),
-  );
-  const [seedMode, setSeedMode] = useState<SeedMode>("none");
-  const [customSeedInput, setCustomSeedInput] = useState("");
-  // Only holds the custom-seed value — Daily Challenge's seed is derived
-  // below from `role`, so switching role while it's on can't drift out of
-  // sync with a stale copy stored in state.
-  const [activeCustomSeed, setActiveCustomSeed] = useState<string | null>(null);
+  /* Battle Royale — play until the pool runs dry. See lib/use-battle-royale.ts. */
+  const br = useBattleRoyale();
+  const battleRoyale = br.active;
+  const battleRoyaleUsed = br.used;
+  // Named for the mount effect and the eliminate callback below, so neither
+  // depends on `br` — a fresh object every render.
+  const { hydrate: hydrateBattleRoyale, eliminate: eliminateFromPool } = br;
   // Perks are randomized, so they can only be computed after hydration —
   // otherwise the server-rendered HTML and the client's first render would
   // pick different perks and React would flag a hydration mismatch.
@@ -421,12 +393,24 @@ export function RandomizerBoard() {
     DEFAULT_PIECE_VISIBILITY,
   );
 
-  const activeSeed =
-    seedMode === "daily"
-      ? dailyChallengeSeed(role)
-      : seedMode === "custom"
-        ? activeCustomSeed
-        : null;
+  /* Seeds — Daily Challenge, a typed seed, or one carried by a share link.
+     See lib/use-seed.ts. Every path through it drops the shared build,
+     which a seeded build outranks; forgetting that on one path was how a
+     seed could silently show the wrong build. */
+  const seed = useSeed({
+    role,
+    onChange: useCallback(({ reroll }: { reroll: boolean }) => {
+      setSharedBuild(null);
+      setSharedLoadoutPieces(null);
+      if (reroll) setNonce((n) => n + 1);
+    }, []),
+  });
+  const activeSeed = seed.active;
+  // Pulled out by name for the mount effect below, same reason as the
+  // hydrate callbacks above: `seed` is a fresh object every render, and an
+  // effect that sets state depending on it would never stop running.
+  const { hydrateFromUrl: hydrateSeedFromUrl } = seed;
+
 
   useEffect(() => {
     function applyInitialClientState() {
@@ -446,13 +430,7 @@ export function RandomizerBoard() {
         setRole(urlState.role);
         setMode(urlState.mode);
         if (urlState.seed) {
-          setCustomSeedInput(urlState.seed);
-          if (urlState.seed === dailyChallengeSeed(urlState.role)) {
-            setSeedMode("daily");
-          } else {
-            setSeedMode("custom");
-            setActiveCustomSeed(urlState.seed);
-          }
+          hydrateSeedFromUrl(urlState.seed, urlState.role);
         } else {
           // Not an else-if chain — "all" mode's share link carries both
           // `p=` and `lp=` together and needs both applied, or the
@@ -467,11 +445,7 @@ export function RandomizerBoard() {
           }
         }
       }
-      const br = loadBattleRoyale();
-      if (br.active) {
-        setBattleRoyale(true);
-        setBattleRoyaleUsed(new Set(br.used));
-      }
+      hydrateBattleRoyale();
 
       setPieceVisibility(
         safeGetJSON(
@@ -487,7 +461,13 @@ export function RandomizerBoard() {
     // depending on those would re-run this on every render — and since
     // hydrating sets state, that is an endless loop rather than merely
     // wasteful. The callbacks themselves are stable.
-  }, [hydrateExcludedPerks, hydrateFavorites, hydrateExcludedLoadout]);
+  }, [
+    hydrateExcludedPerks,
+    hydrateFavorites,
+    hydrateExcludedLoadout,
+    hydrateSeedFromUrl,
+    hydrateBattleRoyale,
+  ]);
 
   // Perks the current theme filter rules out, expressed as an exclusion set
   // so it can merge into the same combinedExcluded pipeline that already
@@ -856,21 +836,8 @@ export function RandomizerBoard() {
   }, [mounted, publishCurrentBuild, shouldPublish, buildKey, obsModalOpen]);
 
   const eliminateCurrentBuild = useCallback(() => {
-    // "all" mode eliminates both halves together in one update, rather
-    // than two separate setState calls — avoids persisting the evolving
-    // set to storage twice for what's really one user action.
-    const hasPerks = mode !== "loadout" && perks.length > 0;
-    const hasLoadout = mode !== "perks" && loadoutPieces.length > 0;
-    if (!hasPerks && !hasLoadout) return;
-    setBattleRoyaleUsed((prev) => {
-      const next = new Set(prev);
-      if (hasPerks) perks.forEach((p) => next.add(p.slug));
-      if (hasLoadout)
-        loadoutPieces.forEach((p) => next.add(`${p.kind}:${p.slug}`));
-      persistBattleRoyale({ active: true, used: [...next] });
-      return next;
-    });
-  }, [mode, perks, loadoutPieces]);
+    eliminateFromPool({ mode, perks, loadoutPieces });
+  }, [eliminateFromPool, mode, perks, loadoutPieces]);
 
   // Declared after eliminateCurrentBuild because it takes it: copying a
   // build is one of the two ways Battle Royale retires one (the other is
@@ -955,9 +922,11 @@ export function RandomizerBoard() {
     setRole(preset.role);
     // A seeded build outranks a shared one further up, so leaving a seed
     // active would show the seed's build and quietly ignore the pick.
-    setSeedMode("none");
+    // `release`, not `clear`: this is installing a build, so the reroll
+    // `clear` triggers would immediately throw it away.
+    seed.release();
     setSharedBuild(perks);
-  }, []);
+  }, [seed]);
 
 
   // Page-level keyboard shortcuts — see lib/use-board-shortcuts.ts. Every
@@ -1256,58 +1225,16 @@ export function RandomizerBoard() {
   }
 
   function toggleBattleRoyale() {
-    // Strict Mode (dev, React 19) invokes a setState updater function twice
-    // to catch impurity — the side effects (localStorage write, other
-    // setters) used to live inside setBattleRoyale's updater and so fired
-    // twice per toggle. Computing `next` from the already-in-scope
-    // `battleRoyale` and calling the other setters as plain top-level
-    // statements keeps setBattleRoyale itself a pure value-set.
-    const next = !battleRoyale;
-    const used = next ? new Set<string>() : battleRoyaleUsed;
-    setBattleRoyale(next);
-    setBattleRoyaleUsed(used);
-    persistBattleRoyale({ active: next, used: [...used] });
+    // The mode itself is the hook's; dropping whatever build is on screen
+    // and rolling into the new pool is the board's.
+    br.toggle();
     setSharedBuild(null);
     setSharedLoadoutPieces(null);
     setNonce((n) => n + 1);
   }
 
   function restartBattleRoyale() {
-    setBattleRoyaleUsed(new Set());
-    persistBattleRoyale({ active: true, used: [] });
-    setSharedBuild(null);
-    setSharedLoadoutPieces(null);
-    setNonce((n) => n + 1);
-  }
-
-  function toggleDailyChallenge() {
-    if (seedMode === "daily") {
-      clearSeed();
-      return;
-    }
-    // Counted here rather than on page load: this is the moment someone
-    // actually takes the challenge, which is what the number claims to
-    // report. Deduplicated per browser per day inside the helper.
-    recordDailyParticipation();
-    setSeedMode("daily");
-    setCustomSeedInput("");
-    setSharedBuild(null);
-    setSharedLoadoutPieces(null);
-  }
-
-  function applyCustomSeed() {
-    const value = customSeedInput.trim();
-    if (!value) return;
-    setSeedMode("custom");
-    setActiveCustomSeed(value);
-    setSharedBuild(null);
-    setSharedLoadoutPieces(null);
-  }
-
-  function clearSeed() {
-    setSeedMode("none");
-    setActiveCustomSeed(null);
-    setCustomSeedInput("");
+    br.restart();
     setSharedBuild(null);
     setSharedLoadoutPieces(null);
     setNonce((n) => n + 1);
@@ -1693,10 +1620,10 @@ export function RandomizerBoard() {
             <div className="flex flex-col gap-1">
               <button
                 type="button"
-                onClick={toggleDailyChallenge}
+                onClick={seed.toggleDaily}
                 className={cn(
                   "flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm font-medium transition-colors",
-                  seedMode === "daily"
+                  seed.mode === "daily"
                     ? "bg-accent/15 text-accent"
                     : "text-foreground hover:bg-surface-hover",
                 )}
@@ -1708,25 +1635,25 @@ export function RandomizerBoard() {
               <div className="flex items-center gap-1.5 px-2 py-1">
                 <input
                   type="text"
-                  value={customSeedInput}
-                  onChange={(e) => setCustomSeedInput(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && applyCustomSeed()}
+                  value={seed.input}
+                  onChange={(e) => seed.setInput(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && seed.applyCustom()}
                   aria-label={t({ ru: "Свой сид", en: "Custom seed" })}
                   placeholder={t({ ru: "Свой сид…", en: "Custom seed…" })}
                   className="min-w-0 flex-1 rounded-full border border-border bg-background px-3 py-1 text-xs text-foreground placeholder:text-muted/60 focus:ring-2 focus:ring-accent/40 focus:outline-none"
                 />
                 <button
                   type="button"
-                  onClick={applyCustomSeed}
-                  disabled={!customSeedInput.trim()}
+                  onClick={seed.applyCustom}
+                  disabled={!seed.input.trim()}
                   className="rounded-full px-2.5 py-1 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
                 >
                   {t({ ru: "Задать", en: "Set" })}
                 </button>
-                {seedMode !== "none" && (
+                {seed.mode !== "none" && (
                   <button
                     type="button"
-                    onClick={clearSeed}
+                    onClick={seed.clear}
                     aria-label={t({ ru: "Сбросить сид", en: "Clear seed" })}
                     className="flex size-6 shrink-0 items-center justify-center rounded-full text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
                   >
@@ -1778,7 +1705,7 @@ export function RandomizerBoard() {
             {/* Daily Challenge only: a custom seed is yours alone, so a
                 shared count would mean nothing there. Mounting this is
                 also what opens the listener — see the component. */}
-            {seedMode === "daily" && <DailyCount />}
+            {seed.mode === "daily" && <DailyCount />}
           </p>
         )}
       </div>
