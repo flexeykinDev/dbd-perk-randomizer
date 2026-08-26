@@ -84,7 +84,7 @@
         "en": "Built to end chases quickly: pallets stop helping and windows stop working.",
         "ru": "Собрано, чтобы заканчивать погони быстро: доски перестают спасать, а окна — работать."
       },
-      "perks": ["bamboozle", "enduring", "spirit-fury", "save-the-best-for-last"]
+      "perks": ["bamboozle", "enduring", "spirit-fury", "keep-them-waiting"]
     }
   ]
 }

@@ -241,7 +241,6 @@
   "perk:killer/rancor": "https://deadbydaylight.wiki.gg/images/IconPerks_rancor.png?df9209@256",
   "perk:killer/rapid-brutality": "https://deadbydaylight.wiki.gg/images/IconPerks_rapidBrutality.png?1c1f82@256",
   "perk:killer/remember-me": "https://deadbydaylight.wiki.gg/images/IconPerks_rememberMe.png?4b8c1b@256",
-  "perk:killer/save-the-best-for-last": "https://deadbydaylight.wiki.gg/images/IconPerks_saveTheBestForLast.png?f6b33a@256",
   "perk:killer/scourge-hook-floods-of-rage": "https://deadbydaylight.wiki.gg/images/IconPerks_scourgeHookFloodsOfRage.png?45d664@256",
   "perk:killer/scourge-hook-hangman-s-trick": "https://deadbydaylight.wiki.gg/images/IconPerks_scourgeHookHangmansTrick.png?fb70f3@256",
   "perk:killer/scourge-hook-jagged-compass": "https://deadbydaylight.wiki.gg/images/IconPerks_scourgeHookJaggedCompass.png?38db55@256",
@@ -409,5 +408,14 @@
   "perk:survivor/down-to-the-last": "https://deadbydaylight.wiki.gg/images/IconPerks_soleSurvivor_noLicense.png?801a0f@256",
   "perk:survivor/will-to-live": "https://deadbydaylight.wiki.gg/images/IconPerks_decisiveStrike.png?55fc96@256",
   "perk:killer/cull-the-weak": "https://deadbydaylight.wiki.gg/images/IconPerks_dyingLight.png?2513ea@256",
-  "perk:killer/see-how-they-run": "https://deadbydaylight.wiki.gg/images/IconPerks_playWithYourFood.png?bfcaf7@256"
+  "perk:killer/see-how-they-run": "https://deadbydaylight.wiki.gg/images/IconPerks_playWithYourFood.png?bfcaf7@256",
+  "perk:survivor/boon-steadfast": "https://deadbydaylight.wiki.gg/images/T_UI_iconsPerks_BoonSteadfast.png?69ff59@256",
+  "perk:survivor/fruits-of-your-labor": "https://deadbydaylight.wiki.gg/images/T_UI_iconsPerks_FruitsOfYourLabor.png?6e8560@256",
+  "perk:survivor/salvation-s-cry": "https://deadbydaylight.wiki.gg/images/T_UI_iconsPerks_SalvationsCry.png?697de7@256",
+  "perk:killer/celestial-witness": "https://deadbydaylight.wiki.gg/images/T_UI_iconsPerks_CelestialWitness.png?d93f72@256",
+  "perk:killer/hex-under-your-thumb": "https://deadbydaylight.wiki.gg/images/T_UI_iconsPerks_HexUnderYourThumb.png?57c1f4@256",
+  "perk:killer/keep-them-waiting": "https://deadbydaylight.wiki.gg/images/IconPerks_saveTheBestForLast_noLicense.png?e62cf0@256",
+  "perk:killer/lay-waste": "https://deadbydaylight.wiki.gg/images/T_UI_iconsPerks_LayWaste.png?a49aeb@256",
+  "character:Aurora": "https://deadbydaylight.wiki.gg/images/S54_AuroraStardotter_Portrait.png?570493@256",
+  "character:Judgment": "https://deadbydaylight.wiki.gg/images/K44_TheJudgment_Portrait.png?a744a3@256"
 }

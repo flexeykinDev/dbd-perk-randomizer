@@ -117,6 +117,9 @@
     "description": "A Boon that conceals the truth. Press and hold the Active Ability button on a Dull or Hex Totem to bless it and create a Boon Totem.All Survivors within 24 metres hear soft chimes ringing out and benefit from its Boon Effects: Scratch Marks are suppressed. Auras are hidden from The Killer. Both effects linger for 2/3/4 seconds after leaving the Boon Totem's range. Only one Totem can be blessed by your Boon Perks at a time and all of their effects are active on the same Boon Totem. \"Stick to the shadows and cover your tracks.\" — Mikaela Reid",
     "descriptionRuRaw": "Когда вы стоите рядом с тотемом, нажмите Е, чтобы благословить его и создать уникальный дарующий тотем со всеми вашими дарами. Выжившие в радиусе действия этого тотема: не оставляют следы-трещины; убийца не может видеть их ауры. После выхода из этой области эффект сохраняется еще 2/3/4 сек.."
   },
+  "boon-steadfast": {
+    "description": "Press and hold the Active Ability button on a Dull or Hex Totem to bless it and create a Boon Totem.All Survivors within 24 metres hear soft chimes ringing out and benefit from its Boon Effects: Generators within this Boon's range: Regress -50 % slower. Survivors repair them +8/9/10 % faster. Survivors can only be affected by one instance of Boon: Steadfast at a time. Only one Totem can be blessed by your Boon Perks at a time and all of their effects are active on the same Boon Totem."
+  },
   "borrowed-time": {
     "description": "\"You are fuelled with an unexpected energy when saving an ally from a hook.\" Whenever you unhook another Survivor, they benefit from the following effects: Extends the duration of the Endurance Status Effect by 6/8/10 seconds to 21/23/25 seconds. Endurance is cancelled prematurely when performing a Conspicuous Action of any kind. Extends the duration of the Haste Status Effect by +10 seconds to 25 seconds. \"Probably stings like hell, but it ain't gonna kill ya. Up and at 'em soldier. Time to move!\" — Bill Overbeck",
     "descriptionRuRaw": "Когда вы снимаете выжившего с крюка: его эффект \"Стойкость\" после снятия действует на 6/8/10 сек. дольше; его эффект \"Спешка\" после снятия действует на 10 сек. дольше. Стойких выживших нельзя смертельно ранить одним ударом, вместо этого они получают глубокую рану. \"Спешка\" ускоряет движение убийц и выживших."
@@ -333,6 +336,9 @@
   "friendly-competition": {
     "description": "\"You revel in the community spirit of a competition, and inspire others to follow suit.\" Each time you complete a Generator together with at least one other Survivor, Friendly Competition activates: Increases the Repair speed of all participating Survivors, including yourself, by +5 % for 100/110/120 seconds. \"C'mon, let's do this!\" — Thalita Lyra",
     "descriptionRuRaw": "Когда вы чините генератор совместно с выжившим, по завершении ремонта выжившие, участвовавшие в этом процессе, начинают чинить на 5% быстрее в течение 100/110/120 сек.."
+  },
+  "fruits-of-your-labor": {
+    "description": "Whenever a Generator is completed, gain a token. Whenever you finish repairing a Generator, for each token this perk has: Gain +5 % Haste Status Effect for 2 seconds. Gain 10/15/20 % healing progress."
   },
   "ghost-notes": {
     "description": "\"You know that the best breakdowns precede the biggest build-ups.\" While suffering from the Exhausted Status Effect, you benefit from the following effects: Causes your Scratch Marks to disappear +50 % faster. Increases your Recovery rate from that Status Effect by 5/7.5/10 %. Ghost Notes does not cause the Exhausted Status Effect. \"Let's take it to the bridge!\" — Vee Boonyasak",
@@ -591,6 +597,9 @@
     "description": "Unlocks potential in your Aura-reading ability: While the Killer is carrying another Survivor, the Auras of all Hooks within 56 metres of their original Pick-up location are revealed to you: The Auras of normal Hooks are white. The Auras of Scourge Hooks are yellow. Unlocks the ability to sabotage Hooks without Toolboxes: Increases the Sabotage speed without a Toolbox by +30 %. This effect has a cool-down of 70/65/60 seconds after use.",
     "descriptionRuRaw": "В пределах 56м от места, где убийца поднял и понес выжившего, вы видите ауры обычных и секущих крюков. Вы можете ломать крюки. Перезарядка: 70/65/60 сек.."
   },
+  "salvation-s-cry": {
+    "description": "When the Killer starts chasing you: You see the auras of other Survivors for 1/2/3 seconds. Survivors not being chased see your aura for 5 seconds Survivors not being chased see the Killer's aura for 5 seconds"
+  },
   "scavenger": {
     "description": "\"Where others see junk, you see valuable improvised tools.\" While holding a depleted Toolbox, Scavenger activates: Succeeding at Great Repairing Skill Checks grants 1 Token, up to a maximum of 5 Tokens. Reaching the maximum number of Tokens automatically consumes them and fully recharges the Toolbox. Recharging a Toolbox will reduce your Repair speed by -50 % for the next 40/35/30 seconds. Scavenger grants the ability to rummage through an opened Chest once per Trial and will guarantee a basic Toolbox. \"It's amazing what people will throw away around here.\" — Gabriel Soma",
     "descriptionRuRaw": "Если вы заняты починкой, а ваш ящик с инструментами пуст, за каждую отличную базовую проверку реакции вы получаете жетоны (1 шт.). Если накопить жетоны в количестве 5 и потратить их все: вы мгновенно перезаряжаете ящик с инструментами; продолжать ремонты вы будете на 50% медленнее в течение 40/35/30 сек.. Вы можете обыскать сундук 1 раз(а). При первом обыске в сундуке будет необычный ящик с инструментами."
@@ -842,6 +851,9 @@
     "description": "\"Your psychic abilities influence technology in devastating ways.\" After performing the Damage Generator action on a Generator, Call of Brine applies its effects to it for 90 seconds: Increases its Regression speed to 130/140/150 % of the default value. Highlights its Aura to you in yellow. Triggers a Loud Noise Notification whenever a Survivor succeeds a Good Skill Check while repairing it.",
     "descriptionRuRaw": "Когда вы повреждаете генератор, его прогресс снижается на 30/40/50% быстрее в течение 70 сек. Если за это время чинящий его выживший хорошо проходит базовую проверку реакции, вы получаете уведомление."
   },
+  "celestial-witness": {
+    "description": "Every 30 seconds, if the Obsession is 40 metres away from you, you see their aura for 2/2.5/3 seconds. Otherwise, the farthest Survivor becomes the Obsession."
+  },
   "corrupt-intervention": {
     "description": "Your prayers invoke a dark power that meddles with the Survivors' chances of survival. At the start of the Trial, the 3 Generators located farthest from you are blocked by The Entity for 80/100/120 seconds. Corrupt Intervention deactivates prematurely once the first Survivor is put into the Dying State. \"It shall be known across the land that the Gods curse the unfaithful.\" — (The Tablet of Adiris, 3.7)",
     "descriptionRuRaw": "В начале матча самые дальние от вас генераторы (3) блокируются на 80/100/120 сек. или до тех пор, когда вы смертельно раните выжившего."
@@ -1047,6 +1059,9 @@
     "description": "\"A Hex that teaches those who mess with you a lesson.\" Anytime you are stunned or blinded by any Survivor a total of 4/3/2 times, and if there is not yet a Hex Totem already associated with Hex: Two Can Play and there is at least one Dull Totem remaining in the Trial Grounds, Hex: Two Can Play activates on a random Totem: Blinds all Survivors who stun or blind you for 1.5 seconds. This does not affect carried Survivors. The Hex Effects persist until the Hex Totem is either blessed or cleansed by a Survivor, disabling it for the remainder of the Trial. \"From now on, no more Mr Good Guy.\" — Chucky",
     "descriptionRuRaw": "Если этот тотем тусклый, то он загорается, когда выживший ослепляет или оглушает вас 4/3/2 раза раз. Когда вас ослепляет или оглушает выживший, которого вы не переносите, он слепнет на 1.5 сек."
   },
+  "hex-under-your-thumb": {
+    "description": "When a Survivor gains a Hook State, Hex: Under Your Thumb activates on a random Dull Totem: Running Survivors cannot gain more than 25/20/15 % Haste at once. Whenever a running Survivor within 32 metres gains Haste, the Survivor's location is revealed to you for 4 seconds. The Hex Effects persist until the Hex Totem is either blessed or cleansed by a Survivor, disabling it for the remainder of the Trial."
+  },
   "hex-undying": {
     "description": "\"A Hex which maintains the vile powers that flow throughout the Trial.\" Whenever a Survivor is within 2/3/4 metres of a Dull Totem, Hex: Undying triggers its primary effect: Their Aura is revealed to you for as long as they remain in that range. Whenever a Hex Totem is cleansed, Hex: Undying triggers its secondary effect: Transfers the cleansed Hex to the Hex Totem associated with Hex: Undying instead, replacing it. The Hex Effects persist until the Hex Totem is either blessed or cleansed by a Survivor, disabling it for the remainder of the Trial.",
     "descriptionRuRaw": "В начале матча загорается тусклый тотем. Когда другой проклятый тотем благословляют или очищают, он заменяет этот и сохраняет все его жетоны. Вы видите ауры выживших в радиусе 2/3/4 м. от тусклых тотемов."
@@ -1091,6 +1106,9 @@
     "description": "While interacting with an empty Locker, Iron Maiden applies its primary effect: Increases your Search speed by 30/40/50 %. Whenever a Survivor exits a Locker, Iron Maiden triggers its secondary effects: Causes them to scream and trigger a Loud Noise Notification at their current location. This effect lingers for 4 seconds. Causes them to suffer from the Exposed Status Effect for 30 seconds. \"This is no place for cowards.\" — The Legion",
     "descriptionRuRaw": "Когда выживший вылезает из шкафчика: он получает эффект \"Уязвимость\" на 30 сек.; он кричит, и вы узнаете о его местоположении на 4 сек. Вы открываете шкафчики на 30/40/50% быстрее. Уязвимые выжившие получают смертельные ранения от базовых атак, даже если полностью здоровы."
   },
+  "keep-them-waiting": {
+    "description": "Damaging any Survivor other than the Obsession with a Basic Attack causes Keep Them Waiting to gain +1 Token, up to a maximum of 6/7/8 Tokens.Damaging the Obsession with either a Basic or Special Attack causes Keep Them Waiting to lose -2 Tokens: Grants a stack-able -5 % per Token Cool-down time reduction on successful Basic Attacks, up to a maximum of 30/35/40 %. Keep Them Waiting freezes its current Token Count once the Obsession is sacrificed or killed.You can only be obsessed with one Survivor at a time."
+  },
   "knock-out": {
     "description": "\"The trauma caused by your brutal attacks makes crying for help painfully difficult.\" Whenever a Survivor moves farther than 6 metres from a Pallet within 6 seconds of dropping it, Knock Out triggers its effect: Causes them to suffer from a -5 % Hindered Status Effect for 3/4/5 seconds. \"Oh, that gun's no good. The old way... with a sledge! You see, that way's better. They die better that way.\" — Nubbins Sawyer",
     "descriptionRuRaw": "Когда выживший роняет доску, в следующие 6 сек., если он отойдет от нее на 6м, то получит 5% эффекта \"Замедление\" на 3/4/5 сек.. Замедленные убийцы и выжившие двигаются медленнее."
@@ -1098,6 +1116,9 @@
   "languid-touch": {
     "description": "\"Your dreadful aura is so suffocating that even terrifying scenes tire your prey.\" When a Survivor scares off a Crow within 36 metres of your location, Languid Touch activates: Causes that Survivor to suffer from the Exhausted Status Effect for 6/8/10 seconds. Languid Touch has a cool-down of 5 seconds. \"Submit to me. It is inevitable.\" — Vecna",
     "descriptionRuRaw": "Когда выживший спугивает ворону в пределах 36м от вас, он получает эффект \"Усталость\" на 6/8/10 сек.. Перезарядка: 5 сек. Усталые выжившие не могут использовать навыки, которые вызывают \"Усталость\"."
+  },
+  "lay-waste": {
+    "description": "Damaging a Generator makes it regress +2 % faster for each Charge it has. This perk has a cool-down of 55/50/45 seconds after damaging a Generator."
   },
   "lethal-pursuer": {
     "description": "\"You have been designed to track down and eliminate targets.\" At the start of the Trial, the Auras of all Survivors are revealed to you for 7/8/9 seconds. Extends the duration of all instances of a Survivor Aura being revealed to you by +2 seconds. Lethal Pursuer benefits from its own effect. \"...it knows what it wants and won't stop till it gets it.\" — Carlos Oliveira",
@@ -1163,7 +1184,7 @@
     "descriptionRuRaw": "Впервые вешая выжившего на крюк, вы получаете жетоны (1). По окончании ремонта всех генераторов, за каждый жетон: стоящие доски блокируются на 12/14/16 сек.; прыжки в окна блокируются на 12/14/16 сек.."
   },
   "nowhere-to-hide": {
-    "description": "\"The machinations of the weak and craven draw your ire.Your anger forces Survivors to reveal themselves.\" Performing the Damage Generator action on a Generator triggers Nowhere to Hide: The Auras of all Survivors within 18 metres of your location are revealed to you for 3/4/5 seconds. \"Out with you, cowards! Show yourselves!\" — Tarhos Kovács",
+    "description": "\"The machinations of the weak and craven draw your ire.Your anger forces Survivors to reveal themselves.\" Performing the Damage Generator action on a Generator triggers Nowhere to Hide: The Auras of all Survivors within 24 metres of the Generator's location are revealed to you for 3/4/5 seconds. \"Out with you, cowards! Show yourselves!\" — Tarhos Kovács",
     "descriptionRuRaw": "В течение 3/4/5 сек. после того, как вы повреждаете генератор, вы видите ауры всех выживших в радиусе 24м от вас."
   },
   "oppression": {
@@ -1209,10 +1230,6 @@
   "remember-me": {
     "description": "Whenever the Obsession loses a Health State by any means, Remember Me gains +1 Token, up to a maximum of 3/4/5 Tokens: Increases the Opening time of both Exit Gates by a stack-able 6 seconds per Token, up to a maximum additional Opening time of 18/24/30 seconds. This results in a maximum possible Opening time of 38/44/50 seconds for both Exit Gates. Remember Me does not apply its penalty to the Obsession, allowing them to open both Exit Gates in the default time of 20 seconds. You can only be obsessed with one Survivor at a time. \"You don't remember? You must. You're my number one, and you'll never wake up again.\" — Freddy Krueger",
     "descriptionRuRaw": "Когда объект одержимости получает урон, вы получаете жетоны (1, максимум - 3/4/5 шт.). С каждым жетоном другие выжившие открывают ворота на 30% медленнее."
-  },
-  "save-the-best-for-last": {
-    "description": "Whenever you hit a Survivor other than your Obsession with a Basic Attack, Save the Best for Last gains +1 Token, up to a maximum of 6/7/8 Tokens: Grants a stack-able -4 % Cool-down reduction on successful Basic Attacks per Token, up to a maximum of 24/28/32 %. Whenever you hit your Obsession with a Basic or Special Attack, Save the Best for Last loses -2 Tokens. When the Obsession is sacrificed or killed, Save the Best for Last freezes its current Token count. You can only be obsessed with one Survivor at a time. \"Death has come to your little town, Sheriff.\" — Dr Sam Loomis",
-    "descriptionRuRaw": "Если во время погони за объектом одержимости вы ломаете доску, разрушаемую стену или повреждаете генератор базовым действием, то получаете 7% эффекта \"Спешка\" на 8/9/10 сек.. Когда вы раните базовой атакой выжившего с наибольшим временем преследования, тот становится объектом одержимости. \"Спешка\" ускоряет движение убийц и выживших."
   },
   "scourge-hook-floods-of-rage": {
     "description": "\"You form a psychic connection with The Entity and alter the rules of the Trial.\" At the start of the Trial, 4 Hooks in the environment are changed into Scourge Hooks: The Auras of these Scourge Hooks are highlighted in white. Each time a Survivor is unhooked from a Scourge Hook, the following effects apply: The Auras of all other Survivors are revealed for 5/6/7 seconds.",

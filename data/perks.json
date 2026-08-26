@@ -392,6 +392,21 @@
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
+    "slug": "boon-steadfast",
+    "role": "survivor",
+    "name": {
+      "en": "Boon: Steadfast",
+      "ru": "Boon: Steadfast"
+    },
+    "character": "Aurora",
+    "icon": "/perks/survivor/boon-steadfast.webp",
+    "tags": [
+      "generator",
+      "totems"
+    ],
+    "addedAt": "2026-08-26T03:38:19.039Z"
+  },
+  {
     "slug": "borrowed-time",
     "role": "survivor",
     "name": {
@@ -1118,6 +1133,21 @@
       "generator"
     ],
     "addedAt": "2020-01-01T00:00:00.000Z"
+  },
+  {
+    "slug": "fruits-of-your-labor",
+    "role": "survivor",
+    "name": {
+      "en": "Fruits of Your Labor",
+      "ru": "Fruits of Your Labor"
+    },
+    "character": "Aurora",
+    "icon": "/perks/survivor/fruits-of-your-labor.webp",
+    "tags": [
+      "generator",
+      "healing"
+    ],
+    "addedAt": "2026-08-26T03:38:19.039Z"
   },
   {
     "slug": "ghost-notes",
@@ -1899,6 +1929,20 @@
       "aura"
     ],
     "addedAt": "2020-01-01T00:00:00.000Z"
+  },
+  {
+    "slug": "salvation-s-cry",
+    "role": "survivor",
+    "name": {
+      "en": "Salvation's Cry",
+      "ru": "Salvation's Cry"
+    },
+    "character": "Aurora",
+    "icon": "/perks/survivor/salvation-s-cry.webp",
+    "tags": [
+      "aura"
+    ],
+    "addedAt": "2026-08-26T03:38:19.039Z"
   },
   {
     "slug": "scavenger",
@@ -2698,6 +2742,20 @@
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
+    "slug": "celestial-witness",
+    "role": "killer",
+    "name": {
+      "en": "Celestial Witness",
+      "ru": "Celestial Witness"
+    },
+    "character": "Judgment",
+    "icon": "/perks/killer/celestial-witness.webp",
+    "tags": [
+      "aura-info"
+    ],
+    "addedAt": "2026-08-26T03:38:19.039Z"
+  },
+  {
     "slug": "corrupt-intervention",
     "role": "killer",
     "name": {
@@ -3392,6 +3450,22 @@
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
+    "slug": "hex-under-your-thumb",
+    "role": "killer",
+    "name": {
+      "en": "Hex: Under Your Thumb",
+      "ru": "Hex: Under Your Thumb"
+    },
+    "character": "Judgment",
+    "icon": "/perks/killer/hex-under-your-thumb.webp",
+    "tags": [
+      "hex",
+      "aura-info",
+      "chase"
+    ],
+    "addedAt": "2026-08-26T03:38:19.039Z"
+  },
+  {
     "slug": "hex-undying",
     "role": "killer",
     "name": {
@@ -3542,6 +3616,18 @@
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
+    "slug": "keep-them-waiting",
+    "role": "killer",
+    "name": {
+      "en": "Keep Them Waiting",
+      "ru": "Keep Them Waiting"
+    },
+    "character": "All",
+    "icon": "/perks/killer/keep-them-waiting.webp",
+    "tags": [],
+    "addedAt": "2026-08-26T03:38:19.039Z"
+  },
+  {
     "slug": "knock-out",
     "role": "killer",
     "name": {
@@ -3568,6 +3654,21 @@
       "aura-info"
     ],
     "addedAt": "2020-01-01T00:00:00.000Z"
+  },
+  {
+    "slug": "lay-waste",
+    "role": "killer",
+    "name": {
+      "en": "Lay Waste",
+      "ru": "Lay Waste"
+    },
+    "character": "Judgment",
+    "icon": "/perks/killer/lay-waste.webp",
+    "tags": [
+      "gen-regression",
+      "chase"
+    ],
+    "addedAt": "2026-08-26T03:38:19.039Z"
   },
   {
     "slug": "lethal-pursuer",
@@ -3922,18 +4023,6 @@
     },
     "character": "Nightmare",
     "icon": "/perks/killer/remember-me.webp",
-    "tags": [],
-    "addedAt": "2020-01-01T00:00:00.000Z"
-  },
-  {
-    "slug": "save-the-best-for-last",
-    "role": "killer",
-    "name": {
-      "en": "Save the Best for Last",
-      "ru": "Догонялки"
-    },
-    "character": "Shape",
-    "icon": "/perks/killer/save-the-best-for-last.webp",
     "tags": [],
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
