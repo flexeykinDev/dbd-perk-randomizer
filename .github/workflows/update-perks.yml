@@ -23,10 +23,31 @@ jobs:
         run: npm run scrape:perks
       - name: Scrape items/add-ons/offerings from the DBD wiki
         run: npm run scrape:loadout
+      # Both scrapes stamp the time they ran into meta.json, so a week where
+      # the wiki did not move still leaves the tree "dirty" with nothing worth
+      # saying. create-pull-request then failed on it -- every scheduled run
+      # since at least 17 August died with a blank "Unexpected error:" while
+      # the manual runs, which happened to land on weeks with real changes,
+      # passed. Excluding the two timestamp files is what tells those apart.
+      #
+      # New icons arrive as UNTRACKED files, which `git diff` cannot see, so
+      # public/ is checked separately.
+      - name: Is there anything worth a pull request?
+        id: worth
+        run: |
+          if git diff --quiet -- data ':(exclude)data/meta.json' ':(exclude)data/loadout-meta.json' && [ -z "$(git status --porcelain public/)" ]; then
+            echo "The wiki has not changed since the last run — nothing to open."
+            echo "any=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "any=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Classify the diff (new entries vs changes to existing ones)
         id: classify
+        if: steps.worth.outputs.any == 'true'
         run: npx tsx scripts/classify-scrape-diff.ts
       - name: Build the PR description
+        if: steps.worth.outputs.any == 'true'
         run: |
           {
             echo "Automated scrape of the DBD wiki's [Perks](https://deadbydaylight.fandom.com/wiki/Perks), [Items](https://deadbydaylight.fandom.com/wiki/Items), [Add-ons](https://deadbydaylight.fandom.com/wiki/Add-ons), and [Offerings](https://deadbydaylight.fandom.com/wiki/Offerings) pages."
@@ -46,8 +67,12 @@ jobs:
 
       - name: Open PR with updated perk + loadout data
         id: cpr
+        if: steps.worth.outputs.any == 'true'
         uses: peter-evans/create-pull-request@v7
         with:
+          # Belt and braces behind the check above: if the diff still comes
+          # out empty here, exit cleanly rather than erroring.
+          skip-when-empty: true
           commit-message: "chore: update DBD perk and loadout data from wiki"
           title: "Update DBD perk and loadout data"
           body-path: pr-body.md
@@ -73,7 +98,7 @@ jobs:
             public/loadout/**
 
       - name: Auto-merge (only when PR created & nothing pre-existing changed)
-        if: steps.cpr.outputs.pull-request-number != '' && steps.classify.outputs.safe == 'true'
+        if: steps.worth.outputs.any == 'true' && steps.cpr.outputs.pull-request-number != '' && steps.classify.outputs.safe == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
