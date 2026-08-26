@@ -705,3 +705,46 @@ test("loadout overrides only carry fields something reads", () => {
   }
   assert.deepEqual(stray, [], `unknown override fields: ${stray.join(", ")}`);
 });
+
+test("a Core Effect override actually reaches the card", () => {
+  /* The bug this exists for: every loadout override was inert in the UI for
+   * as long as they had existed, and every test here passed.
+   *
+   * The overrides are looked up by `kind:slug`. The description bundle holds
+   * only `description` and `descriptionRuRaw` — no identity — and the modal
+   * was calling getLoadoutPieceDescription(entry) with just that. The lookup
+   * found nothing and the piece fell back to the derived text. The tests
+   * missed it because they built their input as { ...piece, ...entry },
+   * which is not what the component did.
+   *
+   * So this asserts on the component's own composition, and fails if the
+   * override does not survive it. */
+  const bundle = loadMap<Prose>("loadout-descriptions.json");
+  const pieces = [...items, ...addons, ...offerings];
+  const overridden = Object.entries(
+    loadoutOverrides.entries as Record<string, { ru?: string; en?: string }>,
+  ).filter(([, e]) => e.ru || e.en);
+  assert.ok(overridden.length > 50, "expected a body of overrides to check");
+
+  const inert: string[] = [];
+  for (const [key, override] of overridden) {
+    const [kind, slug] = key.split(":");
+    const piece = pieces.find(
+      (p) => p.slug === slug && (p as { kind?: string }).kind === kind,
+    );
+    const entry = bundle[key];
+    if (!piece || !entry) continue;
+    for (const lang of ["ru", "en"] as const) {
+      const expected = override[lang];
+      if (!expected) continue;
+      // Exactly how components/dbd/loadout-grid.tsx builds it.
+      const view = getPerkDescription({ ...piece, ...entry } as never, lang);
+      if (coreSummary(view) !== expected) inert.push(`${key} [${lang}]`);
+    }
+  }
+  assert.deepEqual(
+    inert.slice(0, 8),
+    [],
+    `${inert.length} overrides never reach the card`,
+  );
+});

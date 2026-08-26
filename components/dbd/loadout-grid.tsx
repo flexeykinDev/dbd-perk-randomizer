@@ -614,7 +614,17 @@ function LoadoutDescriptionPanel({
   const entry = useDescription("loadout", `${piece.kind}:${piece.slug}`);
 
   if (!entry) return <DescriptionSkeleton />;
-  const description = getLoadoutPieceDescription(entry, language);
+  /* The piece has to go in alongside the prose, not just the prose.
+   *
+   * A hand-written Core Effect in data/overrides/loadout.json is looked up
+   * by `kind:slug`, and the description bundle carries only `description`
+   * and `descriptionRuRaw` — no identity at all. Passing `entry` on its own
+   * meant the lookup silently found nothing and every one of those overrides
+   * was inert in the UI while looking correct in every test, because the
+   * tests were passing the piece and the entry together the way this now
+   * does. The two objects share no field names, so the spread is a merge
+   * rather than an override. */
+  const description = getLoadoutPieceDescription({ ...piece, ...entry }, language);
   // Moved in here from the modal body: it's a statement about the
   // description, and the description is what this component has.
   const untranslated =
