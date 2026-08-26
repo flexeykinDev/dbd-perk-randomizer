@@ -142,7 +142,8 @@ Two things that are easy to get wrong:
   and `*-icon-sources` files, `data/author.json`) is overwritten on the next
   run. The hand-authored translations — `data/translations.ru.json`,
   `data/character-translations.ru.json`,
-  `data/description-translations.ru.json` — are meant to be edited directly.
+  `data/overrides/perks.json` and `data/overrides/loadout.json` — are meant to be
+  edited directly.
 - **Screenshots.** If you change the UI, `npm run capture:screenshots`
   regenerates `docs/screenshots/` (it drives the dev server on port 3000).
 

@@ -129,7 +129,7 @@
     }
   },
   "borrowed-time": {
-    "description": "\"You are fuelled with an unexpected energy when saving an ally from a hook.\" Whenever you unhook another Survivor, they benefit from the following effects: Extends the duration of the Endurance Status Effect by 6/8/10 seconds to 21/23/25 seconds. Endurance is cancelled prematurely when performing a Conspicuous Action of any kind. Extends the duration of the Haste Status Effect by +10 seconds to 25 seconds. \"Probably stings like hell, but it ain't gonna kill ya. Up and at 'em soldier. Time to move!\" — Bill Overbeck",
+    "description": "\"You are fuelled with an unexpected energy when saving an ally from a hook.\" Whenever you unhook another Survivor, they benefit from the following effects: Extends the duration of the Endurance Status Effect by 6/8/10 seconds to 16/18/20 seconds. Endurance is cancelled prematurely when performing a Conspicuous Action of any kind. Extends the duration of the Haste Status Effect by +10 seconds to 20 seconds. \"Probably stings like hell, but it ain't gonna kill ya. Up and at 'em soldier. Time to move!\" — Bill Overbeck",
     "descriptionRuRaw": "Когда вы снимаете выжившего с крюка: его эффект \"Стойкость\" после снятия действует на 6/8/10 сек. дольше; его эффект \"Спешка\" после снятия действует на 10 сек. дольше. Стойких выживших нельзя смертельно ранить одним ударом, вместо этого они получают глубокую рану. \"Спешка\" ускоряет движение убийц и выживших."
   },
   "botany-knowledge": {
@@ -268,6 +268,15 @@
   },
   "down-to-the-last": {
     "description": "As more of your friends fall to the Killer, you become shrouded in isolation and the Killer's Aura-reading abilities towards you are disrupted. Each time a Survivor other than yourself is killed or sacrificed, Down to the Last gains 1 Token, up to a maximum of 3 Tokens: Grants a stack-able radius of 20/22/24 metres per Token around you, up to a maximum of 60/66/72 metres, within which you are immune to the Killer's Aura-reading abilities. When you are the Last Survivor Standing, you benefit from the following effects: Increases your Repair speed by +75 %. Increases your Gate and Hatch Opening speeds by +50 %. Increases your chance of becoming the initial Obsession by increasing the default value by +100 %.The Killer can only be obsessed with one Survivor at a time.",
+    "descriptionRu": {
+      "full": "Чем больше ваших друзей гибнет от рук убийцы, тем сильнее вы окутаны изоляцией, мешающей убийце читать вашу ауру. За каждого погибшего или принесённого в жертву выжившего (кроме вас) вы получаете жетон, максимум 3: каждый жетон даёт суммируемый радиус в 20/22/24 метра, вплоть до 60/66/72 метров, в котором убийца не может видеть вашу ауру. Когда вы остаётесь последним живым выжившим: скорость ремонта увеличивается на 75%, скорость открытия ворот и люка — на 50%, а шанс изначально стать объектом одержимости увеличивается на 100%. Убийца может быть одержим только одним выжившим одновременно.",
+      "core": [
+        "За каждого погибшего товарища — **жетон** (максимум **3**): **20/22/24 м** радиуса защиты от чтения ауры за жетон, максимум **60/66/72 м**.",
+        "Когда вы остаётесь **последним живым**: ремонт **+75%**, открытие ворот и люка **+50%**.",
+        "Шанс стать **объектом одержимости** увеличен на **100%**."
+      ],
+      "quote": "«Это был бугимен» — Лори Строуд"
+    },
     "descriptionRuRaw": "Когда выживший погибает, вы получаете жетоны (1шт.). За каждый жетон ваша аура скрывается от убийцы на расстоянии до 20/22/24 метра. Если все остальные выжившие мертвы: вы ремонтируете на 75% быстрее; вы открываете ворота и люк на 50% быстрее. В начале матча у вас больше шансов стать объектом одержимости."
   },
   "dramaturgy": {

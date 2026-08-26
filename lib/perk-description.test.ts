@@ -26,7 +26,9 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { coreSummary, getPerkDescription } from "./perk-description";
-import coreOverrides from "../data/core-effect-overrides.json";
+import loadoutOverrides from "../data/overrides/loadout.json";
+import perkOverrides from "../data/overrides/perks.json";
+const coreOverrides = loadoutOverrides.entries;
 import type { Lang } from "./i18n";
 import type { LocalizedDescription } from "./types";
 
@@ -491,7 +493,7 @@ test("English summaries are not truncated more often than Russian ones", () => {
   assert.ok(ru <= 20, `${ru} Russian summaries end mid-thought`);
 });
 
-/* data/core-effect-overrides.json — hand-written Core Effect lines.
+/* data/overrides/loadout.json — hand-written Core Effect lines.
  *
  * Hand-maintained content next to a scheduled scraper is exactly the setup
  * that rots: a renamed slug leaves the override pointing at nothing, and the
@@ -614,4 +616,67 @@ test("every item states its numbers, in both languages", () => {
     }
   }
   assert.deepEqual(silent, [], `items with no value in their Core Effect:\n${silent.join("\n")}`);
+});
+
+/* data/overrides/perks.json — everything hand-written about a perk.
+ *
+ * Merged from four files that split one perk across four places depending on
+ * which aspect you were fixing. Same guard the loadout overlay gets: a
+ * renamed slug leaves an entry pointing at nothing, and the perk silently
+ * goes back to whatever the wiki says — which is exactly what the entry
+ * existed to correct.
+ */
+test("every perk override points at a perk that still exists", () => {
+  const entries = perkOverrides.entries as Record<string, Record<string, unknown>>;
+  const keys = Object.keys(entries);
+  assert.ok(keys.length > 0, "the perk overlay is empty");
+  const shipped = new Set(perks.map((p) => p.slug));
+  /* Renames are the realistic way an entry dies, and the scraper already
+   * records every one of them, so the failure can name its own fix instead
+   * of leaving someone to work out where the perk went. `sole-survivor` sat
+   * orphaned exactly this way after the de-licensing renamed it to
+   * `down-to-the-last` — its curated Russian had been dead ever since, and
+   * nothing said so. */
+  const aliases = (
+    JSON.parse(readFileSync(join(dataDir, "perk-slug-aliases.json"), "utf8")) as {
+      aliases?: Record<string, string>;
+    }
+  ).aliases ?? {};
+  const orphans = keys
+    .filter((k) => !shipped.has(k))
+    .map((k) => (aliases[k] ? `${k} (renamed to ${aliases[k]} — move the entry)` : k));
+  assert.deepEqual(orphans, [], "overrides point at perks that no longer exist");
+});
+
+test("perk overrides only carry fields the scraper reads", () => {
+  /* The overlay is hand-edited, so a typo'd field name is the likely
+   * failure: it would sit there looking authoritative and do nothing at all.
+   * scrape-perks.ts reads exactly these five. */
+  const allowed = new Set(["nameEn", "descriptionEn", "descriptionRu", "iconSource", "iconPinned"]);
+  const stray: string[] = [];
+  for (const [slug, entry] of Object.entries(
+    perkOverrides.entries as Record<string, Record<string, unknown>>,
+  )) {
+    for (const field of Object.keys(entry)) {
+      if (!allowed.has(field)) stray.push(`${slug}.${field}`);
+    }
+  }
+  assert.deepEqual(stray, [], `unknown override fields: ${stray.join(", ")}`);
+});
+
+test("perk slugs are unique across roles, which the overlay key assumes", () => {
+  // The icon overrides used to be keyed "role/slug"; collapsing them to a
+  // bare slug is only safe while no slug appears under both roles.
+  const rows = JSON.parse(readFileSync(join(dataDir, "perks.json"), "utf8")) as {
+    slug: string;
+    role: string;
+  }[];
+  const seen = new Map<string, string>();
+  const clashes: string[] = [];
+  for (const row of rows) {
+    const previous = seen.get(row.slug);
+    if (previous && previous !== row.role) clashes.push(row.slug);
+    seen.set(row.slug, row.role);
+  }
+  assert.deepEqual(clashes, [], `slugs used by both roles: ${clashes.join(", ")}`);
 });

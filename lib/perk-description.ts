@@ -1,7 +1,7 @@
 import type { LocalizedDescription } from "./types";
 import type { Lang } from "./i18n";
 
-import coreEffectOverrides from "@/data/core-effect-overrides.json";
+import loadoutOverrides from "@/data/overrides/loadout.json";
 
 export interface PerkDescriptionView {
   /** Brief bulleted summary of the mechanical effect, "**"-highlighted. */
@@ -406,7 +406,7 @@ interface DescribableEntity {
  *  that the offering is secret. */
 const SECRET_BULLET = "**Secret**.";
 
-const CORE_EFFECT_OVERRIDES = coreEffectOverrides as Record<
+const CORE_EFFECT_OVERRIDES = loadoutOverrides.entries as Record<
   string,
   { en?: string; ru?: string } | string
 >;

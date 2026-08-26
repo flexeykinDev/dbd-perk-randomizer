@@ -1,0 +1,255 @@
+{
+  "_comment": "Hand-authored overrides for PERKS, keyed by perk slug — one entry per perk, holding everything hand-written about it. Replaces the four files this was merged from (name-overrides.en, description-overrides.en, description-translations.ru, icon-overrides), which split the same perk across four places depending on which aspect you were fixing. EDIT THIS DIRECTLY; the scrapers never write here. Every field is optional. `nameEn` and `descriptionEn` replace what the EN wiki scraped, for entries the wiki gets wrong. `descriptionRu` is the curated Russian — `full` is the prose, `core` the bulleted summary, `quote` the trailing lore line — and outranks the auto-synced data/description-ru-raw.json. `iconSource` points at a replacement image scrape-perks.ts downloads like any other; `iconPinned` instead means never re-download, for an icon placed by hand that has no fetchable source. All of it is consumed at scrape time and baked into data/perks.json, so a change here needs `npm run scrape:perks` to take effect.",
+  "entries": {
+    "aftercare": {
+      "descriptionRu": {
+        "full": "Раскрывает потенциал вашей способности видеть ауры. Ауры последних 1/2/3 выживших, с которыми вы взаимодействовали — сняли с крюка друг друга или вылечили друг друга — открываются вам навсегда, а эти выжившие тоже видят вашу ауру. Эффект «Ухода за больным» сбрасывается, как только вас вешают на крюк.",
+        "core": [
+          "Ауры последних **1/2/3** выживших, с которыми вы взаимодействовали, открываются вам **навсегда**.",
+          "Взаимодействия: вы сняли их с крюка, они сняли с крюка вас, вы вылечили их, они вылечили вас.",
+          "Эти выжившие тоже видят **вашу ауру**.",
+          "Эффект сбрасывается, когда вас **вешают на крюк**."
+        ],
+        "quote": "«Милосердие, что разрывает бурю» — Джефф"
+      }
+    },
+    "bamboozle": {
+      "descriptionRu": {
+        "full": "После прыжка в окно «Розыгрыш» призывает Сущность заблокировать это окно на следующие 8/12/16 секунд — выжившие не смогут через него прыгать. Также увеличивает вашу общую скорость прыжков в окна на 5/10/15%. Одновременно блокируется только одно окно, и эффекты не применяются к прыжкам через доски.",
+        "core": [
+          "После прыжка в окно оно **блокируется** на **8/12/16 сек** — выжившие не могут через него прыгнуть.",
+          "Скорость **всех** ваших прыжков в окна: **+5/10/15%**.",
+          "Блокируется только **одно** окно одновременно; на доски не действует."
+        ]
+      }
+    },
+    "boon-steadfast": {
+      "descriptionRu": {
+        "full": "Находясь рядом с тотемом, используйте кнопку особой способности, чтобы благословить его и создать уникальный тотем со всеми вашими Дарами. Генераторы в пределах Дара регрессируют на 50 % медленнее и чинятся на 8/9/10 % быстрее. Выжившие в пределах Дара видят ауры затронутых им генераторов.",
+        "core": [
+          "Благословите тотем, чтобы создать уникальный тотем со всеми вашими Дарами.",
+          "Генераторы в зоне Дара регрессируют на **50 %** медленнее и чинятся на **8/9/10 %** быстрее.",
+          "Выжившие в зоне Дара видят ауры затронутых генераторов."
+        ]
+      }
+    },
+    "celestial-witness": {
+      "descriptionRu": {
+        "full": "Раз в 30 секунд, когда одержимость находится хотя бы в 40 метрах от вас, вы видите её ауру на 2/2.5/3 секунды. Если одержимость за пределами 40 метров, новой одержимостью становится самый дальний от вас выживший.",
+        "core": [
+          "Раз в **30 секунд**, если одержимость не ближе **40 метров**, её аура открывается вам на **2/2.5/3 секунды**.",
+          "Если одержимость дальше **40 метров**, новой одержимостью становится самый дальний выживший."
+        ]
+      }
+    },
+    "corrective-action": {
+      "descriptionRu": {
+        "full": "Вы быстро анализируете ситуацию и исправляете чужие ошибки. Вы начинаете матч с 1/2/3 жетоном(ами). Когда вы отлично проходите проверку реакции, «Корректировка» получает +1 жетон, вплоть до максимума в 5 жетонов: тратя жетон, вы превращаете провальную проверку реакции другого выжившего в хорошую, а его аура открывается вам на 6 секунд. «Корректировка» не действует на особые проверки реакции.",
+        "core": [
+          "Вы начинаете матч с **1/2/3** жетоном(ами).",
+          "За каждую **отличную** проверку реакции получаете **+1 жетон** (максимум **5**).",
+          "Тратя жетон, превращаете **провальную** проверку реакции другого выжившего в **хорошую** — его аура открывается вам на **6 секунд**.",
+          "Не действует на **особые** проверки реакции."
+        ],
+        "quote": "«Лишняя пара глаз никогда не помешает» — Хонас Васкес"
+      }
+    },
+    "darkness-revealed": {
+      "descriptionRu": {
+        "full": "В вашем присутствии места, которые когда-то считались безопасными, зачастую оказываются самыми опасными. Обыск шкафчика активирует следующий эффект: ауры всех выживших в радиусе 8 метров от любого шкафчика открываются вам на 6/7/8 секунд. Время восстановления «Явления мрака» — 30 секунд.",
+        "core": [
+          "При обыске **шкафчика** открываются **ауры** всех выживших в радиусе **8 метров** от любого шкафчика.",
+          "Ауры видны **6/7/8 секунд** (в зависимости от уровня перка).",
+          "Время восстановления: **30 секунд**."
+        ],
+        "quote": "«Оставайтесь в свете, дети мои. Во тьме страх выдаст вас» — Отто Стампер"
+      }
+    },
+    "deja-vu": {
+      "nameEn": "Deja Vu"
+    },
+    "down-to-the-last": {
+      "descriptionRu": {
+        "full": "Чем больше ваших друзей гибнет от рук убийцы, тем сильнее вы окутаны изоляцией, мешающей убийце читать вашу ауру. За каждого погибшего или принесённого в жертву выжившего (кроме вас) вы получаете жетон, максимум 3: каждый жетон даёт суммируемый радиус в 20/22/24 метра, вплоть до 60/66/72 метров, в котором убийца не может видеть вашу ауру. Когда вы остаётесь последним живым выжившим: скорость ремонта увеличивается на 75%, скорость открытия ворот и люка — на 50%, а шанс изначально стать объектом одержимости увеличивается на 100%. Убийца может быть одержим только одним выжившим одновременно.",
+        "core": [
+          "За каждого погибшего товарища — **жетон** (максимум **3**): **20/22/24 м** радиуса защиты от чтения ауры за жетон, максимум **60/66/72 м**.",
+          "Когда вы остаётесь **последним живым**: ремонт **+75%**, открытие ворот и люка **+50%**.",
+          "Шанс стать **объектом одержимости** увеличен на **100%**."
+        ],
+        "quote": "«Это был бугимен» — Лори Строуд"
+      }
+    },
+    "empathy": {
+      "descriptionRu": {
+        "full": "Раскрывает потенциал вашей способности видеть ауры. Ауры раненых или умирающих выживших открываются вам в радиусе 64/96/128 метров.",
+        "core": [
+          "Видите **ауры** раненых и умирающих выживших.",
+          "Радиус действия: **64/96/128 метров**."
+        ]
+      }
+    },
+    "forever-entwined": {
+      "descriptionEn": "\"The greater the struggle, the more difficult the escape.\" Whenever a Survivor takes damage, Forever Entwined gains +1 Token, up to a maximum of 6/7/8 Tokens: Increases the Action speeds for Dropping, Hooking, and Picking up a Survivor by a stack-able +4 % per Token, up to a maximum of 24/28/32 %. \"You tried to devour me so you have no room to complain if I eat you, do you?\" — Ken Kaneki"
+    },
+    "fruits-of-your-labor": {
+      "descriptionRu": {
+        "full": "Каждый раз, когда завершается починка генератора, вы получаете 1 жетон. Каждый раз, когда вы чините генератор, за каждый жетон вы получаете «Спешку» в 5 % на 2 секунды и 10/15/20 % прогресса лечения.",
+        "core": [
+          "За каждый завершённый генератор — **1 жетон**.",
+          "Когда вы чините генератор, за каждый жетон: «Спешка» **5 %** на **2 секунды** и **10/15/20 %** прогресса лечения."
+        ]
+      }
+    },
+    "haywire": {
+      "descriptionEn": "\"For some reason, machinery has a habit of failing when you are near.\" Whenever a Survivor stops opening an Exit Gate after accumulating at least 80 % Progression towards being opened, Haywire causes it to regress: Regresses at a rate of 80/90/100 % of the normal Gate-Opening speed. Causes Survivors to see the lights atop the switch flickering randomly while it regresses. \"There will be no redemption for you.\" — Springtrap"
+    },
+    "head-on": {
+      "descriptionRu": {
+        "full": "После 3 секунд в шкафчике «Напролом» активируется: резкий выход из шкафчика оглушает находящегося рядом убийцу на 3 секунды. После срабатывания вы получаете эффект «Изнурение» на 60/50/40 секунд. Перк не работает, если вы уже изнурены или если на вас слетелись вороны от долгого бездействия.",
+        "core": [
+          "После **3 секунд** в шкафчике готов резкий выход, оглушающий убийцу рядом на **3 секунды**.",
+          "После срабатывания — эффект **«Изнурение»** на **60/50/40 сек**.",
+          "Не работает при изнурении или после долгого бездействия (слетелись вороны)."
+        ],
+        "quote": "«Людей помнят по трудностям, которые они преодолели. Можно убежать и забыть, на что ты способна, а можно посмотреть в лицо своим страхам и напомнить миру, кто ты» — Джейн Ромеро"
+      }
+    },
+    "help-wanted": {
+      "descriptionEn": "\"Try as they might, you know how to stay one step ahead of your guests.\" After performing the Damage Generator action, Help Wanted activates: Causes that Generator to become a Compromised Generator. Once the Compromised Generator is completed, you benefit from the following effect for 40/50/60 seconds: Increases the Recovery speed of successful Basic Attacks by +25 %. \"You only think you are in control...\" — Springtrap"
+    },
+    "hex-fortune-s-fool": {
+      "descriptionEn": "The first time you hook each Survivor, they become Cursed and a Dull Totem ignites. For 90 seconds, the Cursed Totem is blocked for other Survivors. Cursed Survivors: are afflicted with the Oblivious Status Effect. See the Cursed Totem's Aura within a 24/20/16 metre radius. Oblivious Survivors do not hear the Killer's Terror Radius.",
+      "iconPinned": true
+    },
+    "hex-nothing-but-misery": {
+      "descriptionEn": "\"You've been driven to the absolute depths of pain, and now you're ready to inflict that pain on others.\" After damaging Survivors a total of 8 times with Basic Attacks, a random Dull Totem becomes a Hex Totem, cursing all Survivors: Survivors damaged by a Basic Attack suffer from a -5 % Hindered Status Effect for 10/12.5/15 seconds. The Hex Effects persist until the Hex Totem is either blessed or cleansed by a Survivor, disabling it for the remainder of the Trial. \"All of the liabilities of this world are due to the inadequacies of the person involved.\" — Ken Kaneki"
+    },
+    "hex-under-your-thumb": {
+      "descriptionRu": {
+        "full": "Когда выживший впервые оказывается на крюке, загорается тусклый тотем. Вы получаете оповещение каждый раз, когда выживший получает «Спешку» в 32 метрах от вас. Эффективность «Спешки» выживших не может превышать 25/20/15 %.",
+        "core": [
+          "Когда выживший впервые попадает на крюк, загорается тусклый тотем.",
+          "Оповещение каждый раз, когда выживший получает «Спешку» в **32 метрах** от вас.",
+          "Эффективность «Спешки» выживших не выше **25/20/15 %**."
+        ]
+      }
+    },
+    "invocation-weaving-spiders": {
+      "descriptionRu": {
+        "full": "Находясь в подвале рядом с кругом, нажмите кнопку активной способности, чтобы начать ритуал — он длится 60 секунд. Во время ритуала ваша аура открыта всем выжившим, и они могут присоединиться: ритуал ускоряется на 100%, если у выжившего тоже есть перк-чары, или на 50%, если нет. По завершении: требование по зарядам ремонта для всех генераторов навсегда снижается на 8/9/10 зарядов, вы автоматически переходите в состояние ранения и получаете эффект «Слом» до конца матча. Завершённый ритуал отключает все перки-чары до конца матча для всех выживших.",
+        "core": [
+          "В подвале рядом с кругом активируйте ритуал — длится **60 секунд**.",
+          "Другие выжившие видят вашу ауру и могут ускорить ритуал: **+100%**, если у них тоже есть чары, или **+50%**, если нет.",
+          "После завершения: генераторам нужно на **8/9/10** зарядов меньше, но вы получаете ранение и эффект **«Слом»** до конца матча.",
+          "Завершённый ритуал отключает **все чары** у всех выживших до конца матча."
+        ],
+        "quote": "«Я взываю к духам ночи — помогите нам в отчаянном бегстве!» — Сейбл"
+      }
+    },
+    "lay-waste": {
+      "descriptionRu": {
+        "full": "Каждый раз, когда вы повреждаете генератор, за каждый имеющийся в нём заряд он регрессирует на 2 % быстрее. Время перезарядки: 55/50/45 секунд.",
+        "core": [
+          "При повреждении генератора он регрессирует на **2 %** быстрее за каждый заряд в нём.",
+          "Время перезарядки: **55/50/45 секунд**."
+        ]
+      }
+    },
+    "left-behind": {
+      "descriptionRu": {
+        "full": "Как только вы остаётесь последним живым выжившим, «Оставленный Позади» активируется: аура люка открывается вам в радиусе 24/28/32 метров.",
+        "core": [
+          "Работает, только когда вы — **последний живой выживший**.",
+          "Открывает ауру **люка** в радиусе **24/28/32 метров**."
+        ],
+        "quote": "«Я не шучу. Я справлюсь один!» — Билл Овербек"
+      }
+    },
+    "made-for-this": {
+      "descriptionRu": {
+        "full": "Пока вы ранены, «Призвание» активно: после лечения другого выжившего вы получаете эффект «Стойкость» на 6/8/10 секунд (он отменяется раньше срока, если вы совершите заметное действие). Также вы получаете 1/2/3% эффекта «Прыть», пока бежите и одновременно страдаете от глубокой раны.",
+        "core": [
+          "Активно, пока вы **ранены**.",
+          "После лечения другого выжившего: эффект **«Стойкость»** на **6/8/10 сек** (отменяется заметным действием).",
+          "При беге с **глубокой раной**: **+1/2/3%** эффекта **«Прыть»**."
+        ],
+        "quote": "«Я пришёл сюда не для того, чтобы стать кормом для роботов!» — Габриэль Сома"
+      }
+    },
+    "monitor-and-abuse": {
+      "descriptionRu": {
+        "full": "Базовый радиус террора увеличен на 6/7/8 метров на весь матч. Пока вы не преследуете выжившего, радиус террора дополнительно уменьшается на 12/14/16 метров.",
+        "core": [
+          "Базовый радиус террора: **+6/7/8 метров** на весь матч.",
+          "Вне погони радиус террора дополнительно **−12/14/16 метров**."
+        ],
+        "quote": "«Пора начинать лечение!» — Херман Картер, Доктор"
+      }
+    },
+    "no-holds-barred": {
+      "descriptionEn": "\"You induce mental suffering by crushing any hope of escape.\" Each time a Generator is completed, No Holds Barred calls upon The Entity for the following effects: Blocks the Generator with the most Progression for 15/20/25 seconds. The Aura of the Blocked Generator is highlighted to you in white.",
+      "iconSource": "https://deadbydaylight.wiki.gg/images/IconPerks_NoHoldsBarred.png"
+    },
+    "none-are-free": {
+      "descriptionEn": "\"You know better than anyone that the light at the end of the tunnel is only an illusion.\" Whenever you hook a Survivor for the first time, None Are Free gains +1 Token, up to a maximum of 4 Tokens. Once all Generators are completed, None Are Free calls upon The Entity to trigger the following effect: Blocks all Windows and upright Pallets for a stack-able 12/14/16 seconds per Token, up to a maximum of 48/56/64 seconds. \"I'm not wrong. What's wrong is this messed-up world!\" — Ken Kaneki"
+    },
+    "open-handed": {
+      "descriptionRu": {
+        "full": "Усиливает способности чтения ауры — как ваши, так и всей команды. Увеличивает радиус действия всех способностей чтения ауры, исходящих от вас или других выживших, на 8/12/16 метров. На выжившего одновременно может действовать только один «Игра в открытую».",
+        "core": [
+          "Увеличивает радиус **всех** способностей чтения ауры на **8/12/16 метров** — своих и чужих.",
+          "На одного выжившего действует только **один** экземпляр перка одновременно."
+        ],
+        "quote": "«Внимательность годами спасала мне жизнь. Ну и моя привлекательная внешность, конечно» — Эйс Висконти"
+      }
+    },
+    "phantom-fear": {
+      "descriptionEn": "\"You have always had a reputation for startling unsuspecting guests.\" Whenever a Survivor within your Terror Radius looks at you, they suffer from the following effects: Causes them to scream and reveal their Aura to you for 2 seconds. Phantom Fear has a cool-down of 80/70/60 seconds. \"Excellent. Your screams please me.\" — Springtrap"
+    },
+    "salvation-s-cry": {
+      "descriptionRu": {
+        "full": "Каждый раз, когда убийца начинает погоню за вами, вы видите ауры других выживших на 1/2/3 секунды, а выжившие вне погони видят вашу ауру и ауру убийцы на 5 секунд.",
+        "core": [
+          "Когда убийца начинает погоню за вами, вы видите ауры других выживших **1/2/3 секунды**.",
+          "Выжившие вне погони видят вашу ауру и ауру убийцы **5 секунд**."
+        ]
+      }
+    },
+    "scourge-hook-weeping-wounds": {
+      "descriptionEn": "\"You are the bringer of sweet pain.\" At the start of the Trial, 4 Hooks in the environment are changed into Scourge Hooks: The Auras of these Scourge Hooks are highlighted in white. Each time a Survivor is unhooked from a Scourge Hook, the following effects apply: Causes that Survivor to suffer from the Haemorrhage Status Effect for 90 seconds. After the first time that Survivor is healed back to full health, they suffer from the following effect until they are injured again by any means: Reduces their Action speeds for Healing and Repairing by 10/13/16 %.",
+      "iconSource": "https://deadbydaylight.wiki.gg/images/IconPerks_scourgeHookWeepingWounds.png"
+    },
+    "small-game": {
+      "descriptionRu": {
+        "full": "Вы получаете звуковое предупреждение, если смотрите в сторону тотема в конусе 45° на расстоянии до 8/10/12 метров. Время восстановления перка — 14/12/10 секунд после каждого срабатывания. За каждый очищенный любым игроком тусклый или хекс-тотем вы получаете жетон: каждый жетон сужает конус обнаружения на 5°, вплоть до минимума в 20°.",
+        "core": [
+          "Звуковое предупреждение при взгляде на тотем в конусе **45°** на расстоянии **8/10/12 м**.",
+          "Перезарядка после срабатывания: **14/12/10 сек**.",
+          "За каждый очищенный тотем — **жетон**, сужающий конус обнаружения на **5°** (минимум **20°**)."
+        ],
+        "quote": "«Не-а» — Энди, «Утерянные записи»"
+      }
+    },
+    "stridor": {
+      "descriptionRu": {
+        "full": "Громкость стонов от боли раненых выживших увеличена на 30/40/50%. Громкость обычного дыхания выживших увеличена на 15/20/25%.",
+        "core": [
+          "Стоны от боли раненых выживших: **громче на 30/40/50%**.",
+          "Обычное дыхание выживших: **громче на 15/20/25%**."
+        ],
+        "quote": "«Если ты не остановишься и не переведёшь дыхание... она сделает это за тебя»"
+      }
+    },
+    "troubleshooter": {
+      "descriptionRu": {
+        "full": "Во время погони с убийцей «Ремонтник» активируется: вам открывается аура генератора с наибольшим прогрессом, а после сброса доски вы на 4/5/6 секунд видите ауру убийцы. Эффекты сохраняются ещё 6/8/10 секунд после окончания погони, после чего перк отключается.",
+        "core": [
+          "Во время **погони**: видите ауру генератора с **наибольшим прогрессом**.",
+          "После сброса доски: аура убийцы на **4/5/6 сек**.",
+          "Эффекты держатся ещё **6/8/10 сек** после конца погони."
+        ],
+        "quote": "«Здесь ничего не будет сделано, если не сделаю я» — Габриэль Сома"
+      }
+    }
+  }
+}

@@ -143,7 +143,8 @@ Issues и PR приветствуются. Перед PR прогоните `npm
   и `*-icon-sources`, `data/author.json`), перезапишется на следующем
   запуске. А вот ручные переводы — `data/translations.ru.json`,
   `data/character-translations.ru.json`,
-  `data/description-translations.ru.json` — редактируются напрямую, так и
+  `data/overrides/perks.json` и `data/overrides/loadout.json` — редактируются
+  напрямую, так и
   задумано.
 - **Скриншоты.** Если поменяли интерфейс, `npm run capture:screenshots`
   пересоберёт `docs/screenshots/` (скрипту нужен dev-сервер на порту 3000).

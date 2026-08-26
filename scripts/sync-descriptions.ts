@@ -238,7 +238,7 @@ async function main() {
 
   const output = {
     _comment:
-      "Raw (uncurated) RU description text per perk slug, scraped from each perk's own RU wiki page — see scripts/sync-descriptions.ts. getPerkDescription() runs this through the same auto-highlight/sentence-split pipeline used for the English fallback. A hand-authored entry in description-translations.ru.json always takes priority over this file.",
+      "Raw (uncurated) RU description text per perk slug, scraped from each perk's own RU wiki page — see scripts/sync-descriptions.ts. getPerkDescription() runs this through the same auto-highlight/sentence-split pipeline used for the English fallback. A hand-authored `descriptionRu` in data/overrides/perks.json always takes priority over this file.",
     ...existing,
   };
   writeFileSync(DESCRIPTION_RU_RAW_JSON, JSON.stringify(output, null, 2) + "\n");

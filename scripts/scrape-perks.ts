@@ -40,11 +40,8 @@ const PERKS_JSON = join(DATA_DIR, "perks.json");
 const PERK_DESCRIPTIONS_JSON = join(DATA_DIR, "perk-descriptions.json");
 const META_JSON = join(DATA_DIR, "meta.json");
 const TRANSLATIONS_JSON = join(DATA_DIR, "translations.ru.json");
-const DESCRIPTION_TRANSLATIONS_JSON = join(DATA_DIR, "description-translations.ru.json");
+const OVERRIDES_PERKS_JSON = join(DATA_DIR, "overrides", "perks.json");
 const DESCRIPTION_RU_RAW_JSON = join(DATA_DIR, "description-ru-raw.json");
-const DESCRIPTION_OVERRIDES_EN_JSON = join(DATA_DIR, "description-overrides.en.json");
-const NAME_OVERRIDES_EN_JSON = join(DATA_DIR, "name-overrides.en.json");
-const ICON_OVERRIDES_JSON = join(DATA_DIR, "icon-overrides.json");
 const CHARACTER_RELEASE_DATES_JSON = join(DATA_DIR, "character-release-dates.json");
 const CHARACTER_ALIASES_JSON = join(DATA_DIR, "character-aliases.json");
 const PERK_SLUG_ALIASES_JSON = join(DATA_DIR, "perk-slug-aliases.json");
@@ -65,11 +62,44 @@ function loadTranslations(): Record<string, string> {
   return JSON.parse(readFileSync(TRANSLATIONS_JSON, "utf8"));
 }
 
-function loadDescriptionTranslations(): Record<string, LocalizedDescription> {
-  if (!existsSync(DESCRIPTION_TRANSLATIONS_JSON)) return {};
-  const raw = JSON.parse(readFileSync(DESCRIPTION_TRANSLATIONS_JSON, "utf8"));
-  delete raw._comment;
-  return raw;
+/* Everything hand-written about a perk, in one place.
+ *
+ * This used to be four files — name-overrides.en, description-overrides.en,
+ * description-translations.ru and icon-overrides — so fixing one perk meant
+ * knowing which of the four owned the aspect you were fixing, and a chapter
+ * touched several of them. They are one entry per slug now; see
+ * data/overrides/perks.json.
+ *
+ * Keyed by bare slug rather than "role/slug" as the icon file was: perk slugs
+ * are unique across both roles (asserted in lib/perk-description.test.ts), so
+ * the role added nothing but a second key format to remember.
+ */
+interface PerkOverride {
+  nameEn?: string;
+  descriptionEn?: string;
+  descriptionRu?: LocalizedDescription;
+  iconSource?: string;
+  iconPinned?: boolean;
+}
+
+function loadPerkOverrides(): Record<string, PerkOverride> {
+  if (!existsSync(OVERRIDES_PERKS_JSON)) return {};
+  const raw = JSON.parse(readFileSync(OVERRIDES_PERKS_JSON, "utf8")) as {
+    entries?: Record<string, PerkOverride>;
+  };
+  return raw.entries ?? {};
+}
+
+function pick<K extends keyof PerkOverride>(
+  overrides: Record<string, PerkOverride>,
+  field: K,
+): Record<string, NonNullable<PerkOverride[K]>> {
+  const out: Record<string, NonNullable<PerkOverride[K]>> = {};
+  for (const [slug, entry] of Object.entries(overrides)) {
+    const value = entry[field];
+    if (value !== undefined) out[slug] = value as NonNullable<PerkOverride[K]>;
+  }
+  return out;
 }
 
 function loadDescriptionRuRaw(): Record<string, string> {
@@ -79,37 +109,6 @@ function loadDescriptionRuRaw(): Record<string, string> {
   return raw;
 }
 
-function loadDescriptionOverridesEn(): Record<string, string> {
-  if (!existsSync(DESCRIPTION_OVERRIDES_EN_JSON)) return {};
-  const raw = JSON.parse(readFileSync(DESCRIPTION_OVERRIDES_EN_JSON, "utf8"));
-  delete raw._comment;
-  return raw;
-}
-
-function loadNameOverridesEn(): Record<string, string> {
-  if (!existsSync(NAME_OVERRIDES_EN_JSON)) return {};
-  const raw = JSON.parse(readFileSync(NAME_OVERRIDES_EN_JSON, "utf8"));
-  delete raw._comment;
-  return raw;
-}
-
-function loadPinnedIcons(): Set<string> {
-  if (!existsSync(ICON_OVERRIDES_JSON)) return new Set();
-  const raw = JSON.parse(readFileSync(ICON_OVERRIDES_JSON, "utf8"));
-  return new Set(raw.pinned ?? []);
-}
-
-/** Replacement icon URLs keyed "role/slug" — see data/icon-overrides.json.
- *  Separate from `pinned`: pinning freezes whatever is already on disk,
- *  which is useless when the file on disk is itself the wrong image. This
- *  swaps the URL *before* download, so the corrected icon goes through the
- *  same fetch/resize/webp path as every other one and keeps updating if
- *  the replacement source ever changes. */
-function loadIconSourceOverrides(): Record<string, string> {
-  if (!existsSync(ICON_OVERRIDES_JSON)) return {};
-  const raw = JSON.parse(readFileSync(ICON_OVERRIDES_JSON, "utf8"));
-  return raw.sources ?? {};
-}
 
 
 /** Records retired perk slugs so old share links keep working.
@@ -230,15 +229,15 @@ async function downloadIcon(
   row: ScrapedRow,
   role: PerkRole,
   iconSources: Record<string, string>,
-  pinnedIcons: Set<string>,
+  pinnedIcons: Record<string, boolean>,
   iconSourceOverrides: Record<string, string>,
 ): Promise<string> {
   const destRelative = `/perks/${role}/${row.slug}.webp`;
   const destAbsolute = join(PUBLIC_PERKS_DIR, role, `${row.slug}.webp`);
   const cacheKey = `perk:${role}/${row.slug}`;
 
-  if (pinnedIcons.has(`${role}/${row.slug}`) && existsSync(destAbsolute)) {
-    // A manually-sourced icon (see data/icon-overrides.json) — the wiki's
+  if (pinnedIcons[row.slug] && existsSync(destAbsolute)) {
+    // A manually-sourced icon (see data/overrides/perks.json) — the wiki's
     // own URL for this one is wrong/missing, so never re-fetch it.
     return destRelative;
   }
@@ -246,10 +245,10 @@ async function downloadIcon(
   // Fandom's Loadout template renders a literal "?" placeholder image for a
   // perk whose data it fails to look up — the same failure that produces
   // the "Unable to retrieve the Perk description" text handled by
-  // data/description-overrides.en.json. Nothing about that image is
+  // data/overrides/perks.json. Nothing about that image is
   // distinguishable from a real icon at fetch time, so the corrected
   // source is named explicitly per slug.
-  const sourceUrl = iconSourceOverrides[`${role}/${row.slug}`] ?? row.iconSourceUrl;
+  const sourceUrl = iconSourceOverrides[row.slug] ?? row.iconSourceUrl;
 
   // The recorded key carries the output size as well as the source URL.
   // Comparing the URL alone meant that raising ICON_SIZE left every icon
@@ -334,12 +333,13 @@ async function main() {
   const scrapedByRole = parsePerkTables(html, SOURCE.origin);
 
   const translations = loadTranslations();
-  const descriptionTranslations = loadDescriptionTranslations();
+  const overrides = loadPerkOverrides();
+  const descriptionTranslations = pick(overrides, "descriptionRu");
   const descriptionRuRaw = loadDescriptionRuRaw();
-  const descriptionOverridesEn = loadDescriptionOverridesEn();
-  const nameOverridesEn = loadNameOverridesEn();
-  const pinnedIcons = loadPinnedIcons();
-  const iconSourceOverrides = loadIconSourceOverrides();
+  const descriptionOverridesEn = pick(overrides, "descriptionEn");
+  const nameOverridesEn = pick(overrides, "nameEn");
+  const pinnedIcons = pick(overrides, "iconPinned");
+  const iconSourceOverrides = pick(overrides, "iconSource");
   const characterReleaseDates = loadCharacterReleaseDates();
   const previous = new Map(
     loadPreviousPerks().map((p) => [`${p.role}/${p.slug}`, p]),
@@ -465,7 +465,7 @@ async function main() {
       const prev = previous.get(`${role}/${row.slug}`);
       const nameEn = nameOverridesEn[row.slug] ?? row.name;
       // A name override implies the wiki's own spelling of that name is
-      // unwanted (see data/name-overrides.en.json) — scrub any literal
+      // unwanted (see data/overrides/perks.json) — scrub any literal
       // mention of it out of the description too, or a perk's own body
       // text would keep citing the un-overridden spelling (e.g. Deja Vu's
       // description name-drops itself as "Déjà Vu").

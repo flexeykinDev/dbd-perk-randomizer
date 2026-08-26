@@ -130,14 +130,14 @@ jobs:
             if [ "${{ steps.classify.outputs.safe }}" = "true" ]; then
               echo "**Only brand-new entries.** Nothing pre-existing changed, so nothing that already worked can have regressed."
             else
-              echo "**Changes to pre-existing entries — needs a human look before merging** (see below). A change here could be a legitimate wiki correction, or the scraper clobbering something — same class of bug that silently reverted \`data/name-overrides.en.json\`/\`data/icon-overrides.json\`'s two pins before those existed."
+              echo "**Changes to pre-existing entries — needs a human look before merging** (see below). A change here could be a legitimate wiki correction, or the scraper clobbering something — same class of bug that silently reverted the two icon pins in \`data/overrides/perks.json\` before those existed."
             fi
             echo
             cat scrape-diff-summary.md
             echo
             echo "---"
             echo
-            echo "If a new chapter landed, check the Russian actually came through — the RU wiki lags the EN one by days, and when it has no page yet the card falls back to English silently. \`data/description-translations.ru.json\` is the hand-authored override for that case."
+            echo "If a new chapter landed, check the Russian actually came through — the RU wiki lags the EN one by days, and when it has no page yet the card falls back to English silently. A \`descriptionRu\` in \`data/overrides/perks.json\` is the hand-authored override for that case."
             echo
             echo "For the loadout data specifically, also spot-check that any *new* killer's add-ons resolved to the right character name (see \`resolvePowerToCharacter\` in \`scripts/scrape-loadout.ts\`) — it falls back to \`.All\` and logs a warning if it can't, so check the workflow log for \`Could not resolve a killer for power heading\` too. A new killer should also pick up a Power icon automatically (\`scrapeKillerPowerIcons\`) — check the log for \`No Power icon found on <killer>'s wiki page\` if one's missing from \`data/killer-power-icons.json\`."
           } > pr-body.md
