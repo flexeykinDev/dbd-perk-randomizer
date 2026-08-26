@@ -3744,64 +3744,84 @@
     "descriptionRuRaw": "Лопасти покрыты зазубринами и трещинами, словно налетели на что-то твердое. Преодолевание окон в режиме \"Вездесущее зло\" помечает их на 13 сек. Когда вы применяете пугалку, все помеченные окна блокируются на 13 сек."
   },
   "addon:heretic-s-mark": {
-    "description": "\"Those who stray from the path shall never escape ostracization once they received the mark.\" When a cast Divine Light passes a Survivor within 1 metre without hitting them, they are revealed by Killer Instinct for 2 seconds."
+    "description": "\"Those who stray from the path shall never escape ostracization once they received the mark.\" When a cast Divine Light passes a Survivor within 1 metre without hitting them, they are revealed by Killer Instinct for 2 seconds.",
+    "descriptionRuRaw": "Когда активированный Священный свет проходит мимо выживших в пределах 1 метра, не задевая их, их можно обнаружить с помощью инстинкта убийцы в течение 2 сек."
   },
   "addon:koenrad-s-gauntlet": {
-    "description": "\"When darkness threatened to swallow his flock, he led them towards the light.\" Increases the maximum duration of Divine Light control duration by +25 %. Decreases the maximum speed of controlled Divine Light by -10 %"
+    "description": "\"When darkness threatened to swallow his flock, he led them towards the light.\" Increases the maximum duration of Divine Light control duration by +25 %. Decreases the maximum speed of controlled Divine Light by -10 %",
+    "descriptionRuRaw": "Увеличивает на 25% максимальное время, которое можно потратить на управление Священным светом, прежде чем его активировать. Понижает максимальную скорость контролируемого Священного света на 10%."
   },
   "addon:prayer-kneeler": {
-    "description": "\"Suffer the pain of prayer, for the suffering of unbelievers is far worse.\" While controlling an obstructed Divine Light: Decrease its maximum speed by -99 %."
+    "description": "\"Suffer the pain of prayer, for the suffering of unbelievers is far worse.\" While controlling an obstructed Divine Light: Decrease its maximum speed by -99 %.",
+    "descriptionRuRaw": "При контроле Священного света, замедленного препятствием: ещё сильнее снижает его максимальную скорость на 99%; при активации тот достигает своей предельной скорости на 25% быстрее, а сама она увеличивается на 10%."
   },
   "addon:searcher-s-skull": {
-    "description": "\"The skulls of the heretics shall be cleaned and displayed as a warning to others who might stray from the light.\" When a Survivor blinds you: The Survivor gains Heresy. If the Survivor is a Heretic, they become blinded themselves for 2.5 seconds."
+    "description": "\"The skulls of the heretics shall be cleaned and displayed as a warning to others who might stray from the light.\" When a Survivor blinds you: The Survivor gains Heresy. If the Survivor is a Heretic, they become blinded themselves for 2.5 seconds.",
+    "descriptionRuRaw": "Всякий раз, когда выживший ослепляет вас: он слепнет сам, если считается еретиком; затем он получает эффект «Ересь»."
   },
   "addon:aurora-s-telereceptor": {
-    "description": "\"None should stare into the abyss with the wretched devices made by the heretics.\" Survivors who gain Heresy have their aura revealed for 4 seconds. They also see your aura for 4 seconds. Heretics see your aura for +2 seconds longer."
+    "description": "\"None should stare into the abyss with the wretched devices made by the heretics.\" Survivors who gain Heresy have their aura revealed for 4 seconds. They also see your aura for 4 seconds. Heretics see your aura for +2 seconds longer.",
+    "descriptionRuRaw": "Когда на выживших накладывается эффект «Ересь», их аура становится видна в течение 4 сек. Кроме того, они видят вашу ауру в течение 4 сек."
   },
   "addon:confessor-s-war-horn": {
-    "description": "\"The sound of the horn shall strike fear into the hearts of unbelievers and muster the will of the faithful.\" Survivors who gain Heresy are inflicted Exhausted Status Effect for 10 seconds."
+    "description": "\"The sound of the horn shall strike fear into the hearts of unbelievers and muster the will of the faithful.\" Survivors who gain Heresy are inflicted Exhausted Status Effect for 10 seconds.",
+    "descriptionRuRaw": "При получении эффекта «Ересь» выжившие дополнительно получают «Усталость» на 10 сек."
   },
   "addon:magnetised-manacles": {
-    "description": "\"Those who do not go into hiding will be locked deep underground, far from the guiding light of the stars.\" Gain +1 Token when you send a Survivor with the lowest amount of Hook States to the Exile, up to 5 Tokens. For each token, increase the duration of Zealous when activated by +10 %"
+    "description": "\"Those who do not go into hiding will be locked deep underground, far from the guiding light of the stars.\" Gain +1 Token when you send a Survivor with the lowest amount of Hook States to the Exile, up to 5 Tokens. For each token, increase the duration of Zealous when activated by +10 %",
+    "descriptionRuRaw": "Изгоняя выжившего с наименьшей стадией крюка, вы получаете жетон (максимум 5). Когда вы получаете эффект «Рвение», он продолжает действовать на 10% дольше за каждый жетон."
   },
   "addon:mark-of-the-adherent": {
-    "description": "\"Wear your faith proudly and permanently. Let it be a reminder to others that It is always present.\" While not Zealous, Divine Light's radius is +10 % larger."
+    "description": "\"Wear your faith proudly and permanently. Let it be a reminder to others that It is always present.\" While not Zealous, Divine Light's radius is +10 % larger.",
+    "descriptionRuRaw": "Пока на вас действует «Рвение» и вы активируете Священный свет: вы сохраняете 1% контроля над ним; препятствия замедляют его дополнительно на 50%."
   },
   "addon:undying-flame": {
-    "description": "\"The village of Dend was repentant in its last moments, but its remnants still burn to this day as a warning.\" While Zealous: Increase lifetime of the cast Divine Light by +200 %. Decrease the radius of Divine Light by -20 %. Increase Survivor Divine Light aura reading range by +200 %."
+    "description": "\"The village of Dend was repentant in its last moments, but its remnants still burn to this day as a warning.\" While Zealous: Increase lifetime of the cast Divine Light by +200 %. Decrease the radius of Divine Light by -20 %. Increase Survivor Divine Light aura reading range by +200 %.",
+    "descriptionRuRaw": "Пока действует «Рвение»: повышает максимальный период действия активированного Священного света на 200%; уменьшает радиус Священного света на 50%; дистанция, на которой выжившие могут видеть ауру Священного света, увеличивается на 200%."
   },
   "addon:blindfold-of-the-devoted": {
-    "description": "\"Those who follow Gerhardt's path shall wear blindfolds, to remember the sacrifice he made for his prophecy.\" Sending a Survivor to the Exile with the lowest amount of Hook States reveals the auras of all other Survivors with the lowest amount of Hook States outside 32 metres for 5 seconds."
+    "description": "\"Those who follow Gerhardt's path shall wear blindfolds, to remember the sacrifice he made for his prophecy.\" Sending a Survivor to the Exile with the lowest amount of Hook States reveals the auras of all other Survivors with the lowest amount of Hook States outside 32 metres for 5 seconds.",
+    "descriptionRuRaw": "Изгоняя выжившего с наименьшей стадией крюка, вы 5 сек. видите ауры всех других выживших с наименьшими стадиями крюка, пока они находятся далее 32 м."
   },
   "addon:electric-torch": {
-    "description": "\"The faithful shall go out in great numbers at night, searching for the heretics who hide in the dark.\" Increases the maximum speed of the controlled Divine Light by +25 %. Increases movement speed while controlling Divine Light by +10 %."
+    "description": "\"The faithful shall go out in great numbers at night, searching for the heretics who hide in the dark.\" Increases the maximum speed of the controlled Divine Light by +25 %. Increases movement speed while controlling Divine Light by +10 %.",
+    "descriptionRuRaw": "Уменьшает радиус Священного света на 10%. Повышает максимальную скорость контролируемого Священного света на 25%. Контролируя его, вы перемещаетесь на 10% быстрее."
   },
   "addon:holy-winged-icon": {
-    "description": "\"Clutch it to your chest and pray, lest your heart appear untrue to It.\" While casting Divine Light, press the Secondary Power button to cast it back towards your location. When cast this way: Minimum delay before it deals damage and inflicts Heresy is set to 0.4 seconds. Increase its maximum speed by +10 %. It only damages Heretics"
+    "description": "\"Clutch it to your chest and pray, lest your heart appear untrue to It.\" While casting Divine Light, press the Secondary Power button to cast it back towards your location. When cast this way: Minimum delay before it deals damage and inflicts Heresy is set to 0.4 seconds. Increase its maximum speed by +10 %. It only damages Heretics",
+    "descriptionRuRaw": "Контролируя Священный свет, вы получаете возможность нажать кнопку способности убийцы, чтобы призвать столп света обратно к себе. Когда вы призываете его в этом направлении: минимальная задержка перед тем, как Священный свет станет летальным, устанавливается на 0,5 сек.; его максимальная скорость повышается на 10%; он наносит урон только еретикам."
   },
   "addon:order-of-inquisition": {
-    "description": "\"All those who believe in Its glory are deputized to search for heretics. Trust not even your own neighbor.\" When Divine Light is cast, its radius starts -25 % smaller, but grows +50 % larger over a period of 1 second."
+    "description": "\"All those who believe in Its glory are deputized to search for heretics. Trust not even your own neighbor.\" When Divine Light is cast, its radius starts -25 % smaller, but grows +50 % larger over a period of 1 second.",
+    "descriptionRuRaw": "При каждой активации Священного света его радиус изначально меньше на 50%, но увеличивается до 100% за 1 секунду."
   },
   "addon:superheated-glass": {
-    "description": "\"The planet of Aleide was unrepentant; after their leader was Exiled, Its Divine Light turned the surface to glass.\" Decreases the duration of Zealous by -20 %. While Zealous, a cast Divine Light breaks all Breakable Walls and Pallets it passes through. Breaking an object this way causes Survivors within 12 metres to scream and gain Heresy."
+    "description": "\"The planet of Aleide was unrepentant; after their leader was Exiled, Its Divine Light turned the surface to glass.\" Decreases the duration of Zealous by -20 %. While Zealous, a cast Divine Light breaks all Breakable Walls and Pallets it passes through. Breaking an object this way causes Survivors within 12 metres to scream and gain Heresy.",
+    "descriptionRuRaw": "Воздействующий на вас эффект «Рвения» длится на 50% меньше. Пока на вас воздействует «Рвение», Священный свет при активации разрушает все ломаемые стены и упавшие доски, через которые проходит."
   },
   "addon:chains-of-the-heretic": {
-    "description": "\"Examples shall be made of the loudest apostates. They shall be dragged through the streets in chains.\" While Zealous: Cast Divine Light will always be directed towards you. Minimum delay before cast Divine Light deals damage and inflicts Heresy is set to 0.35 seconds. Increases the maximum speed of controlled Divine Light by +100 %. Increases the maximum speed of cast Divine Light by +50 %."
+    "description": "\"Examples shall be made of the loudest apostates. They shall be dragged through the streets in chains.\" While Zealous: Cast Divine Light will always be directed towards you. Minimum delay before cast Divine Light deals damage and inflicts Heresy is set to 0.35 seconds. Increases the maximum speed of controlled Divine Light by +100 %. Increases the maximum speed of cast Divine Light by +50 %.",
+    "descriptionRuRaw": "Пока на вас воздействует «Рвение»: минимальная задержка до того, как Священный свет станет летальным, устанавливается на 0,5 секунд; максимальная скорость контролируемого Священного света повышается на 100%; максимальная скорость активированного Священного света повышается на 50%; активированный Священный свет всегда направляется к вам."
   },
   "addon:crown-of-the-destroyer": {
-    "description": "\"The Creators saw this and bestowed upon It a crown and said, use this to bring light to the darkness.\" When a Survivor is rescued from the Exile, for 20 seconds: Your Terror Radius is reduced by -70 %. Your Terror Radius is copied to all Shrines of Judgment. Grants the Undetectable Status Effect."
+    "description": "\"The Creators saw this and bestowed upon It a crown and said, use this to bring light to the darkness.\" When a Survivor is rescued from the Exile, for 20 seconds: Your Terror Radius is reduced by -70 %. Your Terror Radius is copied to all Shrines of Judgment. Grants the Undetectable Status Effect.",
+    "descriptionRuRaw": "Всякий раз, когда один выживший возвращает другого из изгнания, в течение 20 сек.: ваш радиус террора уменьшается на 75%; ваш радиус террора копируется каждым святилищем Правосудия; вы получаете «Незаметность»."
   },
   "addon:eyes-of-gerhardt": {
-    "description": "\"He rapturously tore the eyes from his face after seeing such brilliant visions of the future.\" When a Heretic completes a Generator, opens an Exit Gate or exits a Locker, all Heretics have their aura revealed for 5 seconds."
+    "description": "\"He rapturously tore the eyes from his face after seeing such brilliant visions of the future.\" When a Heretic completes a Generator, opens an Exit Gate or exits a Locker, all Heretics have their aura revealed for 5 seconds.",
+    "descriptionRuRaw": "Всякий раз, когда еретик заканчивает ремонт генератора или открывает ворота, вы в течение 5 сек. видите ауры всех еретиков."
   },
   "addon:improvised-detonators": {
-    "description": "\"Like cowards, they strike with bombs in the night, afraid to let the light of day illuminate their blackened souls.\" If no Survivors are dead, sending a Survivor with the lowest amount of Hook States to the Exile grants +1 Token. When you reach 4 Tokens, the Generator with the highest progress explodes and loses -20 % progress."
+    "description": "\"Like cowards, they strike with bombs in the night, afraid to let the light of day illuminate their blackened souls.\" If no Survivors are dead, sending a Survivor with the lowest amount of Hook States to the Exile grants +1 Token. When you reach 4 Tokens, the Generator with the highest progress explodes and loses -20 % progress.",
+    "descriptionRuRaw": "Всякий раз, когда вы изгоняете выжившего с наименьшей стадией крюка, а никто из выживших ещё не погиб, вы получаете жетон. Когда вы накопите 4 или больше жетонов, генератор с наибольшим прогрессом ремонта взорвётся и сразу потеряет 20% прогресса."
   },
   "addon:mirror-of-the-creators": {
-    "description": "\"And They said unto It, take this mirror, and show them the error of their ways.\" Cast Divine Light reflects off the first 2 obstructions it would otherwise pass through. When reflecting, it pauses for 0.4 seconds before reflecting again."
+    "description": "\"And They said unto It, take this mirror, and show them the error of their ways.\" Cast Divine Light reflects off the first 2 obstructions it would otherwise pass through. When reflecting, it pauses for 0.4 seconds before reflecting again.",
+    "descriptionRuRaw": "Священный свет при активации теперь отражается от 2 первых препятствий, через которые он должен был пройти. При таком отражении столп света получает задержку в 0,5 сек., прежде чем его можно будет активировать снова."
   },
   "addon:obsidian-feather": {
-    "description": "\"Some villagers will carve feathers from rocks, hoping that their faith might protect them.\" You can no longer cancel nor manually cast the controlled Divine Light and it is automatically cast when it would instead time out. Increases movement speed while controlling Divine Light by +100 %. Decreases the maximum amount of time you can control Divine Light for by -25 %. Increases the recovery time after casting Divine Light by +10 %. Decreases the movement speed while recovering after casting Divine Light by -30 %."
+    "description": "\"Some villagers will carve feathers from rocks, hoping that their faith might protect them.\" You can no longer cancel nor manually cast the controlled Divine Light and it is automatically cast when it would instead time out. Increases movement speed while controlling Divine Light by +100 %. Decreases the maximum amount of time you can control Divine Light for by -25 %. Increases the recovery time after casting Divine Light by +10 %. Decreases the movement speed while recovering after casting Divine Light by -30 %.",
+    "descriptionRuRaw": "Вы больше не сможете отозвать контролируемый Священный свет, и тот автоматически активируется по истечении времени. Вы перемещаетесь на 75% быстрее, пока контролируете Священный свет. Вы восстанавливаетесь на 10% медленнее и перемещаетесь на 30% медленнее при активации Священного света."
   },
   "offering:hollow-shell": {
     "description": "Grants +25 % bonus Bloodpoints in all Scoring Categories. The bonus Bloodpoints are applied after exiting the Trial. \"An unidentifiable cocoon which was breached by whatever was inside.\"",
