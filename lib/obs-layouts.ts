@@ -17,7 +17,7 @@ import { safeGetJSON, safeSetJSON } from "./safe-storage";
 import type { ObsIconPosition } from "./use-obs-mode";
 
 const STORAGE_KEY = "dbd-randomizer:obs-layouts";
-export const MAX_LAYOUTS = 8;
+const MAX_LAYOUTS = 8;
 export const MAX_LAYOUT_NAME = 24;
 
 /** Exactly the values that make an overlay look the way it looks. Stored

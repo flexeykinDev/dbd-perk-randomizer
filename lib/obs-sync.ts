@@ -124,7 +124,7 @@ function randomRoomCode(): string {
  *  publishObsState uses this (not getOrCreateRoomCode) specifically so a
  *  visitor who's never opened the OBS Overlay modal never starts writing to
  *  Firebase on every single generate. */
-export function peekRoomCode(): string | null {
+function peekRoomCode(): string | null {
   return safeGet("local", ROOM_STORAGE_KEY);
 }
 

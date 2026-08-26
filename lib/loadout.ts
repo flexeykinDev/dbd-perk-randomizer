@@ -69,11 +69,11 @@ export function flattenLoadout(loadout: Loadout): LoadoutPiece[] {
   return pieces;
 }
 
-export function getAddonsForItemType(itemType: ItemType): Addon[] {
+function getAddonsForItemType(itemType: ItemType): Addon[] {
   return addons.filter((a) => a.role === "survivor" && a.itemType === itemType);
 }
 
-export function getAddonsForKiller(character: string): Addon[] {
+function getAddonsForKiller(character: string): Addon[] {
   return addons.filter((a) => a.role === "killer" && a.character === character);
 }
 
@@ -87,7 +87,7 @@ export function getKillerCharacters(): string[] {
     .sort();
 }
 
-export function getOfferingsByRole(role: PerkRole): Offering[] {
+function getOfferingsByRole(role: PerkRole): Offering[] {
   return offerings.filter((o) => o.role === role || o.role === "both");
 }
 
@@ -120,17 +120,17 @@ function excludeKey(kind: "item" | "addon" | "offering", slug: string): string {
   return `${kind}:${slug}`;
 }
 
-export function getAvailableItems(excludedSlugs?: ReadonlySet<string>): Item[] {
+function getAvailableItems(excludedSlugs?: ReadonlySet<string>): Item[] {
   if (!excludedSlugs || excludedSlugs.size === 0) return items;
   return items.filter((i) => !excludedSlugs.has(excludeKey("item", i.slug)));
 }
 
-export function getAvailableAddons(pool: Addon[], excludedSlugs?: ReadonlySet<string>): Addon[] {
+function getAvailableAddons(pool: Addon[], excludedSlugs?: ReadonlySet<string>): Addon[] {
   if (!excludedSlugs || excludedSlugs.size === 0) return pool;
   return pool.filter((a) => !excludedSlugs.has(excludeKey("addon", a.slug)));
 }
 
-export function getAvailableOfferings(role: PerkRole, excludedSlugs?: ReadonlySet<string>): Offering[] {
+function getAvailableOfferings(role: PerkRole, excludedSlugs?: ReadonlySet<string>): Offering[] {
   const pool = getOfferingsByRole(role);
   if (!excludedSlugs || excludedSlugs.size === 0) return pool;
   return pool.filter((o) => !excludedSlugs.has(excludeKey("offering", o.slug)));

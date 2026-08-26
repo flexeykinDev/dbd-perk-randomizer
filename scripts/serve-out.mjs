@@ -10,7 +10,7 @@
 // already serve a directory of files.
 import { createServer } from "node:http";
 import { createReadStream } from "node:fs";
-import { stat } from "node:fs/promises";
+import { readdir, stat } from "node:fs/promises";
 import { extname, join, normalize, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -82,6 +82,58 @@ try {
 } catch {
   console.error(`No static export at ${ROOT}. Run \`npm run build\` first.`);
   process.exit(1);
+}
+
+/* Refuse to serve an export older than the code it was built from.
+ *
+ * `npm run test:e2e` builds first, so the packaged path was always safe. The
+ * gap was the iteration path: running `playwright test` on its own serves
+ * whatever happens to be in out/, and a run against yesterday's bundle passes
+ * cheerfully. That has cost real debugging time — twice in one session, once
+ * while verifying a fix and once mid break-test, where a stale export made a
+ * deliberately broken build look green.
+ *
+ * Fails loudly instead. Set E2E_ALLOW_STALE=1 to serve an old export anyway
+ * (bisecting a bundle, say). */
+async function newestSourceTime() {
+  const SKIP = new Set(["node_modules", ".next", "out", ".git", "test-results", "playwright-report"]);
+  const roots = ["app", "components", "lib", "data", "public", "next.config.ts", "package.json"]
+    .map((p) => fileURLToPath(new URL(`../${p}`, import.meta.url)));
+  let newest = 0;
+  async function walk(path) {
+    let info;
+    try {
+      info = await stat(path);
+    } catch {
+      return; // An optional path that does not exist here.
+    }
+    if (info.isFile()) {
+      newest = Math.max(newest, info.mtimeMs);
+      return;
+    }
+    if (!info.isDirectory()) return;
+    for (const entry of await readdir(path, { withFileTypes: true })) {
+      if (SKIP.has(entry.name)) continue;
+      await walk(join(path, entry.name));
+    }
+  }
+  await Promise.all(roots.map(walk));
+  return newest;
+}
+
+if (process.env.E2E_ALLOW_STALE !== "1") {
+  const built = (await stat(join(ROOT, "index.html")).catch(() => null))?.mtimeMs ?? 0;
+  const source = await newestSourceTime();
+  // A second of slack: a build reads its inputs and writes its outputs at
+  // very nearly the same moment, and mtime resolution varies by filesystem.
+  if (source > built + 1000) {
+    const age = Math.round((source - built) / 1000);
+    console.error(
+      `out/ is ${age}s older than your sources — it was built from different code.\n` +
+        `Run \`npm run build\` first, or set E2E_ALLOW_STALE=1 to serve it anyway.`,
+    );
+    process.exit(1);
+  }
 }
 
 server.listen(PORT, () => {

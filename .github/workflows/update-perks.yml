@@ -50,12 +50,14 @@ jobs:
       # a chapter must not cost us the English update. Falling back to English
       # text is the designed behaviour, and it is what happens today anyway.
       - name: Refresh RU names
+        id: ru_names
         continue-on-error: true
         run: |
           npm run sync:localization
           npm run sync:characters
           npm run sync:loadout-localization
       - name: Refresh RU descriptions
+        id: ru_descriptions
         continue-on-error: true
         run: |
           npm run sync:descriptions
@@ -125,6 +127,23 @@ jobs:
             echo
             if [ "${{ steps.validate.outcome }}" != "success" ]; then
               echo "🔴 **Lint, tests or build FAILED on this data — not auto-merging.** Check the \`Validate the scraped data\` step in the run log before touching this PR."
+              echo
+            fi
+            # The RU passes are continue-on-error on purpose: the RU wiki
+            # being down must not cost us the English update, and falling
+            # back to English is the designed behaviour. But a green run that
+            # quietly shipped English on every Russian card is exactly how
+            # the 25 August chapter went out, so say so here — the PR body is
+            # where a human is already looking.
+            if [ "${{ steps.ru_names.outcome }}" != "success" ] || [ "${{ steps.ru_descriptions.outcome }}" != "success" ]; then
+              echo "🟠 **A Russian sync step failed — the RU text in this PR may be stale or missing**, and cards with no Russian silently fall back to English."
+              echo
+              echo "| Step | Outcome |"
+              echo "| --- | --- |"
+              echo "| Refresh RU names | \`${{ steps.ru_names.outcome }}\` |"
+              echo "| Refresh RU descriptions | \`${{ steps.ru_descriptions.outcome }}\` |"
+              echo
+              echo "Check the run log for which script died. A rerun once the RU wiki catches up is usually all it needs; \`descriptionRu\` in \`data/overrides/perks.json\` is the hand-authored escape hatch if it does not."
               echo
             fi
             if [ "${{ steps.classify.outputs.safe }}" = "true" ]; then

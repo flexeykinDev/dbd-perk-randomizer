@@ -51,7 +51,7 @@ async function fetchBundle(which: Which): Promise<void> {
 /** Starts a load if one hasn't started already. Safe to call repeatedly —
  *  a second call while the first is in flight joins it rather than
  *  fetching twice. */
-export function loadDescriptions(which: Which): Promise<void> {
+function loadDescriptions(which: Which): Promise<void> {
   if (loaded[which]) return Promise.resolve();
   inflight[which] ??= fetchBundle(which).catch(() => {
     // A failed load leaves the card showing its name and no prose, which

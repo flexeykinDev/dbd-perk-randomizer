@@ -29,7 +29,7 @@ import {
 // word: with names on, each slot is an icon *and* a 2-line label
 // underneath, so a tighter separation let row 1's labels overlap row 2's
 // icons at the preview's size.
-export const DEFAULT_SLOT_POSITIONS: readonly ObsIconPosition[] = [
+const DEFAULT_SLOT_POSITIONS: readonly ObsIconPosition[] = [
   { x: 12.5, y: 33 },
   { x: 37.5, y: 33 },
   { x: 62.5, y: 33 },

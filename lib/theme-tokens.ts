@@ -38,7 +38,7 @@ function readVar(styles: CSSStyleDeclaration, name: string, fallback: string): s
 /** #rgb / #rrggbb / rgb(...) → 0..1 triple. Anything unparseable falls back
  *  to mid grey rather than throwing: a wrong colour is a cosmetic bug, an
  *  exception in a draw loop is a blank stage. */
-export function toRgb(colour: string): [number, number, number] {
+function toRgb(colour: string): [number, number, number] {
   const hex = colour.trim();
   if (hex.startsWith("#")) {
     const h = hex.slice(1);
@@ -71,7 +71,7 @@ function shade([r, g, b]: [number, number, number], amount: number): [number, nu
   return [f(r), f(g), f(b)];
 }
 
-export function readThemeTokens(): ThemeTokens {
+function readThemeTokens(): ThemeTokens {
   if (typeof document === "undefined") {
     return {
       isLight: false,

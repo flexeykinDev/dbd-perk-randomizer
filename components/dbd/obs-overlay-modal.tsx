@@ -159,9 +159,16 @@ export function ObsOverlayModal({
                   <MonitorPlay className="size-4.5" />
                 </span>
                 <div>
-                  <p id={titleId} className="font-semibold text-foreground">
+                  {/* A heading, not a styled <p>. This dialog is the only
+                      place in the app with <h3> section headings (the panels
+                      below), and with a <p> here they hung off the page's
+                      <h1> with no <h2> in between — a skipped level, which is
+                      what a screen reader navigating by heading actually
+                      trips over. Tailwind's preflight drops the default
+                      heading size and weight, so this looks identical. */}
+                  <h2 id={titleId} className="font-semibold text-foreground">
                     {t({ ru: "Оверлей для OBS", en: "OBS Overlay" })}
-                  </p>
+                  </h2>
                   <p id={descId} className="text-xs text-muted">
                     {mode === "loadout"
                       ? t({
