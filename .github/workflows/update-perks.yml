@@ -12,17 +12,63 @@ permissions:
 jobs:
   scrape:
     runs-on: ubuntu-latest
+    # The English scrape alone is a couple of minutes; the RU passes below
+    # walk every perk's own wiki page, so this job is much longer than CI.
+    # Still far short of GitHub's 6-hour default, which is the thing worth
+    # capping — a hung run there is invisible until someone goes looking.
+    timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
       - run: npm ci
+
+      # ---- English, from the EN wiki -----------------------------------
       - name: Scrape perks from the DBD wiki
         run: npm run scrape:perks
       - name: Scrape items/add-ons/offerings from the DBD wiki
         run: npm run scrape:loadout
+
+      # ---- Russian, from the RU wiki -----------------------------------
+      #
+      # These used to be manual, and that is exactly how the site shipped the
+      # 25 August chapter with English text on every Russian card: the perks
+      # arrived, nothing fetched their Russian, and nobody noticed until a
+      # player did. A weekly job that updates half the site's languages is
+      # not really automated.
+      #
+      # Order matters. sync:descriptions looks a perk up on the RU wiki BY
+      # ITS RUSSIAN NAME, so the name passes have to run first — with no name
+      # mapping it silently skips the perk, which is what "0 extracted" meant
+      # for all six new perks. And these read data/perks.json to know what to
+      # ask for, so they can only run after the English scrape has put the new
+      # entries there.
+      #
+      # continue-on-error throughout: the RU wiki being down or lagging behind
+      # a chapter must not cost us the English update. Falling back to English
+      # text is the designed behaviour, and it is what happens today anyway.
+      - name: Refresh RU names
+        continue-on-error: true
+        run: |
+          npm run sync:localization
+          npm run sync:characters
+          npm run sync:loadout-localization
+      - name: Refresh RU descriptions
+        continue-on-error: true
+        run: |
+          npm run sync:descriptions
+          npm run sync:loadout-descriptions
+
+      # The sync scripts write their own raw files; only a scrape bakes those
+      # into data/perks.json and data/loadout-descriptions.json, which is what
+      # the site actually loads. Hence the second pass.
+      - name: Bake the Russian text into the shipped data
+        run: |
+          npm run scrape:perks
+          npm run scrape:loadout
+
       # Both scrapes stamp the time they ran into meta.json, so a week where
       # the wiki did not move still leaves the tree "dirty" with nothing worth
       # saying. create-pull-request then failed on it -- every scheduled run
@@ -42,18 +88,47 @@ jobs:
             echo "any=true" >> "$GITHUB_OUTPUT"
           fi
 
+      # The same three commands CI runs, against the freshly scraped data,
+      # BEFORE anything can be merged.
+      #
+      # Auto-merge used to run `gh pr merge --squash` the moment the PR
+      # existed. That does not wait for anything: PR #4 was merged with an
+      # empty check list, seconds after it was opened, and the only thing
+      # standing between a bad scrape and the live site was a CI run that had
+      # not reported yet. These tests are not decoration either — this
+      # chapter's update broke four of them (a build preset naming a renamed
+      # perk, and an orphaned icon), and a purely additive chapter would have
+      # been classified "safe" and merged without a human ever looking.
+      #
+      # continue-on-error so a failure still opens the PR for review rather
+      # than losing the scrape entirely; the merge gate below reads the
+      # outcome.
+      - name: Validate the scraped data
+        id: validate
+        if: steps.worth.outputs.any == 'true'
+        continue-on-error: true
+        run: |
+          npm run lint
+          npm test
+          npm run build
+
       - name: Classify the diff (new entries vs changes to existing ones)
         id: classify
         if: steps.worth.outputs.any == 'true'
         run: npx tsx scripts/classify-scrape-diff.ts
+
       - name: Build the PR description
         if: steps.worth.outputs.any == 'true'
         run: |
           {
-            echo "Automated scrape of the DBD wiki's [Perks](https://deadbydaylight.fandom.com/wiki/Perks), [Items](https://deadbydaylight.fandom.com/wiki/Items), [Add-ons](https://deadbydaylight.fandom.com/wiki/Add-ons), and [Offerings](https://deadbydaylight.fandom.com/wiki/Offerings) pages."
+            echo "Automated scrape of the DBD wiki's [Perks](https://deadbydaylight.wiki.gg/wiki/Perks), [Items](https://deadbydaylight.wiki.gg/wiki/Items), [Add-ons](https://deadbydaylight.wiki.gg/wiki/Add-ons), and [Offerings](https://deadbydaylight.wiki.gg/wiki/Offerings) pages, plus the Russian names and descriptions from the RU wiki."
             echo
+            if [ "${{ steps.validate.outcome }}" != "success" ]; then
+              echo "🔴 **Lint, tests or build FAILED on this data — not auto-merging.** Check the \`Validate the scraped data\` step in the run log before touching this PR."
+              echo
+            fi
             if [ "${{ steps.classify.outputs.safe }}" = "true" ]; then
-              echo "**Only brand-new entries — auto-merging.** Nothing pre-existing changed, so nothing that already worked can have regressed."
+              echo "**Only brand-new entries.** Nothing pre-existing changed, so nothing that already worked can have regressed."
             else
               echo "**Changes to pre-existing entries — needs a human look before merging** (see below). A change here could be a legitimate wiki correction, or the scraper clobbering something — same class of bug that silently reverted \`data/name-overrides.en.json\`/\`data/icon-overrides.json\`'s two pins before those existed."
             fi
@@ -61,6 +136,8 @@ jobs:
             cat scrape-diff-summary.md
             echo
             echo "---"
+            echo
+            echo "If a new chapter landed, check the Russian actually came through — the RU wiki lags the EN one by days, and when it has no page yet the card falls back to English silently. \`data/description-translations.ru.json\` is the hand-authored override for that case."
             echo
             echo "For the loadout data specifically, also spot-check that any *new* killer's add-ons resolved to the right character name (see \`resolvePowerToCharacter\` in \`scripts/scrape-loadout.ts\`) — it falls back to \`.All\` and logs a warning if it can't, so check the workflow log for \`Could not resolve a killer for power heading\` too. A new killer should also pick up a Power icon automatically (\`scrapeKillerPowerIcons\`) — check the log for \`No Power icon found on <killer>'s wiki page\` if one's missing from \`data/killer-power-icons.json\`."
           } > pr-body.md
@@ -93,13 +170,37 @@ jobs:
             data/killer-power-icons.json
             data/icon-sources.json
             data/loadout-icon-sources.json
+            data/perk-slug-aliases.json
+            data/translations.ru.json
+            data/character-translations.ru.json
+            data/description-ru-raw.json
+            data/loadout-translations.ru.json
+            data/loadout-description-ru-raw.json
             public/perks/**
             public/characters/**
             public/loadout/**
 
-      - name: Auto-merge (only when PR created & nothing pre-existing changed)
-        if: steps.worth.outputs.any == 'true' && steps.cpr.outputs.pull-request-number != '' && steps.classify.outputs.safe == 'true'
+      # Three conditions, not two: the PR exists, nothing pre-existing
+      # changed, AND the data passes the same checks CI would run. Dropping
+      # any one of them puts unreviewed, unverified data straight onto a
+      # branch that deploys.
+      - name: Auto-merge (new entries only, and only if it validates)
+        if: >-
+          steps.worth.outputs.any == 'true'
+          && steps.cpr.outputs.pull-request-number != ''
+          && steps.classify.outputs.safe == 'true'
+          && steps.validate.outcome == 'success'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh pr merge "${{ steps.cpr.outputs.pull-request-number }}" --squash --delete-branch
+
+      # A scheduled run that fails is invisible — nobody watches the Actions
+      # tab on a Monday morning. This is the difference between "the chapter
+      # landed two days late" and "the chapter landed whenever someone
+      # happened to look".
+      - name: Fail the run if the data did not validate
+        if: steps.worth.outputs.any == 'true' && steps.validate.outcome != 'success'
+        run: |
+          echo "::error::Scraped data failed lint/test/build — a PR was opened but not merged."
+          exit 1

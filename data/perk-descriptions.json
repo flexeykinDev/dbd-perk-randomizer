@@ -1145,7 +1145,7 @@
   },
   "keep-them-waiting": {
     "description": "Damaging any Survivor other than the Obsession with a Basic Attack causes Keep Them Waiting to gain +1 Token, up to a maximum of 6/7/8 Tokens.Damaging the Obsession with either a Basic or Special Attack causes Keep Them Waiting to lose -2 Tokens: Grants a stack-able -5 % per Token Cool-down time reduction on successful Basic Attacks, up to a maximum of 30/35/40 %. Keep Them Waiting freezes its current Token Count once the Obsession is sacrificed or killed.You can only be obsessed with one Survivor at a time.",
-    "descriptionRuRaw": "Если во время погони за объектом одержимости вы ломаете доску, разрушаемую стену или повреждаете генератор базовым действием, то получаете 7% эффекта \"Спешка\" на 8/9/10 сек.. Когда вы раните базовой атакой выжившего с наибольшим временем преследования, тот становится объектом одержимости. \"Спешка\" ускоряет движение убийц и выживших."
+    "descriptionRuRaw": "Когда ваша базовая атака наносит урон выжившему, которым вы не одержимы, вы получаете жетоны (1 шт., максимум - 6/7/8 шт.). За каждый жетон ваша базовая атака перезаряжается на 4% быстрее. Когда объект одержимости получает урон, вы теряете жетоны (2 шт.). Если объект одержимости мертв, вы не получаете жетоны."
   },
   "knock-out": {
     "description": "\"The trauma caused by your brutal attacks makes crying for help painfully difficult.\" Whenever a Survivor moves farther than 6 metres from a Pallet within 6 seconds of dropping it, Knock Out triggers its effect: Causes them to suffer from a -5 % Hindered Status Effect for 3/4/5 seconds. \"Oh, that gun's no good. The old way... with a sledge! You see, that way's better. They die better that way.\" — Nubbins Sawyer",
