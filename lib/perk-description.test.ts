@@ -564,6 +564,9 @@ test("every override line is a mechanic, not a paragraph", () => {
       if (lang.startsWith("_")) continue;
       // Matches MAX_JOINED in perk-description.ts — a Core Effect line
       // should never be longer than what the parser would assemble itself.
+      // nameRu is a name, not a Core Effect line — it is checked for
+      // emptiness below rather than against the summary budget.
+      if (lang === "nameRu") continue;
       if (line.length > 200) bad.push(`${key} [${lang}] runs to ${line.length} chars`);
       if (line.endsWith("\u2026")) bad.push(`${key} [${lang}] ends mid-thought`);
       if (/[:—-]\s*$/.test(line)) bad.push(`${key} [${lang}] is a lead-in`);
@@ -679,4 +682,23 @@ test("perk slugs are unique across roles, which the overlay key assumes", () => 
     seen.set(row.slug, row.role);
   }
   assert.deepEqual(clashes, [], `slugs used by both roles: ${clashes.join(", ")}`);
+});
+
+test("loadout overrides only carry fields something reads", () => {
+  /* Four fields, read in two different places: `en`/`ru` are the Core Effect
+   * lines lib/perk-description.ts returns verbatim at render time, while
+   * `nameRu`/`descriptionRu` are baked into addons.json by
+   * scripts/scrape-loadout.ts and need a re-scrape to take effect. A typo'd
+   * field name would sit in a hand-edited file looking authoritative and do
+   * nothing at all. */
+  const allowed = new Set(["en", "ru", "nameRu", "descriptionRu"]);
+  const stray: string[] = [];
+  for (const [key, entry] of Object.entries(
+    loadoutOverrides.entries as Record<string, Record<string, unknown>>,
+  )) {
+    for (const field of Object.keys(entry)) {
+      if (!field.startsWith("_") && !allowed.has(field)) stray.push(`${key}.${field}`);
+    }
+  }
+  assert.deepEqual(stray, [], `unknown override fields: ${stray.join(", ")}`);
 });

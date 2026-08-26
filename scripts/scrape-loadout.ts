@@ -45,6 +45,7 @@ const LOADOUT_DESCRIPTION_RU_RAW_JSON = join(DATA_DIR, "loadout-description-ru-r
 const KILLER_POWER_ICONS_JSON = join(DATA_DIR, "killer-power-icons.json");
 const LOADOUT_ICON_SOURCES_JSON = join(DATA_DIR, "loadout-icon-sources.json");
 const SUPPLEMENTAL_ADDONS_EN_JSON = join(DATA_DIR, "supplemental-addons.en.json");
+const LOADOUT_OVERRIDES_JSON = join(DATA_DIR, "overrides", "loadout.json");
 
 // 256 because that is what the wiki's originals actually are, and what the
 // character portraits already used. `withoutEnlargement` is the important
@@ -947,8 +948,36 @@ function loadDescriptionRuRaw(): Record<string, string> {
 
 
 
+/* Hand-written Russian for loadout pieces — see data/overrides/loadout.json.
+ *
+ * The overlay already carries hand-written Core Effect lines, which are read
+ * at RENDER time by lib/perk-description.ts. Names and raw descriptions are
+ * different: they are baked into items.json / addons.json here, so they have
+ * to be applied at scrape time, and they outrank the synced RU wiki data the
+ * same way a perk's `descriptionRu` outranks description-ru-raw.json.
+ *
+ * The case this exists for: an add-on the ENGLISH wiki has not catalogued
+ * either, so it arrived through supplemental-addons.en.json and the Russian
+ * wiki cannot possibly have a row for it yet. All twenty of The Judgment's
+ * fall back to English names today for exactly that reason. */
+interface LoadoutOverride {
+  en?: string;
+  ru?: string;
+  nameRu?: string;
+  descriptionRu?: string;
+}
+
+function loadLoadoutOverrides(): Record<string, LoadoutOverride> {
+  const raw = loadJson<{ entries?: Record<string, LoadoutOverride> }>(
+    LOADOUT_OVERRIDES_JSON,
+    {},
+  );
+  return raw.entries ?? {};
+}
+
 async function main() {
   const translations = loadTranslations();
+  const overrides = loadLoadoutOverrides();
   const descriptionRuRaw = loadDescriptionRuRaw();
   const previousItems = loadJson<Item[]>(ITEMS_JSON, []);
   const previousAddons = loadJson<Addon[]>(ADDONS_JSON, []);
@@ -973,11 +1002,12 @@ async function main() {
   } {
     const key = `${kind}:${piece.slug}`;
     const prev = previousBySlug.get(key);
+    const override = overrides[key];
     return {
       slug: piece.slug,
-      name: { en: piece.name, ru: translations[key] ?? piece.name },
+      name: { en: piece.name, ru: override?.nameRu ?? translations[key] ?? piece.name },
       description: piece.description,
-      descriptionRuRaw: descriptionRuRaw[key],
+      descriptionRuRaw: override?.descriptionRu ?? descriptionRuRaw[key],
       addedAt: prev?.addedAt ?? scrapedAt,
     };
   }
