@@ -81,7 +81,10 @@ const ROLE_LABEL: Record<PerkRole, { ru: string; en: string }> = {
   killer: { ru: "Убийца", en: "Killer" },
 };
 
-export type ShareCardLayout = "landscape" | "story";
+// Defined in lib/types.ts; re-exported here because this is where
+// callers have always imported it from.
+export type { ShareCardLayout } from "@/lib/types";
+import type { ShareCardLayout } from "@/lib/types";
 
 const CANVAS_SIZE: Record<ShareCardLayout, { width: number; height: number }> =
   {

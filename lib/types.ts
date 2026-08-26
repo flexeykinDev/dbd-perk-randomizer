@@ -173,3 +173,9 @@ export interface PieceVisibility {
   addon: boolean;
   offering: boolean;
 }
+
+/** Which shape the shareable build card is rendered at — a 16:9 image for a
+ *  post, or a 9:16 one for a story. Lives here rather than in share-card.tsx
+ *  so lib/use-share-export.ts can name it without lib/ reaching up into
+ *  components/; share-card re-exports it, so existing imports still work. */
+export type ShareCardLayout = "landscape" | "story";

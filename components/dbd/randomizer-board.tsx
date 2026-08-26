@@ -3,15 +3,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Link2,
-  ListFilter,
   Dices,
   Skull,
   BarChart3,
-  BookOpen,
-  CalendarClock,
   Copy,
-  History,
-  MonitorPlay,
   Users,
   X,
 } from "lucide-react";
@@ -48,6 +43,9 @@ import { ROLE_COLOR } from "@/lib/role-color";
 import { useLanguage, useT } from "@/lib/i18n";
 import { useSeed } from "@/lib/use-seed";
 import { useBattleRoyale } from "@/lib/use-battle-royale";
+import { useShareExport } from "@/lib/use-share-export";
+import { PoolStatsPanel } from "./pool-stats-panel";
+import { BoardToolbar } from "./board-toolbar";
 import { recordRoll } from "@/lib/stats";
 import {
   parseLoadoutKey,
@@ -77,24 +75,19 @@ import { CopyToast } from "./copy-toast";
 import { ExcludePanel } from "./exclude-panel";
 import { LoadoutExcludePanel } from "./loadout-exclude-panel";
 import { StatsModal } from "./stats-modal";
-import { DailyCount } from "./daily-count";
 import { HistoryModal } from "./history-modal";
 import { PresetsModal } from "./presets-modal";
 import { ToggleSwitch } from "./toggle-switch";
 import {
   ShareCard,
-  type ShareCardLayout,
   type ShareCardPiece,
 } from "./share-card";
 import { DownloadImageButton } from "./download-image-button";
-import { canvasToShareBlob, EXPORT_EXTENSION, saveImage } from "@/lib/save-image";
 import { ObsOverlayModal, type PieceVisibility } from "./obs-overlay-modal";
 import { CharacterPickerModal } from "./character-picker-modal";
-import { MoreMenu } from "./more-menu";
 import { PresentationPicker } from "./presentation-picker";
 import { SoundControl } from "./sound-control";
 import { playSound, setSoundSurface } from "@/lib/sound";
-import { renderRitualBackdrop } from "@/lib/ritual-backdrop";
 import { RitualStage } from "./ritual-stage";
 import { SlotsStage } from "./slots-stage";
 import { ErrorBoundary } from "../error-boundary";
@@ -293,10 +286,6 @@ export function RandomizerBoard() {
   const t = useT();
   const { lang: language } = useLanguage();
   const [role, setRole] = useState<PerkRole>("survivor");
-  const [generatingImage, setGeneratingImage] =
-    useState<ShareCardLayout | null>(null);
-  const shareCardRef = useRef<HTMLDivElement>(null);
-  const storyShareCardRef = useRef<HTMLDivElement>(null);
   const [excludePanelOpen, setExcludePanelOpen] = useState(false);
   // Which pool the "Пул" button(s) open — irrelevant outside "all" mode
   // (there's only one pool to manage there), but "all" mode shows perks
@@ -848,6 +837,26 @@ export function RandomizerBoard() {
     },
   });
 
+  /* Link and image export — see lib/use-share-export.ts. Both report
+     through the same toast, and both can be declined by something outside
+     our control (the clipboard, the share sheet). */
+  const {
+    generating: generatingImage,
+    cardRef: shareCardRef,
+    storyCardRef: storyShareCardRef,
+    backdrops: shareBackdrops,
+    copyLink: handleShare,
+    downloadImage: handleDownloadImage,
+    // Destructured rather than kept as one object: the React Compiler lint
+    // treats any property read on a value that carries refs as a ref access
+    // during render, which `ref={shareCardRef}` trips.
+  } = useShareExport({
+    role,
+    slugs: useMemo(() => sharePieces.map((p) => p.slug), [sharePieces]),
+    showToast,
+  });
+
+
   const regenerate = useCallback(() => {
     playSound("roll");
     // Battle Royale's whole premise is elimination — the pool should shrink
@@ -1122,106 +1131,6 @@ export function RandomizerBoard() {
       ].join(", "),
       { ru: "Всё скопировано в буфер обмена!", en: "Everything copied to clipboard!" },
     );
-  }
-
-  function handleShare() {
-    navigator.clipboard
-      .writeText(window.location.href)
-      .then(() =>
-        showToast(
-          t({ ru: "Ссылка на билд скопирована!", en: "Build link copied!" }),
-        ),
-      )
-      .catch(() =>
-        showToast(
-          t({
-            ru: "Не удалось скопировать ссылку",
-            en: "Couldn't copy the link",
-          }),
-        ),
-      );
-  }
-
-  /* One vortex per build, per layout.
-   *
-   * useMemo rather than state: it is a pure function of the build and the
-   * shape of the card, and recomputing it on an unrelated render would hand
-   * back a different picture for the same build. Both layouts are prepared up
-   * front because the off-screen cards are always mounted -- the work is a
-   * single shader draw, not something worth deferring to the click. */
-  const shareBackdrops = useMemo(() => {
-    const parts = sharePieces.map((p) => p.slug);
-    if (parts.length === 0) return { landscape: null, story: null };
-    return {
-      landscape: renderRitualBackdrop({ width: 1600, height: 900, role, parts }),
-      story: renderRitualBackdrop({ width: 1080, height: 1920, role, parts }),
-    };
-  }, [sharePieces, role]);
-
-  async function handleDownloadImage(layout: ShareCardLayout) {
-    const target =
-      layout === "story" ? storyShareCardRef.current : shareCardRef.current;
-    if (!target || sharePieces.length === 0 || generatingImage) return;
-    setGeneratingImage(layout);
-    try {
-      // html2canvas draws text with canvas fillText using each element's
-      // computed font-family. If a webfont has not finished loading it does
-      // not fall back gracefully — it bakes the fallback face into the PNG
-      // and nothing reports a problem. The card is set in Oswald and IBM Plex
-      // Mono (lib/export-fonts.ts), so wait for them before rasterising.
-      // Cheap in practice: by the time anyone clicks, they are long loaded.
-      if (typeof document !== "undefined" && document.fonts?.ready) {
-        await document.fonts.ready;
-      }
-      const { default: html2canvas } = await import("html2canvas");
-      const canvas = await html2canvas(target, {
-        // Background is baked into ShareCard's own gradient now (see
-        // share-card.tsx), not a flat fill — this backgroundColor is just
-        // the fallback if that CSS somehow fails to paint.
-        backgroundColor: "#0d0e12",
-        // 2x, not 3x. Two reasons, both measured rather than assumed.
-        //
-        // Resolution: the card draws each icon at ~122px from a 256px source,
-        // so 2x renders it at 244px — just under native. 3x asked for 366px
-        // from the same 256px file, which is upscaling: more pixels, no more
-        // detail.
-        //
-        // Weight: the film grain is high-frequency noise, which is close to
-        // the worst case for PNG. At 3x the landscape export was 15 MB and
-        // the story export 22 MB — over what Discord accepts from a free
-        // account. 2x brings both back under control while still being far
-        // larger than anything a feed displays.
-        //
-        // (The note that used to sit here said the icons were capped at
-        // 128x128. That has been wrong since the 256px re-scrape.)
-        scale: 2,
-        useCORS: true,
-      });
-      const suffix = layout === "story" ? "-story" : "";
-      const filename = `dbd-${role}-build-${sharePieces.map((p) => p.slug).join("-")}${suffix}.${EXPORT_EXTENSION}`;
-      // See lib/save-image.ts: this used to be an <a download> pointed at a
-      // data: URL, which does nothing whatsoever on iOS and reported success
-      // anyway.
-      const outcome = await saveImage(await canvasToShareBlob(canvas), filename);
-      if (outcome === "shared") {
-        showToast(t({ ru: "Картинка билда готова!", en: "Build image ready!" }));
-      } else if (outcome === "downloaded") {
-        showToast(
-          t({ ru: "Картинка билда скачана!", en: "Build image downloaded!" }),
-        );
-      }
-      // "cancelled" means the share sheet was dismissed on purpose. Nothing
-      // went wrong and nothing was saved, so say neither.
-    } catch {
-      showToast(
-        t({
-          ru: "Не удалось создать картинку",
-          en: "Couldn't generate the image",
-        }),
-      );
-    } finally {
-      setGeneratingImage(null);
-    }
   }
 
   function toggleBattleRoyale() {
@@ -1546,169 +1455,17 @@ export function RandomizerBoard() {
         )}
       </div>
 
-      {/* Utility bar — only the controls used on nearly every roll (pool,
-          OBS) stay always-visible; Daily Challenge, custom seed, Stats, and
-          History move into the "More" popover below since they're reached
-          far less often and were crowding this row (user feedback: "too
-          much buttons"). */}
-      <div className="flex flex-col items-center gap-1.5">
-        <div className="flex flex-wrap items-center justify-center gap-1.5 rounded-full border border-border bg-surface/60 px-2 py-1.5">
-          {mode === "all" ? (
-            <>
-              <button
-                type="button"
-                onClick={() => openExcludePanel("perks")}
-                className="tap flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
-              >
-                <ListFilter className="size-3.5" />
-                {t({ ru: "Пул перков", en: "Perk pool" })}
-                {excludedSlugs.size > 0 && (
-                  <span className="rounded-full bg-accent/15 px-1.5 text-accent">
-                    {excludedSlugs.size}
-                  </span>
-                )}
-              </button>
-              <button
-                type="button"
-                onClick={() => openExcludePanel("loadout")}
-                className="tap flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
-              >
-                <ListFilter className="size-3.5" />
-                {t({ ru: "Пул экип.", en: "Loadout pool" })}
-                {excludedLoadoutSlugs.size > 0 && (
-                  <span className="rounded-full bg-accent/15 px-1.5 text-accent">
-                    {excludedLoadoutSlugs.size}
-                  </span>
-                )}
-              </button>
-            </>
-          ) : (
-            <button
-              type="button"
-              onClick={() =>
-                openExcludePanel(mode === "perks" ? "perks" : "loadout")
-              }
-              className="tap flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
-            >
-              <ListFilter className="size-3.5" />
-              {t({ ru: "Пул", en: "Pool" })}
-              {(mode === "perks"
-                ? excludedSlugs.size
-                : excludedLoadoutSlugs.size) > 0 && (
-                <span className="rounded-full bg-accent/15 px-1.5 text-accent">
-                  {mode === "perks"
-                    ? excludedSlugs.size
-                    : excludedLoadoutSlugs.size}
-                </span>
-              )}
-            </button>
-          )}
-          <button
-            type="button"
-            onClick={() => setObsModalOpen(true)}
-            title={t({
-              ru: "Отдельная ссылка специально для источника «Браузер» в OBS — не та же ссылка, что у кнопки «Поделиться».",
-              en: "A separate link made specifically for an OBS Browser source — not the same link as the “Share” button.",
-            })}
-            className="tap flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
-          >
-            <MonitorPlay className="size-3.5" />
-            {t({ ru: "Оверлей OBS", en: "OBS Overlay" })}
-          </button>
-          <span className="mx-0.5 h-4 w-px bg-border" aria-hidden />
-          <MoreMenu>
-            <div className="flex flex-col gap-1">
-              <button
-                type="button"
-                onClick={seed.toggleDaily}
-                className={cn(
-                  "flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm font-medium transition-colors",
-                  seed.mode === "daily"
-                    ? "bg-accent/15 text-accent"
-                    : "text-foreground hover:bg-surface-hover",
-                )}
-              >
-                <CalendarClock className="size-4 shrink-0" />
-                {t({ ru: "Задание дня", en: "Daily Challenge" })}
-              </button>
-
-              <div className="flex items-center gap-1.5 px-2 py-1">
-                <input
-                  type="text"
-                  value={seed.input}
-                  onChange={(e) => seed.setInput(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && seed.applyCustom()}
-                  aria-label={t({ ru: "Свой сид", en: "Custom seed" })}
-                  placeholder={t({ ru: "Свой сид…", en: "Custom seed…" })}
-                  className="min-w-0 flex-1 rounded-full border border-border bg-background px-3 py-1 text-xs text-foreground placeholder:text-muted/60 focus:ring-2 focus:ring-accent/40 focus:outline-none"
-                />
-                <button
-                  type="button"
-                  onClick={seed.applyCustom}
-                  disabled={!seed.input.trim()}
-                  className="rounded-full px-2.5 py-1 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
-                >
-                  {t({ ru: "Задать", en: "Set" })}
-                </button>
-                {seed.mode !== "none" && (
-                  <button
-                    type="button"
-                    onClick={seed.clear}
-                    aria-label={t({ ru: "Сбросить сид", en: "Clear seed" })}
-                    className="flex size-6 shrink-0 items-center justify-center rounded-full text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
-                  >
-                    <X className="size-3.5" />
-                  </button>
-                )}
-              </div>
-
-              <div className="my-1 h-px bg-border" aria-hidden />
-
-              <button
-                type="button"
-                onClick={() => setStatsModalOpen(true)}
-                className="tap flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm font-medium text-foreground transition-colors hover:bg-surface-hover"
-              >
-                <BarChart3 className="size-4 shrink-0" />
-                {t({ ru: "Статистика", en: "Stats" })}
-              </button>
-              <button
-                type="button"
-                onClick={() => setHistoryModalOpen(true)}
-                className="tap flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm font-medium text-foreground transition-colors hover:bg-surface-hover"
-              >
-                <History className="size-4 shrink-0" />
-                {t({ ru: "История", en: "History" })}
-              </button>
-              {/* Hidden in loadout-only mode: presets are perk builds, and
-                  an entry that opens a picker with nothing to apply is
-                  worse than no entry. */}
-              {mode !== "loadout" && (
-                <button
-                  type="button"
-                  onClick={() => setPresetsModalOpen(true)}
-                  className="tap flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm font-medium text-foreground transition-colors hover:bg-surface-hover"
-                >
-                  <BookOpen className="size-4 shrink-0" />
-                  {t({ ru: "Готовые билды", en: "Preset Builds" })}
-                </button>
-              )}
-            </div>
-          </MoreMenu>
-        </div>
-        {activeSeed && (
-          <p className="text-xs text-muted">
-            {t({ ru: "Активный сид:", en: "Active seed:" })}{" "}
-            <code className="rounded bg-surface px-1.5 py-0.5 text-accent">
-              {activeSeed}
-            </code>
-            {/* Daily Challenge only: a custom seed is yours alone, so a
-                shared count would mean nothing there. Mounting this is
-                also what opens the listener — see the component. */}
-            {seed.mode === "daily" && <DailyCount />}
-          </p>
-        )}
-      </div>
+      <BoardToolbar
+        mode={mode}
+        excludedPerkCount={excludedSlugs.size}
+        excludedLoadoutCount={excludedLoadoutSlugs.size}
+        seed={seed}
+        onOpenPool={openExcludePanel}
+        onOpenObs={() => setObsModalOpen(true)}
+        onOpenStats={() => setStatsModalOpen(true)}
+        onOpenHistory={() => setHistoryModalOpen(true)}
+        onOpenPresets={() => setPresetsModalOpen(true)}
+      />
 
       {mode === "loadout" ? (
         <p className="text-sm text-muted">
@@ -2012,56 +1769,37 @@ export function RandomizerBoard() {
         {t({ ru: "Статистика пула", en: "Pool stats" })}
       </button>
       {showStats && mounted && mode !== "loadout" && (
-        <div className="rounded-xl border border-border bg-surface px-4 py-3 text-center text-xs text-muted">
-          <p>
-            {t({
-              ru: `Всего перков ${ROLE_LABEL[role].ru}:`,
-              en: `Total ${ROLE_LABEL[role].en} perks:`,
-            })}{" "}
-            <b className="text-foreground">{totalInRole}</b>
-          </p>
-          <p>
-            {t({ ru: "Исключено вручную:", en: "Manually excluded:" })}{" "}
-            <b className="text-foreground">{excludedSlugs.size}</b>
-          </p>
-          {battleRoyale && (
-            <p>
-              {t({
-                ru: "Использовано в Battle Royale:",
-                en: "Used in Battle Royale:",
-              })}{" "}
-              <b className="text-foreground">{battleRoyaleUsedInRole}</b> ·{" "}
-              {t({ ru: "Осталось:", en: "Remaining:" })}{" "}
-              <b className="text-foreground">{availableCount}</b>
-            </p>
-          )}
-        </div>
+        <PoolStatsPanel
+          totalLabel={t({
+            ru: `Всего перков ${ROLE_LABEL[role].ru}:`,
+            en: `Total ${ROLE_LABEL[role].en} perks:`,
+          })}
+          total={totalInRole}
+          excluded={excludedSlugs.size}
+          battleRoyale={
+            battleRoyale
+              ? { usedInRole: battleRoyaleUsedInRole, remaining: availableCount }
+              : undefined
+          }
+        />
       )}
       {showStats && mounted && mode !== "perks" && (
-        <div className="rounded-xl border border-border bg-surface px-4 py-3 text-center text-xs text-muted">
-          <p>
-            {t({
-              ru: `Всего предметов экипировки для ${ROLE_LABEL[role].ru}:`,
-              en: `Total ${ROLE_LABEL[role].en} loadout pieces:`,
-            })}{" "}
-            <b className="text-foreground">{totalLoadoutInRole}</b>
-          </p>
-          <p>
-            {t({ ru: "Исключено вручную:", en: "Manually excluded:" })}{" "}
-            <b className="text-foreground">{excludedLoadoutSlugs.size}</b>
-          </p>
-          {battleRoyale && (
-            <p>
-              {t({
-                ru: "Использовано в Battle Royale:",
-                en: "Used in Battle Royale:",
-              })}{" "}
-              <b className="text-foreground">{battleRoyaleUsedLoadoutInRole}</b>{" "}
-              · {t({ ru: "Осталось:", en: "Remaining:" })}{" "}
-              <b className="text-foreground">{availableLoadoutCount}</b>
-            </p>
-          )}
-        </div>
+        <PoolStatsPanel
+          totalLabel={t({
+            ru: `Всего предметов экипировки для ${ROLE_LABEL[role].ru}:`,
+            en: `Total ${ROLE_LABEL[role].en} loadout pieces:`,
+          })}
+          total={totalLoadoutInRole}
+          excluded={excludedLoadoutSlugs.size}
+          battleRoyale={
+            battleRoyale
+              ? {
+                  usedInRole: battleRoyaleUsedLoadoutInRole,
+                  remaining: availableLoadoutCount,
+                }
+              : undefined
+          }
+        />
       )}
 
       {excludePanelKind === "perks" ? (
