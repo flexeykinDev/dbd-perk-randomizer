@@ -16,17 +16,13 @@ import {
   getCharactersForRole,
   getPerkBySlug,
   getPerksByRole,
-  getRandomPerksWithTeachables,
-  getSeededPerks,
 } from "@/lib/perks";
 import { getCharacterName } from "@/lib/character-name";
 import { resolvePreset, type BuildPreset } from "@/lib/build-presets";
-import { usePerkSlots } from "@/lib/use-perk-slots";
 import { useBoardShortcuts } from "@/lib/use-board-shortcuts";
 import { getTagsForRole } from "@/lib/perk-tags";
 import type {
   Addon,
-  Loadout,
   LoadoutPiece,
   LoadoutSlots,
   Perk,
@@ -43,6 +39,7 @@ import { useLanguage, useT } from "@/lib/i18n";
 import { useSeed } from "@/lib/use-seed";
 import { useBattleRoyale } from "@/lib/use-battle-royale";
 import { useExclusions } from "@/lib/use-exclusions";
+import { useRollSession, type RollSession } from "@/lib/use-roll-session";
 import { useShareExport } from "@/lib/use-share-export";
 import { PoolStatsPanel } from "./pool-stats-panel";
 import { BoardToolbar } from "./board-toolbar";
@@ -55,12 +52,9 @@ import {
 import { getIdForSlug, getSlugForId } from "@/lib/perk-ids";
 import { withBasePath } from "@/lib/asset-path";
 import {
-  flattenLoadout,
   getKillerCharacters,
   getLoadoutPiece,
   getLoadoutPoolForRole,
-  getRandomLoadout,
-  getSeededLoadout,
 } from "@/lib/loadout";
 import {
   getIdForLoadoutPiece,
@@ -296,9 +290,6 @@ export function RandomizerBoard() {
   const [loadoutSlots, setLoadoutSlots] = useState<LoadoutSlots>(
     DEFAULT_LOADOUT_SLOTS,
   );
-  const [sharedLoadoutPieces, setSharedLoadoutPieces] = useState<
-    LoadoutPiece[] | null
-  >(null);
   // Random Character (Feature #2) — deliberately session-only, not synced
   // to the URL or localStorage: it's a flourish on top of a build, not
   // part of what a share link or a returning visit needs to restore.
@@ -347,8 +338,6 @@ export function RandomizerBoard() {
   useEffect(() => {
     prefetchDescriptions();
   }, []);
-  const [nonce, setNonce] = useState(0);
-  const [sharedBuild, setSharedBuild] = useState<Perk[] | null>(null);
   // A quick, session-only filter (not persisted, resets on role change) —
   // distinct from the pool manager's exclusions, which are a deliberate,
   // saved choice. "themeTag: null" means no filter, i.e. the full role pool.
@@ -385,12 +374,16 @@ export function RandomizerBoard() {
      See lib/use-seed.ts. Every path through it drops the shared build,
      which a seeded build outranks; forgetting that on one path was how a
      seed could silently show the wrong build. */
+  // Populated by the effect just below useRollSession.
+  const rollRef = useRef<RollSession | null>(null);
   const seed = useSeed({
     role,
+    /* Reaches the roll session through a ref because that hook is declared
+       below this one — it needs `activeSeed` from here, so the dependency
+       genuinely runs both ways. Same trick as regenerateRef further down. */
     onChange: useCallback(({ reroll }: { reroll: boolean }) => {
-      setSharedBuild(null);
-      setSharedLoadoutPieces(null);
-      if (reroll) setNonce((n) => n + 1);
+      if (reroll) rollRef.current?.rerollAll();
+      else rollRef.current?.releaseShared();
     }, []),
   });
   const activeSeed = seed.active;
@@ -400,6 +393,63 @@ export function RandomizerBoard() {
   const { hydrateFromUrl: hydrateSeedFromUrl } = seed;
 
 
+
+  // Applies to both causes of a too-small pool: Battle Royale attrition and
+  // the player just manually excluding too many perks in Manage Pool. Either
+  // way, getRandomPerks() refuses to top up from excluded perks (see
+  // lib/perks.ts), so this must be checked up front rather than discovered
+  // after the fact from a short/empty result.
+  const poolExhausted =
+    !activeSeed && mounted && perkCount > 0 && availableCount < perkCount;
+
+  /* The build on screen and every way it can change — see
+     lib/use-roll-session.ts. */
+  const roll = useRollSession({
+    mounted,
+    mode,
+    role,
+    perkCount,
+    loadoutSlots,
+    activeSeed,
+    poolExhausted,
+    availableCount,
+    excludedPerks: combinedExcluded,
+    excludedLoadout: combinedExcludedLoadout,
+    favoriteSlugs,
+    guaranteeTeachables,
+    selectedCharacter,
+    maxPerkCount: MAX_PERK_COUNT,
+  });
+  const {
+    perks,
+    loadoutPieces,
+    pinnedPerkSlots,
+    togglePin,
+    rerollSlot,
+    sharedBuild,
+    sharedLoadoutPieces,
+    nonce,
+    clearSlotOverrides,
+    rerollAll,
+    rerollPerks,
+    rerollLoadout,
+    releaseShared,
+    showPerks,
+    showLoadoutPieces,
+    showPerksKeepingLoadout,
+    restoreShared,
+  } = roll;
+  useEffect(() => {
+    rollRef.current = roll;
+  }, [roll]);
+  // Named for the mount effect, which must not depend on `roll` itself — a
+  // fresh object every render would restart an effect that sets state.
+  const hydrateShared = restoreShared;
+
+  /* Restores everything a returning visitor or a share link brings with them.
+     Placed below the roll session on purpose: it installs a shared build, and
+     effects run in declaration order, so it has to come after the effect that
+     populates rollRef. */
   useEffect(() => {
     function applyInitialClientState() {
       // The three saved Sets restore themselves — see lib/use-persisted-set.ts.
@@ -422,13 +472,9 @@ export function RandomizerBoard() {
           // `p=` and `lp=` together and needs both applied, or the
           // loadout half would silently re-roll instead of restoring
           // (only the last branch taken would ever run).
-          if (urlState.perks) {
-            setSharedBuild(urlState.perks);
-            setPerkCount(urlState.perks.length);
-          }
-          if (urlState.loadoutPieces) {
-            setSharedLoadoutPieces(urlState.loadoutPieces);
-          }
+          // One call, both halves: an "all" link carries p= and lp= together.
+          hydrateShared(urlState);
+          if (urlState.perks) setPerkCount(urlState.perks.length);
         }
       }
       hydrateBattleRoyale();
@@ -447,110 +493,12 @@ export function RandomizerBoard() {
     // depending on those would re-run this on every render — and since
     // hydrating sets state, that is an endless loop rather than merely
     // wasteful. The callbacks themselves are stable.
-  }, [hydrateExclusions, hydrateSeedFromUrl, hydrateBattleRoyale]);
-
-  // Applies to both causes of a too-small pool: Battle Royale attrition and
-  // the player just manually excluding too many perks in Manage Pool. Either
-  // way, getRandomPerks() refuses to top up from excluded perks (see
-  // lib/perks.ts), so this must be checked up front rather than discovered
-  // after the fact from a short/empty result.
-  const poolExhausted =
-    !activeSeed && mounted && perkCount > 0 && availableCount < perkCount;
-
-  // The raw roll. Deliberately split from the `perks` the rest of the
-  // component uses (see the overlay memo below): pinning must not itself
-  // cause a reroll, and this memo rerolls whenever any of its dependencies
-  // changes. Keeping pins out of its dependency list is what makes
-  // "pin a perk" a no-op on the other three slots.
-  const basePerks = useMemo(() => {
-    void nonce; // intentional cache-buster: forces a reshuffle on "regenerate"
-    // Gated on mode so every effect keyed off `perks` (stats, URL sync, the
-    // "perks" half of the OBS payload) naturally goes idle in loadout-only
-    // mode instead of needing its own mode check duplicated everywhere —
-    // computed for both "perks" and "all" (which shows both at once).
-    if (!mounted || mode === "loadout") return [];
-    if (sharedBuild) return sharedBuild;
-    if (perkCount === 0) return [];
-    if (activeSeed) return getSeededPerks(role, perkCount, activeSeed);
-    if (poolExhausted) return [];
-    const character = guaranteeTeachables ? selectedCharacter : null;
-    // Rolls a few spares beyond perkCount. The overlay below drops any
-    // rolled perk that a pin already placed in the build, and without
-    // slack that would leave a slot empty whenever the roll happens to
-    // land on a perk the user has pinned. Capped by what the pool can
-    // actually supply so this can never ask for more than exists.
-    const withSlack = Math.min(perkCount + MAX_PERK_COUNT, availableCount);
-    return getRandomPerksWithTeachables(
-      role,
-      withSlack,
-      character,
-      combinedExcluded,
-      Math.random,
-      favoriteSlugs,
-    );
   }, [
-    availableCount,
-    mounted,
-    mode,
-    role,
-    nonce,
-    sharedBuild,
-    combinedExcluded,
-    perkCount,
-    poolExhausted,
-    activeSeed,
-    favoriteSlugs,
-    guaranteeTeachables,
-    selectedCharacter,
+    hydrateExclusions,
+    hydrateSeedFromUrl,
+    hydrateBattleRoyale,
+    hydrateShared,
   ]);
-
-  // Pins and single-slot rerolls, layered over the roll above. Extracted
-  // whole (see lib/use-perk-slots.ts): it was the largest self-contained
-  // mechanism in this file and none of it is presentational — it takes a
-  // roll and returns the build to render.
-  const { perks, pinnedPerkSlots, togglePin, rerollSlot, clearSlotOverrides } =
-    usePerkSlots({
-      basePerks,
-      perkCount,
-      role,
-      fixedBuild: !!sharedBuild || !!activeSeed,
-      guaranteeTeachables,
-      selectedCharacter,
-      combinedExcluded,
-      favoriteSlugs,
-    });
-
-  const loadout = useMemo((): Loadout | null => {
-    void nonce;
-    if (!mounted || mode === "perks" || sharedLoadoutPieces) return null;
-    if (activeSeed) return getSeededLoadout(role, loadoutSlots, activeSeed);
-    return getRandomLoadout(
-      role,
-      loadoutSlots,
-      combinedExcludedLoadout,
-      Math.random,
-      selectedCharacter,
-    );
-  }, [
-    mounted,
-    mode,
-    sharedLoadoutPieces,
-    role,
-    nonce,
-    activeSeed,
-    loadoutSlots,
-    combinedExcludedLoadout,
-    selectedCharacter,
-  ]);
-
-  // Flattened into the same "just some pieces" shape LoadoutGrid renders,
-  // same reasoning as why flattenLoadout exists (see lib/loadout.ts).
-  const loadoutPieces = useMemo((): LoadoutPiece[] => {
-    if (mode === "perks") return [];
-    if (sharedLoadoutPieces) return sharedLoadoutPieces;
-    if (!loadout) return [];
-    return flattenLoadout(loadout);
-  }, [mode, sharedLoadoutPieces, loadout]);
 
   // What Download Image actually exports — perks and/or loadout pieces
   // concatenated the same way the OBS overlay's "all" mode already does
@@ -818,11 +766,9 @@ export function RandomizerBoard() {
     // its Space/Enter shortcut) never drains the pool, so "play until every
     // perk is gone" never actually triggers.
     if (battleRoyale) eliminateCurrentBuild();
-    setSharedBuild(null);
-    setSharedLoadoutPieces(null);
     clearSlotOverrides();
-    setNonce((n) => n + 1);
-  }, [battleRoyale, eliminateCurrentBuild, clearSlotOverrides]);
+    rerollAll();
+  }, [battleRoyale, eliminateCurrentBuild, clearSlotOverrides, rerollAll]);
 
   // `regenerate`'s identity changes on every roll (it depends on
   // eliminateCurrentBuild, which depends on `perks`) — if the Twitch effect
@@ -857,8 +803,8 @@ export function RandomizerBoard() {
     // role is dropped rather than shown mixed.
     const targetRole = matched[0].role;
     setRole(targetRole);
-    setSharedBuild(matched.filter((p) => p.role === targetRole));
-  }, []);
+    showPerksKeepingLoadout(matched.filter((p) => p.role === targetRole));
+  }, [showPerksKeepingLoadout]);
 
   /** Shows a hand-picked build (see data/build-presets.json).
    *
@@ -887,8 +833,8 @@ export function RandomizerBoard() {
     // `release`, not `clear`: this is installing a build, so the reroll
     // `clear` triggers would immediately throw it away.
     seed.release();
-    setSharedBuild(perks);
-  }, [seed]);
+    showPerksKeepingLoadout(perks);
+  }, [seed, showPerksKeepingLoadout]);
 
 
   // Page-level keyboard shortcuts — see lib/use-board-shortcuts.ts. Every
@@ -908,8 +854,7 @@ export function RandomizerBoard() {
   });
 
   function selectRole(next: PerkRole) {
-    setSharedBuild(null);
-    setSharedLoadoutPieces(null);
+    releaseShared();
     setSelectedCharacter(null); // survivor/killer character lists don't overlap
     setRole(next);
     setThemeTag(null); // survivor/killer tags don't overlap — stale otherwise
@@ -921,17 +866,15 @@ export function RandomizerBoard() {
   // function instead of two that could drift out of sync.
   function selectCharacter(character: string | null) {
     setSelectedCharacter(character);
-    setSharedBuild(null);
-    setSharedLoadoutPieces(null);
-    setNonce((n) => n + 1);
+    rerollAll();
   }
 
   function toggleGuaranteeTeachables() {
     const next = !guaranteeTeachables;
     setGuaranteeTeachables(next);
     safeSet("local", GUARANTEE_TEACHABLES_STORAGE_KEY, next ? "1" : "0");
-    setSharedBuild(null);
-    setNonce((n) => n + 1);
+    // Perks only: a shared loadout is unaffected by a perks-mode toggle.
+    rerollPerks();
   }
 
   // Jumps back to a past roll from the History modal — same "shared build"
@@ -950,8 +893,7 @@ export function RandomizerBoard() {
       setRole(entry.role);
       setMode("perks");
       safeSet("local", MODE_STORAGE_KEY, "perks");
-      setSharedLoadoutPieces(null);
-      setSharedBuild(matched);
+      showPerks(matched);
       setPerkCount(matched.length);
     } else {
       const matched = entry.keys
@@ -964,8 +906,7 @@ export function RandomizerBoard() {
       setRole(entry.role);
       setMode("loadout");
       safeSet("local", MODE_STORAGE_KEY, "loadout");
-      setSharedBuild(null);
-      setSharedLoadoutPieces(matched);
+      showLoadoutPieces(matched);
     }
     setHistoryModalOpen(false);
   }
@@ -974,9 +915,7 @@ export function RandomizerBoard() {
   function selectMode(next: BuildMode) {
     setMode(next);
     safeSet("local", MODE_STORAGE_KEY, next);
-    setSharedBuild(null);
-    setSharedLoadoutPieces(null);
-    setNonce((n) => n + 1);
+    rerollAll();
   }
 
   function toggleLoadoutSlot(slot: keyof LoadoutSlots) {
@@ -991,21 +930,21 @@ export function RandomizerBoard() {
       safeSet("local", key, next[slot] ? "1" : "0");
       return next;
     });
-    setSharedLoadoutPieces(null);
-    setNonce((n) => n + 1);
+    // Loadout only: which slots are rolled says nothing about the perks.
+    rerollLoadout();
   }
 
   function selectTheme(tag: string | null) {
-    setSharedBuild(null);
     setThemeTag(tag);
-    setNonce((n) => n + 1);
+    // Themes are a perk idea; a shared loadout is left alone.
+    rerollPerks();
   }
 
   function selectPerkCount(next: number) {
-    setSharedBuild(null);
     setPerkCount(next);
     safeSet("local", PERK_COUNT_STORAGE_KEY, String(next));
-    setNonce((n) => n + 1);
+    // Perks only: how many perks to roll says nothing about a shared loadout.
+    rerollPerks();
   }
 
   const toggleExcluded = exclusions.togglePerk;
@@ -1072,16 +1011,12 @@ export function RandomizerBoard() {
     // The mode itself is the hook's; dropping whatever build is on screen
     // and rolling into the new pool is the board's.
     br.toggle();
-    setSharedBuild(null);
-    setSharedLoadoutPieces(null);
-    setNonce((n) => n + 1);
+    rerollAll();
   }
 
   function restartBattleRoyale() {
     br.restart();
-    setSharedBuild(null);
-    setSharedLoadoutPieces(null);
-    setNonce((n) => n + 1);
+    rerollAll();
   }
 
   const roleColor = ROLE_COLOR[role];
