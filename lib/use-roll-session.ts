@@ -46,9 +46,9 @@ export interface RollSession {
   nonce: Nonce;
 
   /** Drop everything showing and roll both halves fresh. Deliberately does
-   *  NOT clear pins: usePerkSlots keeps them across role, count and pool
+   *  NOT touch pins: usePerkSlots keeps them across role, count and pool
    *  changes on purpose, so they come back when you switch away and return.
-   *  Only the Generate button clears them, via clearSlotOverrides. */
+   *  Nothing clears a pin except unpinning it. */
   rerollAll: () => void;
   /** Roll the perks again, leaving a shared loadout alone. */
   rerollPerks: () => void;
@@ -77,8 +77,10 @@ export interface RollSession {
    *  regression this had, caught by the all-mode share-link test. */
   restoreShared: (next: { perks?: Perk[]; loadoutPieces?: LoadoutPiece[] }) => void;
 
-  /** Forgets every pin and single-slot reroll. Only Generate does this — see
-   *  rerollAll. */
+  /** Drops the single-slot rerolls — NOT the pins, which survive everything
+   *  except being unpinned. A whole-build roll supersedes a per-slot reroll
+   *  because it was an adjustment to the build being replaced; a pin is a
+   *  standing instruction about a slot. Only Generate calls this. */
   clearSlotOverrides: () => void;
 }
 
