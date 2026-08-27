@@ -147,7 +147,7 @@ export function ObsOverlayModal({
             ref={attachCard}
             {...dialogProps}
             aria-describedby={descId}
-            className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-border bg-surface p-5 shadow-2xl lg:max-w-xl"
+            className="modal-card w-full max-w-lg overflow-y-auto rounded-2xl border border-border bg-surface p-5 shadow-2xl lg:max-w-xl"
           >
             <div aria-live="polite" className="sr-only">
               {copy.announcement}

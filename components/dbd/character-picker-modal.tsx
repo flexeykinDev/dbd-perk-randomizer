@@ -77,7 +77,7 @@ export function CharacterPickerModal({
             onClick={(e) => e.stopPropagation()}
             ref={attachCard}
             {...dialogProps}
-            className="flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-border bg-surface shadow-2xl lg:max-w-4xl"
+            className="modal-card flex w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-border bg-surface shadow-2xl lg:max-w-4xl"
           >
             <div className="flex items-center justify-between gap-3 border-b border-border p-4">
               <p className="font-semibold text-foreground">

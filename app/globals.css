@@ -91,8 +91,22 @@
    card, which is where the action button sits, ends up under it. `dvh`
    tracks the live viewport instead. */
 .modal-card {
+  /* Phones take as much of the LIVE viewport as the backdrop padding allows.
+     This is the case dvh exists for and the reason every dialog now shares
+     this rule rather than half of them carrying max-h-[85vh]: 85vh on a phone
+     is 85% of the viewport WITHOUT the URL bar, so the bottom of the card —
+     where the action button is — could sit under it. */
   max-height: calc(100vh - 2rem);
   max-height: calc(100dvh - 2rem);
+}
+
+/* From sm up there is room to frame the dialog rather than run it to the
+   edges, which is what the 85% was for on a desktop. */
+@media (min-width: 640px) {
+  .modal-card {
+    max-height: 85vh;
+    max-height: 85dvh;
+  }
 }
 
 /* The scrolling region inside a modal. `overscroll-contain` stops a scroll
