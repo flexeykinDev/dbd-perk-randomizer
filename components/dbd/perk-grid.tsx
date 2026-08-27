@@ -140,6 +140,30 @@ export function PerkGrid({
                 className={cn(
                   "group relative flex cursor-pointer flex-col items-center gap-2 rounded-2xl border border-border bg-surface p-3 text-center transition-colors hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:outline-none",
                   roleColor.hoverBorder,
+                  /* A pinned card is marked on the CARD, not only by the
+                     padlock in its corner.
+                     
+                     The padlock is 24px in a corner and, as the comment on it
+                     says, was "the only thing on screen saying why this slot
+                     stopped changing when you rerolled". That is a lot to ask
+                     of one small icon: the question a player has after
+                     hitting Generate is "which ones did I hold?", and
+                     answering it meant reading four corners. A role-coloured
+                     edge answers it across the whole row at a glance.
+                     
+                     Role colour rather than the site accent, because that is
+                     already this card's colour vocabulary — the same tokens
+                     its hover border and glow use.
+                     
+                     A RING, not a border colour. Hover already tints the
+                     border, so colouring the border here made a pinned card
+                     and a hovered one look the same; a ring sits outside the
+                     border and is a different property, so the two states
+                     stay legible together. Not merged through tailwind-merge
+                     either — cn is a plain join, so two classes setting the
+                     same property would resolve by stylesheet order rather
+                     than by intent. */
+                  isPinned && cn("ring-2", roleColor.ring),
                 )}
               >
                 <motion.span
