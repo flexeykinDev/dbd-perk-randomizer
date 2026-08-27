@@ -178,6 +178,10 @@ export function ObsOverlay() {
   const scaleRatio = options.scale / 100;
   const nameScaleRatio = options.nameScale / 100;
   const gapPx = Math.round(BASE_GAP_PX * scaleRatio);
+  /** The width every card occupies when names are shown — see slotWidth. */
+  const nameMaxWidthPx = Math.round(
+    BASE_NAME_MAX_WIDTH_PX * scaleRatio * nameScaleRatio,
+  );
   const usePositions =
     !!options.positions &&
     !!state &&
@@ -286,9 +290,10 @@ export function ObsOverlay() {
               paddingRight: Math.round(BASE_NAME_PAD_X_PX * scaleRatio),
               paddingTop: Math.round(BASE_NAME_PAD_Y_PX * scaleRatio),
               paddingBottom: Math.round(BASE_NAME_PAD_Y_PX * scaleRatio),
-              maxWidth: Math.round(
-                BASE_NAME_MAX_WIDTH_PX * scaleRatio * nameScaleRatio,
-              ),
+              // Caps a runaway name. The row equalises its columns to the
+              // widest one, so this is what stops that widest one from
+              // being enormous.
+              maxWidth: nameMaxWidthPx,
               boxShadow: "0 4px 10px -2px rgba(0,0,0,0.4)",
             }}
           >
@@ -353,20 +358,14 @@ export function ObsOverlay() {
         // still renders as the single centered row it always did.
         <>
           {perkPieces.length > 0 && (
-            <div
-              className="flex items-center justify-center"
-              style={{ gap: gapPx }}
-            >
+            <div className="obs-row" style={{ gap: gapPx }}>
               <AnimatePresence mode="popLayout">
                 {perkPieces.map((perk, index) => renderCard(perk, index, null))}
               </AnimatePresence>
             </div>
           )}
           {loadoutPieces.length > 0 && (
-            <div
-              className="flex items-center justify-center"
-              style={{ gap: gapPx }}
-            >
+            <div className="obs-row" style={{ gap: gapPx }}>
               <AnimatePresence mode="popLayout">
                 {loadoutPieces.map((perk, index) =>
                   renderCard(perk, perkPieces.length + index, null),

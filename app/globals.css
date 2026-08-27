@@ -273,3 +273,23 @@ svg {
     font-size: 21px;
   }
 }
+
+/* A row of overlay cards, with every card the same width.
+ *
+ * An inline-grid shrink-wraps to its contents, and `1fr` columns inside one
+ * all resolve to the widest column — so the cards equalise themselves to the
+ * longest name in the build, and the row is no wider than it needs to be.
+ *
+ * A flex row does not do this: each card was as wide as whatever name it drew,
+ * which put the icons at irregular intervals (measured 258/258/186px apart on
+ * a mixed roll) and dragged the icon row's own centre up to 34px off the
+ * middle of the overlay depending purely on which names came up. Each card was
+ * internally centred the whole time, which is why it read as a text-centring
+ * problem and is not one. */
+.obs-row {
+  display: inline-grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  align-items: start;
+  justify-items: center;
+}
