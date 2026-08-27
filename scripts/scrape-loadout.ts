@@ -9,6 +9,13 @@
 // findHeadingTables, and ITEM_TABLE_SIGNATURES below for what was actually
 // found on each page and why the parsing approach differs per page.
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import {
+  downloadIcon as downloadIconTo,
+  fetchWikiPageHtml as fetchPage,
+  ICON_SIZE,
+  loadJsonMap,
+  requestHeaders,
+} from "./lib/wiki";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import * as cheerio from "cheerio";
@@ -52,10 +59,7 @@ const LOADOUT_OVERRIDES_JSON = join(DATA_DIR, "overrides", "loadout.json");
 // half: the previous 128 was reached by *enlarging* a 96px thumbnail, so
 // the stored files cost bytes to hold blur. Never enlarging means a file
 // whose original is smaller simply stays smaller and honest.
-const ICON_SIZE = 256;
-const REQUEST_HEADERS = {
-  "User-Agent": "vortex-info-next loadout scraper (personal site, contact via github)",
-};
+const REQUEST_HEADERS = requestHeaders("loadout scraper");
 
 const ITEMS_PAGE = "Items";
 const ADDONS_PAGE = "Add-ons";
@@ -103,11 +107,6 @@ function loadKnownLoadout(): { characters: Set<string>; slugs: Set<string> } {
     // shipped would let a genuinely new add-on through on a coincidence.
     slugs: new Set(loadout.map((p) => p.slug)),
   };
-}
-
-function loadJsonMap(file: string, key: string): Record<string, string> {
-  if (!existsSync(file)) return {};
-  return JSON.parse(readFileSync(file, "utf8"))[key] ?? {};
 }
 
 const characterAliases = loadJsonMap(
@@ -172,25 +171,8 @@ function loadSupplementalAddons(): SupplementalAddonEntry[] {
   return live;
 }
 
-function apiUrl(page: string): string {
-  return `${SOURCE.apiBase}?action=parse&page=${encodeURIComponent(page)}&format=json&prop=text`;
-}
-
-interface MediaWikiParseResponse {
-  parse?: { text?: { "*"?: string } };
-  error?: { info?: string };
-}
-
-async function fetchWikiPageHtml(page: string): Promise<string> {
-  const res = await fetch(apiUrl(page), { headers: REQUEST_HEADERS });
-  if (!res.ok) throw new Error(`Failed to fetch ${page}: ${res.status} ${res.statusText}`);
-  const json = (await res.json()) as MediaWikiParseResponse;
-  const html = json.parse?.text?.["*"];
-  if (!html) {
-    throw new Error(`Unexpected MediaWiki API response for ${page}: ${json.error?.info ?? "no parse.text.*"}`);
-  }
-  return html;
-}
+const fetchWikiPageHtml = (page: string) =>
+  fetchPage(SOURCE.apiBase, page, { headers: REQUEST_HEADERS });
 
 function cleanText(text: string): string {
   return text.replace(/\s+/g, " ").trim();
@@ -730,33 +712,15 @@ async function downloadIcon(
   sourceUrl: string,
   iconSources: Record<string, string>,
 ): Promise<string> {
-  const destRelative = `/loadout/${kind}/${slug}.webp`;
-  const destAbsolute = join(PUBLIC_LOADOUT_DIR, kind, `${slug}.webp`);
-  const cacheKey = `${kind}/${slug}`;
-
-  // Compares against the *source* URL actually used last time (not just
-  // "did some icon land on this slug before") — the source is already in
-  // hand from the same page fetch this run makes anyway, so checking it
-  // costs nothing extra and means a wiki-side icon rework (art gets
-  // redrawn on an existing add-on) actually gets picked up on the next
-  // scrape instead of the local copy staying stale forever.
-  // Size folded in alongside the URL: comparing the URL alone left every
-  // icon whose source hadn't changed sitting at the previous ICON_SIZE
-  // when that constant was raised.
-  const cacheValue = `${sourceUrl}@${ICON_SIZE}`;
-
-  if (iconSources[cacheKey] === cacheValue && existsSync(destAbsolute)) {
-    return destRelative;
-  }
-
-  const res = await fetch(sourceUrl, { headers: REQUEST_HEADERS });
-  if (!res.ok) throw new Error(`Failed to download icon for ${slug}: ${res.status} ${res.statusText}`);
-  const buffer = Buffer.from(await res.arrayBuffer());
-
-  mkdirSync(dirname(destAbsolute), { recursive: true });
-  await sharp(buffer).resize(ICON_SIZE, ICON_SIZE, { fit: "cover", withoutEnlargement: true }).webp({ quality: 90 }).toFile(destAbsolute);
-  iconSources[cacheKey] = cacheValue;
-  return destRelative;
+  return downloadIconTo({
+    sourceUrl,
+    destAbsolute: join(PUBLIC_LOADOUT_DIR, kind, `${slug}.webp`),
+    destRelative: `/loadout/${kind}/${slug}.webp`,
+    cacheKey: `${kind}/${slug}`,
+    cache: iconSources,
+    headers: REQUEST_HEADERS,
+    label: slug,
+  });
 }
 
 // Same MediaWiki parse endpoint as fetchWikiPageHtml, but following
@@ -767,16 +731,9 @@ async function downloadIcon(
 // so resolveOfferingRole below uses this too rather than the plain
 // fetchWikiPageHtml.
 async function fetchWikiPageHtmlFollowingRedirects(page: string): Promise<string> {
-  const url = `${SOURCE.apiBase}?action=parse&page=${encodeURIComponent(page)}&redirects=1&format=json&prop=text`;
-  const res = await fetch(url, { headers: REQUEST_HEADERS });
-  if (!res.ok) throw new Error(`Failed to fetch ${page}: ${res.status} ${res.statusText}`);
-  const json = (await res.json()) as MediaWikiParseResponse;
-  const html = json.parse?.text?.["*"];
-  if (!html) {
-    throw new Error(`Unexpected MediaWiki API response for ${page}: ${json.error?.info ?? "no parse.text.*"}`);
-  }
-  return html;
+  return fetchPage(SOURCE.apiBase, page, { headers: REQUEST_HEADERS, followRedirects: true });
 }
+
 
 // Every Offering's own article opens with a standard sentence — "<Name>
 // is a(n) <Rarity> Offering belonging to <Survivors|Killers|all

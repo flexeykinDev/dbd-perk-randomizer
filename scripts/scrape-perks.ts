@@ -7,6 +7,12 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
+import {
+  downloadIcon as downloadIconTo,
+  fetchWikiPageHtml as fetchPage,
+  ICON_SIZE,
+  requestHeaders,
+} from "./lib/wiki";
 import { slugify } from "../lib/slugify";
 import { gateScrapedRows } from "./release-gate";
 import { guardAgainstShrink } from "./scrape-census";
@@ -32,7 +38,6 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const SOURCE = WIKI_GG;
 
 const WIKI_PAGE_URL = `${SOURCE.wikiBase}/Perks`;
-const SOURCE_URL = `${SOURCE.apiBase}?action=parse&page=Perks&format=json&prop=text`;
 const DATA_DIR = join(__dirname, "../data");
 const PUBLIC_PERKS_DIR = join(__dirname, "../public/perks");
 const PUBLIC_CHARACTERS_DIR = join(__dirname, "../public/characters");
@@ -54,7 +59,6 @@ const ICON_SOURCES_JSON = join(DATA_DIR, "icon-sources.json");
 // half: the previous 128 was reached by *enlarging* a 96px thumbnail, so
 // the stored files cost bytes to hold blur. Never enlarging means a file
 // whose original is smaller simply stays smaller and honest.
-const ICON_SIZE = 256;
 const ROLES: PerkRole[] = ["survivor", "killer"];
 
 function loadTranslations(): Record<string, string> {
@@ -201,29 +205,10 @@ function loadPreviousPerks(): (Perk & { description?: string })[] {
   }
 }
 
-const REQUEST_HEADERS = {
-  "User-Agent": "vortex-info-next perk scraper (personal site, contact via github)",
-};
+const REQUEST_HEADERS = requestHeaders("perk scraper");
 
-interface MediaWikiParseResponse {
-  parse?: { text?: { "*"?: string } };
-  error?: { info?: string };
-}
-
-async function fetchWikiPageHtml(): Promise<string> {
-  const res = await fetch(SOURCE_URL, { headers: REQUEST_HEADERS });
-  if (!res.ok) {
-    throw new Error(`Failed to fetch ${SOURCE_URL}: ${res.status} ${res.statusText}`);
-  }
-  const json = (await res.json()) as MediaWikiParseResponse;
-  const html = json.parse?.text?.["*"];
-  if (!html) {
-    throw new Error(
-      `Unexpected MediaWiki API response: ${json.error?.info ?? "no parse.text.*"}`,
-    );
-  }
-  return html;
-}
+const fetchWikiPageHtml = () =>
+  fetchPage(SOURCE.apiBase, "Perks", { headers: REQUEST_HEADERS });
 
 async function downloadIcon(
   row: ScrapedRow,
@@ -233,56 +218,30 @@ async function downloadIcon(
   iconSourceOverrides: Record<string, string>,
 ): Promise<string> {
   const destRelative = `/perks/${role}/${row.slug}.webp`;
-  const destAbsolute = join(PUBLIC_PERKS_DIR, role, `${row.slug}.webp`);
-  const cacheKey = `perk:${role}/${row.slug}`;
 
-  if (pinnedIcons[row.slug] && existsSync(destAbsolute)) {
+  if (pinnedIcons[row.slug] && existsSync(join(PUBLIC_PERKS_DIR, role, `${row.slug}.webp`))) {
     // A manually-sourced icon (see data/overrides/perks.json) — the wiki's
-    // own URL for this one is wrong/missing, so never re-fetch it.
+    // own URL for this one is wrong/missing, so never re-fetch it. Checked
+    // here rather than in the shared helper because it is the only pinning
+    // in either scraper.
     return destRelative;
   }
 
   // Fandom's Loadout template renders a literal "?" placeholder image for a
-  // perk whose data it fails to look up — the same failure that produces
-  // the "Unable to retrieve the Perk description" text handled by
-  // data/overrides/perks.json. Nothing about that image is
-  // distinguishable from a real icon at fetch time, so the corrected
-  // source is named explicitly per slug.
-  const sourceUrl = iconSourceOverrides[row.slug] ?? row.iconSourceUrl;
-
-  // The recorded key carries the output size as well as the source URL.
-  // Comparing the URL alone meant that raising ICON_SIZE left every icon
-  // whose source happened to be unchanged sitting at the old dimensions —
-  // which is exactly what happened to the two icons with a source override
-  // (their URLs were already the original, so nothing looked different).
-  // Folding the size in makes any future change to it invalidate the cache
-  // on its own, with nothing to remember.
-  const cacheValue = `${sourceUrl}@${ICON_SIZE}`;
-
-  if (iconSources[cacheKey] === cacheValue && existsSync(destAbsolute)) {
-    // Skip re-downloading when neither the source nor the size has changed.
-    return destRelative;
-  }
-
-  const res = await fetch(sourceUrl, { headers: REQUEST_HEADERS });
-  if (!res.ok) {
-    throw new Error(
-      `Failed to download icon for ${row.name}: ${res.status} ${res.statusText}`,
-    );
-  }
-  const buffer = Buffer.from(await res.arrayBuffer());
-
-  mkdirSync(dirname(destAbsolute), { recursive: true });
-  await sharp(buffer)
-    .resize(ICON_SIZE, ICON_SIZE, { fit: "cover", withoutEnlargement: true })
-    .webp({ quality: 90 })
-    .toFile(destAbsolute);
-
-  // Records the URL actually fetched, override included — storing the
-  // wiki's original here would never match on the next run and would
-  // re-download the overridden icon every single time.
-  iconSources[cacheKey] = cacheValue;
-  return destRelative;
+  // perk whose data it fails to look up — the same failure that produces the
+  // "Unable to retrieve the Perk description" text handled by
+  // data/overrides/perks.json. Nothing about that image is distinguishable
+  // from a real icon at fetch time, so the corrected source is named
+  // explicitly per slug.
+  return downloadIconTo({
+    sourceUrl: iconSourceOverrides[row.slug] ?? row.iconSourceUrl,
+    destAbsolute: join(PUBLIC_PERKS_DIR, role, `${row.slug}.webp`),
+    destRelative,
+    cacheKey: `perk:${role}/${row.slug}`,
+    cache: iconSources,
+    headers: REQUEST_HEADERS,
+    label: row.name,
+  });
 }
 
 async function downloadPortrait(
