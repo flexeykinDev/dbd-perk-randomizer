@@ -76,13 +76,19 @@ export interface ObsOverlayOptions {
   entrance: ObsEntrance;
 }
 
-export type ObsEntrance = "rise" | "drop" | "flip" | "glide" | "none";
+export type ObsEntrance = "rise" | "drop" | "flip" | "glide" | "deal" | "spin" | "none";
 
 export const OBS_ENTRANCES: readonly ObsEntrance[] = [
   "rise",
   "drop",
   "flip",
   "glide",
+  // The two that borrow their motion from a presentation rather than being
+  // generic. Deliberately entrances rather than something the skin turns on:
+  // Slots frames with a plain rise is a reasonable thing to want, and so is
+  // the deal with no frame at all.
+  "deal",
+  "spin",
   "none",
 ];
 

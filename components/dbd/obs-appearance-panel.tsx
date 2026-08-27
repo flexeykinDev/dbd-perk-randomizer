@@ -31,6 +31,14 @@ const ENTRANCE_HINT: Record<ObsEntrance, { ru: string; en: string }> = {
   drop: { ru: "Падает сверху с отскоком", en: "Falls from above and bounces" },
   flip: { ru: "Переворачивается, как карта", en: "Turns over like a card" },
   glide: { ru: "Выезжает слева, без масштаба", en: "Slides in from the left, no scaling" },
+  deal: {
+    ru: "Как раздача карт в «Ритуале» — плавно, без отскока",
+    en: "The Ritual's deal — smooth, no bounce",
+  },
+  spin: {
+    ru: "Барабаны останавливаются слева направо, плавно замедляясь",
+    en: "Reels settle left to right, easing to a stop",
+  },
   none: { ru: "Только плавное появление", en: "Crossfade only, nothing moves" },
 };
 
@@ -39,6 +47,8 @@ const ENTRANCE_LABEL: Record<ObsEntrance, { ru: string; en: string }> = {
   drop: { ru: "Падение", en: "Drop" },
   flip: { ru: "Переворот", en: "Flip" },
   glide: { ru: "Сдвиг", en: "Glide" },
+  deal: { ru: "Раздача", en: "Deal" },
+  spin: { ru: "Барабаны", en: "Spin" },
   none: { ru: "Без анимации", en: "None" },
 };
 
