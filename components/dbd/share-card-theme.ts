@@ -1,4 +1,4 @@
-import type { PerkRole, ShareCardLayout } from "@/lib/types";
+import type { PerkRole } from "@/lib/types";
 import { oswald, plexMono } from "@/lib/export-fonts";
 
 /* The export card's own design tokens.
@@ -39,23 +39,14 @@ export const ROLE_LABEL: Record<PerkRole, { ru: string; en: string }> = {
   killer: { ru: "Убийца", en: "Killer" },
 };
 
-export const CANVAS_SIZE: Record<ShareCardLayout, { width: number; height: number }> =
-  {
-    landscape: { width: 1600, height: 900 },
-    story: { width: 1080, height: 1920 },
-  };
 
-/** Icons are scraped and stored at a native 256x256 (scripts/scrape-perks.ts).
- *  Nothing here may exceed it — past that a fixed-detail bitmap just goes
- *  soft, and no html2canvas `scale` can add detail the file does not have. */
-export const NATIVE_ICON = 256;
 
 /** Tiled, seeded noise (public/export-grain.png). A real image because SVG
  *  and CSS filters both fail under html2canvas; seeded so two exports of the
  *  same build come out byte-identical. */
 export const GRAIN = "/export-grain.png";
 
-/** Inner padding of the anchored (portrait-composition) band. Named because
- *  the band's own width is derived from them plus its contents. */
-export const BAND_PAD_L = 46;
-export const BAND_PAD_R = 28;
+// The card's fixed numbers live in share-card-metrics.ts, which has no
+// dependencies so the layout arithmetic stays testable; re-exported here
+// because this is where the card's constants have always been imported from.
+export { BAND_PAD_L, BAND_PAD_R, CANVAS_SIZE, NATIVE_ICON } from "./share-card-metrics";
