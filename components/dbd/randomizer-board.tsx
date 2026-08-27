@@ -23,7 +23,7 @@ import { getCharacterName } from "@/lib/character-name";
 import { resolvePreset, type BuildPreset } from "@/lib/build-presets";
 import { usePerkSlots } from "@/lib/use-perk-slots";
 import { useBoardShortcuts } from "@/lib/use-board-shortcuts";
-import { getTagsForPerk, getTagsForRole } from "@/lib/perk-tags";
+import { getTagsForRole } from "@/lib/perk-tags";
 import type {
   Addon,
   Loadout,
@@ -37,12 +37,12 @@ import { cn } from "@/lib/cn";
 import { useMounted } from "@/lib/use-mounted";
 import { prefetchDescriptions } from "@/lib/descriptions";
 import { useObsHold } from "@/lib/use-obs-hold";
-import { usePersistedSet } from "@/lib/use-persisted-set";
 import { useBuildClipboard } from "@/lib/use-build-clipboard";
 import { ROLE_COLOR } from "@/lib/role-color";
 import { useLanguage, useT } from "@/lib/i18n";
 import { useSeed } from "@/lib/use-seed";
 import { useBattleRoyale } from "@/lib/use-battle-royale";
+import { useExclusions } from "@/lib/use-exclusions";
 import { useShareExport } from "@/lib/use-share-export";
 import { PoolStatsPanel } from "./pool-stats-panel";
 import { BoardToolbar } from "./board-toolbar";
@@ -97,11 +97,8 @@ import { Dropdown } from "./dropdown";
 
 const MAX_PERK_COUNT = 4;
 const DEFAULT_PERK_COUNT = 4;
-const EXCLUDED_STORAGE_KEY = "dbd-randomizer:excluded-perks";
-const FAVORITE_STORAGE_KEY = "dbd-randomizer:favorite-perks";
 const PERK_COUNT_STORAGE_KEY = "dbd-randomizer:perk-count";
 const MODE_STORAGE_KEY = "dbd-randomizer:mode";
-const EXCLUDED_LOADOUT_STORAGE_KEY = "dbd-randomizer:excluded-loadout";
 const LOADOUT_SLOT_ITEM_STORAGE_KEY = "dbd-randomizer:loadout-slot-item";
 const LOADOUT_SLOT_ADDONS_STORAGE_KEY = "dbd-randomizer:loadout-slot-addons";
 const LOADOUT_SLOT_OFFERING_STORAGE_KEY =
@@ -286,23 +283,12 @@ export function RandomizerBoard() {
   const t = useT();
   const { lang: language } = useLanguage();
   const [role, setRole] = useState<PerkRole>("survivor");
-  const [excludePanelOpen, setExcludePanelOpen] = useState(false);
-  // Which pool the "Пул" button(s) open — irrelevant outside "all" mode
-  // (there's only one pool to manage there), but "all" mode shows perks
-  // and loadout together, so it needs two separate pool buttons and this
-  // decides which panel opens when one of them is clicked.
-  const [excludePanelKind, setExcludePanelKind] = useState<"perks" | "loadout">(
-    "perks",
-  );
+  // Pool exclusions, favourites and the pool manager — see lib/use-exclusions.ts.
   // Both start at SSR-safe defaults and are corrected from localStorage in
   // the mount effect below — a lazy useState(loadX) initializer would read
   // localStorage during the client's first render, which happens *before*
   // hydration reconciles against the server's (window-less) HTML and would
   // throw a hydration mismatch for any returning visitor with saved state.
-  const excludedPerks = usePersistedSet(EXCLUDED_STORAGE_KEY);
-  const favorites = usePersistedSet(FAVORITE_STORAGE_KEY);
-  const excludedSlugs = excludedPerks.values;
-  const favoriteSlugs = favorites.values;
   const [perkCount, setPerkCount] = useState<number>(DEFAULT_PERK_COUNT);
   // Full Loadout mode — same hydration-safety rule as everything else here:
   // SSR-safe defaults, corrected from localStorage/URL in the mount effect.
@@ -310,13 +296,6 @@ export function RandomizerBoard() {
   const [loadoutSlots, setLoadoutSlots] = useState<LoadoutSlots>(
     DEFAULT_LOADOUT_SLOTS,
   );
-  const excludedLoadout = usePersistedSet(EXCLUDED_LOADOUT_STORAGE_KEY);
-  const excludedLoadoutSlugs = excludedLoadout.values;
-  // Pulled out by name so the mount effect can depend on stable callbacks
-  // rather than on the hooks' return objects, which are new every render.
-  const { hydrate: hydrateExcludedPerks } = excludedPerks;
-  const { hydrate: hydrateFavorites } = favorites;
-  const { hydrate: hydrateExcludedLoadout } = excludedLoadout;
   const [sharedLoadoutPieces, setSharedLoadoutPieces] = useState<
     LoadoutPiece[] | null
   >(null);
@@ -374,6 +353,26 @@ export function RandomizerBoard() {
   // distinct from the pool manager's exclusions, which are a deliberate,
   // saved choice. "themeTag: null" means no filter, i.e. the full role pool.
   const [themeTag, setThemeTag] = useState<string | null>(null);
+
+  /* Everything that narrows the pool: saved exclusions, the theme filter, and
+     Battle Royale attrition, merged into the one set a roll subtracts. */
+  const exclusions = useExclusions({
+    role,
+    mounted,
+    themeTag,
+    alsoExcluded: battleRoyale ? battleRoyaleUsed : null,
+  });
+  const excludedSlugs = exclusions.perkSlugs;
+  const favoriteSlugs = exclusions.favoriteSlugs;
+  const excludedLoadoutSlugs = exclusions.loadoutKeys;
+  const combinedExcluded = exclusions.combinedPerks;
+  const combinedExcludedLoadout = exclusions.combinedLoadout;
+  const availablePool = exclusions.availablePool;
+  const availableCount = exclusions.availableCount;
+  const excludePanelOpen = exclusions.panelOpen;
+  const excludePanelKind = exclusions.panelKind;
+  const openExcludePanel = exclusions.openPanel;
+  const { hydrate: hydrateExclusions } = exclusions;
   // Display-only filter for the OBS overlay and Download Image — separate
   // from `loadoutSlots` (which decides what actually gets *rolled*): a
   // streamer might still want the full loadout rolled (to copy/reference
@@ -404,9 +403,7 @@ export function RandomizerBoard() {
   useEffect(() => {
     function applyInitialClientState() {
       // The three saved Sets restore themselves — see lib/use-persisted-set.ts.
-      hydrateExcludedPerks();
-      hydrateFavorites();
-      hydrateExcludedLoadout();
+      hydrateExclusions();
       setPerkCount(loadPerkCount());
       setMode(loadMode());
       setLoadoutSlots(loadLoadoutSlots());
@@ -450,41 +447,8 @@ export function RandomizerBoard() {
     // depending on those would re-run this on every render — and since
     // hydrating sets state, that is an endless loop rather than merely
     // wasteful. The callbacks themselves are stable.
-  }, [
-    hydrateExcludedPerks,
-    hydrateFavorites,
-    hydrateExcludedLoadout,
-    hydrateSeedFromUrl,
-    hydrateBattleRoyale,
-  ]);
+  }, [hydrateExclusions, hydrateSeedFromUrl, hydrateBattleRoyale]);
 
-  // Perks the current theme filter rules out, expressed as an exclusion set
-  // so it can merge into the same combinedExcluded pipeline that already
-  // handles Battle Royale attrition and manual exclusions — getRandomPerks
-  // and the pool-exhausted check don't need to know a theme exists at all.
-  const themeExcluded = useMemo(() => {
-    if (!mounted || !themeTag) return null;
-    const nonMatching = getPerksByRole(role)
-      .filter((p) => !getTagsForPerk(p).includes(themeTag))
-      .map((p) => p.slug);
-    return new Set(nonMatching);
-  }, [mounted, role, themeTag]);
-
-  const combinedExcluded = useMemo(() => {
-    const extra: ReadonlySet<string>[] = [];
-    if (battleRoyale && battleRoyaleUsed.size > 0) extra.push(battleRoyaleUsed);
-    if (themeExcluded && themeExcluded.size > 0) extra.push(themeExcluded);
-    if (extra.length === 0) return excludedSlugs;
-    const merged = new Set(excludedSlugs);
-    for (const set of extra) for (const slug of set) merged.add(slug);
-    return merged;
-  }, [excludedSlugs, battleRoyale, battleRoyaleUsed, themeExcluded]);
-
-  const availablePool = useMemo(
-    () => (mounted ? getAvailablePool(role, combinedExcluded) : []),
-    [mounted, role, combinedExcluded],
-  );
-  const availableCount = availablePool.length;
   // Applies to both causes of a too-small pool: Battle Royale attrition and
   // the player just manually excluding too many perks in Manage Pool. Either
   // way, getRandomPerks() refuses to top up from excluded perks (see
@@ -555,17 +519,6 @@ export function RandomizerBoard() {
       combinedExcluded,
       favoriteSlugs,
     });
-
-  // Loadout counterpart of combinedExcluded above — same Battle Royale +
-  // manual-exclusion merge, just namespaced "kind:slug" keys instead of
-  // plain perk slugs (see lib/loadout.ts's excludeKey).
-  const combinedExcludedLoadout = useMemo(() => {
-    if (!battleRoyale || battleRoyaleUsed.size === 0)
-      return excludedLoadoutSlugs;
-    const merged = new Set(excludedLoadoutSlugs);
-    for (const key of battleRoyaleUsed) merged.add(key);
-    return merged;
-  }, [excludedLoadoutSlugs, battleRoyale, battleRoyaleUsed]);
 
   const loadout = useMemo((): Loadout | null => {
     void nonce;
@@ -1017,10 +970,6 @@ export function RandomizerBoard() {
     setHistoryModalOpen(false);
   }
 
-  function openExcludePanel(kind: "perks" | "loadout") {
-    setExcludePanelKind(kind);
-    setExcludePanelOpen(true);
-  }
 
   function selectMode(next: BuildMode) {
     setMode(next);
@@ -1059,30 +1008,16 @@ export function RandomizerBoard() {
     setNonce((n) => n + 1);
   }
 
-  // All six of these used to spell out the same "copy the Set, mutate it,
-  // write it to localStorage" by hand, once per set — see
-  // lib/use-persisted-set.ts.
-  const toggleExcluded = excludedPerks.toggle;
-  const bulkSetExcluded = excludedPerks.setMany;
-  const toggleFavorite = favorites.toggle;
+  const toggleExcluded = exclusions.togglePerk;
+  const bulkSetExcluded = exclusions.setManyPerks;
+  const toggleFavorite = exclusions.toggleFavorite;
+  const resetExcludedForRole = exclusions.resetPerksForRole;
 
-  function resetExcludedForRole(targetRole: PerkRole) {
-    const roleSlugs = new Set(getPerksByRole(targetRole).map((p) => p.slug));
-    excludedPerks.removeWhere((slug) => roleSlugs.has(slug));
-  }
+  const toggleExcludedLoadoutPiece = exclusions.toggleLoadoutPiece;
 
-  function toggleExcludedLoadoutPiece(kind: LoadoutPiece["kind"], slug: string) {
-    excludedLoadout.toggle(`${kind}:${slug}`);
-  }
+  const bulkSetExcludedLoadout = exclusions.setManyLoadout;
 
-  const bulkSetExcludedLoadout = excludedLoadout.setMany;
-
-  function resetExcludedLoadoutForRole(targetRole: PerkRole) {
-    const roleKeys = new Set(
-      getLoadoutPoolForRole(targetRole).map((p) => `${p.kind}:${p.slug}`),
-    );
-    excludedLoadout.removeWhere((key) => roleKeys.has(key));
-  }
+  const resetExcludedLoadoutForRole = exclusions.resetLoadoutForRole;
 
 
   function updatePieceVisibility(kind: keyof PieceVisibility, value: boolean) {
@@ -1815,7 +1750,7 @@ export function RandomizerBoard() {
           onBulkSet={bulkSetExcluded}
           onToggleFavorite={toggleFavorite}
           onResetRole={resetExcludedForRole}
-          onClose={() => setExcludePanelOpen(false)}
+          onClose={exclusions.closePanel}
         />
       ) : (
         <LoadoutExcludePanel
@@ -1829,7 +1764,7 @@ export function RandomizerBoard() {
           onToggle={toggleExcludedLoadoutPiece}
           onBulkSet={bulkSetExcludedLoadout}
           onResetRole={resetExcludedLoadoutForRole}
-          onClose={() => setExcludePanelOpen(false)}
+          onClose={exclusions.closePanel}
         />
       )}
 
