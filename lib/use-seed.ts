@@ -22,6 +22,19 @@ import type { PerkRole } from "./types";
 
 export type SeedMode = "none" | "daily" | "custom";
 
+/** Which mode a seed arriving in a share link should restore.
+ *
+ *  A link to today's Daily Challenge is the daily mode, not a custom seed
+ *  that happens to match — otherwise opening someone's challenge link shows
+ *  the right build with the toggle reading "off", and the shared-participant
+ *  count (which only means anything for the daily) never appears.
+ *
+ *  Split out of the hook so it can be tested without React; the date maths is
+ *  the part worth pinning. */
+export function seedModeForLink(seed: string, linkRole: PerkRole): "daily" | "custom" {
+  return seed === dailyChallengeSeed(linkRole) ? "daily" : "custom";
+}
+
 export interface SeedController {
   mode: SeedMode;
   /** What is in the seed input box — not necessarily what is in force. */
@@ -93,9 +106,7 @@ export function useSeed({
 
   const hydrateFromUrl = useCallback((seed: string, linkRole: PerkRole) => {
     setInput(seed);
-    // A link to today's Daily Challenge is the daily mode, not a custom seed
-    // that happens to match — so the toggle reads as on for whoever opens it.
-    if (seed === dailyChallengeSeed(linkRole)) {
+    if (seedModeForLink(seed, linkRole) === "daily") {
       setMode("daily");
       return;
     }

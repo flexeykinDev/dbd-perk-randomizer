@@ -29,6 +29,25 @@ const EXCLUDED_LOADOUT_STORAGE_KEY = "dbd-randomizer:excluded-loadout";
 
 export type ExcludePanelKind = "perks" | "loadout";
 
+/** Merges the saved exclusions with whatever else is narrowing the pool.
+ *
+ *  Split out of the hook so it can be tested without React — it is the one
+ *  piece of real decision-making here, and every way of getting it wrong is
+ *  silent: a dropped set rolls perks the player ruled out, and a needlessly
+ *  fresh Set changes identity and re-rolls the build on an unrelated render.
+ *
+ *  Returns `saved` itself when nothing else applies, deliberately. */
+export function mergeExclusions(
+  saved: ReadonlySet<string>,
+  extras: ReadonlyArray<ReadonlySet<string> | null | undefined>,
+): ReadonlySet<string> {
+  const active = extras.filter((s): s is ReadonlySet<string> => !!s && s.size > 0);
+  if (active.length === 0) return saved;
+  const merged = new Set(saved);
+  for (const set of active) for (const value of set) merged.add(value);
+  return merged;
+}
+
 export interface ExclusionsController {
   /** The saved sets, as the pool panels show them — manual choices only, with
    *  no theme filter or Battle Royale attrition folded in. */
@@ -105,26 +124,17 @@ export function useExclusions({
     return new Set(nonMatching);
   }, [mounted, role, themeTag]);
 
-  const combinedPerks = useMemo(() => {
-    const extra: ReadonlySet<string>[] = [];
-    if (alsoExcluded && alsoExcluded.size > 0) extra.push(alsoExcluded);
-    if (themeExcluded && themeExcluded.size > 0) extra.push(themeExcluded);
-    // Returned as-is when nothing else applies: a fresh Set on every render
-    // would change identity and re-roll the build for no reason.
-    if (extra.length === 0) return perkSlugs;
-    const merged = new Set(perkSlugs);
-    for (const set of extra) for (const slug of set) merged.add(slug);
-    return merged;
-  }, [perkSlugs, alsoExcluded, themeExcluded]);
+  const combinedPerks = useMemo(
+    () => mergeExclusions(perkSlugs, [alsoExcluded, themeExcluded]),
+    [perkSlugs, alsoExcluded, themeExcluded],
+  );
 
   // Loadout counterpart — same merge, just `kind:slug` keys. No theme filter
   // here; themes are a perk idea.
-  const combinedLoadout = useMemo(() => {
-    if (!alsoExcluded || alsoExcluded.size === 0) return loadoutKeys;
-    const merged = new Set(loadoutKeys);
-    for (const key of alsoExcluded) merged.add(key);
-    return merged;
-  }, [loadoutKeys, alsoExcluded]);
+  const combinedLoadout = useMemo(
+    () => mergeExclusions(loadoutKeys, [alsoExcluded]),
+    [loadoutKeys, alsoExcluded],
+  );
 
   const availablePool = useMemo(
     () => (mounted ? getAvailablePool(role, combinedPerks) : []),

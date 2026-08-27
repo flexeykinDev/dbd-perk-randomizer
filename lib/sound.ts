@@ -181,7 +181,34 @@ function audio(): { ctx: AudioContext; master: GainNode; send: GainNode } | null
 
   master.connect(limiter);
   limiter.connect(ctx.destination);
+  registerRelease();
   return { ctx, master, send: reverbSend };
+}
+
+/* An AudioContext holds a real audio device connection, and this one is a
+ * module singleton created on the first cue and never closed — so it lived
+ * for the whole page. One context is not a leak in any practical sense, but
+ * "never closed" is the kind of thing that stops being true quietly, so it
+ * releases itself when the page goes away.
+ *
+ * pagehide rather than unload: unload does not fire on iOS at all, and it
+ * blocks the back/forward cache on every browser that has one. Registered
+ * once, at the moment there is finally something to release. */
+let releaseRegistered = false;
+function registerRelease() {
+  if (releaseRegistered || typeof window === "undefined") return;
+  releaseRegistered = true;
+  window.addEventListener("pagehide", () => {
+    // A page restored from the back/forward cache would need a context
+    // again; audio() rebuilds one lazily, so dropping the references here is
+    // all that is required.
+    const closing = ctx;
+    ctx = null;
+    master = null;
+    reverbSend = null;
+    noise = null;
+    void closing?.close().catch(() => {});
+  });
 }
 
 /** One second of white noise, reused by every cue that needs air. */
