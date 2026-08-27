@@ -36,7 +36,7 @@ export function ObsPreviewCanvas({
     iconPx,
     characterPx,
     nameMaxWidthPx,
-    darkBg,
+    background,
     showNames,
     canvasWidth,
     canvasHeight,
@@ -58,7 +58,12 @@ export function ObsPreviewCanvas({
         ref={attachPreview}
         className={cn(
           "relative w-full touch-none overflow-hidden rounded-xl border border-border bg-[repeating-conic-gradient(#8884_0%_25%,transparent_0%_50%)] bg-[length:16px_16px]",
-          darkBg && "bg-none bg-[#0b0c0f]",
+          // The checkerboard means "transparent". Any skin paints its own
+          // ground, so the checker would show through a lie.
+          background !== "transparent" && "bg-none",
+          background === "dark" && "bg-[#0b0c0f]",
+          background === "vortex" && "bg-[#0a0c10]",
+          background === "slots" && "bg-[#14171d]",
         )}
         style={{
           aspectRatio: canvasWidth / canvasHeight,

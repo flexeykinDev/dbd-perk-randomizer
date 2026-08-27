@@ -15,7 +15,17 @@ export type { ObsPublishState, ObsPublishStatus };
 
 const OBS_HASH = "#/obs";
 
-export type ObsBackground = "transparent" | "dark";
+export type ObsBackground = "transparent" | "dark" | "vortex" | "slots";
+
+/** How a card is framed. Independent of the background on purpose: fog behind
+ *  plain icons is a perfectly good look, and so is a reel well on a
+ *  transparent scene. */
+export type ObsFrame = "plain" | "ritual" | "slots";
+
+/** The Vortex background is a live shader by default. `still` renders one
+ *  picture per build instead — the same renderer the share card uses — for a
+ *  machine where a 60fps browser source costs more than it is worth. */
+export type ObsMotion = "live" | "still";
 
 /** A custom on-screen position for one perk-icon slot, as a percentage of
  *  the overlay viewport (0-100, top-left origin) — same coordinate space
@@ -40,6 +50,8 @@ export interface ObsOverlayOptions {
    *  per-card name pills, or vice versa. */
   showCharacter: boolean;
   background: ObsBackground;
+  frame: ObsFrame;
+  motion: ObsMotion;
   /** Per-slot custom positions, indexed the same as the current build's
    *  perk list. `null` means "no override — use the default centered row
    *  layout," which is also what a fresh install and a `pos`-less URL get. */
@@ -92,6 +104,10 @@ export const DEFAULT_OBS_OPTIONS: ObsOverlayOptions = {
   // pills does, so unlike showNames this defaults on.
   showCharacter: true,
   background: "transparent",
+  // Both default to the plainest thing: an overlay that already exists in
+  // somebody's scene must not change appearance because this shipped.
+  frame: "plain",
+  motion: "live",
   positions: null,
   characterPosition: null,
   characterScale: 100,
@@ -108,7 +124,9 @@ export const MAX_OBS_NAME_SCALE = 300;
 export const MIN_CHARACTER_SCALE = 40;
 export const MAX_CHARACTER_SCALE = 250;
 
-const BACKGROUNDS: readonly ObsBackground[] = ["transparent", "dark"];
+const BACKGROUNDS: readonly ObsBackground[] = ["transparent", "dark", "vortex", "slots"];
+const FRAMES: readonly ObsFrame[] = ["plain", "ritual", "slots"];
+const MOTIONS: readonly ObsMotion[] = ["live", "still"];
 
 function parseEntrance(params: URLSearchParams): ObsEntrance {
   const raw = params.get("anim");
@@ -203,6 +221,8 @@ export function useObsOverlayOptions(): ObsOverlayOptions {
     function applyFromUrl() {
       const params = new URLSearchParams(window.location.search);
       const background = params.get("bg");
+      const frame = params.get("frame");
+      const motion = params.get("fx");
       setOptions({
         scale: parseScale(params),
         nameScale: parseNameScale(params),
@@ -222,6 +242,12 @@ export function useObsOverlayOptions(): ObsOverlayOptions {
         background: BACKGROUNDS.includes(background as ObsBackground)
           ? (background as ObsBackground)
           : DEFAULT_OBS_OPTIONS.background,
+        frame: FRAMES.includes(frame as ObsFrame)
+          ? (frame as ObsFrame)
+          : DEFAULT_OBS_OPTIONS.frame,
+        motion: MOTIONS.includes(motion as ObsMotion)
+          ? (motion as ObsMotion)
+          : DEFAULT_OBS_OPTIONS.motion,
         positions: parsePositions(params),
         characterPosition: parseCharacterPosition(params),
         characterScale: parseCharacterScale(params),
@@ -358,6 +384,15 @@ export function obsOverlayUrl(
     options.background !== DEFAULT_OBS_OPTIONS.background
   ) {
     params.set("bg", options.background);
+  }
+  if (options.frame && options.frame !== DEFAULT_OBS_OPTIONS.frame) {
+    params.set("frame", options.frame);
+  }
+  // Only meaningful alongside the Vortex background, but written whenever it
+  // is off the default so a streamer who set it, switched background and
+  // switched back does not silently lose the choice.
+  if (options.motion && options.motion !== DEFAULT_OBS_OPTIONS.motion) {
+    params.set("fx", options.motion);
   }
   if (options.positions && options.positions.length > 0) {
     params.set("pos", encodePositions(options.positions));

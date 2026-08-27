@@ -14,6 +14,8 @@ import {
 } from "@/lib/obs-sync";
 import { getCharacterPortrait } from "@/lib/perks";
 import { ROLE_COLOR } from "@/lib/role-color";
+import { ObsCardFrame } from "./obs-card-frame";
+import { ObsSkin } from "./obs-skin";
 import { useObsOverlayOptions, useObsRoomCode } from "@/lib/use-obs-mode";
 import { useT, type Lang } from "@/lib/i18n";
 
@@ -219,6 +221,10 @@ export function ObsOverlay() {
           ...(options.entrance === "flip" ? { perspective: 700 } : {}),
         }}
       >
+        {/* A chosen frame REPLACES this plate rather than stacking on it —
+            a reel well inside a black rounded rectangle reads as two boxes,
+            not as a machine. See ObsCardFrame. */}
+        {options.frame === "plain" ? (
         <span
           // Soft, low-contrast card instead of a bright neon-style ring —
           // a thin translucent border plus a subtle drop shadow for depth,
@@ -246,6 +252,15 @@ export function ObsOverlay() {
             className="rounded-xl"
           />
         </span>
+        ) : (
+          <ObsCardFrame
+            frame={options.frame}
+            role={state!.role}
+            size={iconSize}
+            src={perk.icon}
+            alt={perk.name[state!.language]}
+          />
+        )}
         {options.showNames && (
           <span
             // Wraps onto up to 2 lines instead of cutting off on one —
@@ -290,6 +305,14 @@ export function ObsOverlay() {
           : { gap: hasBothGroups ? Math.round(GROUP_GAP_PX * scaleRatio) : 0 }
       }
     >
+      {state && (
+        <ObsSkin
+          background={options.background}
+          motion={options.motion}
+          role={state.role}
+          buildKey={state.perks.map((p) => p.slug).join(",")}
+        />
+      )}
       {state?.character && options.showCharacter && roleColor && (
         <CharacterBadge
           slug={state.character}

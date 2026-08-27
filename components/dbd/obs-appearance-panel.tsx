@@ -261,19 +261,47 @@ export function ObsAppearancePanel({
         <EntrancePreview entrance={previewing ?? options.entrance} />
       </div>
 
+      <SkinPicker
+        label={t({ ru: "Фон", en: "Background" })}
+        value={options.background}
+        onChange={options.setBackground}
+        choices={[
+          { id: "transparent", label: { ru: "Прозрачный", en: "Transparent" } },
+          { id: "dark", label: { ru: "Тёмный", en: "Dark" } },
+          { id: "vortex", label: { ru: "Вихрь", en: "Vortex" } },
+          { id: "slots", label: { ru: "Слоты", en: "Slots" } },
+        ]}
+      />
+
+      {/* Only meaningful for the Vortex, which is the only animated skin. */}
+      {options.background === "vortex" && (
+        <ToggleSwitch
+          checked={options.motion === "still"}
+          onChange={() => options.setMotion(options.motion === "still" ? "live" : "still")}
+          label={t({ ru: "Неподвижный вихрь", en: "Still vortex" })}
+          tooltip={t({
+            ru: "Одна картинка на билд вместо живого шейдера. Стоит почти ничего — включите, если анимация нагружает кодировщик.",
+            en: "One picture per build instead of a live shader. Costs next to nothing — turn it on if the animation is loading your encoder.",
+          })}
+        />
+      )}
+
+      <SkinPicker
+        label={t({ ru: "Рамка карточек", en: "Card frame" })}
+        value={options.frame}
+        onChange={options.setFrame}
+        choices={[
+          { id: "plain", label: { ru: "Без рамки", en: "None" } },
+          { id: "ritual", label: { ru: "Ритуал", en: "Ritual" } },
+          { id: "slots", label: { ru: "Слоты", en: "Slots" } },
+        ]}
+      />
+
       <div className="mt-1 flex flex-col gap-3">
         <ToggleSwitch
           checked={options.showNames}
           onChange={options.toggleShowNames}
           label={t({ ru: "Показывать названия карточек", en: "Show card names" })}
-        />
-        <ToggleSwitch
-          checked={options.darkBg}
-          onChange={options.toggleDarkBg}
-          label={t({
-            ru: "Тёмный фон вместо прозрачного",
-            en: "Dark background instead of transparent",
-          })}
         />
         <ToggleSwitch
           checked={options.showCharacter}
@@ -424,6 +452,53 @@ function PieceVisibilityChips({
           en: "Doesn't change what actually gets rolled — only what's visible in the overlay and the downloaded image.",
         })}
       </p>
+    </div>
+  );
+}
+
+/** A small segmented control. The skins are a choice among a handful of named
+ *  looks, not a switch — a row of pills says that where a toggle could not. */
+function SkinPicker<T extends string>({
+  label,
+  value,
+  onChange,
+  choices,
+}: {
+  label: string;
+  value: T;
+  onChange: (next: T) => void;
+  choices: ReadonlyArray<{ id: T; label: { ru: string; en: string } }>;
+}) {
+  const t = useT();
+  return (
+    <div className="mt-1 flex flex-col gap-1.5">
+      <span className="text-[0.6875rem] font-medium text-muted">{label}</span>
+      <div
+        role="radiogroup"
+        aria-label={label}
+        className="flex flex-wrap gap-1 rounded-full border border-border bg-background/40 p-1"
+      >
+        {choices.map((choice) => {
+          const active = choice.id === value;
+          return (
+            <button
+              key={choice.id}
+              type="button"
+              role="radio"
+              aria-checked={active}
+              onClick={() => onChange(choice.id)}
+              className={cn(
+                "tap flex-1 rounded-full px-2.5 py-1 text-[0.6875rem] font-medium whitespace-nowrap transition-colors",
+                active
+                  ? "bg-accent text-accent-foreground"
+                  : "text-muted hover:bg-surface-hover hover:text-foreground",
+              )}
+            >
+              {t(choice.label)}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }

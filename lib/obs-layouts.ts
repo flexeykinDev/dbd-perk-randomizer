@@ -14,7 +14,7 @@
 // usual.
 import { useCallback, useEffect, useState } from "react";
 import { safeGetJSON, safeSetJSON } from "./safe-storage";
-import type { ObsIconPosition } from "./use-obs-mode";
+import type { ObsBackground, ObsFrame, ObsIconPosition, ObsMotion } from "./use-obs-mode";
 
 const STORAGE_KEY = "dbd-randomizer:obs-layouts";
 const MAX_LAYOUTS = 8;
@@ -30,7 +30,14 @@ export interface ObsLayoutSnapshot {
   canvasHeight: number;
   showNames: boolean;
   showCharacter: boolean;
+  /** Superseded by `skin`, kept so layouts saved before skins existed still
+   *  load: an old snapshot has no `skin`, and its darkBg still says which of
+   *  the two original backgrounds it wanted. */
   darkBg: boolean;
+  /** Optional because a layout saved before this shipped will not have it. */
+  skin?: ObsBackground;
+  frame?: ObsFrame;
+  motion?: ObsMotion;
   characterScale: number;
   positions: ObsIconPosition[] | null;
   characterPosition: ObsIconPosition | null;

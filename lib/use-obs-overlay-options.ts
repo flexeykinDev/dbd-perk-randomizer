@@ -20,8 +20,11 @@ import {
   MAX_CHARACTER_SCALE,
   MIN_CHARACTER_SCALE,
   obsOverlayUrl,
+  type ObsBackground,
   type ObsEntrance,
+  type ObsFrame,
   type ObsIconPosition,
+  type ObsMotion,
 } from "./use-obs-mode";
 
 // 8 slots: 4 perks + 4 loadout pieces, the largest "all" mode can produce.
@@ -137,7 +140,9 @@ export function useObsOverlayOptions(open: boolean) {
   const [canvasHeight, setCanvasHeight] = useState(DEFAULT_STYLE.canvasHeight);
   const [showNames, setShowNames] = useState(DEFAULT_OBS_OPTIONS.showNames);
   const [showCharacter, setShowCharacter] = useState(DEFAULT_OBS_OPTIONS.showCharacter);
-  const [darkBg, setDarkBg] = useState(DEFAULT_OBS_OPTIONS.background === "dark");
+  const [background, setBackground] = useState<ObsBackground>(DEFAULT_OBS_OPTIONS.background);
+  const [frame, setFrame] = useState<ObsFrame>(DEFAULT_OBS_OPTIONS.frame);
+  const [motion, setMotion] = useState<ObsMotion>(DEFAULT_OBS_OPTIONS.motion);
   // null = no custom layout yet; the overlay falls back to its default
   // centered row. Set the first time any icon is dragged in the preview.
   const [positions, setPositions] = useState<ObsIconPosition[] | null>(null);
@@ -166,7 +171,9 @@ export function useObsOverlayOptions(open: boolean) {
         nameScale,
         showNames,
         showCharacter,
-        background: darkBg ? "dark" : "transparent",
+        background,
+        frame,
+        motion,
         positions: positions ?? undefined,
         characterPosition: characterPosition ?? undefined,
         characterScale,
@@ -195,7 +202,9 @@ export function useObsOverlayOptions(open: boolean) {
     canvasHeight,
     showNames,
     showCharacter,
-    darkBg,
+    background,
+    frame,
+    motion,
     positions,
     characterPosition,
     characterScale,
@@ -211,7 +220,9 @@ export function useObsOverlayOptions(open: boolean) {
     setScale,
     setNameScale,
     toggleShowNames: () => setShowNames((v) => !v),
-    toggleDarkBg: () => setDarkBg((v) => !v),
+    setBackground,
+    setFrame,
+    setMotion,
     toggleShowCharacter: () => setShowCharacter((v) => !v),
     useCustomStyle: () => setStyleMode("custom"),
 
@@ -283,7 +294,12 @@ export function useObsOverlayOptions(open: boolean) {
       canvasHeight,
       showNames,
       showCharacter,
-      darkBg,
+      // darkBg is still written for layouts read by an older build, and is
+      // what `skin` falls back to when an older layout is read by this one.
+      darkBg: background === "dark",
+      skin: background,
+      frame,
+      motion,
       characterScale,
       positions,
       characterPosition,
@@ -296,7 +312,9 @@ export function useObsOverlayOptions(open: boolean) {
       setCanvasHeight(snapshot.canvasHeight);
       setShowNames(snapshot.showNames);
       setShowCharacter(snapshot.showCharacter);
-      setDarkBg(snapshot.darkBg);
+      setBackground(snapshot.skin ?? (snapshot.darkBg ? "dark" : "transparent"));
+      setFrame(snapshot.frame ?? DEFAULT_OBS_OPTIONS.frame);
+      setMotion(snapshot.motion ?? DEFAULT_OBS_OPTIONS.motion);
       setCharacterScale(snapshot.characterScale);
       setPositions(snapshot.positions);
       setCharacterPosition(snapshot.characterPosition);
