@@ -1090,7 +1090,10 @@ export function RandomizerBoard() {
   );
 
   return (
-    <div className="flex flex-col items-center gap-3">
+    /* gap-2 on phones, gap-3 from sm up. Eight stacked groups at 12px each
+       is 96px of pure gap before the build on a screen that has none to
+       spare; at 8px it is 64px and nothing reads as cramped. */
+    <div className="flex flex-col items-center gap-2 sm:gap-3">
       <title>{pageTitle}</title>
       {/* Polite, so it waits for the reader to finish rather than cutting in;
           the build is not urgent enough for assertive. Empty until the first
@@ -1168,7 +1171,7 @@ export function RandomizerBoard() {
           the bug back) or blowing out the page's own width. */}
       <div className="flex w-full max-w-full flex-col items-start divide-y divide-border overflow-x-auto rounded-2xl border border-border bg-surface/40 sm:w-auto sm:flex-row sm:items-center sm:divide-x sm:divide-y-0">
         {mode !== "loadout" && (
-          <div className="flex shrink-0 flex-wrap items-center justify-center gap-x-2 gap-y-1.5 px-4 py-2 text-sm">
+          <div className="flex shrink-0 flex-wrap items-center justify-center gap-x-2 gap-y-1.5 px-4 py-1.5 text-sm sm:py-2">
             <span className="text-muted">
               {t({ ru: "Перков:", en: "Perks:" })}
             </span>
@@ -1193,7 +1196,7 @@ export function RandomizerBoard() {
         )}
 
         {mode !== "loadout" && mounted && getTagsForRole(role).length > 0 && (
-          <div className="flex shrink-0 flex-wrap items-center justify-center gap-x-2 gap-y-1.5 px-4 py-2 text-sm">
+          <div className="flex shrink-0 flex-wrap items-center justify-center gap-x-2 gap-y-1.5 px-4 py-1.5 text-sm sm:py-2">
             <span className="text-muted">
               {t({ ru: "Тема:", en: "Theme:" })}
             </span>
@@ -1214,7 +1217,7 @@ export function RandomizerBoard() {
         )}
 
         {mode !== "perks" && (
-          <div className="flex shrink-0 flex-wrap items-center justify-center gap-x-2 gap-y-1.5 px-4 py-2 text-sm">
+          <div className="flex shrink-0 flex-wrap items-center justify-center gap-x-2 gap-y-1.5 px-4 py-1.5 text-sm sm:py-2">
             <span className="text-muted">
               {t({ ru: "Слоты:", en: "Slots:" })}
             </span>
