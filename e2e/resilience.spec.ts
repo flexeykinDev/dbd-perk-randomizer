@@ -97,11 +97,27 @@ test("without reduce-motion the cards still animate", async ({ page }) => {
   await page.goto("/?role=survivor&mode=perks");
   await expect.poll(() => page.locator("[data-perk-card]").count()).toBe(4);
 
-  let sawMotion = false;
-  for (let i = 0; i < 8 && !sawMotion; i++) {
-    sawMotion = (await cardTransforms(page)).some((t) => !IDENTITY.test(t));
-    if (!sawMotion) await page.waitForTimeout(40);
-  }
+  /* Sampled inside the page with rAF rather than by polling from the test.
+     Each poll is a round trip, so under parallel load the first sample could
+     land after the spring had already finished and the test failed for a
+     reason that had nothing to do with the code — which it did, once, in a
+     full-suite run while passing in isolation. Watching from within the page
+     removes that jitter entirely. */
+  const sawMotion = await page.evaluate(
+    () =>
+      new Promise<boolean>((resolve) => {
+        const t0 = performance.now();
+        const tick = () => {
+          const moving = [...document.querySelectorAll<HTMLElement>("[data-perk-card]")].some(
+            (el) => !/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/.test(getComputedStyle(el).transform),
+          );
+          if (moving) resolve(true);
+          else if (performance.now() - t0 > 1500) resolve(false);
+          else requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      }),
+  );
   expect(sawMotion, "the reveal animation is gone for everyone, not just reduce-motion").toBe(
     true,
   );

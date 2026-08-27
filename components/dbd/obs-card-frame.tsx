@@ -1,6 +1,7 @@
 "use client";
 
 import { withBasePath } from "@/lib/asset-path";
+import { ObsReel, reelTiming } from "./obs-reel";
 import { ROLE_COLOR } from "@/lib/role-color";
 import { useThemeTokens } from "@/lib/theme-tokens";
 import type { ObsFrame } from "@/lib/use-obs-mode";
@@ -34,12 +35,18 @@ export function ObsCardFrame({
   size,
   src,
   alt,
+  index,
+  spin,
 }: {
   frame: ObsFrame;
   role: PerkRole;
   size: number;
   src: string;
   alt: string;
+  /** Position in the row — the reels' left-to-right settle depends on it. */
+  index: number;
+  /** False when the streamer has asked for no motion at all. */
+  spin: boolean;
 }) {
   const theme = useThemeTokens();
   const accent = ROLE_COLOR[role].solid;
@@ -69,29 +76,19 @@ export function ObsCardFrame({
     );
   }
 
-  // Slots.
-  const w = Math.round(size * 1.12);
+  /* Slots is a real reel — a strip with the result on the pay line and the
+     symbols either side of it — rather than one icon in a box. See
+     obs-reel.tsx for why that distinction is the whole feature. */
   return (
-    <div
-      className="flex items-center justify-center"
-      style={{
-        width: w,
-        /* A well is taller than it is wide — that is what makes it a well
-           rather than a tile — but not the stage's 1.5, which is sized to show
-           symbols scrolling past above and below the pay line. Nothing scrolls
-           here; one symbol has landed. */
-        height: Math.round(w * 1.28),
-        borderRadius: 14,
-        background: `linear-gradient(180deg, ${theme.stageGround} 0%, ${theme.surface} 50%, ${theme.stageGround} 100%)`,
-        border: `1px solid ${accent}aa`,
-        // The lip. A well without one reads as a printed rectangle rather
-        // than a recess.
-        boxShadow: "inset 0 10px 18px -10px rgba(0,0,0,0.85), inset 0 -10px 18px -10px rgba(0,0,0,0.85)",
-      }}
-    >
-      {/* 0.84, the same share of the well the stage gives a landed symbol. */}
-      <Art src={src} alt={alt} size={Math.round(w * 0.84)} />
-    </div>
+    <ObsReel
+      role={role}
+      size={size}
+      src={src}
+      alt={alt}
+      index={index}
+      timing={reelTiming(index)}
+      animate={spin}
+    />
   );
 }
 

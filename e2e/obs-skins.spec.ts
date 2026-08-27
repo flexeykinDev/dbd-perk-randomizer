@@ -91,11 +91,11 @@ test("background and frame are independent", async ({ page }) => {
 });
 
 test("a framed card still shows every perk", async ({ page }) => {
-  // A frame that swallowed a card would be caught nowhere else — the overlay
-  // has no other assertion that the count survives a skin.
+  /* A frame that swallowed a card would be caught nowhere else. Counted by
+     PIECE rather than by image: a reel renders a whole strip, so images are
+     no longer one per card. */
   await openOverlay(page, "&bg=slots&frame=slots");
-  const icons = page.locator(".obs-overlay-root img");
-  await expect.poll(() => icons.count()).toBe(4);
+  await expect.poll(() => page.locator("[data-obs-piece]").count()).toBe(4);
 });
 
 test("an unknown skin falls back rather than rendering nothing", async ({ page }) => {
@@ -104,4 +104,70 @@ test("an unknown skin falls back rather than rendering nothing", async ({ page }
   await openOverlay(page, "&bg=nonsense&frame=nonsense&fx=nonsense");
   await expect(page.locator(".fixed.-z-10")).toHaveCount(0);
   await expect.poll(() => page.locator(".obs-overlay-root img").count()).toBe(4);
+});
+
+test("the Slots frame is a real reel, not one icon in a box", async ({ page }) => {
+  /* The first version of this was a single icon in a well, which is the shape
+     of a reel with none of the point. A reel shows a STRIP — what landed on
+     the pay line and what sits either side of it. */
+  await openOverlay(page, "&bg=slots&frame=slots");
+  const perImage = await page.evaluate(() =>
+    [...document.querySelectorAll("[data-obs-piece]")].map((p) => p.querySelectorAll("img").length),
+  );
+  expect(perImage).toHaveLength(4);
+  for (const n of perImage) {
+    expect(n, `a reel with ${n} symbol(s) is not a strip`).toBeGreaterThan(3);
+  }
+});
+
+test("the reels spin, and settle left to right", async ({ page }) => {
+  await openOverlay(page, "&bg=slots&frame=slots&anim=spin");
+
+  const track = await page.evaluate(
+    () =>
+      new Promise<{ settleFrame: number[]; travelled: number[] }>((resolve) => {
+        const strips = () =>
+          [...document.querySelectorAll<HTMLElement>("[data-obs-piece]")].map((p) =>
+            p.querySelector<HTMLElement>('div[style*="position: absolute"]'),
+          );
+        const first: number[] = [];
+        const last: number[] = [];
+        const settleFrame = [-1, -1, -1, -1];
+        const moved = [false, false, false, false];
+        let f = 0;
+        const t0 = performance.now();
+        const tick = () => {
+          strips().forEach((s, i) => {
+            if (!s) return;
+            const y = new DOMMatrixReadOnly(getComputedStyle(s).transform).f;
+            if (first[i] === undefined) first[i] = y;
+            // Settled once it stops moving between frames.
+            /* Only after it has actually MOVED. Reels 2-4 sit still through
+               their start delay, and treating that as "settled" made every
+               reel look like it stopped on frame 9. */
+            if (last[i] !== undefined && Math.abs(y - last[i]) > 0.01) moved[i] = true;
+            if (moved[i] && last[i] !== undefined && Math.abs(y - last[i]) < 0.01 && settleFrame[i] < 0) {
+              settleFrame[i] = f;
+            }
+            last[i] = y;
+          });
+          f++;
+          if (performance.now() - t0 < 2600) requestAnimationFrame(tick);
+          else resolve({ settleFrame, travelled: first.map((y, i) => Math.abs(y - last[i])) });
+        };
+        requestAnimationFrame(tick);
+      }),
+  );
+
+  // Each reel actually scrolled a long way, rather than cutting to the result.
+  for (const d of track.travelled) {
+    expect(d, `a reel only moved ${d.toFixed(0)}px — that is not a spin`).toBeGreaterThan(200);
+  }
+  // And they stopped in order. This is the signature of the whole thing: the
+  // last reel landing is what makes it a result.
+  const [a, b, c, d] = track.settleFrame;
+  expect([a, b, c, d].every((n) => n > 0), "a reel never settled").toBe(true);
+  expect(a).toBeLessThan(b);
+  expect(b).toBeLessThan(c);
+  expect(c).toBeLessThan(d);
 });

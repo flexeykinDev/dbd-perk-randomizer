@@ -208,7 +208,15 @@ export function ObsOverlay() {
         // piece before this, which is why the surface that goes out live on
         // a stream was the one with no test looking at it.
         data-obs-piece={perk.slug}
-        {...entranceMotion(options.entrance, index)}
+        /* A reel provides its own motion — the strip scrolling and braking IS
+           the entrance. Letting the `spin` entrance also translate the whole
+           card means two vertical motions at once, and the wells visibly
+           arrive at different heights while their symbols are still moving.
+           Every other entrance is a different gesture and layers fine. */
+        {...entranceMotion(
+          options.frame === "slots" && options.entrance === "spin" ? "none" : options.entrance,
+          index,
+        )}
         className={cn(
           "flex flex-col items-center gap-1.5",
           pos && "absolute -translate-x-1/2 -translate-y-1/2",
@@ -259,6 +267,8 @@ export function ObsOverlay() {
             size={iconSize}
             src={perk.icon}
             alt={perk.name[state!.language]}
+            index={index}
+            spin={options.entrance !== "none"}
           />
         )}
         {options.showNames && (
