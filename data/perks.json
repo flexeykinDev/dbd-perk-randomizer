@@ -396,12 +396,13 @@
     "role": "survivor",
     "name": {
       "en": "Boon: Steadfast",
-      "ru": "Дар: Непоколебимость"
+      "ru": "Дар: непоколебимость"
     },
     "character": "Aurora",
     "icon": "/perks/survivor/boon-steadfast.webp",
     "tags": [
       "generator",
+      "aura",
       "totems"
     ],
     "addedAt": "2026-08-26T03:38:19.039Z"
@@ -3454,7 +3455,7 @@
     "role": "killer",
     "name": {
       "en": "Hex: Under Your Thumb",
-      "ru": "Порча: В твоей власти"
+      "ru": "Порча: в твоей власти"
     },
     "character": "Judgment",
     "icon": "/perks/killer/hex-under-your-thumb.webp",
