@@ -594,7 +594,14 @@
     "descriptionRuRaw": "Когда чините генератор не менее 1 сек., вы видите его ауру. Когда вы прячетесь в шкафчике, убийца получает оповещение о генераторе. Перезарядка: 25/20/15 сек."
   },
   "repressed-alliance": {
-    "description": "You are accustomed to being hunted by malicious forces, and you have begun using it to your advantage. After repairing Generators for a total of 55/50/45 seconds, Repressed Alliance activates: Press the Active Ability button to call upon The Entity to block the Generator you are currently repairing for 15 seconds, after which Repressed Alliance deactivates. The Aura of the blocked Generator is revealed to all Survivors in white. Repressed Alliance can only be triggered when no other Survivors are repairing your Generator.",
+    "description": "You are accustomed to being hunted by malicious forces, and you have begun using it to your advantage. After repairing Generators for a total of 40/35/30 seconds, Repressed Alliance activates: Press the Active Ability button to call upon The Entity to block the Generator you are currently repairing for 15 seconds, after which Repressed Alliance deactivates. The Aura of the blocked Generator is revealed to all Survivors in white. Repressed Alliance can only be triggered when no other Survivors are repairing your Generator.",
+    "descriptionRu": {
+      "full": "Если вы в одиночку ремонтируете генераторы в течение 40/35/30 сек., нажмите кнопку способности, чтобы заблокировать ремонтируемый генератор на 15 сек. Аура заблокированного генератора видна всем выжившим.",
+      "core": [
+        "Ремонт генераторов в одиночку суммарно **40/35/30 сек.** активирует перк.",
+        "Блокирует ремонтируемый генератор на **15 сек.**"
+      ]
+    },
     "descriptionRuRaw": "Если вы в одиночку ремонтируете генераторы в течение 55/50/45 сек., нажмите E, чтобы заблокировать генератор на 30 сек."
   },
   "residual-manifest": {
@@ -772,7 +779,14 @@
     "descriptionRuRaw": "Вы получаете 90/95/100% эффекта \"Спешка\", когда пригнулись. \"Спешка\" ускоряет движение убийц и выживших."
   },
   "vigil": {
-    "description": "\"You watch over your friends, even in dire situations.\" You recover 30/35/40 % faster from the following: The Blindness, Broken, Exhausted, Exposed, Haemorrhage, Hindered, Mangled, and Oblivious Status Effects. Vigil extends its effect to all Survivors within 16 metres of your location and lingers for 15 seconds after leaving its Area of Effect.Survivors can only be affected by one instance of Vigil at a time. \"I am gonna be here when you wake up. You are gonna make it.\" — Quentin Smith",
+    "description": "\"You watch over your friends, even in dire situations.\" You recover 20/25/30 % faster from the Exhausted Status Effect. Vigil extends its effect to all Survivors within 16 metres of your location and lingers for 15 seconds after leaving its Area of Effect. Survivors can only be affected by one instance of Vigil at a time. \"I am gonna be here when you wake up. You are gonna make it.\" — Quentin Smith",
+    "descriptionRu": {
+      "full": "Все выжившие в радиусе 16 м от вас теряют эффект «Усталость» на 20/25/30 % быстрее. После выхода из радиуса эффект сохраняется ещё 15 сек. На выжившего действует только один «Дозор» одновременно.",
+      "core": [
+        "Выжившие в радиусе **16 м** теряют «Усталость» на **20/25/30 %** быстрее.",
+        "После выхода из радиуса эффект длится ещё **15 сек.**"
+      ]
+    },
     "descriptionRuRaw": "Все выжившие в радиусе 16м от вас: теряют эффект \"Слепота\" на 44/55/66% быстрее; теряют эффект \"Ослабление\" на 44/55/66% быстрее; теряют эффект \"Усталость\" на 44/55/66% быстрее; теряют эффект \"Уязвимость\" на 44/55/66% быстрее; теряют эффект \"Кровотечение\" на 44/55/66% быстрее; теряют эффект \"Замедление\" на 44/55/66% быстрее; теряют эффект \"Травма\" на 44/55/66% быстрее; теряют эффект \"Забывчивость\" на 44/55/66% быстрее; Когда вы отойдете, эффект сохранится еще на 15 сек."
   },
   "visionary": {
