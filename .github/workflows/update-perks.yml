@@ -114,6 +114,16 @@ jobs:
           npm test
           npm run build
 
+      # The scrape trusts the wiki, and the wiki lags BHVR. On 1 September the
+      # 10.1.1 notes changed two perks and a scrape that day returned the old
+      # numbers with nothing to say anything was wrong. This does not parse the
+      # notes — it just says whether a patch landed that the wiki may not have
+      # caught up with, so whoever reviews the PR knows to look.
+      - name: Has BHVR shipped a patch the wiki may not have?
+        id: patches
+        continue-on-error: true
+        run: npx tsx scripts/check-patch-notes.ts | tee patch-notes.txt
+
       - name: Classify the diff (new entries vs changes to existing ones)
         id: classify
         if: steps.worth.outputs.any == 'true'
@@ -153,6 +163,19 @@ jobs:
             fi
             echo
             cat scrape-diff-summary.md
+            if [ -s patch-notes.txt ] && grep -q "::warning::" patch-notes.txt; then
+              echo
+              echo "### Patch notes to check"
+              echo
+              echo "BHVR has shipped a patch since the last scrape, and the wiki may not"
+              echo "reflect it yet. If a perk changed and the wiki still shows the old"
+              echo "numbers, correct it in \`data/overrides/perks.json\` — that is superseded"
+              echo "automatically once the wiki agrees."
+              echo
+              echo '```'
+              sed 's/::warning:://' patch-notes.txt
+              echo '```'
+            fi
             echo
             echo "---"
             echo
