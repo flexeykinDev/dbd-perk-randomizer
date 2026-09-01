@@ -1,6 +1,6 @@
 {
   "a-place-for-us": {
-    "description": "While healing an another Survivor, both you and the healed Survivor gain Elusive Status Effect. When you finish healing the Obsession, both you and the Obsession gain Elusive Status Effect for 20/25/30 seconds. Reduces your chance of becoming the initial Obsession by reducing the default value by -100 %.The Killer can only be obsessed with one Survivor at a time.\"I understand computers… systems. Problems. But this… I wonder if I’ll ever understand.\" — Kwon Tae-young",
+    "description": "While healing an another Survivor, both you and the healed Survivor gain Elusive Status Effect. When you finish healing the Obsession, both you and the Obsession gain Elusive Status Effect for 20/25/30 seconds. Reduces your chance of becoming the initial Obsession by reducing the default value by -100 %.The Killer can only be obsessed with one Survivor at a time. \"I understand computers… systems. Problems. But this… I wonder if I’ll ever understand.\" — Kwon Tae-young",
     "descriptionRuRaw": "Если лечите другого выжившего, вы оба получаете эффект \"Ускользание\". Когда завершаете лечение объекта одержимости, вы оба получаете эффект \"Ускользание\" на 20/25/30 сек.. В начале матча шанс, что убийца будет одержим вами, уменьшается. Ускользающие выжившие: ауры скрыты; не оставляют следы-трещины; не оставляют лужи крови; не стонут от боли"
   },
   "ace-in-the-hole": {
@@ -118,7 +118,7 @@
     "descriptionRuRaw": "Когда вы стоите рядом с тотемом, нажмите Е, чтобы благословить его и создать уникальный дарующий тотем со всеми вашими дарами. Выжившие в радиусе действия этого тотема: не оставляют следы-трещины; убийца не может видеть их ауры. После выхода из этой области эффект сохраняется еще 2/3/4 сек.."
   },
   "boon-steadfast": {
-    "description": "Press and hold the Active Ability button on a Dull or Hex Totem to bless it and create a Boon Totem.All Survivors within 24 metres hear soft chimes ringing out and benefit from its Boon Effects: Generators within this Boon's range: Regress -50 % slower. Survivors repair them +8/9/10 % faster. Survivors can only be affected by one instance of Boon: Steadfast at a time. Only one Totem can be blessed by your Boon Perks at a time and all of their effects are active on the same Boon Totem.",
+    "description": "Press and hold the Active Ability button on a Dull or Hex Totem to bless it and create a Boon Totem.All Survivors within 24 metres hear soft chimes ringing out and benefit from its Boon Effects: Generators within this Boon's range: Regress -50 % slower. Survivors repair them +8/9/10 % faster. Survivors see their auras while inside the Boon's range. Survivors can only be affected by one instance of Boon: Steadfast at a time. Only one Totem can be blessed by your Boon Perks at a time and all of their effects are active on the same Boon Totem. \"That which thine hands deliver shall prosper, for thine hands are guided by faith.\" — (Enlightenments, 2:10)",
     "descriptionRu": {
       "full": "Находясь рядом с тотемом, используйте кнопку особой способности, чтобы благословить его и создать уникальный тотем со всеми вашими Дарами. Генераторы в пределах Дара регрессируют на 50 % медленнее и чинятся на 8/9/10 % быстрее. Выжившие в пределах Дара видят ауры затронутых им генераторов.",
       "core": [
@@ -323,7 +323,7 @@
     "descriptionRuRaw": "Если вы здоровы, быстрые прыжки ускоряются на 20%. После быстрого прыжка перезарядка: 40/35/30 сек.."
   },
   "five-moves-ahead": {
-    "description": "This perk activates while you are being chased by the Killer or are inside the Killer's Terror Radius: After you drop a Pallet, you start moving 50 % earlier. See the auras of the 5 closest Pallets and Windows. This perk goes on a 40/35/30 seconds cool-down when you drop a Pallet.\"Every problem has a solution. It’s only a question of complexity.\" — Kwon Tae-young",
+    "description": "This perk activates while you are being chased by the Killer or are inside the Killer's Terror Radius: After you drop a Pallet, you start moving 50 % earlier. See the auras of the 5 closest Pallets and Windows. This perk goes on a 40/35/30 seconds cool-down when you drop a Pallet while this perk is activated. \"Every problem has a solution. It’s only a question of complexity.\" — Kwon Tae-young",
     "descriptionRuRaw": "Если вы находитесь в радиусе террора убийцы или он преследует вас: вы видите ауры ближайших досок и окон (5); после опрокидывания доски вы начинаете двигаться на 50% раньше; после опрокидывания доски начинается перезарядка: 40/35/30 сек.."
   },
   "fixated": {
@@ -355,7 +355,7 @@
     "descriptionRuRaw": "Когда вы чините генератор совместно с выжившим, по завершении ремонта выжившие, участвовавшие в этом процессе, начинают чинить на 5% быстрее в течение 100/110/120 сек.."
   },
   "fruits-of-your-labor": {
-    "description": "Whenever a Generator is completed, gain a token. Whenever you finish repairing a Generator, for each token this perk has: Gain +5 % Haste Status Effect for 2 seconds. Gain 10/15/20 % healing progress.",
+    "description": "Whenever a Generator is completed, gain a token. Whenever you finish repairing a Generator, for each token this perk has: Gain +5 % Haste Status Effect for 2 seconds. Gain 10/15/20 % healing progress. \"And as the final brick was laid upon the walls of Stellanatis, the people rejoiced.\" — (Kelglen’s Declaration, 9:9)",
     "descriptionRu": {
       "full": "Каждый раз, когда завершается починка генератора, вы получаете 1 жетон. Каждый раз, когда вы чините генератор, за каждый жетон вы получаете «Спешку» в 5 % на 2 секунды и 10/15/20 % прогресса лечения.",
       "core": [
@@ -622,7 +622,7 @@
     "descriptionRuRaw": "В пределах 56м от места, где убийца поднял и понес выжившего, вы видите ауры обычных и секущих крюков. Вы можете ломать крюки. Перезарядка: 70/65/60 сек.."
   },
   "salvation-s-cry": {
-    "description": "When the Killer starts chasing you: You see the auras of other Survivors for 1/2/3 seconds. Survivors not being chased see your aura for 5 seconds Survivors not being chased see the Killer's aura for 5 seconds",
+    "description": "When the Killer starts chasing you: You see the auras of other Survivors for 1/2/3 seconds. Survivors not being chased see your aura for 5 seconds Survivors not being chased see the Killer's aura for 5 seconds \"May you see as the stars see.\" — (Auroran Blessing)",
     "descriptionRu": {
       "full": "Каждый раз, когда убийца начинает погоню за вами, вы видите ауры других выживших на 1/2/3 секунды, а выжившие вне погони видят вашу ауру и ауру убийцы на 5 секунд.",
       "core": [
@@ -800,7 +800,7 @@
     "descriptionRuRaw": "Находясь в подвале, вы можете самостоятельно слезть с крюка. Когда вас снимают или вы освобождаетесь сами, вы видите ауру убийцы в течение 16/18/20 сек.."
   },
   "wide-open-throttle": {
-    "description": "Fast-vaulting a Pallet triggers the following effects: Gain 10/12.5/15 % Haste Status Effect for 3 seconds. The Pallet is immediately reset, blocked by the Entity and revealed to all Survivors for 60 seconds. This perk then goes on a 60 second cool-down.\"Nothing but the open road. Just the way I like it.\" — Shane Wiigwaas",
+    "description": "Fast-vaulting a Pallet triggers the following effects: Gain 10/12.5/15 % Haste Status Effect for 3 seconds. The Pallet is immediately reset, blocked by the Entity and revealed to all Survivors for 60 seconds. This perk then goes on a 60 second cool-down. \"Nothing but the open road. Just the way I like it.\" — Shane Wiigwaas",
     "descriptionRuRaw": "Когда быстро перепрыгиваете через доски: вы получаете 10/12.5/15% эффекта \"Спешка\" на 3 сек.; доски обновляются и блокируются на 60 сек., а все выжившие в это время видят их ауру. Перезарядка: 60 сек. \"Спешка\" ускоряет движение убийц и выживших."
   },
   "will-to-live": {
@@ -883,7 +883,7 @@
     "descriptionRuRaw": "Когда вы повреждаете генератор, его прогресс снижается на 30/40/50% быстрее в течение 70 сек. Если за это время чинящий его выживший хорошо проходит базовую проверку реакции, вы получаете уведомление."
   },
   "celestial-witness": {
-    "description": "Every 30 seconds, if the Obsession is 40 metres away from you, you see their aura for 2/2.5/3 seconds. Otherwise, the farthest Survivor becomes the Obsession.",
+    "description": "Every 30 seconds, if the Obsession is 40 metres away from you, you see their aura for 2/2.5/3 seconds. Otherwise, the farthest Survivor becomes the Obsession. \"And so the heretics huddled, cowardly, in the night; but upon Judgment’s arrival, It saw them all, and punished them.\" — (Witness to Koenrad, ch. 32)",
     "descriptionRu": {
       "full": "Раз в 30 секунд, когда одержимость находится хотя бы в 40 метрах от вас, вы видите её ауру на 2/2.5/3 секунды. Если одержимость за пределами 40 метров, новой одержимостью становится самый дальний от вас выживший.",
       "core": [
@@ -1098,7 +1098,7 @@
     "descriptionRuRaw": "Если этот тотем тусклый, то он загорается, когда выживший ослепляет или оглушает вас 4/3/2 раза раз. Когда вас ослепляет или оглушает выживший, которого вы не переносите, он слепнет на 1.5 сек."
   },
   "hex-under-your-thumb": {
-    "description": "When a Survivor gains a Hook State, Hex: Under Your Thumb activates on a random Dull Totem: Running Survivors cannot gain more than 25/20/15 % Haste at once. Whenever a running Survivor within 32 metres gains Haste, the Survivor's location is revealed to you for 4 seconds. The Hex Effects persist until the Hex Totem is either blessed or cleansed by a Survivor, disabling it for the remainder of the Trial.",
+    "description": "When a Survivor gains a Hook State, Hex: Under Your Thumb activates on a random Dull Totem: Running Survivors cannot gain more than 25/20/15 % Haste at once. Whenever a running Survivor within 32 metres gains Haste, the Survivor's location is revealed to you for 4 seconds. The Hex Effects persist until the Hex Totem is either blessed or cleansed by a Survivor, disabling it for the remainder of the Trial. \"They will run, but Judgment will make the very ground they tread turn to ash and smoke.\" — (Visions of Gerhardt, ch. 1)",
     "descriptionRu": {
       "full": "Когда выживший впервые оказывается на крюке, загорается тусклый тотем. Вы получаете оповещение каждый раз, когда выживший получает «Спешку» в 32 метрах от вас. Эффективность «Спешки» выживших не может превышать 25/20/15 %.",
       "core": [
@@ -1165,7 +1165,7 @@
     "descriptionRuRaw": "Когда выживший спугивает ворону в пределах 36м от вас, он получает эффект \"Усталость\" на 6/8/10 сек.. Перезарядка: 5 сек. Усталые выжившие не могут использовать навыки, которые вызывают \"Усталость\"."
   },
   "lay-waste": {
-    "description": "Damaging a Generator makes it regress +2 % faster for each Charge it has. This perk has a cool-down of 55/50/45 seconds after damaging a Generator.",
+    "description": "Damaging a Generator makes it regress +2 % faster for each Charge it has. This perk has a cool-down of 55/50/45 seconds after damaging a Generator. \"They built hypercomputers and skyscrapers and quantum networks, but all of those things trembled and fell under the power of Judgment’s light.\" — (Witness to Koenrad, ch. 8)",
     "descriptionRu": {
       "full": "Каждый раз, когда вы повреждаете генератор, за каждый имеющийся в нём заряд он регрессирует на 2 % быстрее. Время перезарядки: 55/50/45 секунд.",
       "core": [
