@@ -396,7 +396,7 @@
     "role": "survivor",
     "name": {
       "en": "Boon: Steadfast",
-      "ru": "Дар: Непоколебимость"
+      "ru": "Дар: непоколебимость"
     },
     "character": "Aurora",
     "icon": "/perks/survivor/boon-steadfast.webp",
@@ -3455,7 +3455,7 @@
     "role": "killer",
     "name": {
       "en": "Hex: Under Your Thumb",
-      "ru": "Порча: В твоей власти"
+      "ru": "Порча: в твоей власти"
     },
     "character": "Judgment",
     "icon": "/perks/killer/hex-under-your-thumb.webp",
