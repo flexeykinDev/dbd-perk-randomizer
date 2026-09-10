@@ -37,10 +37,13 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      # No secrets: the site publishes to these rooms from the browser
-      # without signing in, so this uses exactly the access the app already
-      # has. Nothing here can reach anything the page could not.
+      # Listing rooms needs FIREBASE_DB_SECRET: the database rules refuse to
+      # enumerate room codes to anyone, since a code is what lets you write
+      # to that streamer's overlay. Without the secret the script skips
+      # cleanly rather than failing — see scripts/prune-obs-rooms.ts.
       - name: Prune
+        env:
+          FIREBASE_DB_SECRET: ${{ secrets.FIREBASE_DB_SECRET }}
         run: >
           npx tsx scripts/prune-obs-rooms.ts
           --days=${{ github.event.inputs.days || '14' }}

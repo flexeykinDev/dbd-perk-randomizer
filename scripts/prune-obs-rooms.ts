@@ -13,11 +13,17 @@
 // case is an overlay showing "waiting for a build" until they roll once,
 // and it heals itself.
 //
-// No credentials: the site publishes to these rooms from the browser
-// without signing in, so the database rules already allow unauthenticated
-// writes to this path — the same access this uses. That is a deliberate
-// property of the design (a room code is the capability), not an oversight
-// this script depends on.
+// Needs a credential, because it LISTS rooms and nothing else may. A room
+// code is the capability: the overlay reads and writes the one room it knows
+// the code of, and the database rules refuse to enumerate them — otherwise
+// anyone could list every streamer's code and write to their overlay. This
+// used to run with no credentials only because the database was still in
+// Firebase's open test mode, which is exactly the hole that listing was.
+//
+// So: FIREBASE_DB_SECRET (a Realtime Database secret, Firebase console →
+// Project settings → Service accounts → Database secrets) if it is set, and
+// otherwise a clean skip. Being refused is the rules working, not a failure
+// worth a red run every Monday.
 //
 // Dry-run unless --delete is passed. Deleting from a live database is not
 // something to do as a side effect of running a script to see what it
@@ -47,7 +53,17 @@ async function main() {
   const apply = process.argv.includes("--delete");
   const cutoff = Date.now() - maxAgeDays * 24 * 60 * 60 * 1000;
 
-  const res = await fetch(`${DB}/${ROOMS_PATH}.json`);
+  const secret = process.env.FIREBASE_DB_SECRET;
+  const auth = secret ? `?auth=${encodeURIComponent(secret)}` : "";
+
+  const res = await fetch(`${DB}/${ROOMS_PATH}.json${auth}`);
+  if ((res.status === 401 || res.status === 403) && !secret) {
+    console.log(
+      "::notice::Skipped — the database rules refuse to list rooms without a credential. " +
+        "Set the FIREBASE_DB_SECRET repository secret to enable pruning.",
+    );
+    return;
+  }
   if (!res.ok) throw new Error(`${res.status} ${res.statusText} reading ${ROOMS_PATH}`);
   const rooms: Record<string, Room> | null = await res.json();
   if (!rooms) {
@@ -86,7 +102,7 @@ async function main() {
 
   let deleted = 0;
   for (const [code] of stale) {
-    const del = await fetch(`${DB}/${ROOMS_PATH}/${code}.json`, { method: "DELETE" });
+    const del = await fetch(`${DB}/${ROOMS_PATH}/${code}.json${auth}`, { method: "DELETE" });
     if (del.ok) {
       deleted++;
     } else {

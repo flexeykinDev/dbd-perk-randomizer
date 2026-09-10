@@ -110,7 +110,9 @@ same browser.
 
 If you fork this and want cross-profile sync on your own deploy, create a
 Realtime Database, paste your `firebaseConfig` into `lib/firebase.ts`, and
-restrict writes to 8-character room codes:
+publish these rules (the ones the live site runs). A room is reachable only
+by its code, room codes cannot be listed, and the Daily Challenge counter can
+only go up by one:
 
 ```json
 {
@@ -119,13 +121,26 @@ restrict writes to 8-character room codes:
     ".write": false,
     "obs-rooms": {
       "$room": {
-        ".read": "$room.length == 8",
-        ".write": "$room.length == 8 && newData.hasChildren(['role', 'perks', 'language', 'updatedAt'])"
+        ".read": "$room.matches(/^[A-HJ-NP-Z2-9]{8}$/)",
+        ".write": "$room.matches(/^[A-HJ-NP-Z2-9]{8}$/)",
+        ".validate": "newData.hasChildren(['role', 'language', 'updatedAt'])"
+      }
+    },
+    "daily-challenge": {
+      "$day": {
+        "count": {
+          ".read": true,
+          ".write": "$day.matches(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)",
+          ".validate": "newData.isNumber() && newData.val() == (data.exists() ? data.val() : 0) + 1"
+        }
       }
     }
   }
 }
 ```
+
+Don't leave the database in Firebase's test mode: it is readable and writable
+by anyone, and it locks itself entirely after 30 days.
 
 A web app's Firebase config is not a secret; access is restricted by those
 rules, not by hiding the key.

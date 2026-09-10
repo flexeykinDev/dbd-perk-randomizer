@@ -5,12 +5,15 @@ import { getDatabase, type Database } from "firebase/database";
 
 // This config is meant to be public — Firebase's client SDK is designed to
 // run entirely in the browser with no secret key, and access control is
-// enforced by the Realtime Database's own security rules (scoped to
-// obs-rooms/<8-char-room-code>, see the project's Firebase console), not by
-// hiding these values. The only thing on this site that touches Firebase is
-// the OBS Overlay's cross-profile sync — see lib/obs-sync.ts for why that
-// needs an external relay at all (OBS's Browser Source is a separate,
-// cookie-less Chromium profile from whatever browser the main tab runs in).
+// enforced by the Realtime Database's own security rules, not by hiding
+// these values. The rules are in the README and grant exactly two things:
+// one OBS room, reachable only by its 8-character code (codes cannot be
+// listed), and the Daily Challenge counter, which can only go up by one.
+//
+// Two features use it: the OBS Overlay's cross-profile sync — see
+// lib/obs-sync.ts for why that needs an external relay at all (OBS's Browser
+// Source is a separate, cookie-less Chromium profile from whatever browser
+// the main tab runs in) — and the Daily Challenge count in daily-count.ts.
 const firebaseConfig = {
   apiKey: "AIzaSyCgYEjap8EhLkgDqEHcmhDz5t91dkg-s5k",
   authDomain: "dbd-perk-randomizer.firebaseapp.com",
