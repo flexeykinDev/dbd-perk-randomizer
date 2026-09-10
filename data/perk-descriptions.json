@@ -9,7 +9,7 @@
   },
   "adrenaline": {
     "description": "\"You are fuelled by unexpecting energy when on the verge of escape.\" Once the Exit Gates are powered, Adrenaline activates and triggers the following effects: Heals you to the next Health State. Grants a +50 % Haste Status Effect for 4 seconds. Adrenaline can be used while Exhausted and ignores an existing Status Effect.Adrenaline causes the Exhausted Status Effect for 60/50/40 seconds after use.",
-    "descriptionRuRaw": "Если вы смертельно или просто ранены в момент завершения ремонта всех генераторов, то мгновенно исцеляетесь. После этого игнорируется эффект \"Усталость\": вы получаете 50% эффекта \"Спешка\" на 3 сек. получаете эффект \"Усталость\" на 60/50/40 сек.. Усталые выжившие не могут использовать навыки, которые вызывают \"Усталость\". \"Спешка\" ускоряет движение убийц и выживших"
+    "descriptionRuRaw": "Если вы смертельно или просто ранены в момент завершения ремонта всех генераторов, то мгновенно исцеляетесь. После этого игнорируется эффект \"Усталость\": вы получаете 50% эффекта \"Спешка\" на 4 сек. получаете эффект \"Усталость\" на 60/50/40 сек.. Усталые выжившие не могут использовать навыки, которые вызывают \"Усталость\". \"Спешка\" ускоряет движение убийц и выживших"
   },
   "aftercare": {
     "description": "Unlocks potential in your Aura-reading ability: You see the Auras of the 1/2/3 most recent Survivor(s) that helped you or vice versa: Rescued from a Hook. Completed a Healing action on. They also see your Aura. Aftercare resets its effects when you are hooked by the Killer. \"A Mercy that Rips the Storm.Oil work to honour my best buddies who happen to be the best musicians I know. Their first album is still my favourite. It got me through a dark time in my life.\" — Jeff, oil on canvas, 16x16",
@@ -35,7 +35,7 @@
   },
   "apocalyptic-ingenuity": {
     "description": "\"You salvage what little there is to defend your team.\" Unlocks potential in your Aura-reading ability: The Auras of broken Pallets are revealed to you within 24/28/32 metres. After unlocking or rummaging through 1 Chest, Apocalyptic Ingenuity gains a special ability.While standing next to the location of a broken Pallet, press and hold the Active Ability button for 3 seconds to use it: Rebuilds it as a Fragile Pallet. Fragile Pallets instantly break when dropped. \"Without the fences, this place is worthless.\" — Rick Grimes",
-    "descriptionRuRaw": "Обыскав или открыв сундуки 2 раз(а), вы можете встать рядом со сломанной доской и удерживать Е в течение 4 сек., чтобы создать хрупкую доску. Вы видите ауры сломанных досок в радиусе 24/28/32 м."
+    "descriptionRuRaw": "Обыскав или открыв сундуки 1 раз(а), вы можете встать рядом со сломанной доской и удерживать Е в течение 3 сек., чтобы создать хрупкую доску. Вы видите ауры сломанных досок в радиусе 24/28/32 м."
   },
   "appraisal": {
     "description": "\"You have a careful eye that notices what many overlook.\" Start the Trial with 4 Tokens.While standing next to an unlocked and empty Chest, press and hold the Interaction button to perform the Rummage action: Grants the ability to retrieve an extra Item from that Chest. This consumes -1 Token and is limited to twice per Chest. Increases the Rummaging speed by 40/60/80 %.",
@@ -126,7 +126,8 @@
         "Генераторы в зоне Дара регрессируют на **50 %** медленнее и чинятся на **8/9/10 %** быстрее.",
         "Выжившие в зоне Дара видят ауры затронутых генераторов."
       ]
-    }
+    },
+    "descriptionRuRaw": "Находясь рядом с тотемом, используйте Е, чтобы его благословить и создать уникальный дарующий тотем, впитывающий в себя все ваши дары. Генераторы в пределах действия такого тотема: портятся на 50% медленнее; выжившие ремонтируют их на 8/9/10% быстрее. Выжившие в пределах действия дарующего тотема видят ауры подверженных его воздействию генераторов"
   },
   "borrowed-time": {
     "description": "\"You are fuelled with an unexpected energy when saving an ally from a hook.\" Whenever you unhook another Survivor, they benefit from the following effects: Extends the duration of the Endurance Status Effect by 6/8/10 seconds to 16/18/20 seconds. Endurance is cancelled prematurely when performing a Conspicuous Action of any kind. Extends the duration of the Haste Status Effect by +10 seconds to 20 seconds. \"Probably stings like hell, but it ain't gonna kill ya. Up and at 'em soldier. Time to move!\" — Bill Overbeck",
@@ -182,7 +183,7 @@
   },
   "clean-break": {
     "description": "\"At the end of the day, everyone has to look out for themselves.\" After completing a Healing action on another Survivor, Clean Break activates.Press the Active Ability button while being healed by another Survivor to trigger the following effects: Suffer from the Broken Status Effect. You are automatically healed 1 Health State after 75/60/45 seconds. This effect is cancelled prematurely if you enter the Dying State. Clean Break does not activate if you already suffer from Broken.Clean Break deactivates after healing you. \"I'll be fine! Don't stick your neck out for me.\" — Taurie Cain",
-    "descriptionRuRaw": "Когда вы завершаете лечение другого выжившего, пока кто-то лечит вас, нажмите Е, чтобы получить эффект \"Ослабление\". Если вы не получите смертельного ранения в течение 80/70/60 сек., то мгновенно исцелитесь. Ослабленных выживших нельзя вылечить."
+    "descriptionRuRaw": "Когда вы завершаете лечение другого выжившего, пока кто-то лечит вас, нажмите Е, чтобы получить эффект \"Ослабление\". Если вы не получите смертельного ранения в течение 75/60/45 сек., то мгновенно исцелитесь. Ослабленных выживших нельзя вылечить."
   },
   "come-and-get-me": {
     "description": "\"You'll risk your life to save others.\" After unhooking a Survivor, while crouched and stationary, press the Active Ability button to trigger the following effects: Suppresses the creation of Grunts of Pain, Pools of Blood, and Scratch Marks for all injured or dying Survivors within 24 metres of your location for the next 10/12.5/15 seconds. Causes you to scream and reveal your Aura to the Killer for 5 seconds. \"We're the ones who live.\" — Rick Grimes",
@@ -244,7 +245,7 @@
   },
   "deliverance": {
     "description": "After safely unhooking another Survivor, Deliverance activates: Grants the ability to perform a successful Self-Unhook at any point during the first Hook Stage. Causes the Broken Status Effect for 160/140/120 seconds after unhooking yourself. Deliverance cannot be used during the second Hook Stage or if you are hooked as the Last Survivor Standing.Deliverance is disabled for the remainder of the Trial after use. \"I was raised by a strict man who taught me how to make the best of a bad situation.\" — Adam Francis",
-    "descriptionRuRaw": "Один раз за матч, когда безопасно снимаете товарища с крюка, вы получаете возможность слезть с крюка самостоятельно. Использовав эту возможность, вы получаете эффект \"Ослабление\" на 100/80/60 сек.. Ослабленных выживших нельзя вылечить."
+    "descriptionRuRaw": "Один раз за матч, когда безопасно снимаете товарища с крюка, вы получаете возможность слезть с крюка самостоятельно. Использовав эту возможность, вы получаете эффект \"Ослабление\" на 160/140/120 сек.. Ослабленных выживших нельзя вылечить."
   },
   "desperate-measures": {
     "description": "\"You refuse to fail, even during your darkest hour.\" Whenever any Survivor, including yourself, is not in the Healthy State, Desperate Measures activates: Increases your Action speeds for Healing and Unhooking by a stack-able 16/18/20 % per injured, dying, or hooked Survivor, up to a maximum of 64/72/80 %. \"When they come with a wrecking ball, build stronger walls.\" — Felix Richter",
@@ -362,7 +363,8 @@
         "За каждый завершённый генератор — **1 жетон**.",
         "Когда вы чините генератор, за каждый жетон: «Спешка» **5 %** на **2 секунды** и **10/15/20 %** прогресса лечения."
       ]
-    }
+    },
+    "descriptionRuRaw": "Всякий раз при полной починке генератора вы получаете 1 жетон. Завершая ремонт генератора, вы за каждый жетон получаете: 5% эффекта \"Спешка\" на 2 сек. 10/15/20% к прогрессу лечения. \"Спешка\" ускоряет движение убийц и выживших."
   },
   "ghost-notes": {
     "description": "\"You know that the best breakdowns precede the biggest build-ups.\" While suffering from the Exhausted Status Effect, you benefit from the following effects: Causes your Scratch Marks to disappear +50 % faster. Increases your Recovery rate from that Status Effect by 5/7.5/10 %. Ghost Notes does not cause the Exhausted Status Effect. \"Let's take it to the bridge!\" — Vee Boonyasak",
@@ -495,7 +497,7 @@
   },
   "moment-of-glory": {
     "description": "\"A hero should always have the chance to make a comeback.\" After performing the Unlocking or Rummaging action on Chests a total of 1 time, Moment of Glory activates: When you become injured, you instantly suffer from the Broken Status Effect. You are automatically healed 1 Health State after 80/70/60 seconds. This effect is cancelled prematurely if you enter the Dying State. Moment of Glory does not activate if you already suffer from the Broken Status Effect.Moment of Glory deactivates after healing you. \"Never lose hope for a brighter tomorrow.\" — Trevor",
-    "descriptionRuRaw": "Обыскав или открыв сундуки (2), если вы получаете ранение и не имеете эффекта \"Ослабление\", то получаете эффект \"Ослабление\". Если вы не получаете урон в течение 80/70/60 сек., то мгновенно исцеляетесь. Ослабленных выживших нельзя вылечить."
+    "descriptionRuRaw": "Обыскав или открыв сундуки (1), если вы получаете ранение и не имеете эффекта \"Ослабление\", то получаете эффект \"Ослабление\". Если вы не будете смертельно ранены в течении 80/70/60 сек., то мгновенно исцеляетесь. Ослабленных выживших нельзя вылечить."
   },
   "no-mither": {
     "description": "\"Go on out, kid, it is just a scratch.Your thick blood coagulates practically instantly.\" You suffer permanently from the Broken Status Effect in exchange for the following benefits: Suppresses the creation of Pools of Blood. Suppresses your Grunts of Pain while in the Injured State or in the Dying State. Unlocks the Self-Recovery ability, allowing you to fully recover from the Dying State: Increases the Recovery speed by 15/20/25 %. \"I lost it. Just lamped him one. They went and banned me didn't they. Went t'pub afterwards, had a few pints and moved on to the next chapter. I couldn't be mithered with it all anyway, you know what I mean? Can't be arsed.\" — David King",
@@ -602,7 +604,7 @@
         "Блокирует ремонтируемый генератор на **15 сек.**"
       ]
     },
-    "descriptionRuRaw": "Если вы в одиночку ремонтируете генераторы в течение 55/50/45 сек., нажмите E, чтобы заблокировать генератор на 30 сек."
+    "descriptionRuRaw": "Если вы в одиночку ремонтируете генераторы в течение 40/35/30 сек., нажмите E, чтобы заблокировать генератор на 15 сек."
   },
   "residual-manifest": {
     "description": "A lifetime of chasing the darkness has taught you that the best disinfectant is light. After a successful Killer Blind, the Killer suffers from the Blindness Status Effect for 20/25/30 seconds. Residual Manifest grants the ability to rummage through an opened Chest once per Trial and will guarantee a basic Flashlight. \"I'll never see what Haddie sees. But so long as I'm with her, I know I'm safe.\" — Jordan Rois, Ravages of the Abyss Episode 5",
@@ -636,7 +638,8 @@
         "Когда убийца начинает погоню за вами, вы видите ауры других выживших **1/2/3 секунды**.",
         "Выжившие вне погони видят вашу ауру и ауру убийцы **5 секунд**."
       ]
-    }
+    },
+    "descriptionRuRaw": "Всякий раз, когда убийца начинает гнаться за вами: вы видите ауры других выживших в течение 1/2/3 сек.; непреследуемые выжившие видят вашу ауру в течение 5 сек.; непреследуемые выжившие видят ауру убийцы в течение 5 сек."
   },
   "scavenger": {
     "description": "\"Where others see junk, you see valuable improvised tools.\" While holding a depleted Toolbox, Scavenger activates: Succeeding at Great Repairing Skill Checks grants 1 Token, up to a maximum of 5 Tokens. Reaching the maximum number of Tokens automatically consumes them and fully recharges the Toolbox. Recharging a Toolbox will reduce your Repair speed by -50 % for the next 40/35/30 seconds. Scavenger grants the ability to rummage through an opened Chest once per Trial and will guarantee a basic Toolbox. \"It's amazing what people will throw away around here.\" — Gabriel Soma",
@@ -700,7 +703,7 @@
   },
   "sprint-burst": {
     "description": "Starting to run triggers Sprint Burst: Grants a +50 % Haste Status Effect for 2 seconds. Sprint Burst cannot be used while Exhausted.Sprint Burst causes the Exhausted Status Effect for 60/50/40 seconds. \"See you if you can catch up...\" — Meg Thomas",
-    "descriptionRuRaw": "Когда вы переходите на бег, то: получаете 50% эффекта \"Спешка\" на 3 сек. Получаете эффект \"Усталость\" на 60/50/40 сек.. \"Спешка\" ускоряет движение убийц и выживших. Усталые выжившие не могут использовать навыки, которые вызывают усталость."
+    "descriptionRuRaw": "Когда вы переходите на бег, то: получаете 50% эффекта \"Спешка\" на 2 сек. Получаете эффект \"Усталость\" на 60/50/40 сек.. \"Спешка\" ускоряет движение убийц и выживших. Усталые выжившие не могут использовать навыки, которые вызывают усталость."
   },
   "stake-out": {
     "description": "\"Getting close to the Killer fills you with determination.\" Staying in the Terror Radius without being chased grants +1 Token every 15 seconds, up to a maximum of 2/3/4 Tokens.While performing a skilful interaction that can trigger Skill Checks, you benefit from the following effects: Converts any Good Skill Check into a Great Skill Check. This consumes -1 Token. Increases the Progression bonus of those Great Skill Checks by +1 %. Stake Out does not apply to regular Great Skill Checks nor do they consume any Tokens. \"I had you, I had you on your knees. You're runnin' scared because we had you. We're gonna close this case!\" — Detective David Tapp",
@@ -744,7 +747,7 @@
   },
   "technician": {
     "description": "\"You are apt at handling machinery with the greatest care and precision.\" While repairing a Generator, the following effects apply: Reduces the audible range of all noises related to the Repair interaction by -16 metres. Increases the Progression penalty incurred when failing a Skill Check by 4/3/2 %. Suppresses the explosion of the Generator and the Loud Noise Notification usually triggered by that. \"I am gonna stealth this one.\" — Feng Min",
-    "descriptionRuRaw": "Пока вы чините генератор: радиус его шума уменьшается на 8 м. когда вы проваливаете базовую проверку ремонта, генератор не взрывается, но теряет на 5/4/3% прогресса больше."
+    "descriptionRuRaw": "Пока вы чините генератор: радиус его шума уменьшается на 16 м. когда вы проваливаете базовую проверку ремонта, генератор не взрывается, но теряет на 4/3/2% прогресса больше."
   },
   "tenacity": {
     "description": "\"There is nothing stopping you.\" Your ferocious tenacity in dire situations allows you to benefit from the following effects while in the Dying State: Grants the ability to recover while crawling. Grants a 30/40/50 % Haste Status Effect. Reduces the volume of Grunts of Pain by -75 %. Blocks your Aura from being read. \"What the hell is this? I'm taking this bastard down!\" — Detective David Tapp",
@@ -787,7 +790,7 @@
         "После выхода из радиуса эффект длится ещё **15 сек.**"
       ]
     },
-    "descriptionRuRaw": "Все выжившие в радиусе 16м от вас: теряют эффект \"Слепота\" на 44/55/66% быстрее; теряют эффект \"Ослабление\" на 44/55/66% быстрее; теряют эффект \"Усталость\" на 44/55/66% быстрее; теряют эффект \"Уязвимость\" на 44/55/66% быстрее; теряют эффект \"Кровотечение\" на 44/55/66% быстрее; теряют эффект \"Замедление\" на 44/55/66% быстрее; теряют эффект \"Травма\" на 44/55/66% быстрее; теряют эффект \"Забывчивость\" на 44/55/66% быстрее; Когда вы отойдете, эффект сохранится еще на 15 сек."
+    "descriptionRuRaw": "Все выжившие в радиусе 16м от вас: теряют эффект \"Слепота\" на 20/25/30% быстрее; теряют эффект \"Ослабление\" на 20/25/30% быстрее; теряют эффект \"Усталость\" на 20/25/30% быстрее; теряют эффект \"Уязвимость\" на 20/25/30% быстрее; теряют эффект \"Кровотечение\" на 20/25/30% быстрее; теряют эффект \"Замедление\" на 20/25/30% быстрее; теряют эффект \"Травма\" на 20/25/30% быстрее; теряют эффект \"Забывчивость\" на 20/25/30% быстрее; Когда вы отойдете, эффект сохранится еще на 15 сек.[1]"
   },
   "visionary": {
     "description": "\"You are remarkably focused on your means of escape.\" You benefit from the following permanent effect: The Auras of Generators are revealed to you within 32 metres. Visionary is temporarily deactivated for 20/18/16 seconds whenever a Generator is completed.",
@@ -831,7 +834,7 @@
   },
   "a-nurse-s-calling": {
     "description": "Unlocks potential in your Aura-reading ability: The Auras of Survivors being healed or healing themselves are revealed to you within 28/30/32 metres. \"Still attached to the fragments of her past life, she is drawn to those in need of help.\"",
-    "descriptionRuRaw": "В радиусе 28/30/32 м., вы видите ауры раненых выживших, которые лечатся сами или получают лечение."
+    "descriptionRuRaw": "В радиусе 28/30/32 м. вы видите ауры выживших, которые лечатся сами или получают лечение."
   },
   "agitation": {
     "description": "\"You get excited in anticipation of hooking your prey.\" While carrying a Survivor, Agitation activates: Increases your Carrying speed by 6/12/18 %. Increases your Terror Radius by +12 metres. \"At some point, the excitement of hooking one of us becomes more important than the desire to kill us.\"",
@@ -894,7 +897,7 @@
   },
   "call-of-brine": {
     "description": "\"Your psychic abilities influence technology in devastating ways.\" After performing the Damage Generator action on a Generator, Call of Brine applies its effects to it for 90 seconds: Increases its Regression speed to 130/140/150 % of the default value. Highlights its Aura to you in yellow. Triggers a Loud Noise Notification whenever a Survivor succeeds a Good Skill Check while repairing it.",
-    "descriptionRuRaw": "Когда вы повреждаете генератор, его прогресс снижается на 30/40/50% быстрее в течение 70 сек. Если за это время чинящий его выживший хорошо проходит базовую проверку реакции, вы получаете уведомление."
+    "descriptionRuRaw": "Когда вы повреждаете генератор, его прогресс снижается на 30/40/50% быстрее в течение 90 сек. Если за это время чинящий его выживший хорошо проходит базовую проверку реакции, вы получаете уведомление."
   },
   "celestial-witness": {
     "description": "Every 30 seconds, if the Obsession is 40 metres away from you, you see their aura for 2/2.5/3 seconds. Otherwise, the farthest Survivor becomes the Obsession. \"And so the heretics huddled, cowardly, in the night; but upon Judgment’s arrival, It saw them all, and punished them.\" — (Witness to Koenrad, ch. 32)",
@@ -904,7 +907,8 @@
         "Раз в **30 секунд**, если одержимость не ближе **40 метров**, её аура открывается вам на **2/2.5/3 секунды**.",
         "Если одержимость дальше **40 метров**, новой одержимостью становится самый дальний выживший."
       ]
-    }
+    },
+    "descriptionRuRaw": "Раз в 30 сек., если объект одержимости хотя бы в 40м от вас, вы видите его ауру в течение 2/2.5/3 сек.. В противном случает объектом of Obsession становится другой выживший, самый дальний от вас."
   },
   "corrupt-intervention": {
     "description": "Your prayers invoke a dark power that meddles with the Survivors' chances of survival. At the start of the Trial, the 3 Generators located farthest from you are blocked by The Entity for 80/100/120 seconds. Corrupt Intervention deactivates prematurely once the first Survivor is put into the Dying State. \"It shall be known across the land that the Gods curse the unfaithful.\" — (The Tablet of Adiris, 3.7)",
@@ -912,7 +916,7 @@
   },
   "coulrophobia": {
     "description": "\"Even those without a fear of clowns know to be terrified of you.\" Survivors inside your Terror Radius suffer from the following effects: Reduces all Healing speeds by 20/25/30 %. Increases the Pointer-Rotation speed of Healing Skill Checks by +50 %.",
-    "descriptionRuRaw": "Выжившие в вашем радиусе террора: лечатся на 30/40/50% медленнее; во время лечения индикатор базовой проверки реакции вращается на 50% быстрее."
+    "descriptionRuRaw": "Выжившие в вашем радиусе террора: лечатся на 20/25/30% медленнее; во время лечения индикатор базовой проверки реакции вращается на 50% быстрее."
   },
   "coup-de-grace": {
     "description": "As the end nears, you go in for the kill. Whenever a Generator is completed, Coup de Grâce gains +2 Tokens, up to a maximum of 10 Tokens per Trial: Increases the range of your next Lunge Attack by 70/75/80 %, while consuming -1 Token. Coup de Grâce can only hold a maximum of 5 Tokens at a time.",
@@ -1105,7 +1109,7 @@
   },
   "hex-thrill-of-the-hunt": {
     "description": "\"A Hex rooting its power on hope.The false hope of Survivors fills you with excitement and strengthens your Totems.\" Start the Trial with 5 Tokens, one for each Totem located in the environment: Reduces the Action speeds for Blessing and Cleansing by a stack-able 8/9/10 % per Token, up to a maximum of 40/45/50 %. Hex: Thrill of the Hunt loses -1 Token whenever a Totem is cleansed. The Hex Effects persist until the Hex Totem is either blessed or cleansed by a Survivor, disabling it for the remainder of the Trial.",
-    "descriptionRuRaw": "В начале матча загорается тусклый тотем. За каждый оставшийся тусклый или проклятый тотемы вы получаете жетоны (1 шт.). За каждый жетон скорость благословения и очищения тотемов снижается на 8/10/12%."
+    "descriptionRuRaw": "В начале матча загорается тусклый тотем. За каждый оставшийся тусклый или проклятый тотемы вы получаете жетоны (1 шт.). За каждый жетон скорость благословения и очищения тотемов снижается на 8/9/10%."
   },
   "hex-two-can-play": {
     "description": "\"A Hex that teaches those who mess with you a lesson.\" Anytime you are stunned or blinded by any Survivor a total of 4/3/2 times, and if there is not yet a Hex Totem already associated with Hex: Two Can Play and there is at least one Dull Totem remaining in the Trial Grounds, Hex: Two Can Play activates on a random Totem: Blinds all Survivors who stun or blind you for 1.5 seconds. This does not affect carried Survivors. The Hex Effects persist until the Hex Totem is either blessed or cleansed by a Survivor, disabling it for the remainder of the Trial. \"From now on, no more Mr Good Guy.\" — Chucky",
@@ -1120,7 +1124,8 @@
         "Оповещение каждый раз, когда выживший получает «Спешку» в **32 метрах** от вас.",
         "Эффективность «Спешки» выживших не выше **25/20/15 %**."
       ]
-    }
+    },
+    "descriptionRuRaw": "В первый раз, когда выживший оказывается на крюке, зажигается тусклый тотем. Вы получаете оповещение всякий раз, когда бегущий выживший получает \"Спешку\" в пределах 32м от вас. Бегущие выжившие не могут получить более 25/20/15% эффекта \"Спешка\" за раз. \"Спешка\" ускоряет движение убийц и выживших."
   },
   "hex-undying": {
     "description": "\"A Hex which maintains the vile powers that flow throughout the Trial.\" Whenever a Survivor is within 2/3/4 metres of a Dull Totem, Hex: Undying triggers its primary effect: Their Aura is revealed to you for as long as they remain in that range. Whenever a Hex Totem is cleansed, Hex: Undying triggers its secondary effect: Transfers the cleansed Hex to the Hex Totem associated with Hex: Undying instead, replacing it. The Hex Effects persist until the Hex Totem is either blessed or cleansed by a Survivor, disabling it for the remainder of the Trial.",
@@ -1168,7 +1173,7 @@
   },
   "keep-them-waiting": {
     "description": "Damaging any Survivor other than the Obsession with a Basic Attack causes Keep Them Waiting to gain +1 Token, up to a maximum of 6/7/8 Tokens.Damaging the Obsession with either a Basic or Special Attack causes Keep Them Waiting to lose -2 Tokens: Grants a stack-able -5 % per Token Cool-down time reduction on successful Basic Attacks, up to a maximum of 30/35/40 %. Keep Them Waiting freezes its current Token Count once the Obsession is sacrificed or killed.You can only be obsessed with one Survivor at a time.",
-    "descriptionRuRaw": "Когда ваша базовая атака наносит урон выжившему, которым вы не одержимы, вы получаете жетоны (1 шт., максимум - 6/7/8 шт.). За каждый жетон ваша базовая атака перезаряжается на 4% быстрее. Когда объект одержимости получает урон, вы теряете жетоны (2 шт.). Если объект одержимости мертв, вы не получаете жетоны."
+    "descriptionRuRaw": "Когда ваша базовая атака наносит урон выжившему, которым вы не одержимы, вы получаете жетоны (1 шт., максимум - 6/7/8 шт.). За каждый жетон ваша базовая атака перезаряжается на 5% быстрее. Когда объект одержимости получает урон, вы теряете жетоны (2 шт.). Если объект одержимости мертв, вы не получаете жетоны."
   },
   "knock-out": {
     "description": "\"The trauma caused by your brutal attacks makes crying for help painfully difficult.\" Whenever a Survivor moves farther than 6 metres from a Pallet within 6 seconds of dropping it, Knock Out triggers its effect: Causes them to suffer from a -5 % Hindered Status Effect for 3/4/5 seconds. \"Oh, that gun's no good. The old way... with a sledge! You see, that way's better. They die better that way.\" — Nubbins Sawyer",
@@ -1186,7 +1191,8 @@
         "При повреждении генератора он регрессирует на **2 %** быстрее за каждый заряд в нём.",
         "Время перезарядки: **55/50/45 секунд**."
       ]
-    }
+    },
+    "descriptionRuRaw": "Всякий раз, когда вы повреждаете генератор, за каждый имеющийся на нем заряд тот деградирует на 2% быстрее. Время перезарядки: 55/50/45 сек.."
   },
   "lethal-pursuer": {
     "description": "\"You have been designed to track down and eliminate targets.\" At the start of the Trial, the Auras of all Survivors are revealed to you for 7/8/9 seconds. Extends the duration of all instances of a Survivor Aura being revealed to you by +2 seconds. Lethal Pursuer benefits from its own effect. \"...it knows what it wants and won't stop till it gets it.\" — Carlos Oliveira",
@@ -1253,7 +1259,7 @@
   },
   "nowhere-to-hide": {
     "description": "\"The machinations of the weak and craven draw your ire.Your anger forces Survivors to reveal themselves.\" Performing the Damage Generator action on a Generator triggers Nowhere to Hide: The Auras of all Survivors within 24 metres of the Generator's location are revealed to you for 3/4/5 seconds. \"Out with you, cowards! Show yourselves!\" — Tarhos Kovács",
-    "descriptionRuRaw": "В течение 3/4/5 сек. после того, как вы повреждаете генератор, вы видите ауры всех выживших в радиусе 24м от вас."
+    "descriptionRuRaw": "В течение 3/4/5 сек. после того, как вы повреждаете генератор, вы видите ауры всех выживших в радиусе 18м от вас."
   },
   "oppression": {
     "description": "\"Life has been difficult for you, so you will make it difficult for others.\" Performing the Damage Generator action on a Generator triggers the following effects: Randomly selects up to 4 additional Generators that will also start regressing. Triggers a difficult Skill Check for all Survivors currently repairing them. Oppression has a cool-down of 45/40/35 seconds. \"Damn them as they would damn us.\" — Charlotte Deshayes",
