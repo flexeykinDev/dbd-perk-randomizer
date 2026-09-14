@@ -1100,7 +1100,7 @@
     "descriptionRuRaw": "В начале матча загорается тусклый тотем. Прогресс ремонта каждого генератора, который никто не чинит, снижается со скоростью 100/125/150%."
   },
   "hex-scared-to-death": {
-    "description": "When you Hook 3 different Survivors, Hex: Scared to Death activates on a random Dull Totem and triggers its effect: Basic-breaking a Pallet during a chase causes all Survivors within 13 metres to scream and gain 11/12/13 % Hindered Status Effect for 3 seconds. The Hex Effects persist until the Hex Totem is either blessed or cleansed by a Survivor, disabling it for the remainder of the Trial. \"There was a scream from the forest. Like someone was attacking her.\" — Mount Ormond Missing Person Report",
+    "description": "When you Hook 3 different Survivors, Hex: Scared to Death activates on a random Dull Totem and triggers its effect: Basic-breaking a Pallet during a chase causes all Survivors within 13 metres to scream and gain -11/-12/-13 % Hindered Status Effect for 3 seconds. The Hex Effects persist until the Hex Totem is either blessed or cleansed by a Survivor, disabling it for the remainder of the Trial. \"There was a scream from the forest. Like someone was attacking her.\" — Mount Ormond Missing Person Report",
     "descriptionRuRaw": "Когда вы 3 раз(а) подвесите на крюк различных выживших, зажжется тусклый тотем. Во время погони за выжившим, если вы базовым способом ломаете доски, остальные выжившие в пределах 13 м: кричат; получают 11/12/13% эффекта \"Замедление\" на 3 сек. Замедленные убийцы и выжившие двигаются медленнее."
   },
   "hex-the-third-seal": {
@@ -1286,7 +1286,7 @@
     "descriptionRuRaw": "Прекращая погоню за выжившим, вы видите его ауру в течение 4 сек. Перезарядка: 60/50/40 сек.."
   },
   "rampage": {
-    "description": "Whenever you basic-break a Pallet or a Breakable Wall, gain a token, up to 13 Whenever you are blinded or Pallet-stunned, you are granted 1 % Haste Status Effect for each Token this perk has for 13 seconds. This perk has a cool-down of 30/25/20 seconds after being blinded or Pallet-stunned. \"Signs of a pursuit led deep into the woods where the victim's body was found.\" — Port Henly Herald",
+    "description": "Whenever you basic-break a Pallet or a Breakable Wall, gain a token, up to 13. Whenever you are blinded or Pallet-stunned, you are granted +1 % Haste Status Effect for each Token this perk has for 13 seconds. This perk has a cool-down of 30/25/20 seconds after being blinded or Pallet-stunned while this perk has at least 1 token. \"Signs of a pursuit led deep into the woods where the victim's body was found.\" — Port Henly Herald",
     "descriptionRuRaw": "Ломая базовым способом доски или разрушаемую стену, вы получаете жетоны (1шт., можно накопить до 13). Когда вас ослепляют или оглушают доской, на следующие 13 сек. вы получаете 1% эффекта \"Спешка\" за каждый имеющийся жетон. Перезарядка: 30/25/20 сек. \"Спешка\" ускоряет движение убийц и выживших"
   },
   "rancor": {
