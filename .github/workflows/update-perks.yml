@@ -8,6 +8,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  actions: write # to start deploy.yml after an auto-merge
 
 jobs:
   scrape:
@@ -234,8 +235,15 @@ jobs:
           && steps.validate.outcome == 'success'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # A merge made with GITHUB_TOKEN does not start other workflows, so the
+        # push it creates never reached deploy.yml: PR #6 merged on 14
+        # September and the site kept serving the old data. workflow_dispatch
+        # is the one trigger GITHUB_TOKEN is allowed to fire. A PR merged by a
+        # person still deploys through the normal push trigger, so this only
+        # runs here, after the bot's own merge.
         run: |
           gh pr merge "${{ steps.cpr.outputs.pull-request-number }}" --squash --delete-branch
+          gh workflow run deploy.yml --ref main
 
       # A scheduled run that fails is invisible — nobody watches the Actions
       # tab on a Monday morning. This is the difference between "the chapter
