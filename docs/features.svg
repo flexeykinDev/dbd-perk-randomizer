@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 624" width="1200" height="624" role="img" aria-label="What it does">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0f1014"/>
+      <stop offset="1" stop-color="#1a141a"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#38bdf8"/>
+      <stop offset="1" stop-color="#fb7185"/>
+    </linearGradient>
+    <linearGradient id="hl" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#38bdf8" stop-opacity="0.14"/>
+      <stop offset="1" stop-color="#fb7185" stop-opacity="0.1"/>
+    </linearGradient>
+  </defs>
+  <style>
+    text { font-family: Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+    .card { fill: #ffffff; fill-opacity: 0.035; stroke: #ffffff; stroke-opacity: 0.09; stroke-width: 1.5; }
+    .hot { fill: url(#hl); stroke: #38bdf8; stroke-opacity: 0.55; stroke-width: 1.5; }
+    .title { fill: #7d86a3; font-size: 15px; letter-spacing: 3px; }
+    .value { fill: #f4f6ff; font-size: 30px; font-weight: 700; }
+    .line { fill: #9aa2ba; font-size: 17px; }
+  </style>
+  <rect width="1200" height="624" rx="18" fill="url(#bg)"/>
+  <text x="30" y="62" fill="#f4f6ff" font-size="34" font-weight="700">What it does</text>
+  <rect x="30" y="76" width="64" height="4" rx="2" fill="url(#accent)"/>
+
+  <g transform="translate(26 104)">
+    <rect width="368" height="150" rx="14" class="card"/>
+    <rect x="0" y="22" width="4" height="30" rx="2" fill="url(#accent)"/>
+    <text x="26" y="40" class="title">PERK POOL</text>
+    <text x="26" y="80" class="value">321 perks</text>
+    <text x="26" y="110" class="line">176 survivor, 145 killer,</text>
+    <text x="26" y="132" class="line">pulled from the wiki weekly</text>
+  </g>
+  <g transform="translate(416 104)">
+    <rect width="368" height="150" rx="14" class="card"/>
+    <rect x="0" y="22" width="4" height="30" rx="2" fill="url(#accent)"/>
+    <text x="26" y="40" class="title">LOADOUT</text>
+    <text x="26" y="80" class="value">932 add-ons</text>
+    <text x="26" y="110" class="line">Plus 24 items, 43 offerings</text>
+    <text x="26" y="132" class="line">and every killer's Power</text>
+  </g>
+  <g transform="translate(806 104)">
+    <rect width="368" height="150" rx="14" class="card"/>
+    <rect x="0" y="22" width="4" height="30" rx="2" fill="url(#accent)"/>
+    <text x="26" y="40" class="title">PIN AND REROLL</text>
+    <text x="26" y="80" class="value">Keep a slot</text>
+    <text x="26" y="110" class="line">Pin a perk through the roll,</text>
+    <text x="26" y="132" class="line">or reroll just one slot</text>
+  </g>
+  <g transform="translate(26 276)">
+    <rect width="368" height="150" rx="14" class="card"/>
+    <rect x="0" y="22" width="4" height="30" rx="2" fill="url(#accent)"/>
+    <text x="26" y="40" class="title">THE REVEAL</text>
+    <text x="26" y="80" class="value">Vortex or Slots</text>
+    <text x="26" y="110" class="line">A plain grid, cards dealt</text>
+    <text x="26" y="132" class="line">from a vortex, or a reel</text>
+  </g>
+  <g transform="translate(416 276)">
+    <rect width="368" height="150" rx="14" class="hot"/>
+    <rect x="0" y="22" width="4" height="30" rx="2" fill="url(#accent)"/>
+    <text x="26" y="40" class="title">OBS OVERLAY</text>
+    <text x="26" y="80" class="value">Skins + reels</text>
+    <text x="26" y="110" class="line">Vortex or Slots background,</text>
+    <text x="26" y="132" class="line">Deal or Spin entrance</text>
+  </g>
+  <g transform="translate(806 276)">
+    <rect width="368" height="150" rx="14" class="card"/>
+    <rect x="0" y="22" width="4" height="30" rx="2" fill="url(#accent)"/>
+    <text x="26" y="40" class="title">DAILY CHALLENGE</text>
+    <text x="26" y="80" class="value">Same build</text>
+    <text x="26" y="110" class="line">One build for everyone per</text>
+    <text x="26" y="132" class="line">UTC day, with a live count</text>
+  </g>
+  <g transform="translate(26 448)">
+    <rect width="368" height="150" rx="14" class="card"/>
+    <rect x="0" y="22" width="4" height="30" rx="2" fill="url(#accent)"/>
+    <text x="26" y="40" class="title">BATTLE ROYALE</text>
+    <text x="26" y="80" class="value">Builds retire</text>
+    <text x="26" y="110" class="line">A build leaves the pool</text>
+    <text x="26" y="132" class="line">once you have played it</text>
+  </g>
+  <g transform="translate(416 448)">
+    <rect width="368" height="150" rx="14" class="card"/>
+    <rect x="0" y="22" width="4" height="30" rx="2" fill="url(#accent)"/>
+    <text x="26" y="40" class="title">SHARE</text>
+    <text x="26" y="80" class="value">Link or image</text>
+    <text x="26" y="110" class="line">Send the build as a link,</text>
+    <text x="26" y="132" class="line">or export it as a picture</text>
+  </g>
+  <g transform="translate(806 448)">
+    <rect width="368" height="150" rx="14" class="card"/>
+    <rect x="0" y="22" width="4" height="30" rx="2" fill="url(#accent)"/>
+    <text x="26" y="40" class="title">EN / RU</text>
+    <text x="26" y="80" class="value">Works offline</text>
+    <text x="26" y="110" class="line">Both languages from the wikis,</text>
+    <text x="26" y="132" class="line">installable as an app</text>
+  </g>
+</svg>

@@ -1,0 +1,168 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1200 300" width="1200" height="300" role="img" aria-label="DBD Perk Randomizer: 321 perks, one roll, by flexeykinDEV">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0f1014"/>
+      <stop offset="0.55" stop-color="#14151b"/>
+      <stop offset="1" stop-color="#1d1217"/>
+    </linearGradient>
+    <linearGradient id="aura" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#38bdf8"/>
+      <stop offset="1" stop-color="#fb7185"/>
+    </linearGradient>
+    <linearGradient id="auraV" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#38bdf8"/>
+      <stop offset="1" stop-color="#fb7185"/>
+    </linearGradient>
+    <linearGradient id="rim" gradientUnits="userSpaceOnUse" x1="860" y1="90" x2="1090" y2="210">
+      <stop offset="0" stop-color="#38bdf8"/>
+      <stop offset="1" stop-color="#fb7185"/>
+    </linearGradient>
+    <radialGradient id="well" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#1b1d25"/>
+      <stop offset="1" stop-color="#08090c"/>
+    </radialGradient>
+    <radialGradient id="glow" cx="0.81" cy="0.5" r="0.42">
+      <stop offset="0" stop-color="#fb7185" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#fb7185" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="blur" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="28"/>
+    </filter>
+    <clipPath id="frame">
+      <rect width="1200" height="300" rx="18"/>
+    </clipPath>
+    <clipPath id="slot">
+      <path d="M0 -45 L45 0 L0 45 L-45 0 Z"/>
+    </clipPath>
+
+    <!-- Perk glyphs, drawn around 0,0 -->
+    <g id="hook"><path d="M5 -17 V3 a9 9 0 1 1 -9 -9"/><circle cx="5" cy="-20" r="3"/></g>
+    <g id="eye"><path d="M-18 0 Q0 -15 18 0 Q0 15 -18 0 Z"/><circle r="5"/></g>
+    <g id="flame"><path d="M0 -18 C11 -6 13 3 9 10 A10 9 0 0 1 -9 10 C-13 2 -6 -4 -2 -8 C-1 -2 3 -1 3 -5 C4 -9 2 -14 0 -18 Z"/></g>
+    <g id="pulse"><path d="M-18 2 H-9 L-4 -12 L3 14 L8 2 H18"/></g>
+    <g id="bolt"><path d="M3 -18 L-10 3 H0 L-4 18 L10 -4 H0 Z"/></g>
+    <g id="cross"><circle r="11"/><path d="M0 -19 V-6 M0 6 V19 M-19 0 H-6 M6 0 H19"/></g>
+  </defs>
+
+  <style>
+    text { font-family: Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+    .glyph { fill: none; stroke: #eef1f6; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* Each reel scrolls nine symbols and eases onto the tenth, which matches
+       the first, so the loop restarts without a visible jump. */
+    .reel { animation: spin 6s infinite; }
+    .s2 { animation-delay: 0.2s; }
+    .s3 { animation-delay: 0.4s; }
+    .s4 { animation-delay: 0.6s; }
+    @keyframes spin {
+      0%   { transform: translateY(576px); animation-timing-function: cubic-bezier(0.5, 0, 0.18, 1); }
+      42%  { transform: translateY(0); }
+      100% { transform: translateY(0); }
+    }
+
+    .rim { stroke: url(#rim); stroke-width: 2; fill: none; stroke-opacity: 0.45; animation: land 6s infinite; }
+    @keyframes land {
+      0%, 38% { stroke-opacity: 0.45; stroke-width: 2; }
+      44%     { stroke-opacity: 1; stroke-width: 3; }
+      70%, 100% { stroke-opacity: 0.45; stroke-width: 2; }
+    }
+
+    .fog1 { animation: drift 16s ease-in-out infinite alternate; }
+    .fog2 { animation: drift 21s ease-in-out infinite alternate-reverse; }
+    @keyframes drift {
+      from { transform: translateX(-40px); }
+      to   { transform: translateX(40px); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reel, .rim, .fog1, .fog2 { animation: none; }
+    }
+  </style>
+
+  <g clip-path="url(#frame)">
+    <rect width="1200" height="300" fill="url(#bg)"/>
+    <ellipse class="fog1" cx="930" cy="250" rx="260" ry="60" fill="#38bdf8" fill-opacity="0.10" filter="url(#blur)"/>
+    <ellipse class="fog2" cx="1040" cy="70" rx="220" ry="50" fill="#fb7185" fill-opacity="0.12" filter="url(#blur)"/>
+    <rect width="1200" height="300" fill="url(#glow)"/>
+    <g stroke="#ffffff" stroke-opacity="0.04">
+      <path d="M0 80 H1200 M0 150 H1200 M0 220 H1200"/>
+    </g>
+    <rect x="0" y="0" width="8" height="300" fill="url(#auraV)"/>
+  </g>
+
+  <text x="70" y="96" fill="#8d9099" font-size="22" letter-spacing="7">DEAD BY DAYLIGHT</text>
+  <text x="66" y="172" fill="#f4f5f7" font-size="66" font-weight="700" letter-spacing="2">PERK RANDOMIZER</text>
+  <text x="70" y="220" fill="url(#aura)" font-size="28" font-weight="600">321 perks, one roll.</text>
+  <text x="70" y="264" fill="#6f727b" font-size="19">by flexeykinDEV</text>
+
+  <!-- The in-game loadout: four diamonds in a diamond. Slots land in reading order. -->
+  <g transform="translate(975 150) scale(1.15) translate(-975 -150)">
+  <g transform="translate(975 94)">
+    <path d="M0 -50 L50 0 L0 50 L-50 0 Z" fill="url(#well)"/>
+    <g clip-path="url(#slot)"><g class="reel glyph">
+      <use href="#flame" xlink:href="#flame"/>
+      <use href="#eye" xlink:href="#eye" y="-64"/>
+      <use href="#bolt" xlink:href="#bolt" y="-128"/>
+      <use href="#hook" xlink:href="#hook" y="-192"/>
+      <use href="#pulse" xlink:href="#pulse" y="-256"/>
+      <use href="#cross" xlink:href="#cross" y="-320"/>
+      <use href="#eye" xlink:href="#eye" y="-384"/>
+      <use href="#bolt" xlink:href="#bolt" y="-448"/>
+      <use href="#hook" xlink:href="#hook" y="-512"/>
+      <use href="#flame" xlink:href="#flame" y="-576"/>
+    </g></g>
+    <path class="rim" d="M0 -50 L50 0 L0 50 L-50 0 Z"/>
+  </g>
+
+  <g transform="translate(919 150)">
+    <path d="M0 -50 L50 0 L0 50 L-50 0 Z" fill="url(#well)"/>
+    <g clip-path="url(#slot)"><g class="reel s2 glyph">
+      <use href="#hook" xlink:href="#hook"/>
+      <use href="#cross" xlink:href="#cross" y="-64"/>
+      <use href="#flame" xlink:href="#flame" y="-128"/>
+      <use href="#eye" xlink:href="#eye" y="-192"/>
+      <use href="#bolt" xlink:href="#bolt" y="-256"/>
+      <use href="#pulse" xlink:href="#pulse" y="-320"/>
+      <use href="#cross" xlink:href="#cross" y="-384"/>
+      <use href="#flame" xlink:href="#flame" y="-448"/>
+      <use href="#eye" xlink:href="#eye" y="-512"/>
+      <use href="#hook" xlink:href="#hook" y="-576"/>
+    </g></g>
+    <path class="rim s2" d="M0 -50 L50 0 L0 50 L-50 0 Z"/>
+  </g>
+
+  <g transform="translate(1031 150)">
+    <path d="M0 -50 L50 0 L0 50 L-50 0 Z" fill="url(#well)"/>
+    <g clip-path="url(#slot)"><g class="reel s3 glyph">
+      <use href="#eye" xlink:href="#eye"/>
+      <use href="#bolt" xlink:href="#bolt" y="-64"/>
+      <use href="#pulse" xlink:href="#pulse" y="-128"/>
+      <use href="#hook" xlink:href="#hook" y="-192"/>
+      <use href="#flame" xlink:href="#flame" y="-256"/>
+      <use href="#cross" xlink:href="#cross" y="-320"/>
+      <use href="#bolt" xlink:href="#bolt" y="-384"/>
+      <use href="#pulse" xlink:href="#pulse" y="-448"/>
+      <use href="#hook" xlink:href="#hook" y="-512"/>
+      <use href="#eye" xlink:href="#eye" y="-576"/>
+    </g></g>
+    <path class="rim s3" d="M0 -50 L50 0 L0 50 L-50 0 Z"/>
+  </g>
+
+  <g transform="translate(975 206)">
+    <path d="M0 -50 L50 0 L0 50 L-50 0 Z" fill="url(#well)"/>
+    <g clip-path="url(#slot)"><g class="reel s4 glyph">
+      <use href="#pulse" xlink:href="#pulse"/>
+      <use href="#flame" xlink:href="#flame" y="-64"/>
+      <use href="#hook" xlink:href="#hook" y="-128"/>
+      <use href="#cross" xlink:href="#cross" y="-192"/>
+      <use href="#eye" xlink:href="#eye" y="-256"/>
+      <use href="#bolt" xlink:href="#bolt" y="-320"/>
+      <use href="#flame" xlink:href="#flame" y="-384"/>
+      <use href="#hook" xlink:href="#hook" y="-448"/>
+      <use href="#cross" xlink:href="#cross" y="-512"/>
+      <use href="#pulse" xlink:href="#pulse" y="-576"/>
+    </g></g>
+    <path class="rim s4" d="M0 -50 L50 0 L0 50 L-50 0 Z"/>
+  </g>
+  </g>
+</svg>

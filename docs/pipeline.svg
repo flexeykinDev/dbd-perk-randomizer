@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 250" width="1200" height="250" role="img" aria-label="How the data stays current: the DBD wiki is scraped every Monday, validated, opened as a pull request and deployed to GitHub Pages. A Steam patch notes check flags patches the wiki has not caught up with.">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0f1014"/>
+      <stop offset="1" stop-color="#1a141a"/>
+    </linearGradient>
+    <linearGradient id="aura" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#38bdf8"/>
+      <stop offset="1" stop-color="#fb7185"/>
+    </linearGradient>
+    <marker id="head" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#8d93a6"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+    .node { fill: #ffffff; fill-opacity: 0.035; stroke: #ffffff; stroke-opacity: 0.1; stroke-width: 1.5; }
+    .end { stroke: url(#aura); stroke-opacity: 0.8; }
+    .k { fill: #7d86a3; font-size: 13px; letter-spacing: 2.5px; }
+    .v { fill: #f4f6ff; font-size: 21px; font-weight: 700; }
+    .l { fill: #9aa2ba; font-size: 15px; }
+    .flow { stroke: #8d93a6; stroke-width: 2; fill: none; stroke-dasharray: 5 6; animation: flow 1.2s linear infinite; }
+    @keyframes flow { to { stroke-dashoffset: -11; } }
+    @media (prefers-reduced-motion: reduce) { .flow { animation: none; } }
+  </style>
+
+  <rect width="1200" height="250" rx="18" fill="url(#bg)"/>
+  <text x="30" y="50" fill="#f4f6ff" font-size="26" font-weight="700">How the data stays current</text>
+  <rect x="30" y="62" width="56" height="4" rx="2" fill="url(#aura)"/>
+
+  <g transform="translate(26 92)">
+    <rect class="node" width="196" height="96" rx="12"/>
+    <text class="k" x="16" y="28">SOURCE</text>
+    <text class="v" x="16" y="58">DBD wiki</text>
+    <text class="l" x="16" y="81">EN and RU pages</text>
+  </g>
+  <g transform="translate(264 92)">
+    <rect class="node" width="196" height="96" rx="12"/>
+    <text class="k" x="16" y="28">EVERY MONDAY</text>
+    <text class="v" x="16" y="58">Scrape</text>
+    <text class="l" x="16" y="81">text, icons, loadout</text>
+  </g>
+  <g transform="translate(502 92)">
+    <rect class="node" width="196" height="96" rx="12"/>
+    <text class="k" x="16" y="28">VALIDATE</text>
+    <text class="v" x="16" y="58">Test + build</text>
+    <text class="l" x="16" y="81">lint, unit tests, export</text>
+  </g>
+  <g transform="translate(740 92)">
+    <rect class="node" width="196" height="96" rx="12"/>
+    <text class="k" x="16" y="28">PULL REQUEST</text>
+    <text class="v" x="16" y="58">Auto-merge</text>
+    <text class="l" x="16" y="81">if only new and green</text>
+  </g>
+  <g transform="translate(978 92)">
+    <rect class="node end" width="196" height="96" rx="12"/>
+    <text class="k" x="16" y="28">DEPLOY</text>
+    <text class="v" x="16" y="58">GitHub Pages</text>
+    <text class="l" x="16" y="81">static export</text>
+  </g>
+
+  <path class="flow" d="M224 140 H260" marker-end="url(#head)"/>
+  <path class="flow" d="M462 140 H498" marker-end="url(#head)"/>
+  <path class="flow" d="M700 140 H736" marker-end="url(#head)"/>
+  <path class="flow" d="M938 140 H974" marker-end="url(#head)"/>
+
+  <text x="30" y="226" class="l">Steam news check: when BHVR ships a patch the wiki has not caught up with, the PR says so.</text>
+</svg>
