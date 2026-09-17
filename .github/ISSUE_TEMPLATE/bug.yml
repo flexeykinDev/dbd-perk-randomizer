@@ -1,0 +1,50 @@
+name: Bug
+description: Something on the site is broken or behaves oddly
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For wrong perk text, use the "Wrong perk or loadout text" form instead.
+
+        Пишите на русском, если так удобнее.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, what you got instead.
+    validations:
+      required: true
+  - type: input
+    id: link
+    attributes:
+      label: Link to the build, if it involves one
+      description: The Share button copies a link that reproduces the exact build.
+      placeholder: https://flexeykindev.github.io/dbd-perk-randomizer/?r=s&p=108,142,2,128
+    validations:
+      required: false
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and device
+      placeholder: Chrome on Windows 11, or Safari on iPhone 15
+    validations:
+      required: true
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where
+      options:
+        - The main site
+        - The OBS overlay
+        - Both
+        - Not sure
+    validations:
+      required: false
+  - type: textarea
+    id: extra
+    attributes:
+      label: Screenshot or console errors
+      description: Drag an image in. Console errors are under F12, Console tab.
+    validations:
+      required: false

@@ -184,8 +184,9 @@ it only runs with a `FIREBASE_DB_SECRET` repository secret and skips otherwise.
 
 ### Contributing
 
-Run `npm run lint`, `npm run build` and `npm run test:e2e` first. CI runs the
-same three.
+[CONTRIBUTING.md](CONTRIBUTING.md) has the detail. In short: run
+`npm run lint`, `npm run build` and `npm run test:e2e` first, because CI runs
+the same three.
 
 - **Generated files.** Everything the scrapers write (`data/perks.json`,
   `data/items.json`, `data/addons.json`, `data/offerings.json`, the `*-ids`
@@ -206,6 +207,12 @@ Next.js, TypeScript, React, Tailwind CSS, Framer Motion, WebGL, Firebase
 Realtime Database, cheerio and sharp for the scrapers, Playwright.
 
 </details>
+
+## Taking part
+
+Issues and pull requests are welcome, in English or Russian. See
+[CONTRIBUTING.md](CONTRIBUTING.md), the [code of conduct](CODE_OF_CONDUCT.md)
+and the [security policy](SECURITY.md).
 
 ## License
 

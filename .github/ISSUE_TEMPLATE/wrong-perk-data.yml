@@ -1,0 +1,51 @@
+name: Wrong perk or loadout text
+description: A perk, item, add-on or offering shows the wrong numbers or the wrong name
+labels: ["data"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The site takes its text from the wiki, and the wiki lags a patch by a
+        few days. If BHVR changed a perk this week, that is probably why. It
+        can be corrected by hand, which is what this issue is for.
+
+        Пишите на русском, если так удобнее.
+  - type: input
+    id: name
+    attributes:
+      label: Which perk or item
+      placeholder: Repressed Alliance
+    validations:
+      required: true
+  - type: dropdown
+    id: language
+    attributes:
+      label: Language on the site
+      options:
+        - English
+        - Russian
+        - Both
+    validations:
+      required: true
+  - type: textarea
+    id: shown
+    attributes:
+      label: What the site shows
+      placeholder: Blocks the generator for 30 seconds
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What it should say
+      placeholder: Blocks the generator for 15 seconds
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Source
+      description: Patch notes or the wiki page. Official notes are best.
+      placeholder: https://store.steampowered.com/news/app/381210/...
+    validations:
+      required: false

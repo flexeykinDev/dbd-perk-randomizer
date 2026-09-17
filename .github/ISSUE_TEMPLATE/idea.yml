@@ -1,0 +1,36 @@
+name: Idea
+description: Suggest a feature or a change
+labels: ["idea"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Пишите на русском, если так удобнее.
+  - type: textarea
+    id: idea
+    attributes:
+      label: The idea
+      description: What it would do, and when you would use it.
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: What you do today instead
+      description: The workaround, if there is one. This says more than the idea does.
+    validations:
+      required: false
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Rolling and builds
+        - Perk pool and filters
+        - OBS overlay
+        - Sharing and export
+        - Daily Challenge or Battle Royale
+        - Translations
+        - Something else
+    validations:
+      required: false

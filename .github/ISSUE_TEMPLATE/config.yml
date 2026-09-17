@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Open the randomizer
+    url: https://flexeykindev.github.io/dbd-perk-randomizer/
+    about: The live site. Worth a refresh before reporting, it updates often.
+  - name: Dead by Daylight itself
+    url: https://forums.bhvr.com/dead-by-daylight/
+    about: Bugs in the game belong to Behaviour Interactive, not here.

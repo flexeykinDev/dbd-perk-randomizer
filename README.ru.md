@@ -187,8 +187,9 @@ OBS рисует браузерный источник в отдельном п�
 
 ### Как помочь
 
-Перед PR прогоните `npm run lint`, `npm run build` и `npm run test:e2e`. CI
-запускает те же три команды.
+Подробности в [CONTRIBUTING.md](CONTRIBUTING.md). Коротко: перед PR прогоните
+`npm run lint`, `npm run build` и `npm run test:e2e`, CI запускает те же три
+команды.
 
 - **Генерируемые файлы.** Всё, что пишут скрейперы (`data/perks.json`,
   `data/items.json`, `data/addons.json`, `data/offerings.json`, файлы `*-ids`
@@ -209,6 +210,12 @@ Next.js, TypeScript, React, Tailwind CSS, Framer Motion, WebGL, Firebase
 Realtime Database, cheerio и sharp для скрейперов, Playwright.
 
 </details>
+
+## Участие
+
+Issues и PR приветствуются, на русском или английском. См.
+[CONTRIBUTING.md](CONTRIBUTING.md), [правила общения](CODE_OF_CONDUCT.md) и
+[политику безопасности](SECURITY.md).
 
 ## Лицензия
 
