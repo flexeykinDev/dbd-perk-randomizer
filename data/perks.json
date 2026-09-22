@@ -1725,7 +1725,9 @@
     },
     "character": "All",
     "icon": "/perks/survivor/premonition.webp",
-    "tags": [],
+    "tags": [
+      "aura"
+    ],
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
@@ -2053,6 +2055,7 @@
     "character": "All",
     "icon": "/perks/survivor/small-game.webp",
     "tags": [
+      "aura",
       "totems"
     ],
     "addedAt": "2020-01-01T00:00:00.000Z"
@@ -2123,11 +2126,7 @@
     },
     "character": "All",
     "icon": "/perks/survivor/spine-chill.webp",
-    "tags": [
-      "generator",
-      "healing",
-      "unhooking"
-    ],
+    "tags": [],
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
@@ -4011,6 +4010,7 @@
     "character": "Krasue",
     "icon": "/perks/killer/ravenous.webp",
     "tags": [
+      "chase",
       "exposure"
     ],
     "addedAt": "2026-08-17T19:11:57.577Z"
@@ -4083,6 +4083,7 @@
     "icon": "/perks/killer/scourge-hook-monstrous-shrine.webp",
     "tags": [
       "scourge-hook",
+      "gen-regression",
       "aura-info"
     ],
     "addedAt": "2020-01-01T00:00:00.000Z"
@@ -4534,7 +4535,9 @@
     },
     "character": "All",
     "icon": "/perks/killer/whispers.webp",
-    "tags": [],
+    "tags": [
+      "chase"
+    ],
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
