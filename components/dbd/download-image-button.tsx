@@ -31,10 +31,16 @@ export function DownloadImageButton({
   onSelect,
   generating,
   disabled,
+  layouts,
 }: {
   onSelect: (layout: ShareCardLayout) => void;
   generating: ShareCardLayout | null;
   disabled: boolean;
+  /** Which formats to offer. Both, unless the caller only has one card —
+   *  the squad poster is 16:9 only. Left undefined rather than defaulted to
+   *  the full list in the signature so the common call site stays a
+   *  three-prop one. */
+  layouts?: readonly ShareCardLayout[];
 }) {
   const t = useT();
   const [open, setOpen] = useState(false);
@@ -81,7 +87,10 @@ export function DownloadImageButton({
           aria-label={t({ ru: "Формат картинки", en: "Image format" })}
           className="absolute top-full left-1/2 z-20 mt-1.5 w-56 -translate-x-1/2 overflow-hidden rounded-xl border border-border bg-surface py-1 shadow-2xl"
         >
-          {FORMAT_OPTIONS.map((option) => (
+          {(layouts
+            ? FORMAT_OPTIONS.filter((o) => layouts.includes(o.layout))
+            : FORMAT_OPTIONS
+          ).map((option) => (
             <button
               key={option.layout}
               type="button"

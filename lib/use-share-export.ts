@@ -22,6 +22,10 @@ export interface ShareExportController {
   /** Attach to the off-screen ShareCard for each layout. */
   cardRef: React.RefObject<HTMLDivElement | null>;
   storyCardRef: React.RefObject<HTMLDivElement | null>;
+  /** The four-up squad poster. A third card rather than a third layout of the
+   *  first two: it is a different composition, not the same one at another
+   *  aspect ratio — see components/dbd/squad-share-card.tsx. */
+  squadCardRef: React.RefObject<HTMLDivElement | null>;
   /** One vortex per build, per layout. */
   backdrops: { landscape: string | null; story: string | null };
   copyLink: () => void;
@@ -31,18 +35,25 @@ export interface ShareExportController {
 export function useShareExport({
   role,
   slugs,
+  squad = false,
   showToast,
 }: {
   role: PerkRole;
   /** The slugs on the card, in order. Identifies the build for the backdrop
    *  and names the downloaded file. */
   slugs: string[];
+  /** True while the board is showing a squad, so the download targets the
+   *  four-up poster. The squad card is landscape only — a 9:16 story of four
+   *  builds would have to be solved backwards from a much narrower band, the
+   *  way the story layout already was, and nobody has asked for it. */
+  squad?: boolean;
   showToast: (message: string) => void;
 }): ShareExportController {
   const t = useT();
   const [generating, setGenerating] = useState<ShareCardLayout | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const storyCardRef = useRef<HTMLDivElement>(null);
+  const squadCardRef = useRef<HTMLDivElement>(null);
 
   const key = slugs.join(",");
   /* useMemo rather than state: the backdrop is a pure function of the build
@@ -71,7 +82,11 @@ export function useShareExport({
 
   const downloadImage = useCallback(
     async (layout: ShareCardLayout) => {
-      const target = layout === "story" ? storyCardRef.current : cardRef.current;
+      const target = squad
+        ? squadCardRef.current
+        : layout === "story"
+          ? storyCardRef.current
+          : cardRef.current;
       if (!target || slugs.length === 0 || generating) return;
       setGenerating(layout);
       try {
@@ -102,8 +117,13 @@ export function useShareExport({
           scale: 2,
           useCORS: true,
         });
-        const suffix = layout === "story" ? "-story" : "";
-        const filename = `dbd-${role}-build-${slugs.join("-")}${suffix}.${EXPORT_EXTENSION}`;
+        const suffix = squad ? "-squad" : layout === "story" ? "-story" : "";
+        /* A squad's filename would otherwise be sixteen slugs long, which
+           Windows rejects outright past 255 characters and every chat client
+           truncates. The link carries the build; the file only has to say
+           what it is. */
+        const stem = squad ? `${slugs.length}-perks` : slugs.join("-");
+        const filename = `dbd-${role}-build-${stem}${suffix}.${EXPORT_EXTENSION}`;
         // See lib/save-image.ts: this used to be an <a download> pointed at a
         // data: URL, which does nothing whatsoever on iOS and reported success
         // anyway.
@@ -121,8 +141,8 @@ export function useShareExport({
         setGenerating(null);
       }
     },
-    [generating, role, showToast, slugs, t],
+    [generating, role, showToast, slugs, squad, t],
   );
 
-  return { generating, cardRef, storyCardRef, backdrops, copyLink, downloadImage };
+  return { generating, cardRef, storyCardRef, squadCardRef, backdrops, copyLink, downloadImage };
 }

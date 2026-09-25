@@ -1,7 +1,7 @@
 import { getKillerPowerIcon } from "@/lib/loadout";
 import { ruPlural, type Lang } from "@/lib/i18n";
 import type { PerkRole, ShareCardLayout } from "@/lib/types";
-import { BAND_PAD_L, BAND_PAD_R, CANVAS_SIZE } from "./share-card-metrics";
+import { BAND_PAD_L, BAND_PAD_R, CANVAS_SIZE, NATIVE_ICON } from "./share-card-metrics";
 import type { ShareCardPiece } from "./share-card-types";
 
 /* Every number on the export card, worked out before a single element is
@@ -230,4 +230,118 @@ export function landscapePortraitLayout(l: CardLayout): {
   const longestWord = Math.max(1, ...l.title.split(/\s+/).map((w) => w.length));
   const nameSize = Math.max(52, Math.min(104, Math.floor(nameMax / (longestWord * 0.62))));
   return { bandLeft, nameMax, nameSize };
+}
+
+/* ------------------------------------------------------------------ *
+ * The squad card.
+ *
+ * Same arithmetic-before-markup rule as above, and the same reason: the
+ * single-build card broke four times on exactly this kind of sum, and a
+ * squad card has strictly more of it — four rows now have to share a canvas
+ * that one row used to have to itself.
+ *
+ * The composition is deliberately not the portrait one. There is no single
+ * character to stand beside four different builds, so the figure and the
+ * anchored band are dropped and the card becomes what it is showing: a
+ * heading, one labelled row per player, and a footer. Everything below is
+ * solved from the room that leaves rather than scaled down from the
+ * landscape numbers, which is the mistake the story layout above records.
+ * ------------------------------------------------------------------ */
+
+export interface SquadRow {
+  label: string;
+  pieces: ShareCardPiece[];
+}
+
+export interface SquadCardLayout {
+  width: number;
+  height: number;
+  margin: number;
+  /** Heading, already localized. */
+  bandLabel: string;
+  title: string;
+  rows: SquadRow[];
+  /** Diamond size, solved to fit both the row height and the row width. */
+  gem: number;
+  iconSize: number;
+  slotWidth: number;
+  labelGap: number;
+  labelSize: number;
+  playerLabelSize: number;
+  rowGap: number;
+  rowHeight: number;
+}
+
+/** Room the heading and footer take out of the canvas before the rows get
+ *  any. Measured against the rendered card rather than guessed. */
+const SQUAD_HEADER = 168;
+const SQUAD_FOOTER = 76;
+const SQUAD_ROW_GAP = 22;
+/** The player's name sits above its row and needs its own line. */
+const SQUAD_ROW_LABEL = 34;
+
+/** Never larger than the single-build card's perk diamond — past that the
+ *  256px icon is being upscaled — and never so small the perk art stops
+ *  reading at a glance, which is the whole point of the card. */
+const SQUAD_GEM_MAX = 118;
+const SQUAD_GEM_MIN = 54;
+
+export function squadShareCardLayout({
+  language,
+  builds,
+  title,
+}: {
+  language: Lang;
+  /** One build per player, already trimmed of anything that will not draw. */
+  builds: ShareCardPiece[][];
+  /** Already localized by the caller, same contract as shareCardLayout. */
+  title: string;
+}): SquadCardLayout {
+  const { width, height } = CANVAS_SIZE.landscape;
+  const margin = 84;
+
+  const rows = builds.map((pieces, i) => ({
+    label: language === "ru" ? `Игрок ${i + 1}` : `Player ${i + 1}`,
+    pieces,
+  }));
+
+  const rowCount = Math.max(rows.length, 1);
+  const perRow = Math.max(1, ...rows.map((r) => r.pieces.length));
+
+  /* Height first. Each row is the diamond's frame (a square rotated 45°, so
+     1.4143x its side), its label gap and its label, plus the player name
+     above it. Solve that backwards for the gem. */
+  const rowsRoom = height - margin * 2 - SQUAD_HEADER - SQUAD_FOOTER - SQUAD_ROW_GAP * (rowCount - 1);
+  const rowHeight = Math.floor(rowsRoom / rowCount);
+  const gemFromHeight = Math.floor((rowHeight - SQUAD_ROW_LABEL - 46) / 1.4143);
+
+  /* Width second, from the same slot arithmetic the single-build rows use —
+     the gutter is what buys each diamond's label room to sit in without
+     touching its neighbour. */
+  const gutter = 26;
+  const widthRoom = width - margin * 2;
+  const gemFromWidth = Math.floor((widthRoom / perRow - gutter) / 1.4143);
+
+  const gem = Math.max(SQUAD_GEM_MIN, Math.min(SQUAD_GEM_MAX, gemFromHeight, gemFromWidth));
+  const slotWidth = Math.round(gem * 1.4143) + gutter;
+
+  return {
+    width,
+    height,
+    margin,
+    bandLabel:
+      language === "ru"
+        ? `${rowCount} ${ruPlural(rowCount, "игрок", "игрока", "игроков")}`
+        : `${rowCount} ${rowCount === 1 ? "player" : "players"}`,
+    title,
+    rows,
+    gem,
+    iconSize: Math.min(NATIVE_ICON, Math.round(gem * 0.79)),
+    slotWidth,
+    labelGap: Math.max(10, Math.round(gem * 0.15)),
+    labelSize: Math.max(12, Math.min(22, Math.round(gem * 0.2))),
+    playerLabelSize: 24,
+    rowGap: SQUAD_ROW_GAP,
+    rowHeight,
+  };
 }

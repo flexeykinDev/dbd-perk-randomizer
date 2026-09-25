@@ -38,6 +38,7 @@ import { ROLE_COLOR } from "@/lib/role-color";
 import { useLanguage, useT } from "@/lib/i18n";
 import { useSeed } from "@/lib/use-seed";
 import { useBattleRoyale } from "@/lib/use-battle-royale";
+import { useSquad } from "@/lib/use-squad";
 import { useExclusions } from "@/lib/use-exclusions";
 import { useRollSession, type RollSession } from "@/lib/use-roll-session";
 import { useShareExport } from "@/lib/use-share-export";
@@ -49,7 +50,12 @@ import {
   recordHistoryEntry,
   type HistoryEntry,
 } from "@/lib/history";
-import { getIdForSlug, getSlugForId } from "@/lib/perk-ids";
+import {
+  decodeSquadParam,
+  encodeSquadParam,
+  getIdForSlug,
+  getSlugForId,
+} from "@/lib/perk-ids";
 import { withBasePath } from "@/lib/asset-path";
 import {
   getKillerCharacters,
@@ -64,6 +70,8 @@ import { safeGet, safeGetJSON, safeSet, safeSetJSON } from "@/lib/safe-storage";
 import { publishObsState } from "@/lib/obs-sync";
 import { useTwitchSettings } from "@/lib/use-twitch-settings";
 import { PerkGrid } from "./perk-grid";
+import { SquadGrids } from "./squad-grids";
+import { SquadShareCard } from "./squad-share-card";
 import { LoadoutGrid } from "./loadout-grid";
 import { CopyToast } from "./copy-toast";
 import { ExcludePanel } from "./exclude-panel";
@@ -162,6 +170,8 @@ interface InitialUrlState {
   seed?: string;
   perks?: Perk[];
   loadoutPieces?: LoadoutPiece[];
+  /** One build per player, from `?sq=` — see lib/perk-ids.ts. */
+  squad?: Perk[][];
 }
 
 /** Reads either the compact URL format (`?r=s&p=42,105,12,8`, current) or
@@ -261,6 +271,21 @@ function readInitialUrlState(): InitialUrlState | null {
     return { role, mode }; // same "explicit mode is enough" rule as loadout above
   }
 
+  // A squad link is read before the single-build one. They never appear
+  // together — the writer below picks exactly one — and `sq` is the more
+  // specific claim of the two, so it wins if a hand-edited link carries both.
+  const squadParam = params.get("sq");
+  if (squadParam) {
+    const squad = decodeSquadParam(squadParam)
+      .map((slugs) =>
+        slugs
+          .map((slug) => getPerkBySlug(slug))
+          .filter((perk): perk is Perk => !!perk && perk.role === role),
+      )
+      .filter((build) => build.length > 0);
+    if (squad.length > 0) return { role, mode, squad };
+  }
+
   const perks = readPerks();
   if (perks.length > 0) return { role, mode, perks };
 
@@ -309,6 +334,18 @@ export function RandomizerBoard() {
   const [statsVersion, setStatsVersion] = useState(0);
   /* Battle Royale — play until the pool runs dry. See lib/use-battle-royale.ts. */
   const br = useBattleRoyale();
+
+  /* Squad mode — one build per member of a SWF team. See lib/use-squad.ts;
+     the roll itself is lib/squad-roll.ts. Only meaningful in "perks" mode:
+     a squad of loadouts is a different question and nobody has asked it. */
+  const squad = useSquad();
+  const squadActive = squad.active && mode === "perks";
+  /* Pulled out because the mount effect below needs it in its dependency
+     list. useSquad returns a fresh object each render, so depending on the
+     controller itself would re-run that once-only hydration on every roll;
+     `show` is a stable useCallback and does not. */
+  const showSquad = squad.show;
+  const hydrateSquad = squad.hydrate;
   const battleRoyale = br.active;
   const battleRoyaleUsed = br.used;
   // Named for the mount effect and the eliminate callback below, so neither
@@ -454,6 +491,7 @@ export function RandomizerBoard() {
     function applyInitialClientState() {
       // The three saved Sets restore themselves — see lib/use-persisted-set.ts.
       hydrateExclusions();
+      hydrateSquad();
       setPerkCount(loadPerkCount());
       setMode(loadMode());
       setLoadoutSlots(loadLoadoutSlots());
@@ -465,7 +503,13 @@ export function RandomizerBoard() {
       if (urlState) {
         setRole(urlState.role);
         setMode(urlState.mode);
-        if (urlState.seed) {
+        if (urlState.squad) {
+          // A squad link turns the mode on and sizes the lobby to whatever
+          // arrived. It never marks a shared single build: the squad is the
+          // build here, and the normal session underneath stays rerollable.
+          showSquad(urlState.squad);
+          setPerkCount(urlState.squad[0].length);
+        } else if (urlState.seed) {
           hydrateSeedFromUrl(urlState.seed, urlState.role);
         } else {
           // Not an else-if chain — "all" mode's share link carries both
@@ -497,6 +541,8 @@ export function RandomizerBoard() {
     hydrateExclusions,
     hydrateSeedFromUrl,
     hydrateBattleRoyale,
+    showSquad,
+    hydrateSquad,
     hydrateShared,
   ]);
 
@@ -598,6 +644,21 @@ export function RandomizerBoard() {
         // loadout piece gets a short ID at scrape time, same guarantee
         // data/perk-ids.json has always made for perks.
       }
+      // A squad on screen is what the link should reopen, so it replaces the
+      // single build's `p=` rather than sitting beside it. Falls through to
+      // the normal writer before the first roll, when there is no squad yet.
+      if (squadActive && squad.squad.length > 0) {
+        const sq = encodeSquadParam(
+          squad.squad.map((build) => build.map((perk) => perk.slug)),
+        );
+        if (sq) params.set("sq", sq);
+        window.history.replaceState(
+          null,
+          "",
+          `${window.location.pathname}?${params}`,
+        );
+        return;
+      }
       if (mode !== "loadout" && perks.length > 0) {
         const ids = perks.map((p) => getIdForSlug(p.slug));
         if (ids.every((id): id is number => id !== undefined)) {
@@ -617,7 +678,7 @@ export function RandomizerBoard() {
       );
     }
     if (mounted) syncUrl();
-  }, [role, mode, perks, loadoutPieces, mounted, activeSeed]);
+  }, [role, mode, perks, loadoutPieces, mounted, activeSeed, squadActive, squad.squad]);
 
   // Records exactly one roll event per genuine generation (initial pick,
   // regenerate, role/count switch) — deduped by content key so React 19
@@ -745,6 +806,7 @@ export function RandomizerBoard() {
     generating: generatingImage,
     cardRef: shareCardRef,
     storyCardRef: storyShareCardRef,
+    squadCardRef: squadShareCardRef,
     backdrops: shareBackdrops,
     copyLink: handleShare,
     downloadImage: handleDownloadImage,
@@ -753,13 +815,31 @@ export function RandomizerBoard() {
     // during render, which `ref={shareCardRef}` trips.
   } = useShareExport({
     role,
-    slugs: useMemo(() => sharePieces.map((p) => p.slug), [sharePieces]),
+    // In squad mode the export is of the squad, so the backdrop seed and the
+    // filename come from every perk on the poster rather than from the single
+    // build sitting behind it.
+    slugs: useMemo(
+      () =>
+        squadActive && squad.squad.length > 0
+          ? squad.squad.flat().map((p) => p.slug)
+          : sharePieces.map((p) => p.slug),
+      [squadActive, squad.squad, sharePieces],
+    ),
+    squad: squadActive && squad.squad.length > 0,
     showToast,
   });
 
 
   const regenerate = useCallback(() => {
     playSound("roll");
+    // Squad mode replaces the single build on screen, so Generate rolls the
+    // squad and leaves the single-build session alone — including Battle
+    // Royale elimination, which retires the perks of a build the player
+    // actually used and has no meaning for four builds nobody has played yet.
+    if (squadActive) {
+      squad.roll({ role, pool: availablePool, buildSize: perkCount, seed: activeSeed });
+      return;
+    }
     // Battle Royale's whole premise is elimination — the pool should shrink
     // every round regardless of *how* you moved on, not only when you
     // happened to copy a perk first. Without this, spamming Generate (or
@@ -768,7 +848,18 @@ export function RandomizerBoard() {
     if (battleRoyale) eliminateCurrentBuild();
     clearSlotOverrides();
     rerollAll();
-  }, [battleRoyale, eliminateCurrentBuild, clearSlotOverrides, rerollAll]);
+  }, [
+    squadActive,
+    squad,
+    role,
+    availablePool,
+    perkCount,
+    activeSeed,
+    battleRoyale,
+    eliminateCurrentBuild,
+    clearSlotOverrides,
+    rerollAll,
+  ]);
 
   // `regenerate`'s identity changes on every roll (it depends on
   // eliminateCurrentBuild, which depends on `perks`) — if the Twitch effect
@@ -977,6 +1068,23 @@ export function RandomizerBoard() {
   }
 
   function handleCopyAll() {
+    // One line per player, labelled, because a squad pasted into Discord as
+    // sixteen comma-separated names is not something anyone can read back.
+    if (squadActive) {
+      const text = squad.squad
+        .map(
+          (build, i) =>
+            `${t({ ru: "Игрок", en: "Player" })} ${i + 1}: ${build
+              .map((p) => p.name[language])
+              .join(", ")}`,
+        )
+        .join("\n");
+      copy(text, {
+        ru: "Билды всей группы скопированы в буфер обмена!",
+        en: "Every build in the squad copied to clipboard!",
+      });
+      return;
+    }
     copy(perks.map((p) => p.name[language]).join(", "), {
       ru: "Весь билд скопирован в буфер обмена!",
       en: "Full build copied to clipboard!",
@@ -1387,7 +1495,16 @@ export function RandomizerBoard() {
           onCopy={handleCopyLoadoutPiece}
         />
       )}
+      {mode !== "loadout" && squadActive && (
+        <SquadGrids
+          squad={squad.squad}
+          players={squad.players}
+          language={language}
+          onCopy={handleCopy}
+        />
+      )}
       {mode !== "loadout" &&
+        !squadActive &&
         (poolExhausted ? (
           <div
             className={cn(
@@ -1499,11 +1616,13 @@ export function RandomizerBoard() {
                 : handleCopyAll
           }
           disabled={
-            mode === "loadout"
-              ? loadoutPieces.length === 0
-              : mode === "all"
-                ? perks.length === 0 && loadoutPieces.length === 0
-                : perks.length === 0
+            squadActive
+              ? squad.squad.every((build) => build.length === 0)
+              : mode === "loadout"
+                ? loadoutPieces.length === 0
+                : mode === "all"
+                  ? perks.length === 0 && loadoutPieces.length === 0
+                  : perks.length === 0
           }
           className="tap flex w-full items-center justify-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground disabled:pointer-events-none disabled:opacity-40 sm:w-auto"
         >
@@ -1515,6 +1634,9 @@ export function RandomizerBoard() {
         <button
           type="button"
           onClick={handleShare}
+          /* Squad links work; the four-up share card does not exist yet, so
+             only the image download below stays out of squad mode. */
+          disabled={squadActive && squad.squad.length === 0}
           title={t({
             ru: "Ссылка на этот билд для обычного просмотра — не для OBS, для этого есть отдельная кнопка «Оверлей OBS».",
             en: "A link to view this exact build — not for OBS, use the separate “OBS Overlay” button for that.",
@@ -1527,7 +1649,16 @@ export function RandomizerBoard() {
         <DownloadImageButton
           onSelect={handleDownloadImage}
           generating={generatingImage}
-          disabled={sharePieces.length === 0}
+          disabled={
+            squadActive
+              ? squad.squad.length === 0
+              : sharePieces.length === 0
+          }
+          /* The squad poster exists in 16:9 only — see the note on
+             useShareExport's `squad` input. Offering a story format that
+             silently rendered the landscape one would be worse than not
+             offering it. */
+          layouts={squadActive ? ["landscape"] : undefined}
         />
         <PresentationPicker
           value={presentation}
@@ -1550,6 +1681,21 @@ export function RandomizerBoard() {
           pointerEvents: "none",
         }}
       >
+        {squadActive && squad.squad.length > 0 && (
+          <SquadShareCard
+            ref={squadShareCardRef}
+            builds={squad.squad.map((build) =>
+              build.map((perk) => ({
+                slug: perk.slug,
+                icon: perk.icon,
+                name: perk.name,
+              })),
+            )}
+            role={role}
+            language={language}
+            backdrop={shareBackdrops.landscape}
+          />
+        )}
         <ShareCard
           ref={shareCardRef}
           pieces={sharePieces}
@@ -1621,6 +1767,46 @@ export function RandomizerBoard() {
         </kbd>
         {t({ ru: "ссылка", en: "share link" })}
       </p>
+
+      {mode === "perks" && (
+        <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2">
+          <ToggleSwitch
+            checked={squad.active}
+            onChange={squad.toggle}
+            label={t({ ru: "Билды на группу", en: "Squad builds" })}
+            activeClassName="bg-accent"
+            tooltip={t({
+              ru: "Один билд на каждого в группе, без повторов перков между игроками.",
+              en: "One build per player in your group, with no perk repeated across the team.",
+            })}
+          />
+          {squad.active && (
+            <div
+              className="flex items-center gap-1"
+              role="radiogroup"
+              aria-label={t({ ru: "Сколько игроков", en: "How many players" })}
+            >
+              {[2, 3, 4].map((n) => (
+                <button
+                  key={n}
+                  type="button"
+                  role="radio"
+                  aria-checked={squad.players === n}
+                  onClick={() => squad.setPlayers(n)}
+                  className={cn(
+                    "tap size-7 rounded-full border text-xs font-semibold transition-colors",
+                    squad.players === n
+                      ? "border-accent bg-accent text-accent-foreground"
+                      : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
+                  )}
+                >
+                  {n}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       <ToggleSwitch
         checked={battleRoyale}
