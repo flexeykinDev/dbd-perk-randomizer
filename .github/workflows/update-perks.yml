@@ -20,6 +20,43 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v7
+
+      # Clear a leftover scrape branch before starting a new one.
+      #
+      # The auto-merge step at the bottom passes --delete-branch, so the bot
+      # tidies up after itself. That only covers the path where the bot
+      # merges. PR #7 did not meet the auto-merge gate — its checks never
+      # reported — so it was merged by hand a day later, which never touches
+      # that step, and auto/update-perks was still sitting on the remote five
+      # days on. The repository's own delete-branch-on-merge is off, so
+      # nothing else caught it.
+      #
+      # A stale branch is not harmful in itself. What it costs is the one
+      # thing the branch list is for: with it there, "a scrape is in flight"
+      # and "a scrape finished last week" look identical, which is exactly
+      # the signal you want on a Monday morning.
+      #
+      # Only ever deletes a branch with NO open PR. A scrape waiting for a
+      # human to look at it must survive this, including the case where the
+      # auto-merge conditions were not met and the PR is deliberately open.
+      - name: Clear a leftover scrape branch
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          branch=auto/update-perks
+          if ! git ls-remote --exit-code --heads origin "$branch" >/dev/null 2>&1; then
+            echo "No $branch on the remote; nothing to clear."
+            exit 0
+          fi
+          open=$(gh pr list --head "$branch" --state open --json number --jq 'length')
+          if [ "$open" != "0" ]; then
+            echo "$branch has $open open PR(s) — leaving it alone."
+            exit 0
+          fi
+          echo "$branch exists with no open PR; deleting the leftover."
+          git push origin --delete "$branch"
+
       - uses: actions/setup-node@v7
         with:
           node-version: 22
