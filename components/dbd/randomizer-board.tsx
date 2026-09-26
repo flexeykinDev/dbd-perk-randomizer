@@ -61,6 +61,8 @@ import {
 import { COHERENCE_LEVELS, isCoherenceLevel, type CoherenceLevel } from "@/lib/coherence";
 import { rollUnseenPerks } from "@/lib/unseen-roll";
 import type { VaultBuild } from "@/lib/vault";
+import { tallyVotes, VOTE_SLOTS, type VoteResult } from "@/lib/chat-vote";
+import type { ObsVote } from "@/lib/obs-sync";
 import { withBasePath } from "@/lib/asset-path";
 import {
   getKillerCharacters,
@@ -824,6 +826,14 @@ export function RandomizerBoard() {
   // overlay renders exactly what gets published, so hiding a kind here
   // is what actually keeps it off stream, not a flag the overlay itself
   // has to know about.
+  /* What the overlay should draw for a running vote.
+     A ref, not state, and declared here because publishCurrentBuild below is
+     defined long before useTwitchSettings further down — and because a vote
+     changing must not give publishCurrentBuild a new identity, which would
+     re-fire the publish effect that depends on it. The effect further down
+     writes this and republishes. */
+  const overlayVoteRef = useRef<ObsVote | undefined>(undefined);
+
   const publishCurrentBuild = useCallback(() => {
     const perkPieces = visiblePerks.map((p) => ({
       slug: p.slug,
@@ -846,6 +856,7 @@ export function RandomizerBoard() {
       language,
       perks: displayPieces,
       character: shareCharacter ?? undefined,
+      vote: overlayVoteRef.current,
     });
   }, [mode, role, language, visiblePerks, visibleLoadoutPieces, shareCharacter]);
 
@@ -998,11 +1009,72 @@ export function RandomizerBoard() {
   // see lib/use-twitch-settings.ts. `onReroll` goes through the ref for
   // the reason described above: regenerate's identity changes every roll,
   // and depending on it directly would reconnect the socket each time.
+  /* A finished chat vote: the winning slot stays, the other three reroll.
+     Done with the same per-slot reroll the dice buttons and the 1-4 keys
+     use, rather than by pinning the winner and rolling the rest — a pin is
+     the player's own standing instruction about a slot, and borrowing it for
+     a vote would leave a padlock on the board that nobody set. */
+  const handleVoteEnd = useCallback(
+    (result: VoteResult) => {
+      if (result.winner === null) {
+        showToast(
+          t({
+            ru: "Никто не проголосовал — билд остаётся как есть.",
+            en: "Nobody voted — the build stays as it is.",
+          }),
+        );
+        return;
+      }
+      const winner = result.winner;
+      for (const slot of VOTE_SLOTS) {
+        // rerollSlot is 0-based; chat counts from 1.
+        if (slot !== winner) rerollSlot(slot - 1);
+      }
+      showToast(
+        result.tied
+          ? t({
+              ru: `Ничья — оставляем перк ${winner} (левый из равных).`,
+              en: `A tie — keeping perk ${winner}, the leftmost of them.`,
+            })
+          : t({
+              ru: `Чат выбрал перк ${winner} (${result.tally[winner]} из ${result.voters}).`,
+              en: `Chat kept perk ${winner} (${result.tally[winner]} of ${result.voters}).`,
+            }),
+      );
+    },
+    [rerollSlot, showToast, t],
+  );
+
   const twitch = useTwitchSettings({
     mounted,
     onReroll: useCallback(() => regenerateRef.current(), []),
     onPaste: handleTwitchPaste,
+    onVoteEnd: handleVoteEnd,
   });
+
+  /* The live tally, out to the overlay.
+   *
+   * Gated by the same hold the build publish uses: a streamer who has parked
+   * the overlay does not want chat's votes appearing on it either.
+   *
+   * Only fires on a real change. recordVote hands back the identical state
+   * object for a line that altered nothing (see lib/chat-vote.ts), so
+   * ordinary chat never reaches this and never costs a Firebase write. The
+   * `hadVote` ref is what makes the *end* of a vote publish too — the bars
+   * have to come off the overlay, and "no vote" is a change worth sending
+   * exactly once. */
+  const hadVoteRef = useRef(false);
+  useEffect(() => {
+    const live = twitch.vote;
+    const active = live.ballots.size > 0;
+    if (!active && !hadVoteRef.current) return;
+    overlayVoteRef.current = active
+      ? { tally: tallyVotes(live), endsAt: live.endsAt }
+      : undefined;
+    hadVoteRef.current = active;
+    if (!shouldPublish(`vote:${buildKey}:${live.ballots.size}`)) return;
+    publishCurrentBuild();
+  }, [twitch.vote, publishCurrentBuild, shouldPublish, buildKey]);
 
   /* "Roll something new", from the coverage bar in the Stats modal.
      Installs a specific build the same way a preset does — including

@@ -6,7 +6,12 @@ import { cn } from "@/lib/cn";
 import { useT } from "@/lib/i18n";
 import type { CopyFeedback } from "@/lib/use-copy-feedback";
 import type { TwitchConnectionState, TwitchPermission } from "@/lib/twitch-chat";
-import type { TwitchSettings } from "@/lib/use-twitch-settings";
+import {
+  MAX_TWITCH_VOTE_SEC,
+  MIN_TWITCH_VOTE_SEC,
+  type TwitchSettings,
+} from "@/lib/use-twitch-settings";
+import { tallyVotes, VOTE_SLOTS } from "@/lib/chat-vote";
 import { Dropdown } from "./dropdown";
 
 const STATE_LABEL: Record<TwitchConnectionState, { ru: string; en: string }> = {
@@ -221,6 +226,75 @@ export function ObsTwitchPanel({
                     en: "Build one from scratch — see the “Constructor” tab",
                   })}
                 </button>
+              </>
+            )}
+          </div>
+
+          {/* Same shape as the paste block above it: a checkbox that reveals
+              a command, a permission and its own setting. The permission
+              defaults to mods rather than everyone — starting a vote parks
+              the build for half a minute and commits the stream to whatever
+              chat says. */}
+          <div className="flex flex-col gap-1.5">
+            <label className="flex items-center gap-1.5 text-[0.6875rem] font-medium text-muted">
+              <input
+                type="checkbox"
+                checked={twitch.voteEnabled}
+                onChange={(e) => twitch.setVoteEnabled(e.target.checked)}
+                className="size-3.5 accent-accent"
+              />
+              {t({
+                ru: "Голосование: чат выбирает, какой перк оставить",
+                en: '"Chat picks the perk to keep" vote',
+              })}
+            </label>
+            {twitch.voteEnabled && (
+              <>
+                <div className="flex flex-wrap items-center gap-1.5 pl-5">
+                  <input
+                    type="text"
+                    value={twitch.voteCommand}
+                    onChange={(e) => twitch.setVoteCommand(e.target.value)}
+                    placeholder="!vote"
+                    aria-label={t({ ru: "Команда голосования", en: "Vote command" })}
+                    className="w-24 rounded-full border border-border bg-background px-2.5 py-1 text-[0.6875rem] text-foreground placeholder:text-muted/60 focus:ring-2 focus:ring-accent/40 focus:outline-none"
+                  />
+                  <PermissionSelect
+                    value={twitch.votePermission}
+                    onChange={twitch.setVotePermission}
+                  />
+                  <div className="flex items-center gap-1">
+                    <input
+                      type="number"
+                      min={MIN_TWITCH_VOTE_SEC}
+                      max={MAX_TWITCH_VOTE_SEC}
+                      value={twitch.voteDurationSec}
+                      onChange={(e) => twitch.setVoteDurationSec(Number(e.target.value))}
+                      aria-label={t({
+                        ru: "Длительность голосования, секунд",
+                        en: "Vote duration, seconds",
+                      })}
+                      className="w-14 rounded-full border border-border bg-background px-2 py-1 text-[0.6875rem] text-foreground focus:ring-2 focus:ring-accent/40 focus:outline-none"
+                    />
+                    <span className="text-[0.6875rem] text-muted">
+                      {t({ ru: "сек. на голос", en: "sec to vote" })}
+                    </span>
+                  </div>
+                </div>
+                <p className="pl-5 text-[0.6875rem] text-muted">
+                  {t({
+                    ru: "Зрители пишут в чат 1-4. Перк с наибольшим числом голосов остаётся, остальные перероллятся. При равенстве побеждает левый.",
+                    en: "Viewers type 1-4 in chat. The perk with the most votes stays and the rest reroll. A tie goes to the leftmost.",
+                  })}
+                </p>
+                {twitch.vote.ballots.size > 0 && (
+                  <p className="pl-5 text-[0.6875rem] text-foreground tabular-nums">
+                    {t({ ru: "Идёт голосование:", en: "Vote running:" })}{" "}
+                    {VOTE_SLOTS.map((slot) => `${slot}: ${tallyVotes(twitch.vote)[slot]}`).join(
+                      " · ",
+                    )}
+                  </p>
+                )}
               </>
             )}
           </div>

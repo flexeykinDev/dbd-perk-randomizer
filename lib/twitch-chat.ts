@@ -36,6 +36,15 @@ export interface TwitchChatOptions {
   channel: string;
   commands: TwitchCommand[];
   onStateChange: (state: TwitchConnectionState) => void;
+  /** Every chat line in the channel, command or not.
+   *
+   *  Commands are the wrong shape for a chat vote: a viewer typing "3" is
+   *  not issuing a command, and routing votes through TwitchCommand would
+   *  rate-limit the whole channel to one vote per cooldown — the second
+   *  person to answer would be told to wait. So this is a side channel that
+   *  observes rather than dispatches, and it never changes what a line's
+   *  outcome is. See lib/chat-vote.ts for what reads it. */
+  onMessage?: (user: string, text: string, roles: TwitchSenderRoles) => void;
 }
 
 const RECONNECT_DELAY_MS = 3000;
@@ -64,6 +73,18 @@ function parseTags(line: string): { tags: Record<string, string>; rest: string }
     tags[pair.slice(0, eqIndex)] = pair.slice(eqIndex + 1);
   }
   return { tags, rest: line.slice(spaceIndex + 1) };
+}
+
+/** The sender's login name from an IRC line's prefix (`:nick!user@host …`).
+ *
+ *  The login rather than the display name: a display name can be changed at
+ *  will and differs only in case for most accounts, while the login is the
+ *  stable identity a vote needs to count one person once. */
+function nickFromLine(line: string): string {
+  if (!line.startsWith(":")) return "";
+  const bang = line.indexOf("!");
+  if (bang === -1) return "";
+  return line.slice(1, bang).toLowerCase();
 }
 
 function rolesFromTags(tags: Record<string, string>): TwitchSenderRoles {
@@ -97,6 +118,7 @@ export function createChatDispatcher(
   channel: string,
   commands: TwitchCommand[],
   now: () => number = Date.now,
+  onMessage?: (user: string, text: string, roles: TwitchSenderRoles) => void,
 ): (rawLine: string) => ChatLineOutcome {
   const privmsgMarker = ` PRIVMSG #${channel} :`;
   const matchers = commands.map((command) => ({
@@ -117,6 +139,23 @@ export function createChatDispatcher(
     if (markerIndex === -1) return "ignored";
     const text = line.slice(markerIndex + privmsgMarker.length).trim();
     const roles = rolesFromTags(tags);
+
+    /* Before command matching and independent of it: a line can be both an
+       observed message and a command, and a vote must see everything the
+       channel says regardless of permissions or cooldowns. Guarded so a
+       throwing observer cannot take the socket's message handler down with
+       it — losing a vote is a nuisance, losing the connection is the
+       feature. */
+    if (onMessage) {
+      const user = nickFromLine(line);
+      if (user) {
+        try {
+          onMessage(user, text, roles);
+        } catch {
+          // ignored, deliberately — see above
+        }
+      }
+    }
 
     let outcome: ChatLineOutcome = "no-match";
     for (const matcher of matchers) {
@@ -143,7 +182,12 @@ export function createChatDispatcher(
  *  stops any pending reconnect — call on toggle-off or unmount. */
 export function connectTwitchChat(options: TwitchChatOptions): () => void {
   const channel = options.channel.trim().toLowerCase().replace(/^#/, "");
-  const handleLine = createChatDispatcher(channel, options.commands);
+  const handleLine = createChatDispatcher(
+    channel,
+    options.commands,
+    Date.now,
+    options.onMessage,
+  );
 
   let ws: WebSocket | null = null;
   let stopped = false;
