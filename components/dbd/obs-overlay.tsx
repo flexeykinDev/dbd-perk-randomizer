@@ -145,6 +145,56 @@ function CharacterBadge({
  *  per-icon position are all customizable via URL query params — see
  *  lib/use-obs-mode.ts. See lib/obs-sync.ts for how it hears about changes
  *  from the main tab. */
+/** One slot's share of the vote: the number chat typed, and a bar as wide as
+ *  its share of the leading slot.
+ *
+ *  Relative to the leader rather than to the total, because a bar scaled by
+ *  total shrinks to nothing the moment a channel of any size votes — with
+ *  400 viewers spread over four slots, every bar is a quarter of the width
+ *  and the difference between 110 and 90 is invisible. Against the leader,
+ *  the winner is always full width and the rest are read against it, which
+ *  is the comparison the viewer is actually making.
+ *
+ *  No Tailwind colour classes on the fill: this renders inside OBS's own
+ *  Chromium, and the role colour arrives as a literal from ROLE_COLOR. */
+function VoteBar({
+  count,
+  most,
+  slot,
+  scaleRatio,
+  color,
+}: {
+  count: number;
+  most: number;
+  slot: number;
+  scaleRatio: number;
+  color?: string;
+}) {
+  const height = Math.max(4, Math.round(6 * scaleRatio));
+  return (
+    <div
+      className="flex w-full items-center gap-1.5"
+      style={{ fontSize: Math.round(13 * scaleRatio) }}
+      aria-hidden
+    >
+      <span className="font-bold text-white/70 tabular-nums">{slot}</span>
+      <span
+        className="flex-1 overflow-hidden rounded-full bg-black/55"
+        style={{ height }}
+      >
+        <span
+          className="block h-full rounded-full transition-[width] duration-300"
+          style={{
+            width: `${Math.round((count / most) * 100)}%`,
+            background: color ?? "#ffffff",
+          }}
+        />
+      </span>
+      <span className="font-bold text-white tabular-nums">{count}</span>
+    </div>
+  );
+}
+
 export function ObsOverlay() {
   const t = useT();
   const options = useObsOverlayOptions();
@@ -299,6 +349,20 @@ export function ObsOverlay() {
           >
             {perk.name[state!.language]}
           </span>
+        )}
+        {/* The chat vote, under the card it is a vote for.
+            Drawn only for the four perk slots and only while a vote is
+            running. A payload written before this field existed has no
+            `vote` at all, so an overlay on this build simply draws nothing
+            — which is the same thing it does between votes. */}
+        {state!.vote && index < 4 && (
+          <VoteBar
+            count={state!.vote.tally[(index + 1) as 1 | 2 | 3 | 4] ?? 0}
+            most={Math.max(...Object.values(state!.vote.tally), 1)}
+            slot={index + 1}
+            scaleRatio={scaleRatio}
+            color={roleColor?.solid}
+          />
         )}
       </motion.div>
     );

@@ -198,3 +198,61 @@ test("hasPermission ranks the tiers the way the settings UI describes them", () 
   assert.equal(hasPermission({ ...nobody, isVip: true }, "mods"), false);
   assert.equal(hasPermission({ ...nobody, isModerator: true }, "mods"), true);
 });
+
+test("onMessage sees every chat line, not just commands", () => {
+  /* Votes cannot be commands. A viewer typing "3" is not issuing one, and
+   * routing votes through TwitchCommand would rate-limit the channel to one
+   * vote per cooldown — the second person to answer would be refused. So the
+   * observer has to see everything, regardless of permission or cooldown. */
+  const seen: [string, string][] = [];
+  const dispatch = createChatDispatcher(
+    "chan",
+    [{ trigger: "!reroll", permission: "mods", cooldownMs: 60_000, onTrigger: () => {} }],
+    () => 0,
+    (user, text) => seen.push([user, text]),
+  );
+
+  dispatch(":viewer!viewer@viewer.tmi.twitch.tv PRIVMSG #chan :3");
+  dispatch(":Another!another@another.tmi.twitch.tv PRIVMSG #chan :hello there");
+  // A command still reaches the observer, even when it is refused.
+  dispatch(":nobody!nobody@nobody.tmi.twitch.tv PRIVMSG #chan :!reroll");
+
+  assert.deepEqual(seen, [
+    ["viewer", "3"],
+    ["another", "hello there"],
+    ["nobody", "!reroll"],
+  ]);
+});
+
+test("onMessage lowercases the login, so one person is one voter", () => {
+  const seen: string[] = [];
+  const dispatch = createChatDispatcher("chan", [], () => 0, (user) => seen.push(user));
+  dispatch(":BigName!bigname@bigname.tmi.twitch.tv PRIVMSG #chan :1");
+  assert.deepEqual(seen, ["bigname"]);
+});
+
+test("onMessage ignores lines that are not channel messages", () => {
+  const seen: string[] = [];
+  const dispatch = createChatDispatcher("chan", [], () => 0, (user) => seen.push(user));
+  dispatch("PING :tmi.twitch.tv");
+  dispatch(":tmi.twitch.tv 001 bot :Welcome");
+  dispatch(":viewer!viewer@viewer.tmi.twitch.tv PRIVMSG #other :1");
+  assert.deepEqual(seen, [], "nothing here was somebody talking in this channel");
+});
+
+test("a throwing observer cannot take the connection down", () => {
+  // Losing a vote is a nuisance; losing the socket is the feature.
+  const dispatch = createChatDispatcher(
+    "chan",
+    [{ trigger: "!reroll", permission: "everyone", cooldownMs: 0, onTrigger: () => {} }],
+    () => 0,
+    () => {
+      throw new Error("observer blew up");
+    },
+  );
+  assert.equal(
+    dispatch(":viewer!viewer@viewer.tmi.twitch.tv PRIVMSG #chan :!reroll"),
+    "triggered",
+    "the command still ran",
+  );
+});
