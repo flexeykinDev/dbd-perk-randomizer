@@ -14,6 +14,8 @@ import { useT } from "@/lib/i18n";
 import type { BuildMode } from "@/lib/types";
 import type { SeedController } from "@/lib/use-seed";
 import { DailyCount } from "./daily-count";
+import { DailyStreak } from "./daily-streak";
+import type { StreakState } from "@/lib/daily-streak";
 import { MoreMenu } from "./more-menu";
 
 /* The utility bar under the build.
@@ -59,6 +61,7 @@ export function BoardToolbar({
   excludedPerkCount,
   excludedLoadoutCount,
   seed,
+  dailyStreak,
   onOpenPool,
   onOpenObs,
   onOpenStats,
@@ -69,6 +72,9 @@ export function BoardToolbar({
   excludedPerkCount: number;
   excludedLoadoutCount: number;
   seed: SeedController;
+  /** The streak to show beside the shared count, already resolved for today
+   *  — see lib/use-daily-streak.ts. */
+  dailyStreak: StreakState;
   onOpenPool: (kind: "perks" | "loadout") => void;
   onOpenObs: () => void;
   onOpenStats: () => void;
@@ -190,6 +196,7 @@ export function BoardToolbar({
               count would mean nothing there. Mounting this is also what opens
               the listener — see the component. */}
           {seed.mode === "daily" && <DailyCount />}
+          {seed.mode === "daily" && <DailyStreak streak={dailyStreak} />}
         </p>
       )}
     </div>

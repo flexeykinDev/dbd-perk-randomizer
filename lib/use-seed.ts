@@ -56,12 +56,18 @@ export interface SeedController {
 export function useSeed({
   role,
   onChange,
+  onDailyTaken,
 }: {
   role: PerkRole;
   /** Runs after every change that alters which build should be showing.
    *  `reroll` distinguishes "recompute from the new seed" from "there is no
    *  seed any more, so roll something fresh". */
   onChange: (opts: { reroll: boolean }) => void;
+  /** Runs at the same moment the shared head count is incremented: the
+   *  player has taken today's challenge. Given as a callback rather than
+   *  called from here so the streak stays entirely local — see
+   *  lib/use-daily-streak.ts and the privacy note in the README. */
+  onDailyTaken?: () => void;
 }): SeedController {
   const [mode, setMode] = useState<SeedMode>("none");
   const [input, setInput] = useState("");
@@ -90,10 +96,14 @@ export function useSeed({
     // actually takes the challenge, which is what the number claims to
     // report. Deduplicated per browser per day inside the helper.
     recordDailyParticipation();
+    // Same moment, same definition of taking part, different destination:
+    // one increments an anonymous number in Firebase, the other a private
+    // count that never leaves this browser.
+    onDailyTaken?.();
     setMode("daily");
     setInput("");
     onChange({ reroll: false });
-  }, [mode, onChange]);
+  }, [mode, onChange, onDailyTaken]);
 
   const clear = useCallback(() => {
     setMode("none");

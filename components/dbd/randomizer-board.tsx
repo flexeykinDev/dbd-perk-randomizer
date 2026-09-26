@@ -40,6 +40,7 @@ import { useSeed } from "@/lib/use-seed";
 import { useBattleRoyale } from "@/lib/use-battle-royale";
 import { useSquad } from "@/lib/use-squad";
 import { useCoherence } from "@/lib/use-coherence";
+import { useDailyStreak } from "@/lib/use-daily-streak";
 import { useExclusions } from "@/lib/use-exclusions";
 import { useRollSession, type RollSession } from "@/lib/use-roll-session";
 import { useShareExport } from "@/lib/use-share-export";
@@ -374,6 +375,12 @@ export function RandomizerBoard() {
   const [presetsModalOpen, setPresetsModalOpen] = useState(false);
   const [obsModalOpen, setObsModalOpen] = useState(false);
   const [statsVersion, setStatsVersion] = useState(0);
+  /* The Daily Challenge streak. Local only, by design — see the privacy
+     note in lib/use-daily-streak.ts. */
+  const dailyStreak = useDailyStreak();
+  const hydrateDailyStreak = dailyStreak.hydrate;
+  const recordDailyStreak = dailyStreak.record;
+
   /* How much the roll leans toward a build that hangs together — see
      lib/coherence.ts. Level 0 is the roll this site has always done. */
   const coherence = useCoherence();
@@ -466,6 +473,7 @@ export function RandomizerBoard() {
   const rollRef = useRef<RollSession | null>(null);
   const seed = useSeed({
     role,
+    onDailyTaken: recordDailyStreak,
     /* Reaches the roll session through a ref because that hook is declared
        below this one — it needs `activeSeed` from here, so the dependency
        genuinely runs both ways. Same trick as regenerateRef further down. */
@@ -543,6 +551,7 @@ export function RandomizerBoard() {
     function applyInitialClientState() {
       // The three saved Sets restore themselves — see lib/use-persisted-set.ts.
       hydrateExclusions();
+      hydrateDailyStreak();
       hydrateSquad();
       hydrateCoherence();
       setPerkCount(loadPerkCount());
@@ -600,6 +609,7 @@ export function RandomizerBoard() {
     hydrateExclusions,
     hydrateSeedFromUrl,
     hydrateBattleRoyale,
+    hydrateDailyStreak,
     showSquad,
     hydrateSquad,
     hydrateCoherence,
@@ -1606,6 +1616,7 @@ export function RandomizerBoard() {
         excludedPerkCount={excludedSlugs.size}
         excludedLoadoutCount={excludedLoadoutSlugs.size}
         seed={seed}
+        dailyStreak={dailyStreak.streak}
         onOpenPool={openExcludePanel}
         onOpenObs={() => setObsModalOpen(true)}
         onOpenStats={() => setStatsModalOpen(true)}
