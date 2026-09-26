@@ -2,6 +2,7 @@
 
 import {
   BarChart3,
+  Bookmark,
   BookOpen,
   CalendarClock,
   History,
@@ -67,6 +68,7 @@ export function BoardToolbar({
   onOpenStats,
   onOpenHistory,
   onOpenPresets,
+  onOpenVault,
 }: {
   mode: BuildMode;
   excludedPerkCount: number;
@@ -80,6 +82,7 @@ export function BoardToolbar({
   onOpenStats: () => void;
   onOpenHistory: () => void;
   onOpenPresets: () => void;
+  onOpenVault: () => void;
 }) {
   const t = useT();
   return (
@@ -171,6 +174,10 @@ export function BoardToolbar({
             <button type="button" onClick={onOpenStats} className={MENU_ITEM}>
               <BarChart3 className="size-4 shrink-0" />
               {t({ ru: "Статистика", en: "Stats" })}
+            </button>
+            <button type="button" onClick={onOpenVault} className={MENU_ITEM}>
+              <Bookmark className="size-4 shrink-0" />
+              {t({ ru: "Мои билды", en: "My builds" })}
             </button>
             <button type="button" onClick={onOpenHistory} className={MENU_ITEM}>
               <History className="size-4 shrink-0" />

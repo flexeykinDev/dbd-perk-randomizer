@@ -60,6 +60,7 @@ import {
 } from "@/lib/perk-ids";
 import { COHERENCE_LEVELS, isCoherenceLevel, type CoherenceLevel } from "@/lib/coherence";
 import { rollUnseenPerks } from "@/lib/unseen-roll";
+import type { VaultBuild } from "@/lib/vault";
 import { withBasePath } from "@/lib/asset-path";
 import {
   getKillerCharacters,
@@ -83,6 +84,7 @@ import { LoadoutExcludePanel } from "./loadout-exclude-panel";
 import { StatsModal } from "./stats-modal";
 import { HistoryModal } from "./history-modal";
 import { PresetsModal } from "./presets-modal";
+import { VaultModal } from "./vault-modal";
 import { ToggleSwitch } from "./toggle-switch";
 import {
   ShareCard,
@@ -373,6 +375,7 @@ export function RandomizerBoard() {
   const [statsModalOpen, setStatsModalOpen] = useState(false);
   const [historyModalOpen, setHistoryModalOpen] = useState(false);
   const [presetsModalOpen, setPresetsModalOpen] = useState(false);
+  const [vaultModalOpen, setVaultModalOpen] = useState(false);
   const [obsModalOpen, setObsModalOpen] = useState(false);
   const [statsVersion, setStatsVersion] = useState(0);
   /* The Daily Challenge streak. Local only, by design — see the privacy
@@ -1054,6 +1057,38 @@ export function RandomizerBoard() {
     [excludedSlugs, perkCount, seed, showPerksKeepingLoadout, showToast, t],
   );
 
+  /* Reopening a saved build. Same path a preset takes — including releasing
+     an active seed, which outranks a handed-over build and would otherwise
+     swallow the press — because from the board's point of view they are the
+     same thing: a specific build, chosen rather than rolled. */
+  const openVaultBuild = useCallback(
+    (build: VaultBuild) => {
+      setRole(build.role);
+      seed.release();
+      if (build.mode === "perks") {
+        const perks = build.keys
+          .map((slug) => getPerkBySlug(slug))
+          .filter((perk): perk is Perk => !!perk && perk.role === build.role);
+        if (perks.length === 0) return;
+        setMode("perks");
+        setPerkCount(perks.length);
+        showPerksKeepingLoadout(perks);
+      } else {
+        const pieces = build.keys
+          .map((key) => {
+            const parsed = parseLoadoutKey(key);
+            return parsed ? getLoadoutPiece(parsed.kind, parsed.slug) : undefined;
+          })
+          .filter((piece): piece is LoadoutPiece => !!piece);
+        if (pieces.length === 0) return;
+        setMode("loadout");
+        showLoadoutPieces(pieces);
+      }
+      setVaultModalOpen(false);
+    },
+    [seed, showPerksKeepingLoadout, showLoadoutPieces],
+  );
+
   const applyPreset = useCallback((preset: BuildPreset) => {
     const perks = resolvePreset(preset);
     if (perks.length === 0) return;
@@ -1622,6 +1657,7 @@ export function RandomizerBoard() {
         onOpenStats={() => setStatsModalOpen(true)}
         onOpenHistory={() => setHistoryModalOpen(true)}
         onOpenPresets={() => setPresetsModalOpen(true)}
+        onOpenVault={() => setVaultModalOpen(true)}
       />
 
       {mode === "loadout" ? (
@@ -2074,6 +2110,25 @@ export function RandomizerBoard() {
         onClose={() => setStatsModalOpen(false)}
         version={statsVersion}
         onRollUnseen={rollUnseen}
+      />
+
+      <VaultModal
+        open={vaultModalOpen}
+        onClose={() => setVaultModalOpen(false)}
+        onOpenBuild={openVaultBuild}
+        currentBuild={
+          mode === "loadout"
+            ? loadoutPieces.length > 0
+              ? {
+                  role,
+                  mode: "loadout" as const,
+                  keys: loadoutPieces.map((p) => `${p.kind}:${p.slug}`),
+                }
+              : null
+            : perks.length > 0
+              ? { role, mode: "perks" as const, keys: perks.map((p) => p.slug) }
+              : null
+        }
       />
 
       <PresetsModal
