@@ -39,6 +39,7 @@ import { useLanguage, useT } from "@/lib/i18n";
 import { useSeed } from "@/lib/use-seed";
 import { useBattleRoyale } from "@/lib/use-battle-royale";
 import { useSquad } from "@/lib/use-squad";
+import { useCoherence } from "@/lib/use-coherence";
 import { useExclusions } from "@/lib/use-exclusions";
 import { useRollSession, type RollSession } from "@/lib/use-roll-session";
 import { useShareExport } from "@/lib/use-share-export";
@@ -56,6 +57,7 @@ import {
   getIdForSlug,
   getSlugForId,
 } from "@/lib/perk-ids";
+import { COHERENCE_LEVELS, isCoherenceLevel, type CoherenceLevel } from "@/lib/coherence";
 import { withBasePath } from "@/lib/asset-path";
 import {
   getKillerCharacters,
@@ -144,6 +146,34 @@ function loadPerkCount(): number {
     : DEFAULT_PERK_COUNT;
 }
 
+/* Named rather than numbered: "2" says nothing about what it does, and the
+   scale is short enough that four words fit where four digits would. */
+const COHERENCE_LABEL: Record<CoherenceLevel, { ru: string; en: string }> = {
+  0: { ru: "Хаос", en: "Chaos" },
+  1: { ru: "Слегка", en: "Light" },
+  2: { ru: "Заметно", en: "Strong" },
+  3: { ru: "Синергия", en: "Synergy" },
+};
+
+const COHERENCE_HINT: Record<CoherenceLevel, { ru: string; en: string }> = {
+  0: {
+    ru: "Обычный случайный билд — перки не связаны между собой.",
+    en: "The ordinary random build — perks have nothing to do with each other.",
+  },
+  1: {
+    ru: "Перки, подходящие друг другу, выпадают немного чаще.",
+    en: "Perks that fit what you already rolled come up a little more often.",
+  },
+  2: {
+    ru: "Перки, подходящие друг другу, выпадают заметно чаще.",
+    en: "Perks that fit what you already rolled come up noticeably more often.",
+  },
+  3: {
+    ru: "Билд собирается вокруг одной темы. Все перки остаются доступными — просто реже.",
+    en: "The build gathers around one idea. Every perk is still reachable, just rarer.",
+  },
+};
+
 const VALID_MODES: readonly BuildMode[] = ["perks", "loadout", "all"];
 
 function loadMode(): BuildMode {
@@ -168,6 +198,9 @@ interface InitialUrlState {
   role: PerkRole;
   mode: BuildMode;
   seed?: string;
+  /** From `?c=` — see lib/coherence.ts. Absent means 0, which is why every
+   *  link written before this existed still opens the build it describes. */
+  coherence?: CoherenceLevel;
   perks?: Perk[];
   loadoutPieces?: LoadoutPiece[];
   /** One build per player, from `?sq=` — see lib/perk-ids.ts. */
@@ -205,8 +238,15 @@ function readInitialUrlState(): InitialUrlState | null {
   const mode: BuildMode =
     modeParam === "loadout" ? "loadout" : modeParam === "all" ? "all" : "perks";
 
+  /* The level changes what a seed means — the same seed at level 0 and
+     level 3 are different builds — so it has to travel with the link or a
+     shared seed reopens as something else. Read before the seed branch
+     returns, for exactly that reason. */
+  const coherenceParam = Number(params.get("c"));
+  const coherence = isCoherenceLevel(coherenceParam) ? coherenceParam : undefined;
+
   const seed = params.get("seed");
-  if (seed) return { role, mode, seed };
+  if (seed) return { role, mode, seed, coherence };
 
   const readLoadoutPieces = (): LoadoutPiece[] => {
     const lpParam = params.get("lp");
@@ -248,13 +288,13 @@ function readInitialUrlState(): InitialUrlState | null {
 
   if (mode === "loadout") {
     const loadoutPieces = readLoadoutPieces();
-    if (loadoutPieces.length > 0) return { role, mode, loadoutPieces };
+    if (loadoutPieces.length > 0) return { role, mode, loadoutPieces, coherence };
     // Explicit `?mode=loadout` is itself meaningful intent — unlike a bare
     // `?r=...` alone (which existing perk links deliberately don't treat as
     // "shared state," see the perks branch below), a link that spells out
     // the mode should open in that mode even without a specific build to
     // restore.
-    return { role, mode };
+    return { role, mode, coherence };
   }
 
   if (mode === "all") {
@@ -264,11 +304,12 @@ function readInitialUrlState(): InitialUrlState | null {
       return {
         role,
         mode,
+        coherence,
         perks: perks.length > 0 ? perks : undefined,
         loadoutPieces: loadoutPieces.length > 0 ? loadoutPieces : undefined,
       };
     }
-    return { role, mode }; // same "explicit mode is enough" rule as loadout above
+    return { role, mode, coherence }; // same "explicit mode is enough" rule as loadout above
   }
 
   // A squad link is read before the single-build one. They never appear
@@ -287,7 +328,7 @@ function readInitialUrlState(): InitialUrlState | null {
   }
 
   const perks = readPerks();
-  if (perks.length > 0) return { role, mode, perks };
+  if (perks.length > 0) return { role, mode, perks, coherence };
 
   // A role with nothing attached is still intent worth honouring. `r` is the
   // short parameter the site writes into every share link it generates, so
@@ -295,7 +336,7 @@ function readInitialUrlState(): InitialUrlState | null {
   // hand — used to open the Survivor side without a word. Only the role and
   // mode are applied here; nothing is marked as a shared build, so the
   // visitor gets a normal, rerollable roll for the side they asked for.
-  return { role, mode };
+  return { role, mode, coherence };
 }
 
 export function RandomizerBoard() {
@@ -332,6 +373,15 @@ export function RandomizerBoard() {
   const [presetsModalOpen, setPresetsModalOpen] = useState(false);
   const [obsModalOpen, setObsModalOpen] = useState(false);
   const [statsVersion, setStatsVersion] = useState(0);
+  /* How much the roll leans toward a build that hangs together — see
+     lib/coherence.ts. Level 0 is the roll this site has always done. */
+  const coherence = useCoherence();
+  const hydrateCoherence = coherence.hydrate;
+  /* Pulled out for the mount effect's dependency list: useCoherence returns a
+     fresh object each render, so depending on the controller would re-run
+     that once-only hydration on every roll. Both callbacks are stable. */
+  const setCoherenceLevel = coherence.setLevel;
+
   /* Battle Royale — play until the pool runs dry. See lib/use-battle-royale.ts. */
   const br = useBattleRoyale();
 
@@ -453,6 +503,7 @@ export function RandomizerBoard() {
     excludedPerks: combinedExcluded,
     excludedLoadout: combinedExcludedLoadout,
     favoriteSlugs,
+    coherence: coherence.level,
     guaranteeTeachables,
     selectedCharacter,
     maxPerkCount: MAX_PERK_COUNT,
@@ -492,6 +543,7 @@ export function RandomizerBoard() {
       // The three saved Sets restore themselves — see lib/use-persisted-set.ts.
       hydrateExclusions();
       hydrateSquad();
+      hydrateCoherence();
       setPerkCount(loadPerkCount());
       setMode(loadMode());
       setLoadoutSlots(loadLoadoutSlots());
@@ -503,6 +555,12 @@ export function RandomizerBoard() {
       if (urlState) {
         setRole(urlState.role);
         setMode(urlState.mode);
+        /* After hydrateCoherence, so a link wins over the saved setting: the
+           build someone shared was rolled at their level, and opening it at
+           yours would show a different build under their link. Applied before
+           the branch below rather than inside one arm of it — the level is
+           orthogonal to which of squad/seed/shared put the build on screen. */
+        if (urlState.coherence !== undefined) setCoherenceLevel(urlState.coherence);
         if (urlState.squad) {
           // A squad link turns the mode on and sizes the lobby to whatever
           // arrived. It never marks a shared single build: the squad is the
@@ -543,6 +601,8 @@ export function RandomizerBoard() {
     hydrateBattleRoyale,
     showSquad,
     hydrateSquad,
+    hydrateCoherence,
+    setCoherenceLevel,
     hydrateShared,
   ]);
 
@@ -624,6 +684,11 @@ export function RandomizerBoard() {
       const params = new URLSearchParams();
       params.set("r", ROLE_SHORT[role]);
       if (mode !== "perks") params.set("mode", mode); // "loadout" or "all"
+      /* Only when it is doing something. At level 0 the link is byte-for-byte
+         what this site has always written, so nothing about existing links,
+         bookmarks or the OBS overlay's URL changes for anyone who leaves the
+         setting alone. */
+      if (coherence.level !== 0) params.set("c", String(coherence.level));
       if (activeSeed) {
         params.set("seed", activeSeed);
         window.history.replaceState(
@@ -678,7 +743,17 @@ export function RandomizerBoard() {
       );
     }
     if (mounted) syncUrl();
-  }, [role, mode, perks, loadoutPieces, mounted, activeSeed, squadActive, squad.squad]);
+  }, [
+    role,
+    mode,
+    perks,
+    loadoutPieces,
+    mounted,
+    activeSeed,
+    squadActive,
+    squad.squad,
+    coherence.level,
+  ]);
 
   // Records exactly one roll event per genuine generation (initial pick,
   // regenerate, role/count switch) — deduped by content key so React 19
@@ -1321,6 +1396,42 @@ export function RandomizerBoard() {
                 })),
               ]}
             />
+          </div>
+        )}
+
+        {/* Sits beside Theme because the two answer neighbouring questions,
+            and reads as the softer of the pair on purpose: Theme narrows the
+            pool to one idea, this only tilts the draw and leaves every perk
+            reachable. */}
+        {mode !== "loadout" && mounted && (
+          <div className="flex shrink-0 flex-wrap items-center justify-center gap-x-2 gap-y-1.5 px-4 py-1.5 text-sm sm:py-2">
+            <span className="text-muted">
+              {t({ ru: "Связность:", en: "Coherence:" })}
+            </span>
+            <div
+              className="flex items-center gap-1"
+              role="radiogroup"
+              aria-label={t({ ru: "Связность билда", en: "Build coherence" })}
+            >
+              {COHERENCE_LEVELS.map((level) => (
+                <button
+                  key={level}
+                  type="button"
+                  role="radio"
+                  aria-checked={coherence.level === level}
+                  onClick={() => coherence.setLevel(level)}
+                  title={t(COHERENCE_HINT[level])}
+                  className={cn(
+                    "tap rounded-full border px-2.5 py-1 text-xs font-semibold transition-colors",
+                    coherence.level === level
+                      ? cn(roleColor.border, roleColor.bg, roleColor.text)
+                      : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
+                  )}
+                >
+                  {t(COHERENCE_LABEL[level])}
+                </button>
+              ))}
+            </div>
           </div>
         )}
 

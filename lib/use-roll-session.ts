@@ -5,6 +5,7 @@ import { getRandomPerksWithTeachables, getSeededPerks } from "./perks";
 import { flattenLoadout, getRandomLoadout, getSeededLoadout } from "./loadout";
 import { usePerkSlots } from "./use-perk-slots";
 import type { BuildMode, Loadout, LoadoutPiece, LoadoutSlots, Perk, PerkRole } from "./types";
+import type { CoherenceLevel } from "./coherence";
 
 /* What build is on screen, and why.
  *
@@ -96,6 +97,7 @@ export function useRollSession({
   excludedPerks,
   excludedLoadout,
   favoriteSlugs,
+  coherence,
   guaranteeTeachables,
   selectedCharacter,
   maxPerkCount,
@@ -111,6 +113,9 @@ export function useRollSession({
   excludedPerks: ReadonlySet<string>;
   excludedLoadout: ReadonlySet<string>;
   favoriteSlugs: ReadonlySet<string>;
+  /** See lib/coherence.ts. 0 takes the original code path, so the default
+   *  cannot have changed what an existing seed or link produces. */
+  coherence: CoherenceLevel;
   guaranteeTeachables: boolean;
   selectedCharacter: string | null;
   /** How much slack to roll beyond perkCount; see basePerks below. */
@@ -133,6 +138,12 @@ export function useRollSession({
     if (!mounted || mode === "loadout") return [];
     if (sharedBuild) return sharedBuild;
     if (perkCount === 0) return [];
+    /* A seeded build ignores coherence, deliberately. getSeededPerks already
+       ignores exclusions and Battle Royale progress so that one seed means
+       one build for everybody — and the Daily Challenge's seed is derived
+       locally, not shared in a link, so weighting it by a local setting would
+       hand two players taking the same challenge two different builds. The
+       level still applies to the next Generate. */
     if (activeSeed) return getSeededPerks(role, perkCount, activeSeed);
     if (poolExhausted) return [];
     const character = guaranteeTeachables ? selectedCharacter : null;
@@ -149,6 +160,7 @@ export function useRollSession({
       excludedPerks,
       Math.random,
       favoriteSlugs,
+      coherence,
     );
   }, [
     availableCount,
@@ -162,6 +174,7 @@ export function useRollSession({
     poolExhausted,
     activeSeed,
     favoriteSlugs,
+    coherence,
     guaranteeTeachables,
     selectedCharacter,
     maxPerkCount,

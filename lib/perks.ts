@@ -4,6 +4,7 @@ import charactersData from "@/data/characters.json";
 import slugAliasData from "@/data/perk-slug-aliases.json";
 import { GENERAL_CHARACTER, type Perk, type PerkRole, type PerksMeta } from "./types";
 import { createSeededRandom, shuffle } from "./seeded-random";
+import { pickCoherentPerks, type CoherenceLevel } from "./coherence";
 
 export const perks: Perk[] = perksData as Perk[];
 export const perksMeta: PerksMeta = metaData as PerksMeta;
@@ -74,7 +75,7 @@ export function getAvailablePool(
 // appears (it's still possible to roll a build with none of your favorites,
 // same as a real loot table — a hard guarantee would make "favorite everything"
 // behave identically to "favorite nothing", which defeats the point).
-const FAVORITE_WEIGHT = 4;
+export const FAVORITE_WEIGHT = 4;
 
 export function getRandomPerks(
   role: PerkRole,
@@ -82,6 +83,11 @@ export function getRandomPerks(
   excludedSlugs?: ReadonlySet<string>,
   random: () => number = Math.random,
   favoriteSlugs?: ReadonlySet<string>,
+  /** How much the draw should favour perks that fit what it has already
+   *  picked — see lib/coherence.ts. 0 is this function's original behaviour
+   *  and takes the original code path, so an untouched setting cannot have
+   *  changed what any existing seed produces. */
+  coherence: CoherenceLevel = 0,
 ): Perk[] {
   // Never pull from outside the caller's excluded-respecting pool, even when
   // it's smaller than `count` — silently topping up from excluded perks
@@ -90,6 +96,14 @@ export function getRandomPerks(
   // `poolExhausted`) and show an explicit "not enough perks" state instead of
   // calling this with a pool too small to fill the request.
   const pool = getAvailablePool(role, excludedSlugs);
+
+  if (coherence !== 0) {
+    // Favourites still apply: they become the base weight each candidate is
+    // measured from, rather than a second mechanism fighting the first.
+    return pickCoherentPerks(pool, count, coherence, random, (perk) =>
+      favoriteSlugs?.has(perk.slug) ? FAVORITE_WEIGHT : 1,
+    );
+  }
 
   if (!favoriteSlugs || favoriteSlugs.size === 0) {
     return shuffle(pool, random).slice(0, count);
@@ -130,8 +144,10 @@ export function getRandomPerksWithTeachables(
   excludedSlugs?: ReadonlySet<string>,
   random: () => number = Math.random,
   favoriteSlugs?: ReadonlySet<string>,
+  coherence: CoherenceLevel = 0,
 ): Perk[] {
-  if (!character) return getRandomPerks(role, count, excludedSlugs, random, favoriteSlugs);
+  if (!character)
+    return getRandomPerks(role, count, excludedSlugs, random, favoriteSlugs, coherence);
 
   const pool = getAvailablePool(role, excludedSlugs);
   const guaranteed = shuffle(
@@ -143,7 +159,11 @@ export function getRandomPerksWithTeachables(
 
   const extraExcluded = new Set(excludedSlugs ?? []);
   for (const perk of guaranteed) extraExcluded.add(perk.slug);
-  const rest = getRandomPerks(role, remaining, extraExcluded, random, favoriteSlugs);
+  /* The guaranteed teachables are placed first and the rest fills around
+     them, so coherence measures the filler against what the character has
+     already put in the build — which is the behaviour you would want from
+     both settings at once. */
+  const rest = getRandomPerks(role, remaining, extraExcluded, random, favoriteSlugs, coherence);
   return shuffle([...guaranteed, ...rest], random);
 }
 

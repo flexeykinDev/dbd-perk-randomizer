@@ -37,6 +37,8 @@ function setup({ mode = "all", role = "survivor", perkCount = 4, activeSeed = nu
         perkCount: p.perkCount,
         loadoutSlots: { item: true, addons: true, offering: true },
         activeSeed: p.activeSeed,
+        // Unweighted, so these keep exercising the roll they always have.
+        coherence: 0,
         poolExhausted: false,
         availableCount: getPerksByRole(p.role).length,
         excludedPerks: new Set(),
