@@ -36,6 +36,18 @@ export interface ObsPerk {
   name: { en: string; ru: string };
 }
 
+/** A chat vote in progress, for the overlay's bars.
+ *
+ *  Counts only. The overlay draws what chat has said so far; it has no
+ *  business knowing who said it, and a room code is readable by anyone who
+ *  has the link. */
+export interface ObsVote {
+  /** Votes per slot, always all four so a bar is never missing. */
+  tally: Record<1 | 2 | 3 | 4, number>;
+  /** When the vote closes, so the overlay can show time running out. */
+  endsAt: number;
+}
+
 export interface ObsSyncPayload {
   role: PerkRole;
   perks: ObsPerk[];
@@ -46,6 +58,19 @@ export interface ObsSyncPayload {
    *  build's rolled Power add-ons) for exactly which. Absent when neither
    *  applies (e.g. a survivor build with no character forced). */
   character?: string;
+  /** The vote running right now, absent when there is none.
+   *
+   *  Optional in both directions, and it has to stay that way. An overlay
+   *  running an older build simply never reads this key — extra fields in a
+   *  JSON payload are not an error — and a current overlay reading a payload
+   *  written before this existed sees `undefined` and draws no bars. The
+   *  Firebase rules validate only that role/language/updatedAt are present,
+   *  so a new key needs no rules change either.
+   *
+   *  publishObsState round-trips the payload through JSON before writing,
+   *  which drops undefined-valued keys — so "no vote" costs nothing in the
+   *  database rather than writing a null. */
+  vote?: ObsVote;
 }
 
 /** How the last Firebase write went.

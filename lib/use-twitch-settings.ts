@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   connectTwitchChat,
   type TwitchCommand,
@@ -8,6 +8,14 @@ import {
   type TwitchPermission,
 } from "./twitch-chat";
 import { safeGet, safeSet } from "./safe-storage";
+import {
+  closeVote,
+  NO_VOTE,
+  openVote,
+  recordVote,
+  type VoteResult,
+  type VoteState,
+} from "./chat-vote";
 
 // Everything behind "let chat reroll my build": the settings, where they
 // persist, and the chat connection they configure.
@@ -27,12 +35,22 @@ const COOLDOWN_KEY = "dbd-randomizer:twitch-cooldown-sec";
 const PASTE_ENABLED_KEY = "dbd-randomizer:twitch-paste-enabled";
 const PASTE_COMMAND_KEY = "dbd-randomizer:twitch-paste-command";
 const PASTE_PERMISSION_KEY = "dbd-randomizer:twitch-paste-permission";
+const VOTE_ENABLED_KEY = "dbd-randomizer:twitch-vote-enabled";
+const VOTE_COMMAND_KEY = "dbd-randomizer:twitch-vote-command";
+const VOTE_PERMISSION_KEY = "dbd-randomizer:twitch-vote-permission";
+const VOTE_DURATION_KEY = "dbd-randomizer:twitch-vote-duration-sec";
 
 export const DEFAULT_TWITCH_REROLL_COMMAND = "!reroll";
 export const DEFAULT_TWITCH_PASTE_COMMAND = "!paste";
+export const DEFAULT_TWITCH_VOTE_COMMAND = "!vote";
 const DEFAULT_COOLDOWN_SEC = 4;
 export const MIN_TWITCH_COOLDOWN_SEC = 1;
 export const MAX_TWITCH_COOLDOWN_SEC = 300;
+/** Long enough for chat to notice and answer, short enough that the stream
+ *  is not sitting still waiting for it. */
+const DEFAULT_VOTE_DURATION_SEC = 30;
+export const MIN_TWITCH_VOTE_SEC = 5;
+export const MAX_TWITCH_VOTE_SEC = 300;
 
 const VALID_PERMISSIONS: readonly TwitchPermission[] = [
   "everyone",
@@ -47,6 +65,13 @@ function loadPermission(key: string, fallback: TwitchPermission): TwitchPermissi
   return VALID_PERMISSIONS.includes(stored as TwitchPermission)
     ? (stored as TwitchPermission)
     : fallback;
+}
+
+function loadVoteDurationSec(): number {
+  const n = Number(safeGet("local", VOTE_DURATION_KEY));
+  return Number.isFinite(n) && n >= MIN_TWITCH_VOTE_SEC && n <= MAX_TWITCH_VOTE_SEC
+    ? n
+    : DEFAULT_VOTE_DURATION_SEC;
 }
 
 function loadCooldownSec(): number {
@@ -66,6 +91,13 @@ export interface TwitchSettings {
   pasteEnabled: boolean;
   pasteCommand: string;
   pastePermission: TwitchPermission;
+  voteEnabled: boolean;
+  voteCommand: string;
+  votePermission: TwitchPermission;
+  voteDurationSec: number;
+  /** The vote currently running, or NO_VOTE. Exposed so the panel can show
+   *  it and so chunk 3 can publish the tally to the overlay. */
+  vote: VoteState;
   setChannel: (value: string) => void;
   setEnabled: (value: boolean) => void;
   setRerollCommand: (value: string) => void;
@@ -74,18 +106,27 @@ export interface TwitchSettings {
   setPasteEnabled: (value: boolean) => void;
   setPasteCommand: (value: string) => void;
   setPastePermission: (value: TwitchPermission) => void;
+  setVoteEnabled: (value: boolean) => void;
+  setVoteCommand: (value: string) => void;
+  setVotePermission: (value: TwitchPermission) => void;
+  setVoteDurationSec: (value: number) => void;
 }
 
 export function useTwitchSettings({
   mounted,
   onReroll,
   onPaste,
+  onVoteEnd,
 }: {
   /** Gates both hydration and connecting, so nothing here runs during the
    *  server render or before the client has caught up. */
   mounted: boolean;
   onReroll: () => void;
   onPaste: (argsText: string) => void;
+  /** Runs when a vote's timer expires. `winner` is null when nobody voted —
+   *  the caller decides what that means rather than this pretending chat
+   *  chose the first slot. */
+  onVoteEnd?: (result: VoteResult) => void;
 }): TwitchSettings {
   const [channel, setChannelState] = useState("");
   const [enabled, setEnabledState] = useState(false);
@@ -98,6 +139,14 @@ export function useTwitchSettings({
   const [pasteCommand, setPasteCommandState] = useState(DEFAULT_TWITCH_PASTE_COMMAND);
   const [pastePermission, setPastePermissionState] =
     useState<TwitchPermission>("subs_vips");
+  const [voteEnabled, setVoteEnabledState] = useState(false);
+  const [voteCommand, setVoteCommandState] = useState(DEFAULT_TWITCH_VOTE_COMMAND);
+  /* Mods by default, unlike reroll: starting a vote parks the build for half
+     a minute and commits the stream to whatever chat says, which is not
+     something any passer-by should be able to do on a whim. */
+  const [votePermission, setVotePermissionState] = useState<TwitchPermission>("mods");
+  const [voteDurationSec, setVoteDurationSecState] = useState(DEFAULT_VOTE_DURATION_SEC);
+  const [vote, setVote] = useState<VoteState>(NO_VOTE);
 
   // Hydrated on mount rather than in useState initialisers: localStorage
   // doesn't exist during the server render, and reading it there would
@@ -129,6 +178,12 @@ export function useTwitchSettings({
         safeGet("local", PASTE_COMMAND_KEY) || DEFAULT_TWITCH_PASTE_COMMAND,
       );
       setPastePermissionState(loadPermission(PASTE_PERMISSION_KEY, "subs_vips"));
+      setVoteEnabledState(safeGet("local", VOTE_ENABLED_KEY) === "1");
+      setVoteCommandState(
+        safeGet("local", VOTE_COMMAND_KEY) || DEFAULT_TWITCH_VOTE_COMMAND,
+      );
+      setVotePermissionState(loadPermission(VOTE_PERMISSION_KEY, "mods"));
+      setVoteDurationSecState(loadVoteDurationSec());
     }
     restoreSavedSettings();
   }, [mounted]);
@@ -163,6 +218,17 @@ export function useTwitchSettings({
     setPastePermissionState,
     (v) => v,
   );
+  const setVoteEnabled = persist<boolean>(
+    VOTE_ENABLED_KEY,
+    setVoteEnabledState,
+    (v) => (v ? "1" : "0"),
+  );
+  const setVoteCommand = persist<string>(VOTE_COMMAND_KEY, setVoteCommandState, (v) => v);
+  const setVotePermission = persist<TwitchPermission>(
+    VOTE_PERMISSION_KEY,
+    setVotePermissionState,
+    (v) => v,
+  );
 
   /** Clamped rather than validated: the control is a number input, and
    *  silently correcting an out-of-range value beats refusing it. */
@@ -174,6 +240,68 @@ export function useTwitchSettings({
     setCooldownSecState(clamped);
     safeSet("local", COOLDOWN_KEY, String(clamped));
   };
+
+  const setVoteDurationSec = (seconds: number) => {
+    const clamped = Math.min(MAX_TWITCH_VOTE_SEC, Math.max(MIN_TWITCH_VOTE_SEC, seconds));
+    setVoteDurationSecState(clamped);
+    safeSet("local", VOTE_DURATION_KEY, String(clamped));
+  };
+
+  /* The vote itself.
+   *
+   * Held in a ref as well as in state, for one specific reason: the chat
+   * message handler is baked into the socket by the effect below, and a
+   * handler that closed over `vote` would make the vote a dependency of the
+   * connection — every single message would tear down the WebSocket and
+   * reconnect. The ref is what the handler reads; the state is what the UI
+   * renders, and it is only for rendering. */
+  const voteRef = useRef<VoteState>(NO_VOTE);
+  const voteTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Same trick the board uses for regenerate: the callback can change every
+  // render without that reaching the socket.
+  const onVoteEndRef = useRef(onVoteEnd);
+  useEffect(() => {
+    onVoteEndRef.current = onVoteEnd;
+  }, [onVoteEnd]);
+
+  const finishVote = useCallback(() => {
+    voteTimer.current = null;
+    const result = closeVote(voteRef.current);
+    voteRef.current = NO_VOTE;
+    setVote(NO_VOTE);
+    onVoteEndRef.current?.(result);
+  }, []);
+
+  const startVote = useCallback(
+    (durationSec: number) => {
+      // A second !vote while one is running restarts it rather than opening
+      // a rival: two live votes would split chat between two tallies that
+      // neither the streamer nor the viewers can tell apart.
+      if (voteTimer.current) clearTimeout(voteTimer.current);
+      const ms = durationSec * 1000;
+      const opened = openVote(ms, Date.now());
+      voteRef.current = opened;
+      setVote(opened);
+      voteTimer.current = setTimeout(finishVote, ms);
+    },
+    [finishVote],
+  );
+
+  /** Stable on purpose — see voteRef above. Reads the ref, writes both. */
+  const handleChatMessage = useCallback((user: string, text: string) => {
+    const next = recordVote(voteRef.current, user, text, Date.now());
+    // recordVote returns the same object when nothing changed, so an
+    // ordinary chat line costs one comparison and no render.
+    if (next === voteRef.current) return;
+    voteRef.current = next;
+    setVote(next);
+  }, []);
+
+  // A vote must not outlive the page, or its timer fires into a component
+  // that is gone.
+  useEffect(() => () => {
+    if (voteTimer.current) clearTimeout(voteTimer.current);
+  }, []);
 
   // The connection itself. Rebuilt whenever anything it configures
   // changes, since a command's trigger, permission or cooldown is baked
@@ -202,7 +330,22 @@ export function useTwitchSettings({
         onTrigger: (args) => onPaste(args),
       });
     }
-    return connectTwitchChat({ channel, commands, onStateChange: setState });
+    if (voteEnabled) {
+      commands.push({
+        trigger: voteCommand.trim() || DEFAULT_TWITCH_VOTE_COMMAND,
+        permission: votePermission,
+        cooldownMs: cooldownSec * 1000,
+        onTrigger: () => startVote(voteDurationSec),
+      });
+    }
+    return connectTwitchChat({
+      channel,
+      commands,
+      onStateChange: setState,
+      // Only while the feature is on: a channel that never votes should not
+      // have every line it says routed through a tallier.
+      onMessage: voteEnabled ? handleChatMessage : undefined,
+    });
   }, [
     mounted,
     enabled,
@@ -213,6 +356,12 @@ export function useTwitchSettings({
     pasteEnabled,
     pasteCommand,
     pastePermission,
+    voteEnabled,
+    voteCommand,
+    votePermission,
+    voteDurationSec,
+    startVote,
+    handleChatMessage,
     onReroll,
     onPaste,
   ]);
@@ -235,5 +384,14 @@ export function useTwitchSettings({
     setPasteEnabled,
     setPasteCommand,
     setPastePermission,
+    voteEnabled,
+    voteCommand,
+    votePermission,
+    voteDurationSec,
+    vote,
+    setVoteEnabled,
+    setVoteCommand,
+    setVotePermission,
+    setVoteDurationSec,
   };
 }
