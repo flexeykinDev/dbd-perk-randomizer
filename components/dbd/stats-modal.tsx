@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { X, Trash2 } from "lucide-react";
+import { X, Trash2, Sparkles } from "lucide-react";
 import type { PerkRole } from "@/lib/types";
 import { getPerksByRole } from "@/lib/perks";
 import { withBasePath } from "@/lib/asset-path";
@@ -18,6 +18,7 @@ export function StatsModal({
   language,
   onClose,
   version,
+  onRollUnseen,
 }: {
   open: boolean;
   language: "en" | "ru";
@@ -25,6 +26,11 @@ export function StatsModal({
   /** Bump to force a re-read of localStorage the next time this is open
    *  (e.g. right after a new build was generated). */
   version: number;
+  /** Rolls a build from perks that have never come up, for the role being
+   *  looked at — which is not necessarily the board's, so the board switches
+   *  to it. Acting on a different role than the number above the button
+   *  would be a surprise. */
+  onRollUnseen: (role: PerkRole) => void;
 }) {
   const t = useT();
   const { attachCard, dialogProps } = useModal({
@@ -139,7 +145,11 @@ export function StatsModal({
                       </p>
                     </div>
 
-                    <PoolCoverage seen={stats.seen} poolSize={stats.poolSize} />
+                    <PoolCoverage
+                      seen={stats.seen}
+                      poolSize={stats.poolSize}
+                      onRollUnseen={() => onRollUnseen(role)}
+                    />
 
                     <StatList
                       title={t({ ru: "Чаще всего выпадают", en: "Most Frequently Rolled" })}
@@ -189,7 +199,15 @@ export function StatsModal({
  *  counts are shown rather than only a percentage, because the pool grows
  *  with every chapter — 41% of 315 is a different achievement from 41% of
  *  260, and a bare percentage hides that it can go down when perks ship. */
-function PoolCoverage({ seen, poolSize }: { seen: number; poolSize: number }) {
+function PoolCoverage({
+  seen,
+  poolSize,
+  onRollUnseen,
+}: {
+  seen: number;
+  poolSize: number;
+  onRollUnseen: () => void;
+}) {
   const t = useT();
   const percent = poolSize > 0 ? Math.round((seen / poolSize) * 100) : 0;
   const left = poolSize - seen;
@@ -225,6 +243,21 @@ function PoolCoverage({ seen, poolSize }: { seen: number; poolSize: number }) {
               en: "Every one of them has come up.",
             })}
       </p>
+      {/* Directly under the number it acts on: the count is the reason
+          anybody would press this, and a player 184 perks into 321 has no
+          other way to go looking for the remaining 137. Offered only while
+          some are left — a button that can only ever hand back an ordinary
+          build is worse than no button. */}
+      {left > 0 && (
+        <button
+          type="button"
+          onClick={onRollUnseen}
+          className="tap mt-2.5 flex w-full items-center justify-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+        >
+          <Sparkles className="size-3.5" />
+          {t({ ru: "Выдать новое", en: "Roll something new" })}
+        </button>
+      )}
     </div>
   );
 }

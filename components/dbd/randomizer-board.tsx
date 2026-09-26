@@ -45,7 +45,7 @@ import { useRollSession, type RollSession } from "@/lib/use-roll-session";
 import { useShareExport } from "@/lib/use-share-export";
 import { PoolStatsPanel } from "./pool-stats-panel";
 import { BoardToolbar } from "./board-toolbar";
-import { recordRoll } from "@/lib/stats";
+import { getSeenSlugs, recordRoll } from "@/lib/stats";
 import {
   parseLoadoutKey,
   recordHistoryEntry,
@@ -58,6 +58,7 @@ import {
   getSlugForId,
 } from "@/lib/perk-ids";
 import { COHERENCE_LEVELS, isCoherenceLevel, type CoherenceLevel } from "@/lib/coherence";
+import { rollUnseenPerks } from "@/lib/unseen-roll";
 import { withBasePath } from "@/lib/asset-path";
 import {
   getKillerCharacters,
@@ -989,6 +990,59 @@ export function RandomizerBoard() {
     onReroll: useCallback(() => regenerateRef.current(), []),
     onPaste: handleTwitchPaste,
   });
+
+  /* "Roll something new", from the coverage bar in the Stats modal.
+     Installs a specific build the same way a preset does — including
+     releasing an active seed, which would otherwise outrank it and quietly
+     ignore the press. Pins and per-slot rerolls are suppressed for it, as
+     they are for any build handed over whole; rolling around a build chosen
+     for what is *not* in it does not have an obvious meaning, and Generate
+     is one press away. */
+  const rollUnseen = useCallback(
+    (targetRole: PerkRole) => {
+      const pool = getAvailablePool(targetRole, excludedSlugs);
+      const result = rollUnseenPerks(pool, getSeenSlugs(targetRole), perkCount);
+      if (result.perks.length === 0) return;
+
+      setRole(targetRole);
+      seed.release();
+      showPerksKeepingLoadout(result.perks);
+      setStatsModalOpen(false);
+      playSound("roll");
+
+      /* Recorded here rather than by the effect below, which skips anything
+         installed as a handed-over build — that rule is about not counting
+         somebody else's shared link as your roll, and this is your roll: you
+         asked for it and these perks are now ones you have been given. Left
+         uncounted, the button could never move the coverage number it sits
+         under, which is the only reason to press it twice. */
+      recordRoll(targetRole, result.perks);
+      recordHistoryEntry({
+        mode: "perks",
+        role: targetRole,
+        keys: result.perks.map((p) => p.slug),
+      });
+      setStatsVersion((v) => v + 1);
+
+      showToast(
+        result.outcome === "fresh"
+          ? t({
+              ru: "Билд целиком из перков, которые вам ещё не выпадали.",
+              en: "A build made only of perks you have never been given.",
+            })
+          : result.outcome === "topped-up"
+            ? t({
+                ru: `Новых осталось всего ${result.unseenCount} — они все здесь, остальное обычное.`,
+                en: `Only ${result.unseenCount} new ones left — all of them are here, the rest is ordinary.`,
+              })
+            : t({
+                ru: "Вам уже выпадали все перки этой роли. Это обычный билд.",
+                en: "Every perk for this role has come up already. This is an ordinary build.",
+              }),
+      );
+    },
+    [excludedSlugs, perkCount, seed, showPerksKeepingLoadout, showToast, t],
+  );
 
   const applyPreset = useCallback((preset: BuildPreset) => {
     const perks = resolvePreset(preset);
@@ -2008,6 +2062,7 @@ export function RandomizerBoard() {
         language={language}
         onClose={() => setStatsModalOpen(false)}
         version={statsVersion}
+        onRollUnseen={rollUnseen}
       />
 
       <PresetsModal

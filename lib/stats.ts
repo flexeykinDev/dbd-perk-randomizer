@@ -45,6 +45,29 @@ export function recordRoll(role: PerkRole, perks: Perk[]): void {
   saveState(state);
 }
 
+/** Every slug of `role` that has come up at least once.
+ *
+ *  Separate from getRoleStatsSummary, which answers "how many" for the
+ *  coverage bar. This answers "which", for the roll that draws from the
+ *  ones that have not — see lib/unseen-roll.ts. A count cannot be turned
+ *  back into a set, so this reads the same saved tally rather than deriving
+ *  anything from the summary.
+ *
+ *  Returns slugs, not perks: a slug that has since been retired from the
+ *  pool is still a fact about what this player has rolled, and the caller
+ *  intersects with the live pool anyway. */
+export function getSeenSlugs(role: PerkRole): Set<string> {
+  const rolls = loadState()[role].rolls;
+  const seen = new Set<string>();
+  for (const [slug, count] of Object.entries(rolls)) {
+    // A stored count of 0 should not exist, but a hand-edited or
+    // older-version payload could carry one, and "rolled zero times" is
+    // exactly what unseen means.
+    if (typeof count === "number" && count > 0) seen.add(slug);
+  }
+  return seen;
+}
+
 export function resetStats(): void {
   safeRemove("local", STORAGE_KEY);
 }
