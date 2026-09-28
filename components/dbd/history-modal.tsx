@@ -10,7 +10,7 @@ import { getPerkBySlug } from "@/lib/perks";
 import { getLoadoutPiece } from "@/lib/loadout";
 import { ROLE_COLOR } from "@/lib/role-color";
 import { cn } from "@/lib/cn";
-import { useT, ruPlural, type Lang } from "@/lib/i18n";
+import { useT, plural, type Lang } from "@/lib/i18n";
 import { useModal } from "@/lib/use-modal";
 import { ConfirmDialog } from "./confirm-dialog";
 
@@ -36,15 +36,15 @@ function formatRelativeTime(at: number, lang: Lang): string {
   const minutes = Math.round(seconds / 60);
   if (minutes < 60) {
     return lang === "ru"
-      ? `${minutes} ${ruPlural(minutes, "минуту", "минуты", "минут")} назад`
+      ? `${minutes} ${plural("ru", minutes, { one: "минуту", few: "минуты", other: "минут" })} назад`
       : `${minutes} min ago`;
   }
   const hours = Math.round(minutes / 60);
   if (hours < 24) {
-    return lang === "ru" ? `${hours} ${ruPlural(hours, "час", "часа", "часов")} назад` : `${hours}h ago`;
+    return lang === "ru" ? `${hours} ${plural("ru", hours, { one: "час", few: "часа", other: "часов" })} назад` : `${hours}h ago`;
   }
   const days = Math.round(hours / 24);
-  return lang === "ru" ? `${days} ${ruPlural(days, "день", "дня", "дней")} назад` : `${days}d ago`;
+  return lang === "ru" ? `${days} ${plural("ru", days, { one: "день", few: "дня", other: "дней" })} назад` : `${days}d ago`;
 }
 
 /** Recently rolled builds (both Perks and Loadout), newest first — lets a

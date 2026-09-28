@@ -1,6 +1,6 @@
 "use client";
 
-import { ruPlural, useT } from "@/lib/i18n";
+import { plural, useT } from "@/lib/i18n";
 import type { StreakState } from "@/lib/daily-streak";
 
 /** Days running on the Daily Challenge, beside the shared head count.
@@ -28,7 +28,7 @@ export function DailyStreak({ streak }: { streak: StreakState }) {
       {" · "}
       <span className="text-foreground">
         {t({
-          ru: `${current} ${ruPlural(current, "день", "дня", "дней")} подряд`,
+          ru: `${current} ${plural("ru", current, { one: "день", few: "дня", other: "дней" })} подряд`,
           en: `${current} ${current === 1 ? "day" : "days"} in a row`,
         })}
       </span>

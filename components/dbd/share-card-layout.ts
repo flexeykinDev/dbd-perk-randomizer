@@ -1,5 +1,5 @@
 import { getKillerPowerIcon } from "@/lib/loadout";
-import { ruPlural, type Lang } from "@/lib/i18n";
+import { plural, type Lang } from "@/lib/i18n";
 import type { PerkRole, ShareCardLayout } from "@/lib/types";
 import { BAND_PAD_L, BAND_PAD_R, CANVAS_SIZE, NATIVE_ICON } from "./share-card-metrics";
 import type { ShareCardPiece } from "./share-card-types";
@@ -83,7 +83,7 @@ function bandHeading(
   if (mode === "all") return language === "ru" ? "Перки и экипировка" : "Perks & loadout";
   // Perks mode counts them, since the heading alone does not say what they are.
   return language === "ru"
-    ? `${perkCount} ${ruPlural(perkCount, "перк", "перка", "перков")}`
+    ? `${perkCount} ${plural("ru", perkCount, { one: "перк", few: "перка", other: "перков" })}`
     : `${perkCount} ${perkCount === 1 ? "perk" : "perks"}`;
 }
 
@@ -331,7 +331,7 @@ export function squadShareCardLayout({
     margin,
     bandLabel:
       language === "ru"
-        ? `${rowCount} ${ruPlural(rowCount, "игрок", "игрока", "игроков")}`
+        ? `${rowCount} ${plural("ru", rowCount, { one: "игрок", few: "игрока", other: "игроков" })}`
         : `${rowCount} ${rowCount === 1 ? "player" : "players"}`,
     title,
     rows,

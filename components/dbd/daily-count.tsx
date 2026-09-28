@@ -1,7 +1,7 @@
 "use client";
 
 import { useDailyCount } from "@/lib/daily-count";
-import { ruPlural, useT } from "@/lib/i18n";
+import { plural, useT } from "@/lib/i18n";
 
 /** How many players have taken today's Daily Challenge.
  *
@@ -24,7 +24,7 @@ export function DailyCount() {
       {" · "}
       <span className="text-foreground">
         {t({
-          ru: `сегодня ${ruPlural(count, "сыграл", "сыграли", "сыграли")} ${count} ${ruPlural(count, "игрок", "игрока", "игроков")}`,
+          ru: `сегодня ${plural("ru", count, { one: "сыграл", other: "сыграли" })} ${count} ${plural("ru", count, { one: "игрок", few: "игрока", other: "игроков" })}`,
           en: `${count} ${count === 1 ? "player" : "players"} took it today`,
         })}
       </span>
