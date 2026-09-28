@@ -2,8 +2,26 @@ name: CI
 
 on:
   pull_request:
+    # Not the scrape bot's branch. Its PRs land in "waiting for approval" and
+    # never get one, so the run sits with zero jobs until the branch is
+    # deleted and then reports failure — 25 hours on 21 September, 83 on
+    # 7 September, both ending within a second of the PR being merged. The
+    # job timeout below never applied, because there was never a job.
+    #
+    # A check that cannot run is worse than no check: it puts a permanent red
+    # X on every scrape and trains you to ignore the one that matters. The
+    # scrape's data is validated inside update-perks.yml, by the same lint,
+    # test and build this workflow runs, before it will merge anything.
+    branches-ignore: [auto/update-perks]
   push:
     branches: [main]
+
+# One run per branch. A second push while the first is still going makes the
+# first irrelevant, and leaving it to finish costs a runner and muddies which
+# result belongs to the tip.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   validate:

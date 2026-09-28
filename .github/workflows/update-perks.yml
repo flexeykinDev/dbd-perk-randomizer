@@ -39,6 +39,29 @@ jobs:
       # Only ever deletes a branch with NO open PR. A scrape waiting for a
       # human to look at it must survive this, including the case where the
       # auto-merge conditions were not met and the PR is deliberately open.
+      # A scrape PR the gate declined to merge is waiting for a person. It
+      # has no CI of its own to go red — ci.yml skips this branch, because a
+      # run that needs an approval nobody gives just hangs (see the note
+      # there) — so nothing anywhere says it is waiting. PR #7 sat for a day,
+      # #4's predecessor for three.
+      #
+      # Failing the scheduled run is what makes it visible, the same
+      # reasoning as the validate step at the bottom of this file: nobody
+      # watches the Actions tab on a Monday morning, but a red cross on the
+      # schedule is hard to miss. Deliberately after the scrape rather than
+      # before it, so this week's data still lands.
+      - name: Warn that an earlier scrape PR is still waiting
+        id: waiting
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          open=$(gh pr list --head auto/update-perks --state open --json number,createdAt --jq 'length')
+          echo "count=$open" >> "$GITHUB_OUTPUT"
+          if [ "$open" != "0" ]; then
+            gh pr list --head auto/update-perks --state open --json number,title,createdAt --jq '.[] | "::warning::scrape PR #\(.number) has been open since \(.createdAt) and is waiting for a human"'
+          fi
+
       - name: Clear a leftover scrape branch
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -290,4 +313,14 @@ jobs:
         if: steps.worth.outputs.any == 'true' && steps.validate.outcome != 'success'
         run: |
           echo "::error::Scraped data failed lint/test/build — a PR was opened but not merged."
+          exit 1
+
+      # Same idea, one step later and for the other reason a PR can be left
+      # sitting: the data was fine but the diff touched something that
+      # already existed, so the gate deliberately did not merge it. That is
+      # working as intended on the day it happens and a problem a week later.
+      - name: Fail the run if an earlier scrape PR was still waiting
+        if: steps.waiting.outputs.count != '0'
+        run: |
+          echo "::error::A scrape PR was already open before this run started — it needs a human look."
           exit 1
