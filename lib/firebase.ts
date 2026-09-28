@@ -1,7 +1,6 @@
 "use client";
 
-import { getApp, getApps, initializeApp } from "firebase/app";
-import { getDatabase, type Database } from "firebase/database";
+import type { Database, DataSnapshot } from "firebase/database";
 
 // This config is meant to be public — Firebase's client SDK is designed to
 // run entirely in the browser with no secret key, and access control is
@@ -24,22 +23,69 @@ const firebaseConfig = {
   appId: "1:804219742324:web:fa69ca4db10e94cbbb0921",
 };
 
-let dbInstance: Database | null | undefined;
+/* Everything the two callers need, handed over together.
+ *
+ * The database alone is not enough: `ref`, `onValue` and friends come from
+ * the same package, and a static `import { ref } from "firebase/database"`
+ * anywhere is what pulls the whole SDK back into the first-paint bundle —
+ * which is the entire thing this file exists to avoid. Importing them here
+ * and passing them out keeps that import in one place where it can be
+ * guaranteed dynamic. */
+export interface FirebaseBundle {
+  db: Database;
+  ref: typeof import("firebase/database").ref;
+  set: typeof import("firebase/database").set;
+  update: typeof import("firebase/database").update;
+  onValue: typeof import("firebase/database").onValue;
+  off: typeof import("firebase/database").off;
+  increment: typeof import("firebase/database").increment;
+}
 
-/** Lazily initializes the Firebase app + Realtime Database on first use, and
- *  returns null (rather than throwing) if that ever fails — a blocked
- *  request (ad-blocker, offline, misconfigured rules) should degrade to
- *  "the OBS overlay just doesn't get cross-profile updates", not break
- *  anything for same-profile use, which already works via
- *  BroadcastChannel/localStorage regardless of Firebase. */
-export function getObsDatabase(): Database | null {
-  if (typeof window === "undefined") return null;
-  if (dbInstance !== undefined) return dbInstance;
-  try {
-    const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
-    dbInstance = getDatabase(app);
-  } catch {
-    dbInstance = null;
-  }
-  return dbInstance;
+export type { DataSnapshot };
+
+/** One import, one app, however many callers. Caching the *promise* rather
+ *  than the result means two features asking at once share a single network
+ *  request instead of racing to initialise twice. */
+let bundle: Promise<FirebaseBundle | null> | null = null;
+
+/**
+ * Loads the Firebase SDK and opens the database, or resolves to null.
+ *
+ * Dynamically imported — the same treatment lib/use-share-export.ts gives
+ * html2canvas, and for the same reason. Measured before this change, the
+ * chunk carrying Firebase was referenced straight from index.html at 47.9KB
+ * gzipped, downloaded and parsed by every visitor although the README's own
+ * position is that someone who never opens the OBS overlay or the Daily
+ * Challenge never touches it.
+ *
+ * Null rather than throwing, exactly as the synchronous version did: a
+ * blocked request (ad-blocker, offline, rules that deny this path) must
+ * degrade to "the OBS overlay doesn't get cross-profile updates" and
+ * "there's no player count today", never to an error anybody sees. The
+ * failure is cached too — a browser extension blocking the SDK will block it
+ * on the next call as well, and retrying per roll would be noise.
+ */
+export function loadFirebase(): Promise<FirebaseBundle | null> {
+  if (typeof window === "undefined") return Promise.resolve(null);
+  bundle ??= (async () => {
+    try {
+      const [{ getApp, getApps, initializeApp }, database] = await Promise.all([
+        import("firebase/app"),
+        import("firebase/database"),
+      ]);
+      const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+      return {
+        db: database.getDatabase(app),
+        ref: database.ref,
+        set: database.set,
+        update: database.update,
+        onValue: database.onValue,
+        off: database.off,
+        increment: database.increment,
+      };
+    } catch {
+      return null;
+    }
+  })();
+  return bundle;
 }

@@ -434,14 +434,40 @@ test.describe("Loadout pairing on the page", () => {
     unlike?: RenderedPiece[],
   ): Promise<RenderedPiece[]> {
     const fingerprint = unlike ? JSON.stringify(unlike) : null;
+    /* Waits for the HUD to go quiet, not merely to be full.
+     *
+     * A full slot count was the original signal and it is not enough. The
+     * slots animate independently, so there is a window where the item has
+     * finished swapping and the add-ons have not: four pieces on screen,
+     * the right number, belonging to two different builds. Read there, the
+     * test reports "hacksaw (toolbox) rendered on dull-key (key)" — which is
+     * indistinguishable from the pairing bug these tests exist to catch, and
+     * cost two false alarms on unrelated changes before anyone looked at the
+     * helper rather than the product.
+     *
+     * So: the same build has to be read twice running before it counts, and
+     * the array returned is the one that was verified rather than a fresh
+     * read taken afterwards. */
+    let settled: RenderedPiece[] = [];
+    let lastSeen: string | null = null;
     await expect
       .poll(async () => {
         const build = await renderedBuild(page);
+        const print = JSON.stringify(build);
+        const unchangedSinceLastLook = print === lastSeen;
+        lastSeen = print;
+
         if (build.length !== PIECE_COUNT[role]) return false;
-        return fingerprint === null || JSON.stringify(build) !== fingerprint;
+        if (fingerprint !== null && print === fingerprint) return false;
+        // One identical read is a snapshot; two is a build that has stopped
+        // moving.
+        if (!unchangedSinceLastLook) return false;
+
+        settled = build;
+        return true;
       }, { timeout: 10_000 })
       .toBe(true);
-    return renderedBuild(page);
+    return settled;
   }
 
   /** Every complaint a build can draw, as sentences — collected rather

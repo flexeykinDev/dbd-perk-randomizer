@@ -1,8 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { increment, onValue, ref, update } from "firebase/database";
-import { getObsDatabase } from "./firebase";
+import { loadFirebase } from "./firebase";
 import { safeGet, safeSet } from "./safe-storage";
 import { todayUtcDateString } from "./seeded-random";
 
@@ -42,17 +41,25 @@ export function recordDailyParticipation(): void {
   const today = todayUtcDateString();
   if (safeGet("local", COUNTED_KEY) === today) return;
 
-  const db = getObsDatabase();
-  if (!db) return;
-  try {
-    // A server-side atomic increment rather than read-then-write: several
-    // players taking the challenge at once would otherwise each write the
-    // same "current + 1" and lose each other's.
-    void update(ref(db, dayPath(today)), { count: increment(1) }).catch(() => {});
-    safeSet("local", COUNTED_KEY, today);
-  } catch {
-    // ignored — see above
-  }
+  // Marked before the write rather than after it. The SDK now arrives
+  // asynchronously, so awaiting the write to set the flag would let a
+  // double-click through while the first load was still in flight — and the
+  // flag's job is "this browser already counted today", not "the write
+  // definitely landed". A lost increment is a number being one low for a
+  // day; a double one is the counter lying.
+  safeSet("local", COUNTED_KEY, today);
+
+  void loadFirebase().then((fb) => {
+    if (!fb) return;
+    try {
+      // A server-side atomic increment rather than read-then-write: several
+      // players taking the challenge at once would otherwise each write the
+      // same "current + 1" and lose each other's.
+      void fb.update(fb.ref(fb.db, dayPath(today)), { count: fb.increment(1) }).catch(() => {});
+    } catch {
+      // ignored — see above
+    }
+  });
 }
 
 // A module-level store rather than per-component state, so the hook below
@@ -82,21 +89,29 @@ function publish(next: number | null): void {
 function subscribe(onStoreChange: () => void): () => void {
   listeners.push(onStoreChange);
   if (listeners.length === 1) {
-    const db = getObsDatabase();
-    if (db) {
+    /* useSyncExternalStore needs its cleanup back synchronously, and the SDK
+       no longer is. So the load is started here and the listener attaches
+       whenever it arrives — `detach` is filled in late, and the returned
+       cleanup below reads it at the moment it runs rather than closing over
+       what it was. If everyone has already unsubscribed by then, the guard
+       tears the listener straight back down instead of leaking one. */
+    void loadFirebase().then((fb) => {
+      if (!fb) return;
       try {
-        detach = onValue(
-          ref(db, `${dayPath(todayUtcDateString())}/count`),
+        const stop = fb.onValue(
+          fb.ref(fb.db, `${dayPath(todayUtcDateString())}/count`),
           (snapshot) => {
             const value = snapshot.val();
             publish(typeof value === "number" && value > 0 ? value : null);
           },
           () => publish(null),
         );
+        if (listeners.length === 0) stop();
+        else detach = stop;
       } catch {
         publish(null);
       }
-    }
+    });
   }
   return () => {
     listeners = listeners.filter((l) => l !== onStoreChange);

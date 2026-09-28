@@ -16,8 +16,7 @@
 //    browser. This only activates once the streamer has opened the OBS
 //    Overlay modal at least once (see peekRoomCode below) — a visitor who
 //    never touches that feature never creates a room or writes to Firebase.
-import { off, onValue, ref, set, type DataSnapshot } from "firebase/database";
-import { getObsDatabase } from "./firebase";
+import { loadFirebase, type DataSnapshot } from "./firebase";
 import type { Lang } from "./i18n";
 import type { PerkRole } from "./types";
 import { safeGet, safeGetJSON, safeSet, safeSetJSON } from "./safe-storage";
@@ -174,15 +173,30 @@ export function publishObsState(
 
   const room = peekRoomCode();
   if (!room) return;
-  const db = getObsDatabase();
-  if (!db) {
-    // A room exists but Firebase isn't configured — the cross-profile
-    // bridge silently can't work, which is exactly the case worth naming
-    // rather than leaving to look like "connected".
-    setPublishStatus({ state: "error" });
-    return;
-  }
-  const roomRef = ref(db, `obs-rooms/${room}`);
+
+  // Status set before the SDK is even here: a publish is in flight from the
+  // player's point of view the moment they roll, and leaving the row on its
+  // previous value until a network import resolves would show "synced" for a
+  // build that has not been sent yet.
+  setPublishStatus({ state: "syncing" });
+  void loadFirebase().then((fb) => {
+    if (!fb) {
+      // A room exists but Firebase isn't configured or could not load — the
+      // cross-profile bridge silently can't work, which is exactly the case
+      // worth naming rather than leaving to look like "connected".
+      setPublishStatus({ state: "error" });
+      return;
+    }
+    publishToRoom(fb, room, full);
+  });
+}
+
+function publishToRoom(
+  fb: NonNullable<Awaited<ReturnType<typeof loadFirebase>>>,
+  room: string,
+  full: ObsSyncPayload,
+): void {
+  const roomRef = fb.ref(fb.db, `obs-rooms/${room}`);
   // Firebase's set() rejects a value tree containing a literal `undefined`
   // *synchronously* — it throws before ever returning the promise the
   // .catch() below attaches to, so an optional field like `character`
@@ -191,8 +205,7 @@ export function publishObsState(
   // JSON round-tripping drops `undefined`-valued keys the same way
   // JSON.stringify always has, which is exactly what Firebase needs here.
   const firebaseSafe = JSON.parse(JSON.stringify(full)) as ObsSyncPayload;
-  setPublishStatus({ state: "syncing" });
-  set(roomRef, firebaseSafe)
+  fb.set(roomRef, firebaseSafe)
     .then(() => {
       setPublishStatus({ state: "synced", lastSyncedAt: Date.now() });
     })
@@ -248,23 +261,30 @@ export function subscribeObsState(
   }
   window.addEventListener("storage", handleStorage);
 
-  let roomRef: ReturnType<typeof ref> | null = null;
-  let handleValue: ((snapshot: DataSnapshot) => void) | null = null;
+  /* Attached late, for the same reason as in lib/daily-count.ts: the caller
+     needs its cleanup synchronously and the SDK arrives when it arrives.
+     `stopRoom` is filled in on resolve, and `cancelled` covers the overlay
+     unmounting while the import is still in flight — without it the listener
+     would attach to a subscription nobody is holding any more. */
+  let stopRoom: (() => void) | null = null;
+  let cancelled = false;
   if (room) {
-    const db = getObsDatabase();
-    if (db) {
-      roomRef = ref(db, `obs-rooms/${room}`);
-      handleValue = (snapshot) => {
+    void loadFirebase().then((fb) => {
+      if (!fb || cancelled) return;
+      const roomRef = fb.ref(fb.db, `obs-rooms/${room}`);
+      const handleValue = (snapshot: DataSnapshot) => {
         const value = snapshot.val() as ObsSyncPayload | null;
         if (value) callback(value);
       };
-      onValue(roomRef, handleValue);
-    }
+      fb.onValue(roomRef, handleValue);
+      stopRoom = () => fb.off(roomRef, "value", handleValue);
+    });
   }
 
   return () => {
+    cancelled = true;
     ch?.removeEventListener("message", handleMessage);
     window.removeEventListener("storage", handleStorage);
-    if (roomRef && handleValue) off(roomRef, "value", handleValue);
+    stopRoom?.();
   };
 }
