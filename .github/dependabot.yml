@@ -1,0 +1,57 @@
+version: 2
+
+# Weekly, grouped, and deliberately not auto-merged.
+#
+# Grouped because eleven separate PRs for eleven bumps is eleven CI runs and
+# eleven things to look at, and nobody looks at the eleventh. Two groups
+# rather than one: a dev-only bump can break the build or the tests and
+# nothing else, while a prod bump ships to visitors — those deserve different
+# amounts of attention, and keeping them apart means the risky half can be
+# held without also holding a Playwright patch release.
+#
+# Not auto-merged, unlike the perk scrape. That one merges itself because its
+# diff is verifiable — the workflow checks the data only grew and nothing
+# existing changed. A dependency bump has no such property: CI passing means
+# the tests we happened to write still pass, which is not the same as the
+# release being fine. Next minor bumps have broken the static export here
+# before.
+#
+# No `open-pull-requests-limit` for npm beyond the default: with grouping,
+# there is at most one PR per group per week anyway.
+
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      # Monday morning UTC would land on top of the perk scrape's own PR
+      # (06:00 Monday, see update-perks.yml). Tuesday keeps the two apart so
+      # a scrape that needs a human look is not competing for attention with
+      # a dependency batch.
+      day: tuesday
+      time: "07:00"
+      timezone: Etc/UTC
+    groups:
+      prod:
+        dependency-type: production
+      dev:
+        dependency-type: development
+    commit-message:
+      # Matches the scrape bot's prefix, which is the only other automated
+      # committer here. Everything written by a person is a plain sentence —
+      # see CONTRIBUTING.
+      prefix: "chore"
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: tuesday
+      time: "07:00"
+      timezone: Etc/UTC
+    groups:
+      actions:
+        patterns:
+          - "*"
+    commit-message:
+      prefix: "chore"

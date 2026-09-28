@@ -1,0 +1,49 @@
+name: CodeQL
+
+# Static analysis, on the two occasions it is worth having: before a change
+# lands, and periodically so a newly published rule finds something old.
+#
+# Deliberately not on every push to main. A PR-gated run plus a weekly sweep
+# covers both without analysing the same tree twice for every merge — and
+# every change here arrives through a PR or through the scrape bot, whose
+# diff is data rather than code.
+
+on:
+  pull_request:
+  schedule:
+    # Tuesday, after the dependency PRs open (see dependabot.yml) and clear
+    # of the Monday scrape.
+    - cron: "0 8 * * 2"
+  # So it can be run by hand after changing this file, without waiting a week
+  # to find out whether it works.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    # Same reasoning as ci.yml: without a cap, a hung step runs to GitHub's
+    # six-hour default and the only way to notice is to go looking. A healthy
+    # run here is a couple of minutes.
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: javascript-typescript
+          # security-and-quality over the default: this is a small codebase
+          # analysed a handful of times a week, so the extra rules cost
+          # minutes rather than anything that matters.
+          queries: security-and-quality
+
+      # No build step. javascript-typescript is analysed from source, and
+      # running `next build` here would double CI's work for no extra
+      # coverage — CodeQL reads the same files either way.
+      - uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:javascript-typescript"
