@@ -7,6 +7,8 @@ import { ObsOverlay } from "@/components/dbd/obs-overlay";
 import { perksMeta } from "@/lib/perks";
 import { useLanguage, useT } from "@/lib/i18n";
 import { useIsObsMode } from "@/lib/use-obs-mode";
+import { useIsEmbedMode } from "@/lib/use-embed-mode";
+import { EmbedView } from "@/components/dbd/embed-view";
 import { registerServiceWorker } from "@/lib/register-sw";
 import { printConsoleBranding } from "@/lib/console-branding";
 import trailer from "@/data/trailer.json";
@@ -15,17 +17,24 @@ export function RandomizerContent() {
   const t = useT();
   const { lang } = useLanguage();
   const isObsMode = useIsObsMode();
+  const isEmbedMode = useIsEmbedMode();
 
   useEffect(() => {
-    registerServiceWorker();
+    // Not in an embed. The service worker is for the installed app, and
+    // registering it from an iframe on a stranger's page would start
+    // caching this origin for a visitor who never came here. The manifest's
+    // start_url is "/" and carries no hash, so it was never at risk of
+    // pointing at the embed.
+    if (!isEmbedMode) registerServiceWorker();
     printConsoleBranding();
-  }, []);
+  }, [isEmbedMode]);
   const updatedAt = new Date(perksMeta.scrapedAt).toLocaleDateString(
     lang === "ru" ? "ru-RU" : "en-US",
     { year: "numeric", month: "long", day: "numeric" },
   );
 
   if (isObsMode) return <ObsOverlay />;
+  if (isEmbedMode) return <EmbedView />;
 
   return (
     <div className="flex flex-col items-center gap-3 text-center">

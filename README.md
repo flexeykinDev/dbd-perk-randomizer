@@ -80,6 +80,22 @@ Everything is set in the dialog, and saved in the link:
 
 An old link with none of these keeps looking exactly as it did.
 
+## Embed it
+
+Drop the randomizer into your own page:
+
+```html
+<iframe
+  src="https://flexeykindev.github.io/dbd-perk-randomizer/?r=s&n=4#/embed"
+  width="360" height="240" loading="lazy" style="border:0"
+  title="DBD Perk Randomizer"></iframe>
+```
+
+`r=s` or `r=k` picks the side, `n=1`…`5` the number of perks. Both are
+optional — `#/embed` on its own gives a survivor build of four. It works from
+about 320x220 up, rolls from the full perk pool, and makes no network
+connections of its own.
+
 ## Privacy and network
 
 - No accounts, no analytics.
