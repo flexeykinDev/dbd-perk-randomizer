@@ -42,6 +42,14 @@ jobs:
       - name: Build (static export, includes typecheck)
         run: npm run build
 
+      # Straight after the build, before the slower browser work: a bundle
+      # that has grown past its budget is worth knowing about in seconds
+      # rather than after Playwright has finished. The number is printed
+      # whether it passes or not, so a PR diff shows it moving — one that
+      # only appeared on failure would be one nobody watches.
+      - name: Bundle size budget
+        run: npm run check:bundle
+
       # Cached against the installed Playwright version, since that is what
       # decides which browser build is needed — a lockfile change that
       # doesn't move Playwright shouldn't cost another download.
