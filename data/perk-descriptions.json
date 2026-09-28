@@ -130,7 +130,7 @@
     "descriptionRuRaw": "Находясь рядом с тотемом, используйте Е, чтобы его благословить и создать уникальный дарующий тотем, впитывающий в себя все ваши дары. Генераторы в пределах действия такого тотема: портятся на 50% медленнее; выжившие ремонтируют их на 8/9/10% быстрее. Выжившие в пределах действия дарующего тотема видят ауры подверженных его воздействию генераторов"
   },
   "borrowed-time": {
-    "description": "Whenever you gain Deep Wound while you have Endurance Status Effect, you passively mend yourself over a period of 40/35/30 seconds. \"Probably stings like hell, but it ain't gonna kill ya. Up and at 'em soldier. Time to move!\" — Bill Overbeck",
+    "description": "Whenever you gain Deep Wound while you have Endurance Status Effect, Borrowed Time activates: Passively mend yourself over a period of 40/35/30 seconds. \"Probably stings like hell, but it ain't gonna kill ya. Up and at 'em soldier. Time to move!\" — Bill Overbeck",
     "descriptionRuRaw": "Когда вы снимаете выжившего с крюка: его эффект \"Стойкость\" после снятия действует на 6/8/10 сек. дольше; его эффект \"Спешка\" после снятия действует на 10 сек. дольше. Стойких выживших нельзя смертельно ранить одним ударом, вместо этого они получают глубокую рану. \"Спешка\" ускоряет движение убийц и выживших."
   },
   "botany-knowledge": {
@@ -268,7 +268,7 @@
     "descriptionRuRaw": "Во время лечения другого выжившего: за каждую его стадию крюка ваша скорость исцеления возрастает на 30/40/50%; за отличную базовую проверку реакции вы получаете на 3% больше прогресса."
   },
   "down-to-the-last": {
-    "description": "As more of your friends fall to the Killer, you become shrouded in isolation and the Killer's Aura-reading abilities towards you are disrupted. Whenever you are hooked or you repair a Generator, Down to the Last gains 1 Token, up to a maximum of 6 Tokens: For each Token, other Survivor open Exit Gates +10 % faster. When you are the Last Survivor Standing and have at least 3 Tokens, you benefit from the following effects: Gain the ability to open the Hatch without the need of a Key. For each Token, your aura is hidden from the Killer for 6/8/10 seconds. Increases your chance of becoming the initial Obsession by increasing the default value by +100 %.The Killer can only be obsessed with one Survivor at a time.",
+    "description": "As more of your friends fall to the Killer, you become shrouded in isolation and the Killer's Aura-reading abilities towards you are disrupted. Whenever you are hooked or you repair a Generator, Down to the Last gains 1 Token, up to a maximum of 6 Tokens: For each Token, other Survivors open Exit Gates +10 % faster. When you are the Last Survivor Standing and have at least 3 Tokens, you benefit from the following effects: Gain the ability to open the Hatch without the need of a Key. For each Token, your aura is hidden from the Killer for 6/8/10 seconds. Increases your chance of becoming the initial Obsession by increasing the default value by +100 %.The Killer can only be obsessed with one Survivor at a time.",
     "descriptionRu": {
       "full": "Чем больше ваших друзей гибнет от рук убийцы, тем сильнее вы окутаны изоляцией, мешающей убийце читать вашу ауру. За каждого погибшего или принесённого в жертву выжившего (кроме вас) вы получаете жетон, максимум 3: каждый жетон даёт суммируемый радиус в 20/22/24 метра, вплоть до 60/66/72 метров, в котором убийца не может видеть вашу ауру. Когда вы остаётесь последним живым выжившим: скорость ремонта увеличивается на 75%, скорость открытия ворот и люка — на 50%, а шанс изначально стать объектом одержимости увеличивается на 100%. Убийца может быть одержим только одним выжившим одновременно.",
       "core": [
@@ -662,7 +662,7 @@
     "descriptionRuRaw": "Когда другого выжившего вешают на крюк, вы получаете эффект \"Ускользание\" на 20/25/30 сек.. Ускользающие выжившие: ауры скрыты; не оставляют следы-трещины; не оставляют лужи крови; не стонут от боли"
   },
   "shoulder-the-burden": {
-    "description": "\"Born to be a disciple. Ready to submit to a greater cause. This is your calling.\" Once per Trial, and while you are not on Death Hook, press the Active Ability button while standing in front of a Hooked Survivor to unhook them and trigger the following effects: Trade 1 Hook Stage with the other Survivor to their benefit. Causes you to scream, become injured and suffer from the Broken Status Effect for 160/140/120 seconds. Shoulder the Burden is then deactivated for all Survivors. \"It's not your time yet. Now go on!\" — Taurie Cain",
+    "description": "\"Born to be a disciple. Ready to submit to a greater cause. This is your calling.\" Once per Trial, and while you are not on Death Hook, press the Active Ability button while standing in front of a Hooked Survivor to unhook them and trigger the following effects: Trade 1 Hook Stage with the other Survivor to their benefit. Causes you to scream, become injured if healthy and suffer from the Broken Status Effect for 160/140/120 seconds. Shoulder the Burden is then deactivated for all Survivors. \"It's not your time yet. Now go on!\" — Taurie Cain",
     "descriptionRuRaw": "Один раз за матч, если вы не имеете 2-й стадии крюка и стоите рядом с подвешенным товарищем, нажмите F, чтобы его освободить. Затем: он теряет одну стадию крюка; вы получаете одну стадию крюка; вы кричите; вы получаете эффект \"Уязвимость\" на 60/50/40 сек.. Уязвимые выжившие получают смертельные ранения от базовых атак, даже если полностью здоровы."
   },
   "slippery-meat": {
@@ -670,7 +670,7 @@
     "descriptionRuRaw": "Вы можете дополнительно попытаться слезть с крюка до 3р., а шанс успеха увеличивается на 2/3/4%."
   },
   "small-game": {
-    "description": "\"You have the undeniable capability to sense danger.\" See auras of Totems within 10/11/12 metres. \"Nope.\" — Andy, The Lost Tapes",
+    "description": "\"You have the undeniable capability to sense danger.\" You see auras of Totems within 10/11/12 metres. \"Nope.\" — Andy, The Lost Tapes",
     "descriptionRu": {
       "full": "Вы получаете звуковое предупреждение, если смотрите в сторону тотема в конусе 45° на расстоянии до 8/10/12 метров. Время восстановления перка — 14/12/10 секунд после каждого срабатывания. За каждый очищенный любым игроком тусклый или хекс-тотем вы получаете жетон: каждый жетон сужает конус обнаружения на 5°, вплоть до минимума в 20°.",
       "core": [
