@@ -17,14 +17,42 @@ function emptyRoleStats(): RoleStats {
   return { totalBuilds: 0, rolls: {} };
 }
 
+/** One role's saved tally, or an empty one.
+ *
+ *  Spreading whatever was stored was not enough. Spreading a *string* gives
+ *  its characters as numbered keys, and a `rolls` that is a string or an
+ *  array survives far enough to be summed — which produces NaN, and "NaN
+ *  builds" on screen reads as the site being broken rather than as a bad
+ *  saved value. Every field is checked for the type it is about to be used
+ *  as. */
+function readRoleStats(value: unknown): RoleStats {
+  const empty = emptyRoleStats();
+  if (!value || typeof value !== "object" || Array.isArray(value)) return empty;
+  const raw = value as Record<string, unknown>;
+
+  const totalBuilds =
+    typeof raw.totalBuilds === "number" && Number.isFinite(raw.totalBuilds) && raw.totalBuilds >= 0
+      ? raw.totalBuilds
+      : 0;
+
+  const rolls: Record<string, number> = {};
+  if (raw.rolls && typeof raw.rolls === "object" && !Array.isArray(raw.rolls)) {
+    for (const [slug, count] of Object.entries(raw.rolls as Record<string, unknown>)) {
+      if (typeof count === "number" && Number.isFinite(count) && count > 0) rolls[slug] = count;
+    }
+  }
+
+  return { totalBuilds, rolls };
+}
+
 function loadState(): StatsState {
-  // Partial<StatsState> in case an older/incompatible app version left a
-  // differently-shaped value behind — spreading undefined below is a no-op,
-  // so this degrades to emptyRoleStats() per role rather than throwing.
-  const parsed = safeGetJSON<Partial<StatsState>>("local", STORAGE_KEY, {});
+  const parsed = safeGetJSON<unknown>("local", STORAGE_KEY, {});
+  const raw = parsed && typeof parsed === "object" && !Array.isArray(parsed)
+    ? (parsed as Record<string, unknown>)
+    : {};
   return {
-    survivor: { ...emptyRoleStats(), ...parsed.survivor },
-    killer: { ...emptyRoleStats(), ...parsed.killer },
+    survivor: readRoleStats(raw.survivor),
+    killer: readRoleStats(raw.killer),
   };
 }
 

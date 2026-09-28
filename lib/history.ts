@@ -19,9 +19,34 @@ export interface HistoryEntry {
   keys: string[];
 }
 
+/** Checks each entry rather than casting the array.
+ *
+ *  `Array.isArray(stored) ? stored as HistoryEntry[] : []` was the whole of
+ *  this, and an array is the easy half: a stored `[1,2,3]`, or an entry from
+ *  an older build without `keys`, went straight through and threw inside the
+ *  modal's render — `entry.keys.map` on undefined — which takes the page
+ *  down rather than the row. An entry that cannot be rendered is dropped
+ *  here, where it costs one row, instead of there, where it costs the
+ *  History dialog. */
+function isHistoryEntry(value: unknown): value is HistoryEntry {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const entry = value as Record<string, unknown>;
+  if (entry.mode !== "perks" && entry.mode !== "loadout") return false;
+  if (entry.role !== "survivor" && entry.role !== "killer") return false;
+  if (!Array.isArray(entry.keys)) return false;
+  return entry.keys.every((key) => typeof key === "string");
+}
+
 function loadHistory(): HistoryEntry[] {
   const stored = safeGetJSON<unknown>("local", STORAGE_KEY, []);
-  return Array.isArray(stored) ? (stored as HistoryEntry[]) : [];
+  if (!Array.isArray(stored)) return [];
+  return stored.filter(isHistoryEntry).map((entry) => ({
+    ...entry,
+    // Both were added after the first version shipped, and both are read
+    // without checking by the list that renders them.
+    id: typeof entry.id === "string" && entry.id !== "" ? entry.id : `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    at: typeof entry.at === "number" && Number.isFinite(entry.at) ? entry.at : 0,
+  }));
 }
 
 function saveHistory(entries: HistoryEntry[]): void {

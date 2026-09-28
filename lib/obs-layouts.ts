@@ -48,6 +48,29 @@ export interface SavedLayout {
   snapshot: ObsLayoutSnapshot;
 }
 
+/** Reads the saved layouts, checking the shape rather than asserting it.
+ *
+ *  `safeGetJSON<SavedLayout[]>(..., [])` only guaranteed valid JSON: a
+ *  stored object or string came back as-is and the modal's `.map` over it
+ *  threw during render, taking the OBS dialog down — on stream, with nothing
+ *  saying why. A row without a name or a snapshot is dropped rather than
+ *  drawn, since there is nothing to draw.
+ *
+ *  The snapshot's own fields are deliberately not validated one by one:
+ *  several are optional by design (skin, frame and motion arrived after
+ *  layouts shipped), and the overlay already falls back per field. What
+ *  matters here is that it is an object at all. */
+function loadLayouts(): SavedLayout[] {
+  const stored = safeGetJSON<unknown>("local", STORAGE_KEY, []);
+  if (!Array.isArray(stored)) return [];
+  return stored.filter((layout): layout is SavedLayout => {
+    if (!layout || typeof layout !== "object" || Array.isArray(layout)) return false;
+    const row = layout as Record<string, unknown>;
+    if (typeof row.name !== "string" || row.name === "") return false;
+    return !!row.snapshot && typeof row.snapshot === "object" && !Array.isArray(row.snapshot);
+  });
+}
+
 export function useObsLayouts() {
   const [layouts, setLayouts] = useState<SavedLayout[]>([]);
 
@@ -57,7 +80,7 @@ export function useObsLayouts() {
   // reads as one restore rather than a stray setState.
   useEffect(() => {
     function restoreSavedLayouts() {
-      setLayouts(safeGetJSON<SavedLayout[]>("local", STORAGE_KEY, []));
+      setLayouts(loadLayouts());
     }
     restoreSavedLayouts();
   }, []);
