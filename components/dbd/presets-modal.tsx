@@ -71,7 +71,7 @@ export function PresetsModal({
                 <p className="font-semibold text-foreground">
                   {t({ ru: "Готовые билды", en: "Preset Builds" })}
                 </p>
-                <p className="text-xs text-muted">
+                <p className="text-hint text-muted">
                   {t({
                     ru: "Собранные наборы — как отправная точка, а не как режим",
                     en: "Assembled sets, as a starting point rather than a mode",
@@ -105,10 +105,10 @@ export function PresetsModal({
                       roleColor.hoverBorder,
                     )}
                   >
-                    <p className="text-sm font-semibold text-foreground">
+                    <p className="text-meta font-semibold text-foreground">
                       {preset.name[language]}
                     </p>
-                    <p className="mt-0.5 text-xs text-muted">{preset.description[language]}</p>
+                    <p className="mt-0.5 text-hint text-muted">{preset.description[language]}</p>
                     <div className="mt-2.5 flex items-center gap-2">
                       {perks.map((perk) => (
                         <span key={perk.slug} className="flex min-w-0 flex-1 flex-col items-center gap-1">
@@ -122,7 +122,7 @@ export function PresetsModal({
                             height={48}
                             className="icon-art size-11 rounded-lg object-cover"
                           />
-                          <span className="w-full truncate text-center text-[0.625rem] leading-tight text-muted">
+                          <span className="w-full truncate text-center text-hint leading-tight text-muted">
                             {perk.name[language]}
                           </span>
                         </span>

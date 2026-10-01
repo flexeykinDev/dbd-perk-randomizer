@@ -29,11 +29,11 @@ export function ObsConstructorPanel({
     <div className="mt-4 rounded-xl border border-border bg-background/60 p-3.5">
       <div className="mb-2 flex items-center gap-2">
         <Wrench className="size-3.5 text-muted" />
-        <h3 className="text-xs font-semibold tracking-wide text-muted uppercase">
+        <h3 className="text-meta font-semibold tracking-wide text-muted uppercase">
           {t({ ru: "Конструктор билда", en: "Build constructor" })}
         </h3>
       </div>
-      <p className="mb-3 text-xs text-muted">
+      <p className="mb-3 text-hint text-muted">
         {t({
           ru: "Собери билд с нуля — независимо от того, что сгенерировано на сайте сейчас, например чтобы заранее подготовить билд для анонса.",
           en: "Build one from scratch — independent of whatever's currently rolled on the main site, e.g. to prepare an announcement build ahead of time.",
@@ -48,7 +48,7 @@ export function ObsConstructorPanel({
               type="button"
               onClick={() => build.setRole(option)}
               className={cn(
-                "rounded-full border px-2.5 py-1 text-[0.6875rem] font-medium transition-colors",
+                "rounded-full border px-2.5 py-1 text-control font-medium transition-colors",
                 build.role === option
                   ? "border-accent/50 bg-accent/15 text-accent"
                   : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
@@ -59,14 +59,14 @@ export function ObsConstructorPanel({
                 : t({ ru: "Убийца", en: "Killer" })}
             </button>
           ))}
-          <span className="ml-auto text-[0.6875rem] text-muted">
+          <span className="ml-auto text-hint text-muted">
             {build.selected.length}/{build.maxSlots}
           </span>
           {build.selected.length > 0 && (
             <button
               type="button"
               onClick={build.clear}
-              className="text-[0.6875rem] font-medium text-muted transition-colors hover:text-foreground"
+              className="text-control font-medium text-muted transition-colors hover:text-foreground"
             >
               {t({ ru: "Очистить", en: "Clear" })}
             </button>
@@ -112,7 +112,7 @@ export function ObsConstructorPanel({
             onChange={(e) => build.setSearch(e.target.value)}
             placeholder={t({ ru: "Поиск перка…", en: "Search perks…" })}
             aria-label={t({ ru: "Поиск перка", en: "Search perks" })}
-            className="w-full rounded-full border border-border bg-background py-1.5 pr-3 pl-7 text-[0.6875rem] text-foreground placeholder:text-muted/60 focus:ring-2 focus:ring-accent/40 focus:outline-none"
+            className="w-full rounded-full border border-border bg-background py-1.5 pr-3 pl-7 text-control text-foreground placeholder:text-muted/60 focus:ring-2 focus:ring-accent/40 focus:outline-none"
           />
         </div>
 
@@ -151,7 +151,7 @@ export function ObsConstructorPanel({
 
         {build.command ? (
           <div className="flex items-center gap-1.5 border-t border-border pt-2">
-            <code className="min-w-0 flex-1 truncate rounded-full border border-border bg-background px-2.5 py-1 text-[0.6875rem] text-foreground">
+            <code className="min-w-0 flex-1 truncate rounded-full border border-border bg-background px-2.5 py-1 text-meta text-foreground">
               {build.command}
             </code>
             <button
@@ -174,7 +174,7 @@ export function ObsConstructorPanel({
             </button>
           </div>
         ) : (
-          <p className="border-t border-border pt-2 text-[0.6875rem] text-muted">
+          <p className="border-t border-border pt-2 text-hint text-muted">
             {t({
               ru: "Выбери до 4 перков, чтобы получить команду.",
               en: "Pick up to 4 perks to get a command.",
@@ -184,7 +184,7 @@ export function ObsConstructorPanel({
       </div>
 
       {!pasteEnabled && (
-        <p className="mt-3 text-[0.6875rem] text-muted">
+        <p className="mt-3 text-hint text-muted">
           {t({
             ru: "Команда «вставить билд по коду» сейчас выключена во вкладке Twitch — включи её там, чтобы зрители могли использовать эту команду в чате.",
             en: 'The "paste a build by code" command is currently off in the Twitch tab — turn it on there for viewers to actually use this command in chat.',

@@ -72,7 +72,7 @@ export function PerkGrid({
 
   if (perks.length === 0) {
     return (
-      <div className="flex min-h-[220px] w-full max-w-md items-center justify-center rounded-2xl border border-dashed border-border p-6 text-center text-sm text-muted">
+      <div className="flex min-h-[220px] w-full max-w-md items-center justify-center rounded-2xl border border-dashed border-border p-6 text-center text-meta text-muted">
         {emptyMessage ?? t({ ru: "Пусто", en: "Nothing here" })}
       </div>
     );
@@ -176,8 +176,8 @@ export function PerkGrid({
                 {isNewPerk(perk) && (
                   <span
                     className={cn(
-                      "absolute -top-2 -left-2 z-10 rounded-full px-2 py-0.5 text-micro font-bold text-black shadow",
-                      perk.role === "survivor" ? "bg-sky-500" : "bg-rose-500",
+                      "absolute -top-2 -left-2 z-10 rounded-full px-2 py-0.5 text-micro font-bold text-background shadow",
+                      perk.role === "survivor" ? "bg-role-survivor" : "bg-role-killer",
                     )}
                   >
                     {t({ ru: "НОВОЕ", en: "NEW" })}
@@ -416,7 +416,7 @@ export function PerkDetailModal({
                   <p className="font-semibold text-foreground">
                     {perk.name[language]}
                   </p>
-                  <p className="flex items-center gap-1.5 text-xs">
+                  <p className="flex items-center gap-1.5 text-meta">
                     <span className={cn("font-medium", roleColor.text)}>
                       {perk.role === "survivor"
                         ? t({ ru: "Выживший", en: "Survivor" })
@@ -453,10 +453,10 @@ export function PerkDetailModal({
                     />
                   </span>
                   <div>
-                    <p className="text-[0.6875rem] text-muted">
+                    <p className="text-hint text-muted">
                       {t({ ru: "Персонаж", en: "Character" })}
                     </p>
-                    <p className="text-sm font-medium text-foreground">
+                    <p className="text-meta font-medium text-foreground">
                       {getCharacterName(perk.character, language)}
                     </p>
                   </div>
@@ -477,7 +477,7 @@ export function PerkDetailModal({
               <button
                 type="button"
                 onClick={() => onCopy(perk)}
-                className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-border py-2 text-sm font-medium text-muted transition-colors hover:border-accent/50 hover:bg-accent/10 hover:text-accent"
+                className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-border py-2 text-control font-medium text-muted transition-colors hover:border-accent/50 hover:bg-accent/10 hover:text-accent"
               >
                 <Copy className="size-3.5" />
                 {t({ ru: "Копировать", en: "Copy" })}
@@ -492,7 +492,7 @@ export function PerkDetailModal({
                 href={wrongDataUrl(perk.name[language])}
                 target="_blank"
                 rel="noreferrer"
-                className="mt-2 block text-center text-[0.6875rem] text-muted underline decoration-dotted underline-offset-4 transition-colors hover:text-foreground"
+                className="mt-2 block text-center text-hint text-muted underline decoration-dotted underline-offset-4 transition-colors hover:text-foreground"
               >
                 {t({ ru: "Неверный текст? Сообщить", en: "Wrong text? Report it" })}
               </a>
@@ -546,7 +546,7 @@ function PerkDescriptionPanel({
 
   return (
     <div className="mt-4">
-      <div className="inline-flex rounded-full border border-border bg-surface/60 p-0.5 text-xs font-medium">
+      <div className="inline-flex rounded-full border border-border bg-surface/60 p-0.5 text-control font-medium">
         {(["core", "full"] as const).map((option) => (
           <button
             key={option}
@@ -567,7 +567,7 @@ function PerkDescriptionPanel({
       </div>
 
       {tab === "core" ? (
-        <ul className="mt-3 space-y-1.5 text-sm leading-relaxed text-muted">
+        <ul className="mt-3 space-y-1.5 text-control leading-relaxed text-muted">
           {description.core.map((bullet, i) => (
             <li key={i} className="flex gap-2">
               <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-accent" aria-hidden />
@@ -579,11 +579,11 @@ function PerkDescriptionPanel({
         </ul>
       ) : (
         <div className="mt-3 space-y-3">
-          <p className="text-sm leading-relaxed text-muted">
+          <p className="text-hint leading-relaxed text-muted">
             <Highlighted text={description.full} role={perk.role} />
           </p>
           {description.quote && (
-            <p className="border-l-2 border-accent/40 pl-3 text-xs italic leading-relaxed text-muted">
+            <p className="border-l-2 border-accent/40 pl-3 text-hint italic leading-relaxed text-muted">
               {description.quote}
             </p>
           )}

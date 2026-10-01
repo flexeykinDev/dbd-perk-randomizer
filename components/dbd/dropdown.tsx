@@ -218,13 +218,13 @@ function Option({
         <Check className={cn("size-3", selected ? "text-accent" : "opacity-0")} />
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block truncate text-xs font-medium text-foreground">{option.label}</span>
+        <span className="block truncate text-control font-medium text-foreground">{option.label}</span>
         {option.hint && (
-          <span className="block text-[0.625rem] leading-snug text-muted">{option.hint}</span>
+          <span className="block text-hint leading-snug text-muted">{option.hint}</span>
         )}
       </span>
       {option.count !== undefined && (
-        <span className="mt-0.5 shrink-0 text-[0.625rem] tabular-nums text-muted">
+        <span className="mt-0.5 shrink-0 text-hint tabular-nums text-muted">
           {option.count}
         </span>
       )}
@@ -377,7 +377,7 @@ export function Dropdown<T extends string>({
             setOpen(true);
           }
         }}
-        className={cn(TRIGGER_CLASS, "px-3 py-1.5 text-xs", className)}
+        className={cn(TRIGGER_CLASS, "px-3 py-1.5 text-control", className)}
       >
         {icon}
         <span className="truncate">{current?.label ?? placeholder ?? label}</span>
@@ -479,7 +479,7 @@ export function MultiDropdown<T extends string>({
             setOpen(true);
           }
         }}
-        className={cn(TRIGGER_CLASS, "px-3 py-1.5 text-xs", className)}
+        className={cn(TRIGGER_CLASS, "px-3 py-1.5 text-control", className)}
       >
         {icon}
         <span className="truncate">{triggerText}</span>

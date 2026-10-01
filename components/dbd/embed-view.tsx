@@ -81,7 +81,7 @@ export function EmbedView() {
               height={44}
               className="size-11 shrink-0"
             />
-            <span className="w-full truncate text-center text-[0.625rem] leading-tight text-muted">
+            <span className="w-full truncate text-center text-hint leading-tight text-muted">
               {perk.name[lang]}
             </span>
           </div>
@@ -92,7 +92,7 @@ export function EmbedView() {
         <button
           type="button"
           onClick={roll}
-          className={`tap flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold ${roleColor.bg} ${roleColor.text} transition-transform hover:scale-105 active:scale-95`}
+          className={`tap flex items-center gap-1.5 rounded-full px-3 py-1.5 text-control font-semibold ${roleColor.bg} ${roleColor.text} transition-transform hover:scale-105 active:scale-95`}
         >
           <Dices className="size-3.5" />
           {t({ ru: "Ещё билд", en: "Roll" })}
@@ -101,7 +101,7 @@ export function EmbedView() {
           href={withBasePath("/")}
           target="_blank"
           rel="noreferrer noopener"
-          className="truncate text-[0.625rem] text-muted underline decoration-dotted underline-offset-2 hover:text-foreground"
+          className="truncate text-micro text-muted underline decoration-dotted underline-offset-2 hover:text-foreground"
         >
           {t({ ru: "Рандомайзер перков DBD", en: "DBD Perk Randomizer" })}
         </a>

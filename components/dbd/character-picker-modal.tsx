@@ -103,14 +103,14 @@ export function CharacterPickerModal({
                     onChange={(e) => setSearch(e.target.value)}
                     aria-label={t({ ru: "Поиск персонажа", en: "Search characters" })}
                     placeholder={t({ ru: "Поиск персонажа…", en: "Search character…" })}
-                    className="w-full rounded-full border border-border bg-background py-1.5 pr-3 pl-8 text-xs text-foreground placeholder:text-muted/60 focus:ring-2 focus:ring-accent/40 focus:outline-none"
+                    className="w-full rounded-full border border-border bg-background py-1.5 pr-3 pl-8 text-control text-foreground placeholder:text-muted/60 focus:ring-2 focus:ring-accent/40 focus:outline-none"
                   />
                 </div>
                 <button
                   type="button"
                   onClick={pickRandom}
                   disabled={filtered.length === 0}
-                  className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
+                  className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-control font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
                 >
                   <Shuffle className="size-3.5" />
                   {t({ ru: "Случайный", en: "Random" })}
@@ -122,7 +122,7 @@ export function CharacterPickerModal({
                       onSelect(null);
                       onClose();
                     }}
-                    className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+                    className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-control font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
                   >
                     <X className="size-3.5" />
                     {t({ ru: "Убрать выбор", en: "Clear selection" })}
@@ -131,7 +131,7 @@ export function CharacterPickerModal({
               </div>
 
               {filtered.length === 0 ? (
-                <p className="p-8 text-center text-sm text-muted">
+                <p className="p-8 text-center text-hint text-muted">
                   {t({ ru: "Ничего не найдено", en: "Nothing matches" })}
                 </p>
               ) : (
@@ -170,7 +170,7 @@ export function CharacterPickerModal({
                             <span className="flex size-12 items-center justify-center bg-surface text-muted">?</span>
                           )}
                         </span>
-                        <span className="text-[0.625rem] leading-tight text-foreground">
+                        <span className="text-meta leading-tight text-foreground">
                           {getCharacterName(character, language)}
                         </span>
                       </button>

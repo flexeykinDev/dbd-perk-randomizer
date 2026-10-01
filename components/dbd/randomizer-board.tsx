@@ -1472,7 +1472,7 @@ export function RandomizerBoard() {
                 type="button"
                 onClick={() => selectRole(r)}
                 className={cn(
-                  "tap rounded-full border px-5 py-1.5 text-sm font-medium capitalize",
+                  "tap rounded-full border px-5 py-1.5 text-control font-medium capitalize",
                   /* The one control whose whole job is saying which side you
                      are playing, so it carries the colour at full strength
                      rather than the /10 wash it used to. See the note in
@@ -1497,7 +1497,7 @@ export function RandomizerBoard() {
           })}
         </div>
 
-        <div className="flex items-center gap-1 rounded-full border border-border bg-surface/60 p-1 text-sm">
+        <div className="flex items-center gap-1 rounded-full border border-border bg-surface/60 p-1 text-control">
           {(["perks", "loadout", "all"] as const).map((m) => (
             <button
               key={m}
@@ -1529,7 +1529,7 @@ export function RandomizerBoard() {
           rest of the setup — see SetupDisclosure. */}
       <div className="flex w-full max-w-full flex-col items-start divide-y divide-border overflow-x-auto rounded-2xl border border-border bg-surface/40 sm:w-auto sm:flex-row sm:items-center sm:divide-x sm:divide-y-0">
         {mode !== "loadout" && (
-          <div className="flex shrink-0 flex-wrap items-center justify-center gap-x-2 gap-y-1.5 px-4 py-1.5 text-sm sm:py-2">
+          <div className="flex shrink-0 flex-wrap items-center justify-center gap-x-2 gap-y-1.5 px-4 py-1.5 text-meta sm:py-2">
             <span className="text-muted">
               {t({ ru: "Перков:", en: "Perks:" })}
             </span>
@@ -1540,7 +1540,7 @@ export function RandomizerBoard() {
                   type="button"
                   onClick={() => selectPerkCount(n)}
                   className={cn(
-                    "tap-square flex size-7 items-center justify-center rounded-full border text-xs font-semibold transition-colors",
+                    "tap-square flex size-7 items-center justify-center rounded-full border text-control font-semibold transition-colors",
                     perkCount === n
                       ? cn(roleColor.border, roleColor.bg, roleColor.text)
                       : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
@@ -1565,7 +1565,7 @@ export function RandomizerBoard() {
         />
 
         {mode !== "perks" && (
-          <div className="flex shrink-0 flex-wrap items-center justify-center gap-x-2 gap-y-1.5 px-4 py-1.5 text-sm sm:py-2">
+          <div className="flex shrink-0 flex-wrap items-center justify-center gap-x-2 gap-y-1.5 px-4 py-1.5 text-meta sm:py-2">
             <span className="text-muted">
               {t({ ru: "Слоты:", en: "Slots:" })}
             </span>
@@ -1583,7 +1583,7 @@ export function RandomizerBoard() {
                   type="button"
                   onClick={() => toggleLoadoutSlot(slot)}
                   className={cn(
-                    "rounded-full border px-3 py-1 text-xs font-medium transition-colors",
+                    "rounded-full border px-3 py-1 text-control font-medium transition-colors",
                     loadoutSlots[slot]
                       ? cn(roleColor.border, roleColor.bg, roleColor.text)
                       : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
@@ -1599,7 +1599,7 @@ export function RandomizerBoard() {
       <SetupDisclosure open={setup.open} onToggle={setup.toggle}>
         <div className="flex w-full max-w-full flex-col items-start divide-y divide-border overflow-x-auto rounded-2xl border border-border bg-surface/40 sm:w-auto sm:flex-row sm:items-center sm:divide-x sm:divide-y-0">
           {mode !== "loadout" && mounted && getTagsForRole(role).length > 0 && (
-            <div className="flex shrink-0 flex-wrap items-center justify-center gap-x-2 gap-y-1.5 px-4 py-1.5 text-sm sm:py-2">
+            <div className="flex shrink-0 flex-wrap items-center justify-center gap-x-2 gap-y-1.5 px-4 py-1.5 text-meta sm:py-2">
               <span className="text-muted">
                 {t({ ru: "Тема:", en: "Theme:" })}
               </span>
@@ -1624,7 +1624,7 @@ export function RandomizerBoard() {
               pool to one idea, this only tilts the draw and leaves every perk
               reachable. */}
           {mode !== "loadout" && mounted && (
-            <div className="flex shrink-0 flex-wrap items-center justify-center gap-x-2 gap-y-1.5 px-4 py-1.5 text-sm sm:py-2">
+            <div className="flex shrink-0 flex-wrap items-center justify-center gap-x-2 gap-y-1.5 px-4 py-1.5 text-meta sm:py-2">
               <span className="text-muted">
                 {t({ ru: "Связность:", en: "Coherence:" })}
               </span>
@@ -1642,7 +1642,7 @@ export function RandomizerBoard() {
                     onClick={() => coherence.setLevel(level)}
                     title={t(COHERENCE_HINT[level])}
                     className={cn(
-                      "tap rounded-full border px-2.5 py-1 text-xs font-semibold transition-colors",
+                      "tap rounded-full border px-2.5 py-1 text-control font-semibold transition-colors",
                       coherence.level === level
                         ? cn(roleColor.border, roleColor.bg, roleColor.text)
                         : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
@@ -1689,10 +1689,10 @@ export function RandomizerBoard() {
                       className="size-7 object-cover"
                     />
                   ) : (
-                    <span className="text-[0.625rem] text-muted">?</span>
+                    <span className="text-hint text-muted">?</span>
                   )}
                 </span>
-                <span className="text-xs font-medium text-foreground">
+                <span className="text-control font-medium text-foreground">
                   {getCharacterName(selectedCharacter, language)}
                 </span>
               </button>
@@ -1843,7 +1843,7 @@ export function RandomizerBoard() {
                   ? restartBattleRoyale
                   : () => openExcludePanel("perks")
               }
-              className="mt-1 rounded-full bg-accent px-5 py-2 text-sm font-semibold text-accent-foreground transition-transform hover:scale-105 active:scale-95"
+              className="mt-1 rounded-full bg-accent px-5 py-2 text-control font-semibold text-accent-foreground transition-transform hover:scale-105 active:scale-95"
             >
               {battleRoyale
                 ? t({ ru: "Начать заново", en: "Start over" })
@@ -2106,7 +2106,7 @@ export function RandomizerBoard() {
                   aria-checked={squad.players === n}
                   onClick={() => squad.setPlayers(n)}
                   className={cn(
-                    "tap size-7 rounded-full border text-xs font-semibold transition-colors",
+                    "tap size-7 rounded-full border text-control font-semibold transition-colors",
                     squad.players === n
                       ? "border-accent bg-accent text-accent-foreground"
                       : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
@@ -2123,7 +2123,7 @@ export function RandomizerBoard() {
       <button
         type="button"
         onClick={() => setShowStats((v) => !v)}
-        className="tap flex items-center gap-1.5 text-xs text-muted transition-colors hover:text-muted"
+        className="tap flex items-center gap-1.5 text-control text-muted transition-colors hover:text-muted"
       >
         <BarChart3 className="size-3.5" />
         {t({ ru: "Статистика пула", en: "Pool stats" })}

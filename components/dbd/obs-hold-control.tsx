@@ -16,7 +16,7 @@ export function ObsHoldControl({ hold }: { hold: ObsHold }) {
     <div
       className={cn(
         "mt-4 rounded-xl border p-3",
-        hold.held ? "border-amber-400/40 bg-amber-400/5" : "border-border bg-background/60",
+        hold.held ? "border-status-pending/40 bg-status-pending/5" : "border-border bg-background/60",
       )}
     >
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
@@ -26,9 +26,9 @@ export function ObsHoldControl({ hold }: { hold: ObsHold }) {
           aria-checked={hold.held}
           onClick={() => hold.setHeld(!hold.held)}
           className={cn(
-            "flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[0.6875rem] font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:outline-none",
+            "flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-control font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:outline-none",
             hold.held
-              ? "border-amber-400/50 bg-amber-400/15 text-amber-300"
+              ? "border-status-pending/50 bg-status-pending/15 text-status-pending"
               : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
           )}
         >
@@ -40,7 +40,7 @@ export function ObsHoldControl({ hold }: { hold: ObsHold }) {
           <button
             type="button"
             onClick={hold.reveal}
-            className="flex items-center gap-1.5 rounded-full bg-accent px-3 py-1 text-[0.6875rem] font-semibold text-accent-foreground transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:outline-none"
+            className="flex items-center gap-1.5 rounded-full bg-accent px-3 py-1 text-control font-semibold text-accent-foreground transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:outline-none"
           >
             <Eye className="size-3.5" />
             {t({ ru: "Показать", en: "Reveal" })}
@@ -51,7 +51,7 @@ export function ObsHoldControl({ hold }: { hold: ObsHold }) {
         )}
       </div>
 
-      <p className="mt-2 text-[0.6875rem] text-muted">
+      <p className="mt-2 text-hint text-muted">
         {hold.held
           ? hold.pending > 0
             ? t({

@@ -26,7 +26,7 @@ export function ObsLayoutBookmarks({ options }: { options: ObsOverlayOptions }) 
     <div className="mt-3 rounded-xl border border-border bg-background/60 p-3">
       <div className="flex items-center gap-2">
         <Bookmark className="size-3.5 shrink-0 text-muted" />
-        <h3 className="text-xs font-semibold tracking-wide text-muted uppercase">
+        <h3 className="text-meta font-semibold tracking-wide text-muted uppercase">
           {t({ ru: "Мои раскладки", en: "Saved layouts" })}
         </h3>
       </div>
@@ -36,7 +36,7 @@ export function ObsLayoutBookmarks({ options }: { options: ObsOverlayOptions }) 
           {layouts.map((layout) => (
             <span
               key={layout.name}
-              className="flex items-center gap-1 rounded-full border border-border bg-surface pl-2.5 text-[0.6875rem]"
+              className="flex items-center gap-1 rounded-full border border-border bg-surface pl-2.5 text-meta"
             >
               <button
                 type="button"
@@ -75,13 +75,13 @@ export function ObsLayoutBookmarks({ options }: { options: ObsOverlayOptions }) 
             }}
             placeholder={t({ ru: "Например, «Игровая сцена»", en: "e.g. “Gameplay scene”" })}
             aria-label={t({ ru: "Название раскладки", en: "Layout name" })}
-            className="min-w-0 flex-1 rounded-full border border-border bg-background px-2.5 py-1 text-[0.6875rem] text-foreground placeholder:text-muted/60 focus:ring-2 focus:ring-accent/40 focus:outline-none"
+            className="min-w-0 flex-1 rounded-full border border-border bg-background px-2.5 py-1 text-control text-foreground placeholder:text-muted/60 focus:ring-2 focus:ring-accent/40 focus:outline-none"
           />
           <button
             type="button"
             onClick={commit}
             disabled={!name.trim()}
-            className="rounded-full bg-accent px-3 py-1 text-[0.6875rem] font-semibold text-accent-foreground transition-opacity hover:opacity-90 disabled:opacity-40"
+            className="rounded-full bg-accent px-3 py-1 text-control font-semibold text-accent-foreground transition-opacity hover:opacity-90 disabled:opacity-40"
           >
             {t({ ru: "Сохранить", en: "Save" })}
           </button>
@@ -92,7 +92,7 @@ export function ObsLayoutBookmarks({ options }: { options: ObsOverlayOptions }) 
           onClick={() => setNaming(true)}
           disabled={isFull}
           className={cn(
-            "mt-2 flex items-center gap-1 text-[0.6875rem] font-medium transition-colors",
+            "mt-2 flex items-center gap-1 text-control font-medium transition-colors",
             isFull ? "cursor-not-allowed text-muted/50" : "text-accent hover:text-accent/80",
           )}
         >
@@ -101,7 +101,7 @@ export function ObsLayoutBookmarks({ options }: { options: ObsOverlayOptions }) 
         </button>
       )}
 
-      <p className="mt-1.5 text-[0.6875rem] text-muted">
+      <p className="mt-1.5 text-hint text-muted">
         {t({
           ru: "Сохраняются настройки, а не ссылка — раскладку можно применить, и ссылка соберётся заново. Хранится только в этом браузере.",
           en: "Stores the settings rather than the link — applying one rebuilds the link. Kept in this browser only.",

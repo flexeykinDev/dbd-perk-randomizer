@@ -65,7 +65,7 @@ export function LoadoutGrid({
 
   if (pieces.length === 0) {
     return (
-      <div className="flex min-h-[180px] w-full max-w-md items-center justify-center rounded-2xl border border-dashed border-border p-6 text-center text-sm text-muted">
+      <div className="flex min-h-[180px] w-full max-w-md items-center justify-center rounded-2xl border border-dashed border-border p-6 text-center text-meta text-muted">
         {emptyMessage ?? t({ ru: "Пусто", en: "Nothing here" })}
       </div>
     );
@@ -186,7 +186,7 @@ function SlotGroup({
 }) {
   return (
     <div data-testid={testId} className="flex flex-col items-center gap-1.5">
-      <span className="text-[0.625rem] font-semibold tracking-wide text-muted uppercase">
+      <span className="text-hint font-semibold tracking-wide text-muted uppercase">
         {label}
       </span>
       <div className="flex items-start gap-2">{children}</div>
@@ -292,7 +292,7 @@ function PieceSlot({
                 transition={{ duration: 0.55, delay: slot * 0.075, ease: "easeOut" }}
               />
               {isNewLoadoutPiece(piece) && (
-                <span className="absolute top-0.5 left-0.5 z-10 rounded-full bg-black/60 px-1 py-px text-[0.5625rem] font-bold text-white/90 shadow">
+                <span className="absolute top-0.5 left-0.5 z-10 rounded-full bg-black/60 px-1 py-px text-micro font-bold text-white/90 shadow">
                   {t({ ru: "НОВОЕ", en: "NEW" })}
                 </span>
               )}
@@ -336,7 +336,7 @@ function PieceSlot({
       </div>
       <span
         className={cn(
-          "text-center text-[0.625rem] leading-tight text-foreground",
+          "text-center text-body leading-tight text-foreground",
           labelWidth,
         )}
       >
@@ -399,7 +399,7 @@ function PowerSlot({
           </span>
         )}
       </div>
-      <span className="w-24 text-center text-[0.625rem] leading-tight text-foreground sm:w-28 lg:w-32">
+      <span className="w-24 text-center text-body leading-tight text-foreground sm:w-28 lg:w-32">
         {character ? getCharacterName(character, language) : " "}
       </span>
     </div>
@@ -493,7 +493,7 @@ function LoadoutDetailModal({
                   <p className="font-semibold text-foreground">
                     {piece.name[language]}
                   </p>
-                  <p className="flex flex-wrap items-center gap-1.5 text-xs">
+                  <p className="flex flex-wrap items-center gap-1.5 text-meta">
                     <span className={cn("font-medium", roleColor.text)}>
                       {t(KIND_LABEL[piece.kind])}
                     </span>
@@ -543,10 +543,10 @@ function LoadoutDetailModal({
                     )}
                   </span>
                   <div>
-                    <p className="text-[0.6875rem] text-muted">
+                    <p className="text-hint text-muted">
                       {t({ ru: "Убийца", en: "Killer" })}
                     </p>
-                    <p className="text-sm font-medium text-foreground">
+                    <p className="text-meta font-medium text-foreground">
                       {getCharacterName(character, language)}
                     </p>
                   </div>
@@ -567,7 +567,7 @@ function LoadoutDetailModal({
               <button
                 type="button"
                 onClick={() => onCopy(piece)}
-                className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-border py-2 text-sm font-medium text-muted transition-colors hover:border-accent/50 hover:bg-accent/10 hover:text-accent"
+                className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-border py-2 text-control font-medium text-muted transition-colors hover:border-accent/50 hover:bg-accent/10 hover:text-accent"
               >
                 <Copy className="size-3.5" />
                 {t({ ru: "Копировать", en: "Copy" })}
@@ -625,7 +625,7 @@ function LoadoutDescriptionPanel({
 
   return (
     <div className="mt-4">
-      <div className="inline-flex rounded-full border border-border bg-surface/60 p-0.5 text-xs font-medium">
+      <div className="inline-flex rounded-full border border-border bg-surface/60 p-0.5 text-control font-medium">
         {(["core", "full"] as const).map((option) => (
           <button
             key={option}
@@ -652,7 +652,7 @@ function LoadoutDescriptionPanel({
            did nothing — see coreSummary in lib/perk-description.ts. The role
            tint on the values is what makes the number findable at a glance,
            which is the entire point of the short view. */
-        <p className="mt-3 flex gap-2 text-sm leading-relaxed text-foreground">
+        <p className="mt-3 flex gap-2 text-meta leading-relaxed text-foreground">
           <span
             className="mt-1.5 size-1.5 shrink-0 rounded-full bg-accent"
             aria-hidden
@@ -663,11 +663,11 @@ function LoadoutDescriptionPanel({
         </p>
       ) : (
         <div className="mt-3 space-y-3">
-          <p className="text-sm leading-relaxed text-muted">
+          <p className="text-hint leading-relaxed text-muted">
             <Highlighted text={description.full} role={role} />
           </p>
           {description.quote && (
-            <p className="border-l-2 border-accent/40 pl-3 text-xs italic leading-relaxed text-muted">
+            <p className="border-l-2 border-accent/40 pl-3 text-hint italic leading-relaxed text-muted">
               {description.quote}
             </p>
           )}
@@ -675,7 +675,7 @@ function LoadoutDescriptionPanel({
       )}
 
       {untranslated && (
-        <p className="mt-2 text-[0.6875rem] text-muted">
+        <p className="mt-2 text-hint text-muted">
           {t({
             ru: "Перевод для этого предмета пока не добавлен — название и/или описание показаны на английском.",
             en: "No RU translation yet for this piece — the name and/or description are shown in English.",

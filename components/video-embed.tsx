@@ -67,7 +67,7 @@ export function VideoEmbed({ src, title }: { src: string; title: string }) {
         <button
           type="button"
           onClick={toggleCollapsed}
-          className="flex w-full items-center justify-center gap-2 rounded-xl border border-border bg-surface py-2.5 text-sm font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+          className="flex w-full items-center justify-center gap-2 rounded-xl border border-border bg-surface py-2.5 text-control font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
         >
           <ChevronDown className="size-4" />
           {t({ ru: "Показать трейлер", en: "Show trailer" })}
@@ -122,7 +122,7 @@ export function VideoEmbed({ src, title }: { src: string; title: string }) {
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-black/45" />
 
-                <span className="absolute top-3 left-3 max-w-[75%] truncate rounded-md bg-black/60 px-2.5 py-1 text-xs font-semibold text-white backdrop-blur-sm">
+                <span className="absolute top-3 left-3 max-w-[75%] truncate rounded-md bg-black/60 px-2.5 py-1 text-meta font-semibold text-white backdrop-blur-sm">
                   {title}
                 </span>
 

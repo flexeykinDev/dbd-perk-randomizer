@@ -71,7 +71,7 @@ export function StatsModal({
                   <p className="font-semibold text-foreground">
                     {t({ ru: "Статистика роллов", en: "Roll Statistics" })}
                   </p>
-                  <p className="text-xs text-muted">
+                  <p className="text-hint text-muted">
                     {t({
                       ru: "Хранится локально в этом браузере",
                       en: "Stored locally in this browser",
@@ -82,7 +82,7 @@ export function StatsModal({
                   <button
                     type="button"
                     onClick={() => setConfirmOpen(true)}
-                    className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:border-rose-500/40 hover:text-rose-400"
+                    className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-control font-medium text-muted transition-colors hover:border-danger/40 hover:text-danger"
                   >
                     <Trash2 className="size-3.5" />
                     {t({ ru: "Сбросить", en: "Reset" })}
@@ -99,7 +99,7 @@ export function StatsModal({
               </div>
 
               <div className="border-b border-border p-3">
-                <div className="inline-flex rounded-full border border-border bg-background p-0.5 text-xs font-medium">
+                <div className="inline-flex rounded-full border border-border bg-background p-0.5 text-control font-medium">
                   {(["survivor", "killer"] as const).map((r) => (
                     <button
                       key={r}
@@ -122,7 +122,7 @@ export function StatsModal({
 
               <div className="overflow-y-auto p-4">
                 {!stats || stats.totalBuilds === 0 ? (
-                  <p className="py-10 text-center text-sm text-muted">
+                  <p className="py-10 text-center text-hint text-muted">
                     {t({
                       ru: "Пока нет данных — сгенерируйте несколько билдов.",
                       en: "No data yet — generate a few builds.",
@@ -140,7 +140,7 @@ export function StatsModal({
                       <p className={cn("text-2xl font-bold", roleColor.text)}>
                         {stats.totalBuilds}
                       </p>
-                      <p className="text-xs text-muted">
+                      <p className="text-hint text-muted">
                         {t({ ru: "билдов сгенерировано", en: "builds generated" })}
                       </p>
                     </div>
@@ -215,10 +215,10 @@ function PoolCoverage({
   return (
     <div>
       <div className="mb-1.5 flex items-baseline justify-between gap-3">
-        <p className="text-xs font-semibold tracking-wide text-muted uppercase">
+        <p className="text-hint font-semibold tracking-wide text-muted uppercase">
           {t({ ru: "Открыто перков", en: "Perks seen" })}
         </p>
-        <p className="text-xs tabular-nums text-muted">
+        <p className="text-hint tabular-nums text-muted">
           {seen} / {poolSize} · {percent}%
         </p>
       </div>
@@ -232,7 +232,7 @@ function PoolCoverage({
       >
         <div className="h-full rounded-full bg-accent transition-[width]" style={{ width: `${percent}%` }} />
       </div>
-      <p className="mt-1.5 text-[0.6875rem] text-muted">
+      <p className="mt-1.5 text-hint text-muted">
         {left > 0
           ? t({
               ru: `Ещё ${left} ни разу не выпадали.`,
@@ -252,7 +252,7 @@ function PoolCoverage({
         <button
           type="button"
           onClick={onRollUnseen}
-          className="tap mt-2.5 flex w-full items-center justify-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+          className="tap mt-2.5 flex w-full items-center justify-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-control font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
         >
           <Sparkles className="size-3.5" />
           {t({ ru: "Выдать новое", en: "Roll something new" })}
@@ -275,9 +275,9 @@ function StatList({
 }) {
   return (
     <div>
-      <p className="mb-2 text-xs font-semibold tracking-wide text-muted uppercase">{title}</p>
+      <p className="mb-2 text-hint font-semibold tracking-wide text-muted uppercase">{title}</p>
       {stats.length === 0 ? (
-        <p className="text-sm text-muted">{emptyLabel}</p>
+        <p className="text-hint text-muted">{emptyLabel}</p>
       ) : (
         <ul className="flex flex-col gap-1.5">
           {stats.map(({ perk, count, percent }) => (
@@ -293,10 +293,10 @@ function StatList({
                 height={28}
                 className="size-7 shrink-0 rounded-md icon-art object-cover"
               />
-              <span className="min-w-0 flex-1 truncate text-sm text-foreground">
+              <span className="min-w-0 flex-1 truncate text-meta text-foreground">
                 {perk.name[language]}
               </span>
-              <span className="shrink-0 text-xs text-muted">
+              <span className="shrink-0 text-hint text-muted">
                 {count}× · {percent.toFixed(1)}%
               </span>
             </li>

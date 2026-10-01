@@ -41,12 +41,12 @@ export function ConfirmDialog({
             className="w-full max-w-sm rounded-2xl border border-border bg-surface p-5 shadow-2xl"
           >
             <p className="font-semibold text-foreground">{title}</p>
-            <p className="mt-1.5 text-sm text-muted">{message}</p>
+            <p className="mt-1.5 text-hint text-muted">{message}</p>
             <div className="mt-4 flex justify-end gap-2">
               <button
                 type="button"
                 onClick={onCancel}
-                className="rounded-full border border-border px-4 py-2 text-sm font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+                className="rounded-full border border-border px-4 py-2 text-control font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
               >
                 {cancelLabel}
               </button>
@@ -54,9 +54,9 @@ export function ConfirmDialog({
                 type="button"
                 onClick={onConfirm}
                 className={cn(
-                  "rounded-full px-4 py-2 text-sm font-semibold transition-transform hover:scale-105 active:scale-95",
+                  "rounded-full px-4 py-2 text-control font-semibold transition-transform hover:scale-105 active:scale-95",
                   danger
-                    ? "bg-rose-500 text-white"
+                    ? "bg-danger text-background"
                     : "bg-accent text-accent-foreground",
                 )}
               >

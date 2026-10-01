@@ -402,7 +402,7 @@ export function ObsOverlay() {
         />
       )}
       {!state || state.perks.length === 0 ? (
-        <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-black/60 px-3 py-1.5 text-xs whitespace-nowrap text-white/70">
+        <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-black/60 px-3 py-1.5 text-meta whitespace-nowrap text-white/70">
           {t({
             ru: "Ждём билд с основного сайта…",
             en: "Waiting for a build from the main site…",

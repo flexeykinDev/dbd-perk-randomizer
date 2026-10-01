@@ -26,8 +26,8 @@ const STATE_LABEL: Record<TwitchConnectionState, { ru: string; en: string }> = {
  *  about brand. Shared vocabulary with the publish-status dot. */
 const STATE_DOT: Record<TwitchConnectionState, string> = {
   disconnected: "bg-muted",
-  connecting: "bg-amber-400 animate-pulse",
-  connected: "bg-emerald-400",
+  connecting: "bg-status-pending animate-pulse",
+  connected: "bg-status-ok",
   error: "bg-red-500",
 };
 
@@ -59,11 +59,11 @@ export function ObsTwitchPanel({
     <div className="mt-4 rounded-xl border border-border bg-background/60 p-3.5">
       <div className="mb-2 flex items-center gap-2">
         <MessageCircle className="size-3.5 text-muted" />
-        <h3 className="text-xs font-semibold tracking-wide text-muted uppercase">
+        <h3 className="text-meta font-semibold tracking-wide text-muted uppercase">
           {t({ ru: "Управление из чата Twitch", en: "Control from Twitch chat" })}
         </h3>
       </div>
-      <p className="mb-3 text-xs text-muted">
+      <p className="mb-3 text-hint text-muted">
         {t({
           ru: "Читает публичный чат канала анонимно (без входа в Twitch).",
           en: "Reads the channel's public chat anonymously (no Twitch login).",
@@ -80,9 +80,9 @@ export function ObsTwitchPanel({
           onChange={(e) => twitch.setChannel(e.target.value)}
           placeholder={t({ ru: "имя_канала", en: "channel_name" })}
           aria-label={t({ ru: "Имя канала Twitch", en: "Twitch channel name" })}
-          className="min-w-0 flex-1 rounded-full border border-border bg-background px-3 py-1.5 text-xs text-foreground placeholder:text-muted/60 focus:ring-2 focus:ring-accent/40 focus:outline-none"
+          className="min-w-0 flex-1 rounded-full border border-border bg-background px-3 py-1.5 text-control text-foreground placeholder:text-muted/60 focus:ring-2 focus:ring-accent/40 focus:outline-none"
         />
-        <label className="flex shrink-0 items-center gap-1.5 text-xs font-medium text-muted">
+        <label className="flex shrink-0 items-center gap-1.5 text-control font-medium text-muted">
           <input
             type="checkbox"
             checked={twitch.enabled}
@@ -94,7 +94,7 @@ export function ObsTwitchPanel({
         </label>
       </div>
       {twitch.enabled && (
-        <p className="mt-2 flex items-center gap-1.5 text-[0.6875rem] text-muted">
+        <p className="mt-2 flex items-center gap-1.5 text-hint text-muted">
           <span className={cn("size-1.5 rounded-full", STATE_DOT[twitch.state])} />
           {t(STATE_LABEL[twitch.state])}
         </p>
@@ -104,7 +104,7 @@ export function ObsTwitchPanel({
         type="button"
         onClick={() => setAdvancedOpen((v) => !v)}
         aria-expanded={advancedOpen}
-        className="mt-3 flex w-full items-center justify-between text-[0.6875rem] font-medium text-muted transition-colors hover:text-foreground"
+        className="mt-3 flex w-full items-center justify-between text-control font-medium text-muted transition-colors hover:text-foreground"
       >
         {t({ ru: "Команды и права доступа", en: "Commands & permissions" })}
         <ChevronDown className={cn("size-3.5 transition-transform", advancedOpen && "rotate-180")} />
@@ -113,7 +113,7 @@ export function ObsTwitchPanel({
       {advancedOpen && (
         <div className="mt-3 flex flex-col gap-3 border-t border-border pt-3">
           <div className="flex flex-col gap-1.5">
-            <span className="text-[0.6875rem] font-medium text-muted">
+            <span className="text-hint font-medium text-muted">
               {t({ ru: "Реролл — команда", en: "Reroll — command" })}
             </span>
             <div className="flex flex-wrap items-center gap-1.5">
@@ -123,7 +123,7 @@ export function ObsTwitchPanel({
                 onChange={(e) => twitch.setRerollCommand(e.target.value)}
                 placeholder="!reroll"
                 aria-label={t({ ru: "Команда реролла", en: "Reroll command" })}
-                className="w-24 rounded-full border border-border bg-background px-2.5 py-1 text-[0.6875rem] text-foreground placeholder:text-muted/60 focus:ring-2 focus:ring-accent/40 focus:outline-none"
+                className="w-24 rounded-full border border-border bg-background px-2.5 py-1 text-control text-foreground placeholder:text-muted/60 focus:ring-2 focus:ring-accent/40 focus:outline-none"
               />
               <PermissionSelect
                 value={twitch.rerollPermission}
@@ -137,9 +137,9 @@ export function ObsTwitchPanel({
                   value={twitch.cooldownSec}
                   onChange={(e) => twitch.setCooldownSec(Number(e.target.value))}
                   aria-label={t({ ru: "Кулдаун реролла, секунд", en: "Reroll cooldown, seconds" })}
-                  className="w-14 rounded-full border border-border bg-background px-2 py-1 text-[0.6875rem] text-foreground focus:ring-2 focus:ring-accent/40 focus:outline-none"
+                  className="w-14 rounded-full border border-border bg-background px-2 py-1 text-control text-foreground focus:ring-2 focus:ring-accent/40 focus:outline-none"
                 />
-                <span className="text-[0.6875rem] text-muted">
+                <span className="text-hint text-muted">
                   {t({ ru: "сек. кулдаун", en: "sec cooldown" })}
                 </span>
               </div>
@@ -147,7 +147,7 @@ export function ObsTwitchPanel({
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="flex items-center gap-1.5 text-[0.6875rem] font-medium text-muted">
+            <label className="flex items-center gap-1.5 text-control font-medium text-muted">
               <input
                 type="checkbox"
                 checked={twitch.pasteEnabled}
@@ -168,14 +168,14 @@ export function ObsTwitchPanel({
                     onChange={(e) => twitch.setPasteCommand(e.target.value)}
                     placeholder="!paste"
                     aria-label={t({ ru: "Команда вставки билда", en: "Paste-build command" })}
-                    className="w-24 rounded-full border border-border bg-background px-2.5 py-1 text-[0.6875rem] text-foreground placeholder:text-muted/60 focus:ring-2 focus:ring-accent/40 focus:outline-none"
+                    className="w-24 rounded-full border border-border bg-background px-2.5 py-1 text-control text-foreground placeholder:text-muted/60 focus:ring-2 focus:ring-accent/40 focus:outline-none"
                   />
                   <PermissionSelect
                     value={twitch.pastePermission}
                     onChange={twitch.setPastePermission}
                   />
                 </div>
-                <p className="pl-5 text-[0.6875rem] text-muted">
+                <p className="pl-5 text-hint text-muted">
                   {t({
                     ru: 'Пример: "!paste 42,105,12,8" — числа берутся из ссылки Поделиться на сайте.',
                     en: 'Example: "!paste 42,105,12,8" — the numbers come from the site\'s Share link.',
@@ -183,14 +183,14 @@ export function ObsTwitchPanel({
                 </p>
                 {pasteCommandForBuild && (
                   <div className="pl-5">
-                    <p className="mb-1 text-[0.6875rem] font-medium text-muted">
+                    <p className="mb-1 text-hint font-medium text-muted">
                       {t({
                         ru: "Готовая команда для билда на экране сейчас:",
                         en: "Ready command for the build on screen right now:",
                       })}
                     </p>
                     <div className="flex items-center gap-1.5">
-                      <code className="min-w-0 flex-1 truncate rounded-full border border-border bg-background px-2.5 py-1 text-[0.6875rem] text-foreground">
+                      <code className="min-w-0 flex-1 truncate rounded-full border border-border bg-background px-2.5 py-1 text-meta text-foreground">
                         {pasteCommandForBuild}
                       </code>
                       <button
@@ -218,7 +218,7 @@ export function ObsTwitchPanel({
                 <button
                   type="button"
                   onClick={onOpenConstructor}
-                  className="flex items-center gap-1.5 pl-5 text-[0.6875rem] font-medium text-accent transition-colors hover:text-accent/80"
+                  className="flex items-center gap-1.5 pl-5 text-control font-medium text-accent transition-colors hover:text-accent/80"
                 >
                   <Wrench className="size-3" />
                   {t({
@@ -236,7 +236,7 @@ export function ObsTwitchPanel({
               the build for half a minute and commits the stream to whatever
               chat says. */}
           <div className="flex flex-col gap-1.5">
-            <label className="flex items-center gap-1.5 text-[0.6875rem] font-medium text-muted">
+            <label className="flex items-center gap-1.5 text-control font-medium text-muted">
               <input
                 type="checkbox"
                 checked={twitch.voteEnabled}
@@ -257,7 +257,7 @@ export function ObsTwitchPanel({
                     onChange={(e) => twitch.setVoteCommand(e.target.value)}
                     placeholder="!vote"
                     aria-label={t({ ru: "Команда голосования", en: "Vote command" })}
-                    className="w-24 rounded-full border border-border bg-background px-2.5 py-1 text-[0.6875rem] text-foreground placeholder:text-muted/60 focus:ring-2 focus:ring-accent/40 focus:outline-none"
+                    className="w-24 rounded-full border border-border bg-background px-2.5 py-1 text-control text-foreground placeholder:text-muted/60 focus:ring-2 focus:ring-accent/40 focus:outline-none"
                   />
                   <PermissionSelect
                     value={twitch.votePermission}
@@ -274,21 +274,21 @@ export function ObsTwitchPanel({
                         ru: "Длительность голосования, секунд",
                         en: "Vote duration, seconds",
                       })}
-                      className="w-14 rounded-full border border-border bg-background px-2 py-1 text-[0.6875rem] text-foreground focus:ring-2 focus:ring-accent/40 focus:outline-none"
+                      className="w-14 rounded-full border border-border bg-background px-2 py-1 text-control text-foreground focus:ring-2 focus:ring-accent/40 focus:outline-none"
                     />
-                    <span className="text-[0.6875rem] text-muted">
+                    <span className="text-hint text-muted">
                       {t({ ru: "сек. на голос", en: "sec to vote" })}
                     </span>
                   </div>
                 </div>
-                <p className="pl-5 text-[0.6875rem] text-muted">
+                <p className="pl-5 text-hint text-muted">
                   {t({
                     ru: "Зрители пишут в чат 1-4. Перк с наибольшим числом голосов остаётся, остальные перероллятся. При равенстве побеждает левый.",
                     en: "Viewers type 1-4 in chat. The perk with the most votes stays and the rest reroll. A tie goes to the leftmost.",
                   })}
                 </p>
                 {twitch.vote.ballots.size > 0 && (
-                  <p className="pl-5 text-[0.6875rem] text-foreground tabular-nums">
+                  <p className="pl-5 text-meta text-foreground tabular-nums">
                     {t({ ru: "Идёт голосование:", en: "Vote running:" })}{" "}
                     {VOTE_SLOTS.map((slot) => `${slot}: ${tallyVotes(twitch.vote)[slot]}`).join(
                       " · ",
@@ -299,7 +299,7 @@ export function ObsTwitchPanel({
             )}
           </div>
 
-          <p className="text-[0.6875rem] text-muted">
+          <p className="text-hint text-muted">
             {t({
               ru: "Twitch не даёт напрямую узнать «донатер» из чата — саб/VIP статус ближе всего к этому и виден в самом чате.",
               en: 'Twitch\'s chat itself has no notion of "donator" — sub/VIP status is the closest thing visible directly in chat.',

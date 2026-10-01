@@ -21,7 +21,7 @@ import { saveImage } from "@/lib/save-image";
 import type { PerkRole } from "@/lib/types";
 
 const ROW =
-  "flex items-center gap-2 rounded-xl border border-border bg-surface px-3 py-2 text-sm";
+  "flex items-center gap-2 rounded-xl border border-border bg-surface px-3 py-2 text-control";
 
 /** What to tell the player about a file that could not be read. Phrased as
  *  what happened and what to do, never as an error code. */
@@ -199,18 +199,18 @@ export function VaultModal({
                     en: "Name this build…",
                   })}
                   aria-label={t({ ru: "Название билда", en: "Build name" })}
-                  className="flex-1 rounded-full border border-border bg-surface px-3 py-1.5 text-sm text-foreground placeholder:text-muted/70 focus:ring-2 focus:ring-accent/40 focus:outline-none"
+                  className="flex-1 rounded-full border border-border bg-surface px-3 py-1.5 text-control text-foreground placeholder:text-muted/70 focus:ring-2 focus:ring-accent/40 focus:outline-none"
                 />
                 <button
                   type="button"
                   onClick={handleSave}
-                  className="rounded-full bg-accent px-4 py-1.5 text-sm font-semibold text-accent-foreground transition-transform hover:scale-105 active:scale-95"
+                  className="rounded-full bg-accent px-4 py-1.5 text-control font-semibold text-accent-foreground transition-transform hover:scale-105 active:scale-95"
                 >
                   {t({ ru: "Сохранить", en: "Save" })}
                 </button>
               </div>
             ) : (
-              <p className="text-sm text-muted">
+              <p className="text-hint text-muted">
                 {t({
                   ru: "Сейчас нечего сохранять — сгенерируйте билд.",
                   en: "Nothing to save yet — generate a build first.",
@@ -219,13 +219,13 @@ export function VaultModal({
             )}
 
             {notice && (
-              <p role="status" className="rounded-xl bg-surface px-3 py-2 text-xs text-muted">
+              <p role="status" className="rounded-xl bg-surface px-3 py-2 text-hint text-muted">
                 {notice}
               </p>
             )}
 
             {builds.length === 0 ? (
-              <p className="py-8 text-center text-sm text-muted">
+              <p className="py-8 text-center text-hint text-muted">
                 {t({
                   ru: "Пока пусто. Сохранённые билды появятся здесь.",
                   en: "Nothing saved yet. Builds you keep will show up here.",
@@ -251,7 +251,7 @@ export function VaultModal({
                             if (e.key === "Escape") setRenaming(null);
                           }}
                           aria-label={t({ ru: "Новое название", en: "New name" })}
-                          className="flex-1 rounded-full border border-border bg-background px-2.5 py-1 text-sm focus:ring-2 focus:ring-accent/40 focus:outline-none"
+                          className="flex-1 rounded-full border border-border bg-background px-2.5 py-1 text-control focus:ring-2 focus:ring-accent/40 focus:outline-none"
                         />
                         <button
                           type="button"
@@ -274,7 +274,7 @@ export function VaultModal({
                         >
                           {build.name}
                           <span
-                            className={cn("ml-2 text-xs font-normal", ROLE_COLOR[build.role].text)}
+                            className={cn("ml-2 text-meta font-normal", ROLE_COLOR[build.role].text)}
                           >
                             {build.keys.length}
                           </span>
@@ -311,7 +311,7 @@ export function VaultModal({
               type="button"
               onClick={handleExport}
               disabled={builds.length === 0}
-              className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
+              className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-control font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
             >
               <Download className="size-3.5" />
               {t({ ru: "Выгрузить файлом", en: "Export to a file" })}
@@ -319,7 +319,7 @@ export function VaultModal({
             <button
               type="button"
               onClick={() => fileInput.current?.click()}
-              className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+              className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-control font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
             >
               <Upload className="size-3.5" />
               {t({ ru: "Загрузить из файла", en: "Import from a file" })}
@@ -338,7 +338,7 @@ export function VaultModal({
                 if (file) void handleImportFile(file);
               }}
             />
-            <p className="w-full text-[0.6875rem] text-muted">
+            <p className="w-full text-hint text-muted">
               {t({
                 ru: "Загрузка добавляет билды к вашим, ничего не стирая.",
                 en: "Importing adds to what you have; nothing is erased.",

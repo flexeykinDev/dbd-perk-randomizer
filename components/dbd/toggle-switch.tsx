@@ -24,7 +24,7 @@ export function ToggleSwitch({
       onMouseEnter={() => setShowTooltip(true)}
       onMouseLeave={() => setShowTooltip(false)}
     >
-      <span className="text-sm font-semibold text-muted">{label}</span>
+      <span className="text-hint font-semibold text-muted">{label}</span>
       <button
         type="button"
         role="switch"
@@ -63,7 +63,7 @@ export function ToggleSwitch({
         <div
           role="tooltip"
           className={cn(
-            "pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 w-max max-w-56 -translate-x-1/2 rounded-lg border border-border bg-surface px-3 py-1.5 text-center text-xs text-foreground shadow-lg transition-opacity",
+            "pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 w-max max-w-56 -translate-x-1/2 rounded-lg border border-border bg-surface px-3 py-1.5 text-center text-meta text-foreground shadow-lg transition-opacity",
             showTooltip ? "opacity-100" : "opacity-0",
           )}
         >

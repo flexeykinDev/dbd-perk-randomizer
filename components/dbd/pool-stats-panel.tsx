@@ -30,7 +30,7 @@ export function PoolStatsPanel({
 }) {
   const t = useT();
   return (
-    <div className="rounded-xl border border-border bg-surface px-4 py-3 text-center text-xs text-muted">
+    <div className="rounded-xl border border-border bg-surface px-4 py-3 text-center text-meta text-muted">
       <p>
         {totalLabel} <b className="text-foreground">{total}</b>
       </p>

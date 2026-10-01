@@ -219,7 +219,7 @@ export function ExcludePanel({
                 <p className="font-semibold text-foreground">
                   {t({ ru: "Настроить пул перков", en: "Manage the perk pool" })}
                 </p>
-                <p className="text-xs text-muted">
+                <p className="text-hint text-muted">
                   {t({ ru: "Активно:", en: "Active:" })}{" "}
                   <b className={roleColor.text}>{activeCount}</b> / {perksForRole.length}
                 </p>
@@ -228,7 +228,7 @@ export function ExcludePanel({
                 <button
                   type="button"
                   onClick={() => onResetRole(role)}
-                  className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+                  className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-control font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
                 >
                   <RotateCcw className="size-3.5" />
                   {t({ ru: "Сбросить", en: "Reset" })}
@@ -258,7 +258,7 @@ export function ExcludePanel({
                         ru: "Поиск: EN или RU название…",
                         en: "Search: EN or RU name…",
                       })}
-                      className="w-full rounded-full border border-border bg-background py-1.5 pr-3 pl-8 text-xs text-foreground placeholder:text-muted/60 focus:ring-2 focus:ring-accent/40 focus:outline-none"
+                      className="w-full rounded-full border border-border bg-background py-1.5 pr-3 pl-8 text-control text-foreground placeholder:text-muted/60 focus:ring-2 focus:ring-accent/40 focus:outline-none"
                     />
                   </div>
                   <Dropdown<SortField>
@@ -295,7 +295,7 @@ export function ExcludePanel({
                   </button>
                 </div>
                 {sortField === "date" && dateSortIsCurrentlyMeaningless && (
-                  <p className="text-[0.6875rem] text-muted">
+                  <p className="text-hint text-muted">
                     {t({
                       ru: "Пока не сортирует — у всех перков одна и та же дата первого добавления в базу сайта. Заработает, когда скрапер найдёт новый перк.",
                       en: "Doesn't reorder anything yet — every perk currently shares the same first-added-to-the-site date. Starts working once the scraper picks up a genuinely new perk.",
@@ -396,7 +396,7 @@ export function ExcludePanel({
                     type="button"
                     onClick={() => onBulkSet(filteredSlugs, false)}
                     disabled={filteredSlugs.length === 0}
-                    className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-[0.6875rem] font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
+                    className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-control font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
                   >
                     <CheckCheck className="size-3.5" />
                     {t({ ru: "Включить все", en: "Enable All" })}
@@ -405,19 +405,19 @@ export function ExcludePanel({
                     type="button"
                     onClick={() => onBulkSet(filteredSlugs, true)}
                     disabled={filteredSlugs.length === 0}
-                    className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-[0.6875rem] font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
+                    className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-control font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
                   >
                     <Ban className="size-3.5" />
                     {t({ ru: "Отключить все", en: "Disable All" })}
                   </button>
-                  <span className="text-[0.6875rem] text-muted">
+                  <span className="text-hint text-muted">
                     {t({ ru: "Показано:", en: "Showing:" })} {filtered.length}
                   </span>
                 </div>
               </div>
 
               {filtered.length === 0 ? (
-                <p className="p-8 text-center text-sm text-muted">
+                <p className="p-8 text-center text-hint text-muted">
                   {t({ ru: "Ничего не найдено", en: "Nothing matches" })}
                 </p>
               ) : (
@@ -492,6 +492,14 @@ export function ExcludePanel({
                              begin with. */
                           className={cn(
                             "absolute top-1 left-1 flex size-4 items-center justify-center rounded-full bg-black/60 transition-opacity",
+                            /* The one colour left outside the tokens, on
+                               purpose. It sits on its own bg-black/60 plate,
+                               so it never meets either theme's surface and
+                               measures 9.57 against that plate in both — the
+                               same reasoning .icon-art uses. It is also a
+                               gold star, which is a convention rather than a
+                               status, so folding it into --status-* would
+                               say something it does not mean. */
                             favoriteSlugs.has(perk.slug)
                               ? "text-amber-400 opacity-100"
                               : cn(CORNER_REVEAL, "text-white/50 hover:text-white"),
@@ -515,7 +523,7 @@ export function ExcludePanel({
                           height={48}
                           className="size-12 rounded-lg icon-art object-cover"
                         />
-                        <span className="text-[0.625rem] leading-tight text-foreground">
+                        <span className="text-meta leading-tight text-foreground">
                           {perk.name[language]}
                         </span>
                       </div>

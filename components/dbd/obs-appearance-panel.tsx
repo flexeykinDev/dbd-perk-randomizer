@@ -96,7 +96,7 @@ function EntrancePreview({ entrance }: { entrance: ObsEntrance }) {
         style={{ perspective: entrance === "flip" ? 700 : undefined }}
       >
         {reduced ? (
-          <span className="text-[0.6875rem] text-muted">
+          <span className="text-hint text-muted">
             {t({ ru: "Анимация отключена в системе", en: "Motion is off in your system settings" })}
           </span>
         ) : (
@@ -121,7 +121,7 @@ function EntrancePreview({ entrance }: { entrance: ObsEntrance }) {
           })
         )}
       </div>
-      <p className="border-t border-border/60 px-2.5 py-1.5 text-center text-[0.625rem] text-muted">
+      <p className="border-t border-border/60 px-2.5 py-1.5 text-center text-hint text-muted">
         {t(ENTRANCE_HINT[entrance])}
       </p>
     </div>
@@ -148,7 +148,7 @@ export function ObsAppearancePanel({
 
   return (
     <div className="mt-5 flex flex-col gap-3">
-      <h3 className="text-xs font-semibold tracking-wide text-muted uppercase">
+      <h3 className="text-meta font-semibold tracking-wide text-muted uppercase">
         {t({ ru: "Оформление", en: "Appearance" })}
       </h3>
 
@@ -172,13 +172,13 @@ export function ObsAppearancePanel({
         />
       </div>
       {options.activePresetDescription && (
-        <p className="-mt-1 text-[0.6875rem] text-muted">{t(options.activePresetDescription)}</p>
+        <p className="-mt-1 text-hint text-muted">{t(options.activePresetDescription)}</p>
       )}
 
       {options.styleMode === "custom" && (
         <div className="flex flex-col gap-4 rounded-lg border border-border bg-background/40 p-3">
           <div className="flex flex-wrap items-center gap-1.5">
-            <label htmlFor={options.canvasWidthId} className="text-[0.6875rem] text-muted">
+            <label htmlFor={options.canvasWidthId} className="text-control text-muted">
               {t({ ru: "Холст OBS:", en: "OBS canvas:" })}
             </label>
             <input
@@ -189,7 +189,7 @@ export function ObsAppearancePanel({
               value={options.canvasWidth}
               onChange={(e) => options.updateCanvasWidth(Number(e.target.value))}
               aria-label={t({ ru: "Ширина холста, пикселей", en: "Canvas width, pixels" })}
-              className="w-16 rounded-full border border-border bg-background px-2 py-0.5 text-[0.6875rem] text-foreground focus:ring-2 focus:ring-accent/40 focus:outline-none"
+              className="w-16 rounded-full border border-border bg-background px-2 py-0.5 text-control text-foreground focus:ring-2 focus:ring-accent/40 focus:outline-none"
             />
             <span className="text-muted" aria-hidden>
               ×
@@ -201,7 +201,7 @@ export function ObsAppearancePanel({
               value={options.canvasHeight}
               onChange={(e) => options.updateCanvasHeight(Number(e.target.value))}
               aria-label={t({ ru: "Высота холста, пикселей", en: "Canvas height, pixels" })}
-              className="w-16 rounded-full border border-border bg-background px-2 py-0.5 text-[0.6875rem] text-foreground focus:ring-2 focus:ring-accent/40 focus:outline-none"
+              className="w-16 rounded-full border border-border bg-background px-2 py-0.5 text-control text-foreground focus:ring-2 focus:ring-accent/40 focus:outline-none"
             />
           </div>
 
@@ -235,7 +235,7 @@ export function ObsAppearancePanel({
       {/* The overlay's only motion, so it gets a real choice rather than
           being fixed. Named for what a viewer sees, not for the transform. */}
       <div className="mt-1" onMouseLeave={() => setPreviewing(null)}>
-        <span className="text-xs font-medium text-muted">
+        <span className="text-hint font-medium text-muted">
           {t({ ru: "Появление билда", en: "Build entrance" })}
         </span>
         <div
@@ -255,7 +255,7 @@ export function ObsAppearancePanel({
               onFocus={() => setPreviewing(id)}
               onBlur={() => setPreviewing(null)}
               className={cn(
-                "rounded-full border px-3 py-1 text-xs font-medium transition-colors",
+                "rounded-full border px-3 py-1 text-control font-medium transition-colors",
                 options.entrance === id
                   ? "border-accent bg-accent/10 text-accent"
                   : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
@@ -348,7 +348,7 @@ function PresetButton({
       onClick={onClick}
       aria-pressed={active}
       className={cn(
-        "rounded-full border px-2 py-1.5 text-[0.6875rem] font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:outline-none",
+        "rounded-full border px-2 py-1.5 text-control font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:outline-none",
         active
           ? "border-accent/50 bg-accent/15 text-accent"
           : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
@@ -383,10 +383,10 @@ function SliderRow({
   return (
     <div className="flex flex-col gap-1.5">
       <div className="flex items-center justify-between gap-3">
-        <label htmlFor={id} className={cn("text-xs font-medium text-muted", disabled && "opacity-40")}>
+        <label htmlFor={id} className={cn("text-control font-medium text-muted", disabled && "opacity-40")}>
           {label}
         </label>
-        <span className={cn("text-[0.6875rem] tabular-nums text-muted", disabled && "opacity-40")}>
+        <span className={cn("text-hint tabular-nums text-muted", disabled && "opacity-40")}>
           {value}%
         </span>
       </div>
@@ -402,7 +402,7 @@ function SliderRow({
         aria-label={label}
         className="w-full accent-accent"
       />
-      {hint && <p className="text-[0.6875rem] text-muted">{hint}</p>}
+      {hint && <p className="text-hint text-muted">{hint}</p>}
     </div>
   );
 }
@@ -430,7 +430,7 @@ function PieceVisibilityChips({
 
   return (
     <div className="flex flex-col gap-1.5">
-      <span className="text-xs font-medium text-muted">{t({ ru: "Показывать:", en: "Show:" })}</span>
+      <span className="text-hint font-medium text-muted">{t({ ru: "Показывать:", en: "Show:" })}</span>
       <div
         className="flex flex-wrap gap-1.5"
         role="group"
@@ -446,7 +446,7 @@ function PieceVisibilityChips({
             aria-pressed={pieceVisibility[kind]}
             onClick={() => onChange(kind, !pieceVisibility[kind])}
             className={cn(
-              "rounded-full border px-2.5 py-1 text-[0.6875rem] font-medium transition-colors",
+              "rounded-full border px-2.5 py-1 text-control font-medium transition-colors",
               pieceVisibility[kind]
                 ? "border-accent/50 bg-accent/15 text-accent"
                 : "border-border text-muted/50 hover:bg-surface-hover hover:text-foreground",
@@ -456,7 +456,7 @@ function PieceVisibilityChips({
           </button>
         ))}
       </div>
-      <p className="text-[0.6875rem] text-muted">
+      <p className="text-hint text-muted">
         {t({
           ru: "Не влияет на то, что реально выпадает — только на то, что видно в оверлее и на картинке.",
           en: "Doesn't change what actually gets rolled — only what's visible in the overlay and the downloaded image.",
@@ -482,7 +482,7 @@ function SkinPicker<T extends string>({
   const t = useT();
   return (
     <div className="mt-1 flex flex-col gap-1.5">
-      <span className="text-[0.6875rem] font-medium text-muted">{label}</span>
+      <span className="text-hint font-medium text-muted">{label}</span>
       <div
         role="radiogroup"
         aria-label={label}
@@ -498,7 +498,7 @@ function SkinPicker<T extends string>({
               aria-checked={active}
               onClick={() => onChange(choice.id)}
               className={cn(
-                "tap flex-1 rounded-full px-2.5 py-1 text-[0.6875rem] font-medium whitespace-nowrap transition-colors",
+                "tap flex-1 rounded-full px-2.5 py-1 text-control font-medium whitespace-nowrap transition-colors",
                 active
                   ? "bg-accent text-accent-foreground"
                   : "text-muted hover:bg-surface-hover hover:text-foreground",

@@ -106,7 +106,7 @@ export function HistoryModal({
                   <p className="font-semibold text-foreground">
                     {t({ ru: "История билдов", en: "Build History" })}
                   </p>
-                  <p className="text-xs text-muted">
+                  <p className="text-hint text-muted">
                     {t({
                       ru: "Последние 20 роллов, хранится локально в этом браузере",
                       en: "Last 20 rolls, stored locally in this browser",
@@ -118,7 +118,7 @@ export function HistoryModal({
                     type="button"
                     onClick={() => setConfirmOpen(true)}
                     disabled={history.length === 0}
-                    className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:border-rose-500/40 hover:text-rose-400 disabled:pointer-events-none disabled:opacity-40"
+                    className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-control font-medium text-muted transition-colors hover:border-danger/40 hover:text-danger disabled:pointer-events-none disabled:opacity-40"
                   >
                     <Trash2 className="size-3.5" />
                     {t({ ru: "Очистить", en: "Clear" })}
@@ -136,7 +136,7 @@ export function HistoryModal({
 
               <div className="overflow-y-auto p-4">
                 {history.length === 0 ? (
-                  <p className="py-10 text-center text-sm text-muted">
+                  <p className="py-10 text-center text-hint text-muted">
                     {t({
                       ru: "Пока пусто — сгенерируйте билд, и он появится здесь.",
                       en: "Nothing yet — generate a build and it'll show up here.",
@@ -171,7 +171,7 @@ export function HistoryModal({
                             ))}
                           </div>
                           <div className="min-w-0 flex-1">
-                            <p className="flex items-center gap-1.5 text-xs">
+                            <p className="flex items-center gap-1.5 text-meta">
                               <span className={cn("font-medium", roleColor.text)}>
                                 {entry.role === "survivor"
                                   ? t({ ru: "Выживший", en: "Survivor" })
@@ -181,19 +181,19 @@ export function HistoryModal({
                                 · {entry.mode === "loadout" ? t({ ru: "Экипировка", en: "Loadout" }) : t({ ru: "Перки", en: "Perks" })}
                               </span>
                             </p>
-                            <p className="truncate text-xs text-muted">
+                            <p className="truncate text-hint text-muted">
                               {pieces.map((p) => p.name[language]).join(", ")}
                             </p>
                           </div>
                           <div className="flex shrink-0 flex-col items-end gap-1">
-                            <span className="flex items-center gap-1 text-[0.625rem] text-muted">
+                            <span className="flex items-center gap-1 text-hint text-muted">
                               <Clock className="size-2.5" />
                               {formatRelativeTime(entry.at, language)}
                             </span>
                             <button
                               type="button"
                               onClick={() => onRestore(entry)}
-                              className="flex items-center gap-1 rounded-full border border-border px-2 py-0.5 text-[0.6875rem] font-medium text-muted transition-colors hover:border-accent/50 hover:bg-accent/10 hover:text-accent"
+                              className="flex items-center gap-1 rounded-full border border-border px-2 py-0.5 text-control font-medium text-muted transition-colors hover:border-accent/50 hover:bg-accent/10 hover:text-accent"
                             >
                               <RotateCcw className="size-2.5" />
                               {t({ ru: "Открыть", en: "View" })}

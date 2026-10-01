@@ -32,7 +32,7 @@ export default function RouteError({
       <h1 className="text-xl font-semibold text-foreground">
         {t({ ru: "Что-то сломалось", en: "Something broke" })}
       </h1>
-      <p className="text-sm text-muted">
+      <p className="text-hint text-muted">
         {t({
           ru: "Страница не отрисовалась. Скорее всего это разовый сбой — попробуйте ещё раз.",
           en: "This page failed to render. It is most likely a one-off — try again.",
@@ -42,14 +42,14 @@ export default function RouteError({
         <button
           type="button"
           onClick={reset}
-          className="rounded-full bg-accent px-5 py-2 text-sm font-medium text-accent-foreground transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:outline-none"
+          className="rounded-full bg-accent px-5 py-2 text-control font-medium text-accent-foreground transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:outline-none"
         >
           {t({ ru: "Попробовать снова", en: "Try again" })}
         </button>
         <button
           type="button"
           onClick={() => window.location.reload()}
-          className="rounded-full border border-border bg-surface px-5 py-2 text-sm font-medium text-foreground transition-colors hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:outline-none"
+          className="rounded-full border border-border bg-surface px-5 py-2 text-control font-medium text-foreground transition-colors hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:outline-none"
         >
           {t({ ru: "Перезагрузить", en: "Reload" })}
         </button>
@@ -58,7 +58,7 @@ export default function RouteError({
           which is the only handle on the actual fault when someone reports
           "it broke". Shown rather than console-only for that reason. */}
       {error.digest && (
-        <p className="font-mono text-xs text-muted/70">{error.digest}</p>
+        <p className="font-mono text-hint text-muted/70">{error.digest}</p>
       )}
     </div>
   );

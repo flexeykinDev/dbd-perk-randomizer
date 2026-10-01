@@ -209,9 +209,17 @@ for (const vp of VIEWPORTS) {
  * raise the number instead of looking. These ceilings are set where a
  * regression means a row came back, not where the layout drifted.
  */
+/* Re-baselined on 1 Oct, when the type scale was finished. Stepping every
+ * control up to 14px cost about 36px at the top of the page — the toolbar
+ * rows each grew a little — and the first card went 345 -> 381 on a laptop.
+ * That is a real cost and it is written down rather than absorbed: the
+ * ceilings move once, with the reason, and a future drift still fails.
+ *
+ * Still well under a row, which is what these numbers are for. A returning
+ * row is ~44px; anything smaller is the layout breathing. */
 const BUILD_START_CEILING = [
-  { name: "laptop 1366x768", width: 1366, height: 768, maxCardY: 380, maxGenerateY: 620 },
-  { name: "phone  360x780", width: 360, height: 780, maxCardY: 660, maxGenerateY: 1100 },
+  { name: "laptop 1366x768", width: 1366, height: 768, maxCardY: 400, maxGenerateY: 640 },
+  { name: "phone  360x780", width: 360, height: 780, maxCardY: 680, maxGenerateY: 1120 },
 ];
 
 for (const vp of BUILD_START_CEILING) {

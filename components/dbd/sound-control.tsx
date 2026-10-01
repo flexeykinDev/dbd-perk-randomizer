@@ -69,7 +69,7 @@ export function SoundControl() {
             type="button"
             onClick={() => setMuted(!muted)}
             data-testid="sound-mute"
-            className="flex w-full items-center justify-between rounded-xl px-2 py-1.5 text-sm text-foreground transition-colors hover:bg-surface-hover"
+            className="flex w-full items-center justify-between rounded-xl px-2 py-1.5 text-control text-foreground transition-colors hover:bg-surface-hover"
           >
             <span>{t({ ru: "Звук интерфейса", en: "Interface sound" })}</span>
             <span
@@ -88,7 +88,7 @@ export function SoundControl() {
           </button>
 
           <label className="mt-2 block px-2">
-            <span className="flex items-baseline justify-between text-[0.6875rem] text-muted">
+            <span className="flex items-baseline justify-between text-hint text-muted">
               {t({ ru: "Громкость", en: "Volume" })}
               <span className="tabular-nums">{percent}%</span>
             </span>

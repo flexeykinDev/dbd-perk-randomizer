@@ -32,9 +32,9 @@ import { MoreMenu } from "./more-menu";
  */
 
 const PILL =
-  "tap flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground";
+  "tap flex items-center gap-1.5 rounded-full px-3 py-1 text-control font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground";
 const MENU_ITEM =
-  "tap flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm font-medium text-foreground transition-colors hover:bg-surface-hover";
+  "tap flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-control font-medium text-foreground transition-colors hover:bg-surface-hover";
 
 /** A pool button, with the count of what has been ruled out of it. */
 function PoolButton({
@@ -129,7 +129,7 @@ export function BoardToolbar({
               type="button"
               onClick={seed.toggleDaily}
               className={cn(
-                "flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm font-medium transition-colors",
+                "flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-control font-medium transition-colors",
                 seed.mode === "daily"
                   ? "bg-accent/15 text-accent"
                   : "text-foreground hover:bg-surface-hover",
@@ -147,13 +147,13 @@ export function BoardToolbar({
                 onKeyDown={(e) => e.key === "Enter" && seed.applyCustom()}
                 aria-label={t({ ru: "Свой сид", en: "Custom seed" })}
                 placeholder={t({ ru: "Свой сид…", en: "Custom seed…" })}
-                className="min-w-0 flex-1 rounded-full border border-border bg-background px-3 py-1 text-xs text-foreground placeholder:text-muted/60 focus:ring-2 focus:ring-accent/40 focus:outline-none"
+                className="min-w-0 flex-1 rounded-full border border-border bg-background px-3 py-1 text-control text-foreground placeholder:text-muted/60 focus:ring-2 focus:ring-accent/40 focus:outline-none"
               />
               <button
                 type="button"
                 onClick={seed.applyCustom}
                 disabled={!seed.input.trim()}
-                className="rounded-full px-2.5 py-1 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
+                className="rounded-full px-2.5 py-1 text-control font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
               >
                 {t({ ru: "Задать", en: "Set" })}
               </button>
@@ -196,7 +196,7 @@ export function BoardToolbar({
         </MoreMenu>
       </div>
       {seed.active && (
-        <p className="text-xs text-muted">
+        <p className="text-hint text-muted">
           {t({ ru: "Активный сид:", en: "Active seed:" })}{" "}
           <code className="rounded bg-surface px-1.5 py-0.5 text-accent">{seed.active}</code>
           {/* Daily Challenge only: a custom seed is yours alone, so a shared

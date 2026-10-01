@@ -39,7 +39,7 @@ export function SquadGrids({
     <div className="flex w-full max-w-4xl flex-col gap-4">
       {builds.map((build, i) => (
         <section key={i} className="flex w-full flex-col items-center gap-1.5">
-          <h2 className="self-start text-xs font-semibold tracking-wide text-muted uppercase">
+          <h2 className="self-start text-meta font-semibold tracking-wide text-muted uppercase">
             {t({ ru: `Игрок ${i + 1}`, en: `Player ${i + 1}` })}
           </h2>
           <PerkGrid

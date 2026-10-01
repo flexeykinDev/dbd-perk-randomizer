@@ -93,10 +93,10 @@ export function PresentationPicker({
                   )}
                 />
                 <span className="min-w-0">
-                  <span className="block text-sm font-medium text-foreground">
+                  <span className="block text-control font-medium text-foreground">
                     {t(PRESENTATION_LABEL[p])}
                   </span>
-                  <span className="block text-[0.6875rem] leading-snug text-muted">
+                  <span className="block text-hint leading-snug text-muted">
                     {t(PRESENTATION_HINT[p])}
                   </span>
                 </span>

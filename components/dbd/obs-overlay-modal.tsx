@@ -37,8 +37,8 @@ export type { PieceVisibility };
  *  feeds OBS's own browser profile. */
 const PUBLISH_STATE_DOT: Record<ObsPublishState, string> = {
   off: "bg-muted",
-  syncing: "bg-amber-400 animate-pulse",
-  synced: "bg-emerald-400",
+  syncing: "bg-status-pending animate-pulse",
+  synced: "bg-status-ok",
   error: "bg-red-500",
 };
 
@@ -169,7 +169,7 @@ export function ObsOverlayModal({
                   <h2 id={titleId} className="font-semibold text-foreground">
                     {t({ ru: "Оверлей для OBS", en: "OBS Overlay" })}
                   </h2>
-                  <p id={descId} className="text-xs text-muted">
+                  <p id={descId} className="text-hint text-muted">
                     {mode === "loadout"
                       ? t({
                           ru: "Прозрачный фон, только карточки экипировки",
@@ -203,7 +203,7 @@ export function ObsOverlayModal({
                 feedback: "too much content", and the constructor being
                 "very deep hidden"). */}
             <div
-              className="mt-4 flex items-center gap-1 rounded-full border border-border bg-background/60 p-1 text-sm"
+              className="mt-4 flex items-center gap-1 rounded-full border border-border bg-background/60 p-1 text-control"
               role="tablist"
             >
               {(["overlay", "twitch", "constructor"] as const).map((tab) => (
@@ -214,7 +214,7 @@ export function ObsOverlayModal({
                   aria-selected={panelTab === tab}
                   onClick={() => setPanelTab(tab)}
                   className={cn(
-                    "flex-1 rounded-full px-3 py-1.5 text-xs font-semibold transition-colors",
+                    "flex-1 rounded-full px-3 py-1.5 text-control font-semibold transition-colors",
                     panelTab === tab
                       ? "bg-accent/15 text-accent"
                       : "text-muted hover:bg-surface-hover hover:text-foreground",
@@ -237,7 +237,7 @@ export function ObsOverlayModal({
                     was invisible: the preview keeps updating over
                     BroadcastChannel regardless, so everything looked fine
                     while the Browser Source on stream sat frozen. */}
-                <p className="mt-4 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[0.6875rem] text-muted">
+                <p className="mt-4 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-hint text-muted">
                   <span
                     className={cn(
                       "size-1.5 shrink-0 rounded-full",
@@ -252,7 +252,7 @@ export function ObsOverlayModal({
                   )}
                 </p>
                 {publishStatus.state === "error" && (
-                  <p className="mt-1 text-[0.6875rem] text-red-400">
+                  <p className="mt-1 text-meta text-red-400">
                     {t({
                       ru: "Проверьте интернет и блокировщики. Оверлей в той же вкладке браузера продолжит работать.",
                       en: "Check your connection and any blockers. An overlay in this same browser keeps working.",
@@ -263,7 +263,7 @@ export function ObsOverlayModal({
                 <div className="mt-3 flex items-center gap-2">
                   <code
                     data-testid="obs-overlay-url"
-                    className="min-w-0 flex-1 truncate rounded-lg border border-border bg-background px-3 py-2 text-xs text-foreground"
+                    className="min-w-0 flex-1 truncate rounded-lg border border-border bg-background px-3 py-2 text-meta text-foreground"
                   >
                     {options.url}
                   </code>
@@ -325,7 +325,7 @@ export function ObsOverlayModal({
                     type="button"
                     onClick={() => setObsSetupOpen((v) => !v)}
                     aria-expanded={obsSetupOpen}
-                    className="flex w-full items-center justify-between text-xs font-semibold tracking-wide text-muted uppercase transition-colors hover:text-foreground"
+                    className="flex w-full items-center justify-between text-control font-semibold tracking-wide text-muted uppercase transition-colors hover:text-foreground"
                   >
                     {t({ ru: "Настройка в OBS", en: "OBS setup" })}
                     <ChevronDown
@@ -336,7 +336,7 @@ export function ObsOverlayModal({
                     />
                   </button>
                   {obsSetupOpen && (
-                    <ol className="mt-2 list-inside list-decimal space-y-1 text-sm text-muted">
+                    <ol className="mt-2 list-inside list-decimal space-y-1 text-control text-muted">
                       <li>
                         {t({
                           ru: "Источники → плюс → «Браузер»",
@@ -362,7 +362,7 @@ export function ObsOverlayModal({
                   )}
                 </div>
 
-                <p className="mt-3 text-xs text-muted">
+                <p className="mt-3 text-hint text-muted">
                   {t({
                     ru: "Держи основную вкладку сайта открытой — оверлей просто зеркалит то, что на ней сгенерировано.",
                     en: "Keep the main site tab open — the overlay just mirrors whatever build is showing there.",

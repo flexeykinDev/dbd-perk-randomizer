@@ -55,6 +55,21 @@
      had; light takes the shades this project already validated. */
   --role-survivor: #38bdf8;
   --role-killer: #fb7185;
+
+  /* Destructive, and the two connection states. These were rose-500,
+     amber-400 and emerald-400 written straight into six components, which
+     meant they could not follow the theme — and measured on the light
+     theme's white surface they were 2.69 (danger text, needs 4.5), 1.67 and
+     1.92 (status dots, need 3). A "connected" dot nobody can see on a white
+     panel, and a Clear button whose danger colour only reads in the dark.
+
+     Danger is rose-ish and so is the killer role, deliberately NOT shared:
+     one means "this side of the game", the other means "this cannot be
+     undone", and a token used for both would make every killer label look
+     like a warning the first time someone reused it. */
+  --danger: #fb7185;
+  --status-ok: #34d399;
+  --status-pending: #fbbf24;
 }
 
 :root[data-theme="light"] {
@@ -83,6 +98,11 @@
      2.14 and 2.69 here, which is the whole reason these are tokens. */
   --role-survivor: #0369a1;
   --role-killer: #be123c;
+  /* 6.29, 5.48 and 5.02 on white — all three clear the 4.5 text floor, so
+     one value per theme covers the dots and the amber hold label alike. */
+  --danger: #be123c;
+  --status-ok: #047857;
+  --status-pending: #b45309;
 }
 
 @theme inline {
@@ -136,6 +156,9 @@
   --text-hint: 0.6875rem;
   --text-micro: 0.625rem;
 
+  --color-danger: var(--danger);
+  --color-status-ok: var(--status-ok);
+  --color-status-pending: var(--status-pending);
   --color-role-survivor: var(--role-survivor);
   --color-role-killer: var(--role-killer);
   --color-highlight-survivor: var(--highlight-survivor);

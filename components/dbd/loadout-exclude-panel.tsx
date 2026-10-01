@@ -243,7 +243,7 @@ export function LoadoutExcludePanel({
                 <p className="font-semibold text-foreground">
                   {t({ ru: "Настроить пул экипировки", en: "Manage the loadout pool" })}
                 </p>
-                <p className="text-xs text-muted">
+                <p className="text-hint text-muted">
                   {t({ ru: "Активно:", en: "Active:" })}{" "}
                   <b className={roleColor.text}>{activeCount}</b> / {poolForRole.length}
                 </p>
@@ -252,7 +252,7 @@ export function LoadoutExcludePanel({
                 <button
                   type="button"
                   onClick={() => onResetRole(role)}
-                  className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+                  className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-control font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
                 >
                   <RotateCcw className="size-3.5" />
                   {t({ ru: "Сбросить", en: "Reset" })}
@@ -282,7 +282,7 @@ export function LoadoutExcludePanel({
                         ru: "Поиск: EN или RU название…",
                         en: "Search: EN or RU name…",
                       })}
-                      className="w-full rounded-full border border-border bg-background py-1.5 pr-3 pl-8 text-xs text-foreground placeholder:text-muted/60 focus:ring-2 focus:ring-accent/40 focus:outline-none"
+                      className="w-full rounded-full border border-border bg-background py-1.5 pr-3 pl-8 text-control text-foreground placeholder:text-muted/60 focus:ring-2 focus:ring-accent/40 focus:outline-none"
                     />
                   </div>
                 </div>
@@ -294,7 +294,7 @@ export function LoadoutExcludePanel({
                       type="button"
                       onClick={() => setStatus(option)}
                       className={cn(
-                        "rounded-full border px-3 py-1 text-[0.6875rem] font-medium transition-colors",
+                        "rounded-full border px-3 py-1 text-control font-medium transition-colors",
                         status === option
                           ? cn(roleColor.border, roleColor.bg, roleColor.text)
                           : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
@@ -323,7 +323,7 @@ export function LoadoutExcludePanel({
                       setCharacterFilter([]);
                     }}
                     className={cn(
-                      "rounded-full border px-3 py-1 text-[0.6875rem] font-medium transition-colors",
+                      "rounded-full border px-3 py-1 text-control font-medium transition-colors",
                       activeCategory === "all"
                         ? cn(roleColor.border, roleColor.bg, roleColor.text)
                         : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
@@ -338,7 +338,7 @@ export function LoadoutExcludePanel({
                       type="button"
                       onClick={() => setCategory(c.id)}
                       className={cn(
-                        "rounded-full border px-3 py-1 text-[0.6875rem] font-medium transition-colors",
+                        "rounded-full border px-3 py-1 text-control font-medium transition-colors",
                         activeCategory === c.id
                           ? cn(roleColor.border, roleColor.bg, roleColor.text)
                           : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
@@ -363,7 +363,7 @@ export function LoadoutExcludePanel({
                       }
                       testId="character-filter"
                       className={cn(
-                        "px-3 py-1 text-[0.6875rem] font-medium",
+                        "px-3 py-1 text-meta font-medium",
                         activeCharacters.length > 0
                           ? cn(roleColor.border, roleColor.bg, roleColor.text)
                           : "border-border bg-transparent text-muted hover:bg-surface-hover hover:text-foreground",
@@ -382,7 +382,7 @@ export function LoadoutExcludePanel({
                     type="button"
                     onClick={() => onBulkSet(filteredKeys, false)}
                     disabled={filteredKeys.length === 0}
-                    className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-[0.6875rem] font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
+                    className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-control font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
                   >
                     <CheckCheck className="size-3.5" />
                     {t({ ru: "Включить все", en: "Enable All" })}
@@ -391,19 +391,19 @@ export function LoadoutExcludePanel({
                     type="button"
                     onClick={() => onBulkSet(filteredKeys, true)}
                     disabled={filteredKeys.length === 0}
-                    className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-[0.6875rem] font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
+                    className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-control font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
                   >
                     <Ban className="size-3.5" />
                     {t({ ru: "Отключить все", en: "Disable All" })}
                   </button>
-                  <span className="text-[0.6875rem] text-muted">
+                  <span className="text-hint text-muted">
                     {t({ ru: "Показано:", en: "Showing:" })} {filtered.length}
                   </span>
                 </div>
               </div>
 
               {filtered.length === 0 ? (
-                <p className="p-8 text-center text-sm text-muted">
+                <p className="p-8 text-center text-hint text-muted">
                   {t({ ru: "Ничего не найдено", en: "Nothing matches" })}
                 </p>
               ) : (
@@ -434,7 +434,7 @@ export function LoadoutExcludePanel({
                             <Lock className="size-2.5" />
                           </span>
                         )}
-                        <span className="absolute top-1 left-1 rounded-full bg-black/60 px-1.5 py-0.5 text-[0.5625rem] font-bold text-white/90">
+                        <span className="absolute top-1 left-1 rounded-full bg-black/60 px-1.5 py-0.5 text-micro font-bold text-white/90">
                           {t(KIND_LABEL[piece.kind])}
                         </span>
                         {/* Lazy, because this list is ~880 rows long. Loading
@@ -453,7 +453,7 @@ export function LoadoutExcludePanel({
                           height={48}
                           className="mt-2 size-12 rounded-lg icon-art object-cover"
                         />
-                        <span className="text-[0.625rem] leading-tight text-foreground">
+                        <span className="text-meta leading-tight text-foreground">
                           {piece.name[language]}
                         </span>
                       </div>
