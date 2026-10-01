@@ -14,6 +14,7 @@ import { getCharacterName } from "@/lib/character-name";
 import { getPerkDescription } from "@/lib/perk-description";
 import { useDescription } from "@/lib/descriptions";
 import { useModal } from "@/lib/use-modal";
+import { wrongDataUrl } from "@/lib/repo";
 import { Highlighted } from "./highlighted-text";
 
 /* The small circular controls in a perk card's top-right corner. Split into
@@ -469,6 +470,20 @@ export function PerkDetailModal({
                 <Copy className="size-3.5" />
                 {t({ ru: "Копировать", en: "Copy" })}
               </button>
+              {/* The only route from a wrong number to the form that fixes
+                  it. It belongs here rather than in the footer because this
+                  is where the error is seen: the reporter is already looking
+                  at the perk, and arrives at a form with its name filled in.
+                  Quiet on purpose — it is the rarest thing in this card and
+                  must not compete with Copy. */}
+              <a
+                href={wrongDataUrl(perk.name[language])}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-2 block text-center text-[0.6875rem] text-muted underline decoration-dotted underline-offset-4 transition-colors hover:text-foreground"
+              >
+                {t({ ru: "Неверный текст? Сообщить", en: "Wrong text? Report it" })}
+              </a>
             </div>
           </motion.div>
         </motion.div>

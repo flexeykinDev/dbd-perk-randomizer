@@ -3,6 +3,7 @@
 import author from "@/data/author.json";
 import { withBasePath } from "@/lib/asset-path";
 import { useT } from "@/lib/i18n";
+import { REPO_URL } from "@/lib/repo";
 import { useIsObsMode } from "@/lib/use-obs-mode";
 
 // Name and avatar are resolved at build time by scripts/sync-author.ts and
@@ -40,6 +41,20 @@ export function Footer() {
           className="tap flex items-center font-medium text-foreground transition-colors hover:text-accent"
         >
           {t({ ru: "Автор сайта:", en: "Site by:" })} {author.name}
+        </a>
+        {/* The repo itself, not the author's profile — which is what this
+            footer linked to, and the reason the issue templates were
+            unreachable from the site they are for. */}
+        <span aria-hidden className="hidden text-border sm:inline">
+          ·
+        </span>
+        <a
+          href={REPO_URL}
+          target="_blank"
+          rel="noreferrer"
+          className="tap flex items-center font-medium transition-colors hover:text-accent"
+        >
+          {t({ ru: "Исходный код", en: "Source" })}
         </a>
       </div>
     </footer>
