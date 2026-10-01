@@ -1993,7 +1993,20 @@ export function RandomizerBoard() {
               })
             : undefined
         }
-        className="flex items-center gap-2.5 rounded-full bg-accent px-8 py-3.5 text-base font-bold text-accent-foreground shadow-lg shadow-accent/30 transition-transform hover:scale-105 active:scale-95 disabled:pointer-events-none disabled:opacity-40"
+        /* Sticky on a phone, static everywhere else.
+        
+           Measured at 390x844: the controls above the build come to 574px and
+           the build itself to 315, so Generate lands at 915 on an 844px
+           screen. It cannot be raised above the fold without removing a
+           control, and four passes have already established that hiding
+           things is not the answer here.
+        
+           So it stops trying to be above the fold and stays on screen
+           instead: the one action the site exists for is always under a
+           thumb, which is better than being 71px further up and still
+           needing a scroll. Static from `sm`, where it was never a problem —
+           at 1366x768 it sits at 598 of 768. */
+        className="sticky bottom-3 z-30 flex items-center gap-2.5 rounded-full bg-accent px-8 py-3.5 text-base font-bold text-accent-foreground shadow-lg shadow-accent/30 transition-transform hover:scale-105 active:scale-95 disabled:pointer-events-none disabled:opacity-40 sm:static sm:bottom-auto"
       >
         <Dices className="size-5" />
         {t({ ru: "Сгенерировать новый билд", en: "Generate a new build" })}

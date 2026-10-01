@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { MotionConfig } from "framer-motion";
 import { VideoEmbed } from "@/components/video-embed";
 import { RandomizerBoard } from "@/components/dbd/randomizer-board";
 import { ObsOverlay } from "@/components/dbd/obs-overlay";
@@ -43,9 +44,20 @@ export function RandomizerContent() {
   if (isStreamMode) return <StreamView />;
 
   return (
-    <div className="flex flex-col items-center gap-3 text-center">
+    /* framer-motion is driven by JS and never sees the CSS media query, so
+       the card entrances, the stage reveals and every AnimatePresence in the
+       app would keep springing. `reducedMotion="user"` makes the library
+       honour the system preference everywhere at once — the alternative was
+       a useReducedMotion call in each of a dozen components, which is a rule
+       somebody forgets on the thirteenth. */
+    <MotionConfig reducedMotion="user">
+    <div className="flex flex-col items-center gap-2 text-center sm:gap-3">
       <div>
-        <h1 className="text-[clamp(1.25rem,3vw+0.75rem,2.25rem)] font-semibold tracking-tight text-balance">
+        {/* The clamp's floor was 1.25rem, which wrapped this to two lines on a
+            390px phone and cost 71px of the first screen — on the device where
+            the first screen is scarcest. 1.05rem fits it to one line there and
+            changes nothing from `sm` up, where 3vw has already overtaken it. */}
+        <h1 className="text-[clamp(1.05rem,3vw+0.75rem,2.25rem)] font-semibold tracking-tight text-balance">
           {t({
             ru: "Dead by Daylight — Рандомайзер Перков",
             en: "Dead by Daylight — Perk Randomizer",
@@ -83,5 +95,6 @@ export function RandomizerContent() {
         <VideoEmbed src={trailer.embedUrl} title={trailer.title} />
       </div>
     </div>
+    </MotionConfig>
   );
 }

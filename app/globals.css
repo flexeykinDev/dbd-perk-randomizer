@@ -395,3 +395,34 @@ svg {
   align-items: start;
   justify-items: center;
 }
+
+/* Someone who asked the system to reduce motion.
+  
+   Measured before this existed: with the preference set, 55 elements still
+   carried a live transition or animation, and the ones that actually MOVED
+   included every perk icon's hover scale, the Generate button's scale and
+   framer-motion's card entrances. Only the two canvas stages checked the
+   preference — somebody thought about it for the WebGL loops and nowhere
+   else.
+  
+   Transforms and animations go. Colour transitions stay: a 150ms colour fade
+   is not what this preference is about, and stripping every transition makes
+   an interface feel broken rather than calm, which is the opposite of what
+   was asked for. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-property: color, background-color, border-color, fill, stroke, opacity !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Hover and entrance scaling, which is the motion people actually notice. */
+  .transition-transform,
+  [class*="hover:scale-"],
+  [class*="group-hover:scale-"] {
+    transform: none !important;
+  }
+}

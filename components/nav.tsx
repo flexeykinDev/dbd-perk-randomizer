@@ -17,7 +17,10 @@ export function Nav() {
 
   return (
     <header className="border-b border-border/60">
-      <nav className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-2.5">
+      {/* Tighter on a phone. This bar was 137px of an 844px screen — a sixth
+          of the first view, for a wordmark and three controls — because the
+          padding and the gap were both tuned at desktop width. */}
+      <nav className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-3 gap-y-1.5 px-4 py-1.5 sm:gap-3 sm:py-2.5">
         {/* `tap` on both: these are the first two things a thumb reaches for,
             and they measured 20px and 34px tall on a phone. The utility only
             applies under `pointer: coarse`, so the desktop nav is unchanged. */}
