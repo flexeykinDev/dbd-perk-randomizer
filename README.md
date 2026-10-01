@@ -211,6 +211,11 @@ the same three.
   `data/overrides/perks.json` and `data/overrides/loadout.json` instead.
 - **Screenshots.** After a UI change, `npm run capture:screenshots` rebuilds
   `docs/screenshots/` (needs the dev server on port 3000).
+- **Social preview.** `docs/social-preview.png` is the card GitHub shows when
+  the repo is linked anywhere. `npm run social:preview` re-renders it from
+  `docs/social-preview.html` with the current perk count; `--debug` draws the
+  safe area over it. GitHub does not read it from the repository — upload it
+  by hand at **Settings → General → Social preview → Edit → Upload an image**.
 
 ### Deployment
 

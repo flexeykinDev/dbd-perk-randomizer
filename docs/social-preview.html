@@ -1,0 +1,227 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>GitHub social preview — DBD Perk Randomizer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+  rel="stylesheet"
+/>
+<style>
+  /* Built from docs/banner.svg, reflowed from 4:1 to 2:1.
+     Palette is the banner's, which is role-color.ts: survivor #38bdf8,
+     killer #fb7185, over the same three-stop ground. Not share-card.tsx's
+     warmer export palette — that one belongs to the image the app itself
+     renders, and docs/steam-guide/cover.html follows it. These two are
+     allowed to differ; what neither may do is invent a third palette. */
+  :root {
+    --ground: #0f1014;
+    --survivor: #38bdf8;
+    --killer: #fb7185;
+    --bone: #f4f5f7;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1280px; height: 640px; }
+  body {
+    background: var(--ground);
+    color: var(--bone);
+    font-family: "Oswald", "Arial Narrow", sans-serif;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* --- SAFE AREA -------------------------------------------------------
+     GitHub serves this at 1280x640 on the repo page, but the surfaces that
+     re-crop it — link unfurls at other aspect ratios, and GitHub's own
+     smaller cards — take a bite out of the edges. So nothing that has to
+     be read lives outside 112px across or 80px down. The wordmark and the
+     key line sit well inside that; the artwork is the only thing allowed
+     near the bleed.
+
+     Render with ?debug to draw the boundary and check it by eye. */
+  .safe {
+    position: absolute; inset: 80px 112px;
+    display: none; border: 1px dashed rgba(56, 189, 248, 0.5);
+  }
+  body.debug .safe { display: block; }
+
+  /* --- background, straight from the banner ---------------------------- */
+  .ground {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, #0f1014 0%, #14151b 55%, #1d1217 100%);
+  }
+  /* The banner's two drifting fog ellipses, parked. They are animated
+     there and cannot be here, so each is placed where it reads as
+     composition rather than as a frame of something interrupted. */
+  .fog { position: absolute; border-radius: 50%; filter: blur(56px); }
+  .fog-cold {
+    width: 620px; height: 240px; right: 20px; bottom: 40px;
+    background: var(--survivor); opacity: 0.1;
+  }
+  .fog-warm {
+    width: 520px; height: 200px; right: 90px; top: 30px;
+    background: var(--killer); opacity: 0.12;
+  }
+  .glow {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 46% 62% at 78% 50%,
+      rgba(251, 113, 133, 0.22) 0%, rgba(251, 113, 133, 0) 100%);
+  }
+  /* Hairlines, as on the banner. Spaced for 640px, not 300px. */
+  .rules {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px) 0 170px / 100% 170px repeat-y;
+  }
+  /* No grain layer, unlike docs/steam-guide/cover.html and the app's own
+     export card. Film grain is noise, and noise is what PNG cannot
+     compress: at opacity 0.1 it cost 410KB of a 904KB file — 45% of the
+     image — for a texture that is invisible at the ~600px GitHub actually
+     renders this at. (The Steam cover pays the same tax and comes to
+     991KB, which would not fit under GitHub's 1MB limit at all.) */
+  /* The aura spine down the left edge — the banner's one piece of full
+     bleed, and what makes a cropped card still look like ours. */
+  .spine {
+    position: absolute; left: 0; top: 0; width: 10px; height: 100%;
+    background: linear-gradient(180deg, var(--survivor), var(--killer));
+  }
+
+  /* --- type ------------------------------------------------------------ */
+  .stage {
+    position: absolute; left: 112px; top: 80px; bottom: 80px;
+    width: 660px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .eyebrow {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 21px; letter-spacing: 0.4em; text-transform: uppercase;
+    color: rgba(244, 245, 247, 0.52);
+    margin-bottom: 26px;
+  }
+  h1 {
+    font-weight: 700; font-size: 104px; line-height: 0.92;
+    letter-spacing: 0.01em; text-transform: uppercase;
+  }
+  .rule {
+    width: 180px; height: 3px; margin: 32px 0 28px;
+    background: linear-gradient(90deg, var(--survivor), var(--killer));
+  }
+  /* The banner's key line, with its gradient fill, clipped to the text so
+     the words carry the same blue-to-rose run as the spine. */
+  .key {
+    font-size: 40px; font-weight: 600;
+    /* fit-content, not the column width. A background-clip gradient maps to
+       the element's box, and at 660px wide the rose end landed past the end
+       of the sentence — the line came out blue with a pink full stop. */
+    width: fit-content;
+    background: linear-gradient(90deg, var(--survivor), var(--killer));
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+    /* A gradient fill is clipped to its own box, which does not include
+       the descender room an inline box would have given it. */
+    padding-bottom: 6px;
+  }
+  .byline {
+    margin-top: 34px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 20px; letter-spacing: 0.04em;
+    color: rgba(244, 245, 247, 0.46);
+  }
+  .byline strong { color: rgba(244, 245, 247, 0.72); font-weight: 500; }
+
+  /* --- the loadout ----------------------------------------------------- */
+  /* Four diamonds in a diamond: the shape the banner ends on, and the one
+     the board itself uses. Centred in the right third, inside the bleed. */
+  .loadout {
+    position: absolute; right: 104px; top: 50%;
+    transform: translateY(-50%);
+    width: 392px; height: 392px;
+  }
+</style>
+
+<div class="ground"></div>
+<div class="fog fog-cold"></div>
+<div class="fog fog-warm"></div>
+<div class="glow"></div>
+<div class="rules"></div>
+<div class="spine"></div>
+
+<svg class="loadout" viewBox="0 0 212 212" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="well" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#1b1d25" />
+      <stop offset="1" stop-color="#08090c" />
+    </radialGradient>
+    <linearGradient id="rim" gradientUnits="userSpaceOnUse" x1="50" y1="50" x2="162" y2="162">
+      <stop offset="0" stop-color="#38bdf8" />
+      <stop offset="1" stop-color="#fb7185" />
+    </linearGradient>
+    <!-- One clip, reused per slot: the icon is square, the well is not. -->
+    <clipPath id="slot" clipPathUnits="userSpaceOnUse">
+      <path d="M0 -50 L50 0 L0 50 L-50 0 Z" />
+    </clipPath>
+  </defs>
+
+  <!-- Real perk icons rather than the banner's abstract glyphs. The banner
+       is a header on a page that already says what this is; a social card
+       is seen with no page around it, and four actual Dead by Daylight
+       icons say "builds for this game" before the wordmark is read.
+       All four are survivor, because a loadout is four of one role and a
+       mixed one is a build that cannot exist. -->
+  <g transform="translate(106 50)">
+    <path d="M0 -50 L50 0 L0 50 L-50 0 Z" fill="url(#well)" />
+    <g clip-path="url(#slot)">
+      <image href="../public/perks/survivor/adrenaline.webp" x="-34" y="-34" width="68" height="68" />
+    </g>
+    <path d="M0 -50 L50 0 L0 50 L-50 0 Z" fill="none" stroke="url(#rim)" stroke-width="2" stroke-opacity="0.85" />
+  </g>
+  <g transform="translate(50 106)">
+    <path d="M0 -50 L50 0 L0 50 L-50 0 Z" fill="url(#well)" />
+    <g clip-path="url(#slot)">
+      <image href="../public/perks/survivor/sprint-burst.webp" x="-34" y="-34" width="68" height="68" />
+    </g>
+    <path d="M0 -50 L50 0 L0 50 L-50 0 Z" fill="none" stroke="url(#rim)" stroke-width="2" stroke-opacity="0.55" />
+  </g>
+  <g transform="translate(162 106)">
+    <path d="M0 -50 L50 0 L0 50 L-50 0 Z" fill="url(#well)" />
+    <g clip-path="url(#slot)">
+      <image href="../public/perks/survivor/resilience.webp" x="-34" y="-34" width="68" height="68" />
+    </g>
+    <path d="M0 -50 L50 0 L0 50 L-50 0 Z" fill="none" stroke="url(#rim)" stroke-width="2" stroke-opacity="0.55" />
+  </g>
+  <g transform="translate(106 162)">
+    <path d="M0 -50 L50 0 L0 50 L-50 0 Z" fill="url(#well)" />
+    <g clip-path="url(#slot)">
+      <image href="../public/perks/survivor/dead-hard.webp" x="-34" y="-34" width="68" height="68" />
+    </g>
+    <path d="M0 -50 L50 0 L0 50 L-50 0 Z" fill="none" stroke="url(#rim)" stroke-width="2" stroke-opacity="0.55" />
+  </g>
+</svg>
+
+<div class="stage">
+  <div class="eyebrow">Dead by Daylight</div>
+  <h1>Perk<br />Randomizer</h1>
+  <div class="rule"></div>
+  <div class="key"><span id="count">321</span> perks, one roll.</div>
+  <div class="byline">flexeykindev.github.io<strong>/dbd-perk-randomizer</strong></div>
+</div>
+
+<div class="safe"></div>
+
+<script>
+  /* The count comes from data/perks.json at render time, passed in as
+     ?perks=N by scripts/make-social-preview.mjs.
+
+     The literal in the markup is only so that opening this file by hand
+     shows a finished card instead of a gap — it is not the source of
+     truth, and it going stale costs nothing. docs/steam-guide/cover.html
+     hardcodes its own count and has said 315 since the patch that made it
+     321, which is the mistake this parameter exists to not repeat. */
+  const perks = new URLSearchParams(location.search).get("perks");
+  if (perks && /^\d+$/.test(perks)) {
+    document.getElementById("count").textContent = perks;
+  }
+  if (new URLSearchParams(location.search).has("debug")) {
+    document.body.classList.add("debug");
+  }
+</script>

@@ -18,6 +18,7 @@
     "sync:loadout-addons": "tsx scripts/sync-loadout-addons.ts",
     "test:e2e": "npm run build && playwright test",
     "capture:screenshots": "node scripts/capture-screenshots.mjs",
+    "social:preview": "node scripts/make-social-preview.mjs",
     "compare:sources": "tsx scripts/compare-sources.ts",
     "check:bundle": "tsx scripts/check-bundle-size.ts",
     "capture:fixture": "tsx scripts/capture-perk-fixture.ts",

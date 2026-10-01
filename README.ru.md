@@ -198,6 +198,11 @@ OBS рисует браузерный источник в отдельном п�
   `data/overrides/perks.json` и `data/overrides/loadout.json`.
 - **Скриншоты.** После изменений интерфейса `npm run capture:screenshots`
   пересоберёт `docs/screenshots/` (нужен dev-сервер на порту 3000).
+- **Карточка для соцсетей.** `docs/social-preview.png` — то, что GitHub
+  показывает по ссылке на репозиторий. `npm run social:preview` пересобирает
+  её из `docs/social-preview.html` с текущим числом перков, `--debug` рисует
+  поверх безопасную зону. Из репозитория GitHub её не берёт — загружается
+  руками в **Settings → General → Social preview → Edit → Upload an image**.
 
 ### Деплой
 
