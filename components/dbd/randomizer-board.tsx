@@ -1882,78 +1882,6 @@ export function RandomizerBoard() {
           perkGridView
         ))}
 
-      {/* Secondary toolbar — sleek, compact, sits right under the cards it
-          acts on rather than competing with Generate for weight. Stacked
-          full-width below `sm` instead of a bare unwrapped row: three
-          worded pill buttons never fit a 320-375px phone on one line, and
-          naive flex-wrap here would've just produced the same lopsided
-          2-then-1 wrap the loadout HUD had (see LoadoutGrid) — a
-          deliberate vertical stack reads cleanly instead. */}
-      <div className="flex w-full max-w-xs flex-col gap-2 sm:w-auto sm:max-w-none sm:flex-row sm:items-center sm:justify-center">
-        <button
-          type="button"
-          onClick={
-            mode === "loadout"
-              ? handleCopyAllLoadout
-              : mode === "all"
-                ? handleCopyAllCombined
-                : handleCopyAll
-          }
-          disabled={
-            squadActive
-              ? squad.squad.every((build) => build.length === 0)
-              : mode === "loadout"
-                ? loadoutPieces.length === 0
-                : mode === "all"
-                  ? perks.length === 0 && loadoutPieces.length === 0
-                  : perks.length === 0
-          }
-          className="tap flex w-full items-center justify-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground disabled:pointer-events-none disabled:opacity-40 sm:w-auto"
-        >
-          <Copy className="size-3.5" />
-          {mode === "loadout"
-            ? t({ ru: "Скопировать всё", en: "Copy full loadout" })
-            : t({ ru: "Скопировать всё", en: "Copy full build" })}
-        </button>
-        <button
-          type="button"
-          onClick={handleShare}
-          /* Squad links work; the four-up share card does not exist yet, so
-             only the image download below stays out of squad mode. */
-          disabled={squadActive && squad.squad.length === 0}
-          title={t({
-            ru: "Ссылка на этот билд для обычного просмотра — не для OBS, для этого есть отдельная кнопка «Оверлей OBS».",
-            en: "A link to view this exact build — not for OBS, use the separate “OBS Overlay” button for that.",
-          })}
-          className="tap flex w-full items-center justify-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground sm:w-auto"
-        >
-          <Link2 className="size-3.5" />
-          {t({ ru: "Поделиться", en: "Share" })}
-        </button>
-        <DownloadImageButton
-          onSelect={handleDownloadImage}
-          generating={generatingImage}
-          disabled={
-            squadActive
-              ? squad.squad.length === 0
-              : sharePieces.length === 0
-          }
-          /* The squad poster exists in 16:9 only — see the note on
-             useShareExport's `squad` input. Offering a story format that
-             silently rendered the landscape one would be worse than not
-             offering it. */
-          layouts={squadActive ? ["landscape"] : undefined}
-        />
-        <PresentationPicker
-          value={presentation}
-          onChange={setPresentation}
-          isDesktop={isDesktop}
-        />
-        {/* Only where there is something to hear. Sound is the slot
-            machine's, not the site's — see lib/sound.ts. */}
-        {effectivePresentation === "casino" && <SoundControl />}
-      </div>
-
       {/* Off-screen — exists only so html2canvas has real, laid-out DOM to
           rasterize when a download button is clicked; never visible itself. */}
       <div
@@ -2051,6 +1979,87 @@ export function RandomizerBoard() {
         </kbd>
         {t({ ru: "ссылка", en: "share link" })}
       </p>
+
+      {/* Export actions — what you do to a build you already like, so they
+          come AFTER Generate rather than before it.
+      
+          They used to sit directly under the cards, which put the page's
+          primary action last: measured at 1366x768, Generate landed at
+          y=671 of a 768px viewport and the shortcut legend below it was off
+          the screen entirely. Someone arriving had the three things you do
+          with a finished build in front of them and the one thing that
+          makes a build out of sight.
+      
+          Quieter by weight, not by size: the borders are transparent until
+          hover and the type stays muted, but every button keeps `.tap` and
+          its full-width phone layout, because e2e/mobile.spec.ts measures
+          every visible button against a 44px target and these are five of
+          them. Demote with colour, never with geometry. */}
+      <div className="flex w-full max-w-xs flex-col gap-2 sm:w-auto sm:max-w-none sm:flex-row sm:items-center sm:justify-center">
+        <button
+          type="button"
+          onClick={
+            mode === "loadout"
+              ? handleCopyAllLoadout
+              : mode === "all"
+                ? handleCopyAllCombined
+                : handleCopyAll
+          }
+          disabled={
+            squadActive
+              ? squad.squad.every((build) => build.length === 0)
+              : mode === "loadout"
+                ? loadoutPieces.length === 0
+                : mode === "all"
+                  ? perks.length === 0 && loadoutPieces.length === 0
+                  : perks.length === 0
+          }
+          className="tap flex w-full items-center justify-center gap-1.5 rounded-full border border-transparent px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:border-border hover:bg-surface-hover hover:text-foreground disabled:pointer-events-none disabled:opacity-40 sm:w-auto"
+        >
+          <Copy className="size-3.5" />
+          {mode === "loadout"
+            ? t({ ru: "Скопировать всё", en: "Copy full loadout" })
+            : t({ ru: "Скопировать всё", en: "Copy full build" })}
+        </button>
+        <button
+          type="button"
+          onClick={handleShare}
+          /* Squad links work; the four-up share card does not exist yet, so
+             only the image download below stays out of squad mode. */
+          disabled={squadActive && squad.squad.length === 0}
+          title={t({
+            ru: "Ссылка на этот билд для обычного просмотра — не для OBS, для этого есть отдельная кнопка «Оверлей OBS».",
+            en: "A link to view this exact build — not for OBS, use the separate “OBS Overlay” button for that.",
+          })}
+          className="tap flex w-full items-center justify-center gap-1.5 rounded-full border border-transparent px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:border-border hover:bg-surface-hover hover:text-foreground sm:w-auto"
+        >
+          <Link2 className="size-3.5" />
+          {t({ ru: "Поделиться", en: "Share" })}
+        </button>
+        <DownloadImageButton
+          onSelect={handleDownloadImage}
+          generating={generatingImage}
+          disabled={
+            squadActive
+              ? squad.squad.length === 0
+              : sharePieces.length === 0
+          }
+          /* The squad poster exists in 16:9 only — see the note on
+             useShareExport's `squad` input. Offering a story format that
+             silently rendered the landscape one would be worse than not
+             offering it. */
+          layouts={squadActive ? ["landscape"] : undefined}
+        />
+        <PresentationPicker
+          value={presentation}
+          onChange={setPresentation}
+          isDesktop={isDesktop}
+        />
+        {/* Only where there is something to hear. Sound is the slot
+            machine's, not the site's — see lib/sound.ts. */}
+        {effectivePresentation === "casino" && <SoundControl />}
+      </div>
+
 
       {mode === "perks" && (
         <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2">

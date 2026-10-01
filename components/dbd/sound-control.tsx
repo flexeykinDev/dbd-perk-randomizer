@@ -49,7 +49,7 @@ export function SoundControl() {
         }
         data-testid="sound-control"
         data-muted={muted ? "1" : "0"}
-        className="tap flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+        className="tap flex items-center gap-1.5 rounded-full border border-transparent px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:border-border hover:bg-surface-hover hover:text-foreground"
       >
         {muted ? (
           <VolumeX className="size-3.5 shrink-0" />
