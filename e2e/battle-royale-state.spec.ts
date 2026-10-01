@@ -74,3 +74,63 @@ test("Начать заново refills the pool without leaving the mode", asyn
   await page.getByRole("button", { name: "Статистика пула" }).click();
   await expect.poll(() => attrition(page).then(([used]) => used)).toBe(0);
 });
+
+/* The count beside the switch.
+ *
+ * The eliminated set spans BOTH roles on purpose — switching side mid-run
+ * must not hand back perks you already spent — so the number shown has to
+ * be filtered to the current role or it disagrees with the pool size it
+ * sits next to. That is the failure this covers: it would read as "the
+ * pool is wrong" rather than as "the label is wrong", and only on the
+ * second role.
+ */
+
+/** "Осталось: 172" → 172. */
+async function remaining(page: Page): Promise<number> {
+  const text = await page.getByText(/^Осталось: \d+$/).first().innerText();
+  return Number(text.match(/\d+/)?.[0]);
+}
+
+test("the count appears only while a run is on", async ({ page }) => {
+  await page.goto("/?role=survivor");
+  await expect(page.locator("[data-perk-card]").first()).toBeVisible();
+
+  // Off: the switch and its explanation, but no number to misread.
+  await expect(page.getByText(/^Осталось: \d+$/)).toHaveCount(0);
+  await expect(
+    page.getByText("Использованные перки выбывают, пока пул не кончится"),
+  ).toBeVisible();
+
+  await page.getByRole("switch", { name: "Battle Royale" }).click();
+  await expect.poll(() => remaining(page)).toBeGreaterThan(0);
+});
+
+test("the count falls as the pool is spent", async ({ page }) => {
+  await page.goto("/?role=survivor");
+  await expect(page.locator("[data-perk-card]").first()).toBeVisible();
+  await page.getByRole("switch", { name: "Battle Royale" }).click();
+
+  const before = await remaining(page);
+  await page.getByRole("button", { name: "Сгенерировать новый билд" }).click();
+  // Four perks retired by one roll.
+  await expect.poll(() => remaining(page)).toBe(before - 4);
+});
+
+test("the count is this role's, not both roles added together", async ({ page }) => {
+  /* The whole reason the hook's comment exists. Spend perks as survivor,
+   * switch to killer, and the number must describe the killer pool only —
+   * a raw count of the eliminated set would still carry the survivor
+   * spend and read several perks short of the truth. */
+  await page.goto("/?role=survivor");
+  await expect(page.locator("[data-perk-card]").first()).toBeVisible();
+  await page.getByRole("switch", { name: "Battle Royale" }).click();
+  await page.getByRole("button", { name: "Сгенерировать новый билд" }).click();
+  await expect.poll(() => remaining(page)).toBeGreaterThan(0);
+
+  await page.getByRole("button", { name: "Убийца" }).click();
+  await expect(page.locator("[data-perk-card]").first()).toBeVisible();
+
+  const killerPool = perks.filter((p) => p.role === "killer").length;
+  // Nothing has been spent as killer yet, so the full killer pool is left.
+  await expect.poll(() => remaining(page)).toBe(killerPool);
+});

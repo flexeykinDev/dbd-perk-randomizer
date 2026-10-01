@@ -90,6 +90,7 @@ import { HistoryModal } from "./history-modal";
 import { PresetsModal } from "./presets-modal";
 import { VaultModal } from "./vault-modal";
 import { ToggleSwitch } from "./toggle-switch";
+import { BattleRoyaleControl } from "./battle-royale-control";
 import {
   ShareCard,
   type ShareCardPiece,
@@ -1552,6 +1553,17 @@ export function RandomizerBoard() {
           </div>
         )}
 
+        {/* A whole game mode, so it belongs with the controls that decide
+            what gets rolled rather than below the keyboard legend, which is
+            where it used to be. `availableCount` is already role-filtered —
+            see lib/use-battle-royale.ts for why a raw count would disagree
+            with the pool size sitting beside it. */}
+        <BattleRoyaleControl
+          active={battleRoyale}
+          onToggle={toggleBattleRoyale}
+          remaining={availableCount}
+        />
+
         {mode !== "perks" && (
           <div className="flex shrink-0 flex-wrap items-center justify-center gap-x-2 gap-y-1.5 px-4 py-1.5 text-sm sm:py-2">
             <span className="text-muted">
@@ -2107,17 +2119,6 @@ export function RandomizerBoard() {
           )}
         </div>
       )}
-
-      <ToggleSwitch
-        checked={battleRoyale}
-        onChange={toggleBattleRoyale}
-        label={t({ ru: "Battle Royale", en: "Battle Royale" })}
-        activeClassName="bg-accent"
-        tooltip={t({
-          ru: "Копирование билда навсегда убирает эти перки из пула — играйте, пока не закончатся все перки роли.",
-          en: "Copying a build permanently removes those perks from the pool — play until every perk for this role is gone.",
-        })}
-      />
 
       <button
         type="button"
