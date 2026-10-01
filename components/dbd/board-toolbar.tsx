@@ -8,6 +8,7 @@ import {
   History,
   ListFilter,
   MonitorPlay,
+  Maximize2,
   X,
 } from "lucide-react";
 import { cn } from "@/lib/cn";
@@ -122,6 +123,24 @@ export function BoardToolbar({
           <MonitorPlay className="size-3.5" />
           {t({ ru: "Оверлей OBS", en: "OBS Overlay" })}
         </button>
+        {/* The same setup, on a page. A link rather than a button because it
+            IS a link — it changes the hash, so middle-click and "open in new
+            tab" work, which matters for the one job this page has: sitting
+            on a second monitor while OBS is on the first.
+
+            The dialog stays. Nothing was removed; this is a roomier way in
+            for the person who is configuring rather than glancing. */}
+        <a
+          href="#/stream"
+          title={t({
+            ru: "Та же настройка оверлея, но на целой странице — удобно держать на втором мониторе рядом с OBS.",
+            en: "The same overlay setup on a full page — made to sit on a second monitor next to OBS.",
+          })}
+          className={PILL}
+        >
+          <Maximize2 className="size-3.5" />
+          {t({ ru: "На странице", en: "Full page" })}
+        </a>
         <span className="mx-0.5 h-4 w-px bg-border" aria-hidden />
         <MoreMenu>
           <div className="flex flex-col gap-1">

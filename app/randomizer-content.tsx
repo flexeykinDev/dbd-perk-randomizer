@@ -8,7 +8,9 @@ import { perksMeta } from "@/lib/perks";
 import { useLanguage, useT } from "@/lib/i18n";
 import { useIsObsMode } from "@/lib/use-obs-mode";
 import { useIsEmbedMode } from "@/lib/use-embed-mode";
+import { useIsStreamMode } from "@/lib/use-stream-mode";
 import { EmbedView } from "@/components/dbd/embed-view";
+import { StreamView } from "@/components/dbd/stream-view";
 import { registerServiceWorker } from "@/lib/register-sw";
 import { printConsoleBranding } from "@/lib/console-branding";
 import trailer from "@/data/trailer.json";
@@ -18,6 +20,7 @@ export function RandomizerContent() {
   const { lang } = useLanguage();
   const isObsMode = useIsObsMode();
   const isEmbedMode = useIsEmbedMode();
+  const isStreamMode = useIsStreamMode();
 
   useEffect(() => {
     // Not in an embed. The service worker is for the installed app, and
@@ -35,6 +38,9 @@ export function RandomizerContent() {
 
   if (isObsMode) return <ObsOverlay />;
   if (isEmbedMode) return <EmbedView />;
+  // After the overlay and the embed: those two are what a Browser Source
+  // and an iframe load, and neither may ever resolve to a setup page.
+  if (isStreamMode) return <StreamView />;
 
   return (
     <div className="flex flex-col items-center gap-3 text-center">

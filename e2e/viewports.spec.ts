@@ -261,3 +261,51 @@ for (const vp of BUILD_START_CEILING) {
     ).toBeLessThanOrEqual(vp.maxGenerateY);
   });
 }
+
+/* The board carries nothing that only a streamer needs.
+ *
+ * This is the invariant the stream page exists to protect, and it is worth
+ * stating because it is easy to undo by accident: one convenience button
+ * promoted out of the setup disclosure and every visitor is paying attention
+ * for a feature most of them never use.
+ *
+ * Measured rather than argued: at rest the board shows 44 controls, 16 of
+ * which belong to the four perk cards and 6 to the site chrome. None of the
+ * rest are OBS, Twitch or overlay controls — those live behind the setup
+ * disclosure, and from there behind either a dialog or #/stream.
+ */
+test("no streamer-only control is on the board at rest", async ({ page }) => {
+  await page.setViewportSize({ width: 1366, height: 768 });
+  // A first visit: the setup disclosure is collapsed, which is where the one
+  // way in lives.
+  await page.context().addInitScript(() => {
+    try {
+      localStorage.removeItem("dbd-randomizer:setup-open");
+    } catch {
+      /* private mode — collapsed is the default anyway */
+    }
+  });
+  await page.goto("/?role=survivor");
+  await expect(page.locator("[data-perk-card]")).toHaveCount(4);
+
+  for (const name of [/Оверлей OBS/, /На странице/, /Twitch/i]) {
+    await expect(
+      page.getByRole("button", { name }).or(page.getByRole("link", { name })),
+      `a streamer control is on the board at rest: ${name}`,
+    ).toHaveCount(0);
+  }
+});
+
+test("the stream page shows the whole overlay setup, and the way back", async ({ page }) => {
+  await page.setViewportSize({ width: 1366, height: 900 });
+  await page.goto("/#/stream");
+
+  // All three tabs, not a subset — splitting the setup across two surfaces
+  // is the failure this page was built to avoid.
+  await expect(page.getByRole("tab")).toHaveCount(3);
+  await expect(page.getByRole("button", { name: /К доске/ })).toBeVisible();
+
+  // And it is a real exit, not a link to a reload that drops the session.
+  await page.getByRole("button", { name: /К доске/ }).click();
+  await expect(page.locator("[data-perk-card]")).toHaveCount(4);
+});
