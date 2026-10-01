@@ -33,7 +33,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: github/codeql-action/init@v3
+      - uses: github/codeql-action/init@v4
         with:
           languages: javascript-typescript
           # security-and-quality over the default: this is a small codebase
@@ -44,6 +44,6 @@ jobs:
       # No build step. javascript-typescript is analysed from source, and
       # running `next build` here would double CI's work for no extra
       # coverage — CodeQL reads the same files either way.
-      - uses: github/codeql-action/analyze@v3
+      - uses: github/codeql-action/analyze@v4
         with:
           category: "/language:javascript-typescript"

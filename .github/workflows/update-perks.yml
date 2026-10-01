@@ -248,7 +248,7 @@ jobs:
       - name: Open PR with updated perk + loadout data
         id: cpr
         if: steps.worth.outputs.any == 'true'
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           # Belt and braces behind the check above: if the diff still comes
           # out empty here, exit cleanly rather than erroring.
