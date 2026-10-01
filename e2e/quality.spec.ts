@@ -7,6 +7,7 @@
 // malformed share link still shows a header. The suite only catches them if
 // something is actually looking.
 import { test, expect, type Page } from "@playwright/test";
+import perkData from "../data/perks.json";
 
 /** Resolves any CSS colour — including the lab()/oklab() Tailwind v4 emits,
  *  which a hand-rolled rgb() parser turns into silently wrong ratios — by
@@ -251,4 +252,84 @@ test("text clears WCAG AA in both themes", async ({ page }) => {
     });
   }
   expect([...new Set(findings)], `${findings.length} text colours below WCAG AA`).toEqual([]);
+});
+
+/* The four cards in a build share their edges, badge or no badge.
+ *
+ * Worth stating as an invariant rather than trusting, because the NEW badge
+ * is the one thing that could break it: it is absolutely positioned and
+ * deliberately overhangs the card's top-left corner by 7px, which LOOKS
+ * like that card starting higher than its neighbours. Measured, it does
+ * not — the grid stretches and the badge is out of flow. The failure this
+ * guards against is someone making the badge in-flow, or setting the grid
+ * to items-start, either of which would turn the appearance into the truth.
+ *
+ * The badged case has to be forced: a perk is NEW for 30 days after the
+ * scraper first saw it, and on most days none qualify. The clock is set
+ * from the data rather than to a fixed date, so a rescrape that moves every
+ * addedAt forward cannot quietly turn this into a test of the unbadged case.
+ */
+test("every card in a build shares its top and bottom edge", async ({ browser }) => {
+  const newest = perkData
+    .filter((p) => p.role === "killer")
+    .map((p) => new Date(p.addedAt).getTime())
+    .sort((a, b) => b - a)[0];
+  // One day after the newest perk was first seen: inside the 30-day window
+  // whatever the data says today.
+  const insideNewWindow = new Date(newest + 24 * 60 * 60 * 1000);
+
+  const page = await browser.newPage();
+  await page.clock.setFixedTime(insideNewWindow);
+  await page.goto("/?role=killer");
+  await expect(page.locator("[data-perk-card]")).toHaveCount(4);
+
+  async function measure() {
+    return page.locator("[data-perk-card]").evaluateAll((els) =>
+      els.map((el) => {
+        const r = el.getBoundingClientRect();
+        return {
+          top: r.top,
+          bottom: r.bottom,
+          badged: [...el.querySelectorAll("span")].some(
+            (s) => (s.textContent ?? "").trim() === "НОВОЕ",
+          ),
+          // Cards animate in with a per-slot stagger; a reading taken
+          // mid-flight measures the entrance, not the layout. This is how
+          // the screenshot that prompted the check caught them at four
+          // different heights.
+          settled: getComputedStyle(el).transform === "none",
+        };
+      }),
+    );
+  }
+
+  /* Every reading waits for the entrance to finish first. The first build
+     animates in too, so measuring straight after the cards appear catches
+     the stagger rather than the layout — which is exactly the mistake the
+     screenshot made. */
+  async function settledCards() {
+    await expect.poll(async () => (await measure()).every((c) => c.settled)).toBe(true);
+    return measure();
+  }
+
+  let cards = await settledCards();
+  for (let roll = 0; roll < 15 && !cards.some((c) => c.badged); roll++) {
+    await page.getByRole("button", { name: "Сгенерировать новый билд" }).click();
+    cards = await settledCards();
+  }
+
+  expect(
+    cards.some((c) => c.badged),
+    "no NEW badge appeared in 15 rolls — the clock override is no longer inside the window",
+  ).toBe(true);
+  expect(cards.every((c) => c.settled), "cards were still animating").toBe(true);
+
+  const tops = cards.map((c) => c.top);
+  const bottoms = cards.map((c) => c.bottom);
+  expect(Math.max(...tops) - Math.min(...tops), "card tops disagree").toBeLessThanOrEqual(1);
+  expect(
+    Math.max(...bottoms) - Math.min(...bottoms),
+    "card bottoms disagree",
+  ).toBeLessThanOrEqual(1);
+  await page.close();
 });
