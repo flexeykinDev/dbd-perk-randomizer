@@ -45,7 +45,7 @@ export function RandomizerContent() {
             en: "Dead by Daylight — Perk Randomizer",
           })}
         </h1>
-        <p className="mt-1.5 text-xs text-muted sm:text-sm">
+        <p className="mt-1.5 text-hint text-muted">
           {t({
             ru: `${perksMeta.survivorCount} перков выживших · ${perksMeta.killerCount} перков убийц · обновлено ${updatedAt} с`,
             en: `${perksMeta.survivorCount} survivor perks · ${perksMeta.killerCount} killer perks · updated ${updatedAt} from the`,

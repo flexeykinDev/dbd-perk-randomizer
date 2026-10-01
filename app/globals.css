@@ -95,6 +95,47 @@
   --color-accent: var(--accent);
   --color-accent-strong: var(--accent-strong);
   --color-accent-foreground: var(--accent-foreground);
+  /* ---- Type scale -------------------------------------------------
+  
+     Five steps, each with one job. Before this there were eight sizes and
+     93 of the 237 declarations were arbitrary one-offs — text-[0.6875rem]
+     alone appeared 74 times — which put the source line, the tap hint, the
+     keyboard legend, the control labels and the mode labels all inside the
+     same 11-12px band. Things you read once competed with things you use
+     every roll.
+  
+     Pick by JOB, not by how big it looks:
+  
+       text-control  14px  Anything you act on. Buttons, pills, menu items,
+                           the labels on a control. If clicking it does
+                           something, it is this.
+       text-body     13px  What you read to decide. Perk and piece names,
+                           descriptions, the content of a card.
+       text-meta     12px  Detail attached to something else. Counts,
+                           secondary labels, the text inside a badge.
+       text-hint     11px  Read once, then ignored forever. The source
+                           line, the tap hint, the keyboard legend. Always
+                           muted as well as small — these step down on BOTH
+                           channels, which is what keeps them out of the
+                           way without making them unreadable.
+       text-micro    10px  Only where the box is fixed and tiny: the NEW
+                           badge, the digit on a reroll button. Never for a
+                           sentence.
+  
+     Shrinking text inside a button must not shrink the button: `.tap`
+     holds a 44px floor and e2e/mobile.spec.ts measures every visible one
+     against 40px. Growing it must not widen the page — e2e/viewports.spec
+     .ts checks from 360px up.
+  
+     Nothing here is a heading size. The page has one h1 and it clamps
+     against the viewport in randomizer-content.tsx; a sixth token that was
+     used once would be a scale with a liar in it. */
+  --text-control: 0.875rem;
+  --text-body: 0.8125rem;
+  --text-meta: 0.75rem;
+  --text-hint: 0.6875rem;
+  --text-micro: 0.625rem;
+
   --color-role-survivor: var(--role-survivor);
   --color-role-killer: var(--role-killer);
   --color-highlight-survivor: var(--highlight-survivor);

@@ -51,7 +51,7 @@ export function PresentationPicker({
         aria-haspopup="menu"
         aria-expanded={open}
         data-testid="presentation-picker"
-        className="tap flex items-center gap-1.5 rounded-full border border-transparent px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:border-border hover:bg-surface-hover hover:text-foreground"
+        className="tap flex items-center gap-1.5 rounded-full border border-transparent px-3 py-1.5 text-control font-medium text-muted transition-colors hover:border-border hover:bg-surface-hover hover:text-foreground"
       >
         <Sparkles className="size-3.5 shrink-0" />
         {t(PRESENTATION_LABEL[value])}

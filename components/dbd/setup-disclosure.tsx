@@ -40,7 +40,7 @@ export function SetupDisclosure({
         onClick={onToggle}
         aria-expanded={open}
         aria-controls="setup-panel"
-        className="tap flex items-center gap-1.5 rounded-full border border-transparent px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:border-border hover:bg-surface-hover hover:text-foreground"
+        className="tap flex items-center gap-1.5 rounded-full border border-transparent px-3 py-1.5 text-control font-medium text-muted transition-colors hover:border-border hover:bg-surface-hover hover:text-foreground"
       >
         <ChevronDown
           aria-hidden

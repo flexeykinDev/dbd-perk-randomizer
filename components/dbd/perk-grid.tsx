@@ -176,7 +176,7 @@ export function PerkGrid({
                 {isNewPerk(perk) && (
                   <span
                     className={cn(
-                      "absolute -top-2 -left-2 z-10 rounded-full px-2 py-0.5 text-[0.625rem] font-bold text-black shadow",
+                      "absolute -top-2 -left-2 z-10 rounded-full px-2 py-0.5 text-micro font-bold text-black shadow",
                       perk.role === "survivor" ? "bg-sky-500" : "bg-rose-500",
                     )}
                   >
@@ -221,7 +221,7 @@ export function PerkGrid({
                           would sound like a count. */}
                       <span
                         aria-hidden
-                        className="text-[0.625rem] leading-none font-semibold tabular-nums pointer-coarse:hidden"
+                        className="text-micro leading-none font-semibold tabular-nums pointer-coarse:hidden"
                       >
                         {index + 1}
                       </span>
@@ -311,7 +311,7 @@ export function PerkGrid({
                   height={112}
                   className="size-24 rounded-xl icon-art object-cover transition-transform group-hover:scale-105 sm:size-28 lg:size-32"
                 />
-                <span className="text-xs font-medium text-foreground">{perk.name[language]}</span>
+                <span className="text-body font-medium text-foreground">{perk.name[language]}</span>
               </motion.div>
             );
           })}

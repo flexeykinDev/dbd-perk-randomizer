@@ -1503,7 +1503,7 @@ export function RandomizerBoard() {
               type="button"
               onClick={() => selectMode(m)}
               className={cn(
-                "tap rounded-full px-3 py-1 text-xs font-medium transition-colors",
+                "tap rounded-full px-3 py-1 text-control font-medium transition-colors",
                 mode === m
                   ? cn(roleColor.border, roleColor.bg, roleColor.text, "border")
                   : "text-muted hover:bg-surface-hover hover:text-foreground",
@@ -1697,7 +1697,7 @@ export function RandomizerBoard() {
             <button
               type="button"
               onClick={() => setCharacterPickerOpen(true)}
-              className="tap flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+              className="tap flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-control font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
             >
               <Users className="size-3.5" />
               {t({ ru: "Выбрать персонажа", en: "Choose Character" })}
@@ -1740,28 +1740,28 @@ export function RandomizerBoard() {
       </SetupDisclosure>
 
       {mode === "loadout" ? (
-        <p className="text-sm text-muted">
+        <p className="text-hint text-muted">
           {t({
             ru: `${battleRoyale ? "Battle Royale" : "Случайная экипировка"} для ${ROLE_LABEL[role].ru} — нажмите на карточку, чтобы скопировать название`,
             en: `${battleRoyale ? "Battle Royale" : "Random loadout"} for ${ROLE_LABEL[role].en} — click a card to copy its name`,
           })}
         </p>
       ) : mode === "all" ? (
-        <p className="text-sm text-muted">
+        <p className="text-hint text-muted">
           {t({
             ru: `${battleRoyale ? "Battle Royale" : "Случайный билд и экипировка"} для ${ROLE_LABEL[role].ru} — нажмите на карточку, чтобы скопировать название`,
             en: `${battleRoyale ? "Battle Royale" : "Random build and loadout"} for ${ROLE_LABEL[role].en} — click a card to copy its name`,
           })}
         </p>
       ) : perkCount === 0 ? (
-        <p className="text-sm text-muted">
+        <p className="text-hint text-muted">
           {t({
             ru: `Испытание без перков для ${ROLE_LABEL[role].ru} — удачи!`,
             en: `A no-perk challenge for ${ROLE_LABEL[role].en} — good luck!`,
           })}
         </p>
       ) : (
-        <p className="text-sm text-muted">
+        <p className="text-hint text-muted">
           {t({
             ru: `${battleRoyale ? "Battle Royale" : "Случайный билд"} для ${ROLE_LABEL[role].ru} — нажмите на перк, чтобы скопировать название`,
             en: `${battleRoyale ? "Battle Royale" : "Random build"} for ${ROLE_LABEL[role].en} — click a perk to copy its name`,
@@ -1813,7 +1813,7 @@ export function RandomizerBoard() {
                     en: "Not enough perks in the pool",
                   })}
             </p>
-            <p className="text-sm text-muted">
+            <p className="text-hint text-muted">
               {battleRoyale
                 ? t({
                     ru: `Вы скопировали билды из всех доступных перков ${ROLE_LABEL[role].ru}.`,
@@ -1970,7 +1970,7 @@ export function RandomizerBoard() {
           grows with every shortcut added while a label on the control does
           not — and this row reading as the complete set while omitting
           them was the actual problem. */}
-      <p className="-mt-1 flex flex-wrap items-center justify-center gap-x-1 gap-y-1 text-[0.6875rem] text-muted pointer-coarse:hidden">
+      <p className="-mt-1 flex flex-wrap items-center justify-center gap-x-1 gap-y-1 text-hint text-muted pointer-coarse:hidden">
         <kbd className="rounded border border-border bg-surface px-1 py-0.5 font-sans">
           Space
         </kbd>
@@ -2021,7 +2021,7 @@ export function RandomizerBoard() {
                   ? perks.length === 0 && loadoutPieces.length === 0
                   : perks.length === 0
           }
-          className="tap flex w-full items-center justify-center gap-1.5 rounded-full border border-transparent px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:border-border hover:bg-surface-hover hover:text-foreground disabled:pointer-events-none disabled:opacity-40 sm:w-auto"
+          className="tap flex w-full items-center justify-center gap-1.5 rounded-full border border-transparent px-3 py-1.5 text-control font-medium text-muted transition-colors hover:border-border hover:bg-surface-hover hover:text-foreground disabled:pointer-events-none disabled:opacity-40 sm:w-auto"
         >
           <Copy className="size-3.5" />
           {mode === "loadout"
@@ -2038,7 +2038,7 @@ export function RandomizerBoard() {
             ru: "Ссылка на этот билд для обычного просмотра — не для OBS, для этого есть отдельная кнопка «Оверлей OBS».",
             en: "A link to view this exact build — not for OBS, use the separate “OBS Overlay” button for that.",
           })}
-          className="tap flex w-full items-center justify-center gap-1.5 rounded-full border border-transparent px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:border-border hover:bg-surface-hover hover:text-foreground sm:w-auto"
+          className="tap flex w-full items-center justify-center gap-1.5 rounded-full border border-transparent px-3 py-1.5 text-control font-medium text-muted transition-colors hover:border-border hover:bg-surface-hover hover:text-foreground sm:w-auto"
         >
           <Link2 className="size-3.5" />
           {t({ ru: "Поделиться", en: "Share" })}
