@@ -116,7 +116,7 @@ test("outside the slot machine the site is completely silent", async ({ page, co
   // copying, pinning.
   await page.getByRole("button", { name: "Сгенерировать новый билд" }).click();
   await page.keyboard.press("2");
-  await page.getByRole("button", { name: /^Копировать$/ }).first().click();
+  await page.getByRole("button", { name: /^Копировать: / }).first().click();
   await page.waitForTimeout(700);
 
   expect(

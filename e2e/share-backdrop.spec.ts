@@ -30,7 +30,7 @@ test("the fog belongs to the build", async ({ page }) => {
   // An unrelated re-render must not repaint it. The memo is keyed on the
   // build, and a fresh vortex on every render would mean the picture was not
   // really of anything.
-  await page.getByRole("button", { name: /^Копировать$/ }).first().click();
+  await page.getByRole("button", { name: /^Копировать: / }).first().click();
   await page.waitForTimeout(300);
   expect(await backdrops(page), "an unrelated render changed the artwork").toEqual(first);
 

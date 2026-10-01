@@ -277,6 +277,34 @@ export function PerkGrid({
                   >
                     <Info className="size-3.5" />
                   </button>
+
+                  {/* Copy, which used to be a full-width labelled button at
+                      the foot of the card. The word appeared five times in
+                      one view — four cards plus "Copy full build" — and each
+                      card spent about a third of its height saying it.
+
+                      stopPropagation is load-bearing and was on the old
+                      button too: the card body opens the description, and
+                      without this, copying would open it as well. See
+                      lib/focus.ts for why that distinction is delicate.
+
+                      Named after the perk rather than just "Copy": four
+                      buttons on screen all announcing "Copy" tell a screen
+                      reader nothing about which one. Same shape the Info
+                      button beside it already uses. */}
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onCopy(perk);
+                    }}
+                    aria-label={
+                      t({ ru: "Копировать:", en: "Copy:" }) + " " + perk.name[language]
+                    }
+                    className={CORNER_BUTTON}
+                  >
+                    <Copy className="size-3.5" />
+                  </button>
                 </div>
 
                 {/* eslint-disable-next-line @next/next/no-img-element -- next/image ignores basePath for unoptimized runtime src, see lib/asset-path.ts */}
@@ -288,18 +316,6 @@ export function PerkGrid({
                   className="size-24 rounded-xl icon-art object-cover transition-transform group-hover:scale-105 sm:size-28 lg:size-32"
                 />
                 <span className="text-xs font-medium text-foreground">{perk.name[language]}</span>
-
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onCopy(perk);
-                  }}
-                  className="tap mt-auto flex w-full items-center justify-center gap-1.5 rounded-lg border border-border py-1.5 text-xs font-medium text-muted transition-colors hover:border-accent/50 hover:bg-accent/10 hover:text-accent"
-                >
-                  <Copy className="size-3.5" />
-                  {t({ ru: "Копировать", en: "Copy" })}
-                </button>
               </motion.div>
             );
           })}
