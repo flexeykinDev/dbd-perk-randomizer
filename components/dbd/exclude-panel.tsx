@@ -78,6 +78,50 @@ export function ExcludePanel({
 
   const activeCount = perksForRole.filter((p) => !excludedSlugs.has(p.slug)).length;
 
+  /* How many perks each tag would show, if you clicked only that one.
+  
+     Narrowed by the state filter and the search, NOT by the other tags.
+     Both halves of that are deliberate:
+  
+     The state filter and the search describe the list you are looking at.
+     A tag reading "Aura 14" while you are filtered to Disabled and only
+     three of those are disabled is a lie about what clicking will do, and
+     it is the lie you would act on.
+  
+     The tags do not narrow each other because they are a multi-select OR
+     group: picking Healing would make every other tag's number drop, for a
+     reason nothing on screen explains, and picking a second tag is a
+     perfectly sensible thing to do. A number that moves when you touch a
+     different control is worse than no number.
+  
+     So each count answers exactly one question — "how many would this
+     chip show on its own, here?" — and the sum can exceed the list length
+     because a perk can carry several tags.
+  
+     One pass over the already-narrowed list, memoised: the tags live on
+     each perk (see lib/perk-tags.ts, written by the scraper) so this is a
+     cheap derivation, but it is still O(perks x tags) on every keystroke
+     if left in the render body. */
+  const tagCounts = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    const counts = new Map<string, number>();
+    for (const tag of tags) counts.set(tag.id, 0);
+    for (const perk of perksForRole) {
+      if (status === "active" && excludedSlugs.has(perk.slug)) continue;
+      if (status === "disabled" && !excludedSlugs.has(perk.slug)) continue;
+      if (status === "favorite" && !favoriteSlugs.has(perk.slug)) continue;
+      if (query) {
+        const haystack = `${perk.name.en} ${perk.name.ru}`.toLowerCase();
+        if (!haystack.includes(query)) continue;
+      }
+      for (const tagId of getTagsForPerk(perk)) {
+        const current = counts.get(tagId);
+        if (current !== undefined) counts.set(tagId, current + 1);
+      }
+    }
+    return counts;
+  }, [perksForRole, tags, status, search, excludedSlugs, favoriteSlugs]);
+
   const filtered = useMemo(() => {
     const query = search.trim().toLowerCase();
     let list = perksForRole.filter((perk) => {
@@ -258,14 +302,38 @@ export function ExcludePanel({
                   </p>
                 )}
 
-                <div className="flex flex-wrap items-center gap-1.5">
+                {/* Two groups, two rows, each labelled.
+                
+                    They were one wrapping row with a 1px rule between them,
+                    and a divider inside a flex-wrap row cannot know which
+                    visual line it landed on — the moment the chips wrapped,
+                    the only thing separating eleven chips into two groups
+                    was sitting in the middle of a row. Same incompatibility
+                    the board's control panel documents.
+                
+                    They answer different questions: the first picks WHICH
+                    perks, the second picks WHAT KIND. One from each is a
+                    sensible thing to do, and the old flat list never said
+                    so. Labelled rather than just spaced, because the state
+                    row is single-select and the tag row is multi-select and
+                    nothing about a chip's shape says which. */}
+                <div
+                  role="radiogroup"
+                  aria-label={t({ ru: "Какие перки показывать", en: "Which perks to show" })}
+                  className="flex flex-wrap items-center gap-1.5"
+                >
+                  <span className="mr-0.5 text-hint text-muted">
+                    {t({ ru: "Показывать:", en: "Show:" })}
+                  </span>
                   {(["all", "active", "disabled", "favorite"] as const).map((option) => (
                     <button
                       key={option}
                       type="button"
+                      role="radio"
+                      aria-checked={status === option}
                       onClick={() => setStatus(option)}
                       className={cn(
-                        "flex items-center gap-1 rounded-full border px-3 py-1 text-[0.6875rem] font-medium transition-colors",
+                        "flex items-center gap-1 rounded-full border px-3 py-1 text-hint font-medium transition-colors",
                         status === option
                           ? cn(roleColor.border, roleColor.bg, roleColor.text)
                           : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
@@ -281,22 +349,45 @@ export function ExcludePanel({
                             : t({ ru: "Избранные", en: "Favorites" })}
                     </button>
                   ))}
-                  <span className="mx-1 h-4 w-px bg-border" aria-hidden />
-                  {tags.map((tag) => (
-                    <button
-                      key={tag.id}
-                      type="button"
-                      onClick={() => toggleTag(tag.id)}
-                      className={cn(
-                        "rounded-full border px-3 py-1 text-[0.6875rem] font-medium transition-colors",
-                        selectedTags.has(tag.id)
-                          ? "border-accent/50 bg-accent/15 text-accent"
-                          : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
-                      )}
-                    >
-                      {t({ ru: tag.ru, en: tag.en })}
-                    </button>
-                  ))}
+                </div>
+
+                <div
+                  role="group"
+                  aria-label={t({ ru: "Фильтр по типу перка", en: "Filter by perk type" })}
+                  className="flex flex-wrap items-center gap-1.5"
+                >
+                  <span className="mr-0.5 text-hint text-muted">
+                    {t({ ru: "Тип:", en: "Type:" })}
+                  </span>
+                  {tags.map((tag) => {
+                    const count = tagCounts.get(tag.id) ?? 0;
+                    return (
+                      <button
+                        key={tag.id}
+                        type="button"
+                        aria-pressed={selectedTags.has(tag.id)}
+                        onClick={() => toggleTag(tag.id)}
+                        className={cn(
+                          "flex items-center gap-1.5 rounded-full border px-3 py-1 text-hint font-medium transition-colors",
+                          selectedTags.has(tag.id)
+                            ? "border-accent/50 bg-accent/15 text-accent"
+                            : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
+                          // Nothing to show, so say so rather than offering an
+                          // empty list. Still clickable — disabling it would
+                          // change behaviour, and the number is the warning.
+                          count === 0 && !selectedTags.has(tag.id) && "opacity-50",
+                        )}
+                      >
+                        {t({ ru: tag.ru, en: tag.en })}
+                        {/* aria-hidden: the count is a preview for the eye.
+                            A screen reader reading "Aura 14" as the button's
+                            name would make the name change as you type. */}
+                        <span aria-hidden className="tabular-nums opacity-60">
+                          {count}
+                        </span>
+                      </button>
+                    );
+                  })}
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2">
