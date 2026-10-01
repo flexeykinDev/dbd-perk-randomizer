@@ -14,6 +14,7 @@ import { useDescription } from "@/lib/descriptions";
 import { DescriptionSkeleton } from "./perk-grid";
 import { useModal } from "@/lib/use-modal";
 import { ROLE_COLOR } from "@/lib/role-color";
+import { CORNER_BUTTON } from "./card-affordance";
 import { cn } from "@/lib/cn";
 import { GENERAL_CHARACTER } from "@/lib/types";
 import { useT } from "@/lib/i18n";
@@ -222,7 +223,7 @@ function PieceSlot({
   const dim = size === "lg" ? "size-24 sm:size-28 lg:size-32" : "size-16 sm:size-20 lg:size-24";
   const labelWidth = size === "lg" ? "w-24 sm:w-28 lg:w-32" : "w-16 sm:w-20 lg:w-24";
   return (
-    <div className="flex flex-col items-center gap-1">
+    <div className="group flex flex-col items-center gap-1">
       <div className={cn(dim, "relative shrink-0")}>
         <AnimatePresence mode="wait">
           {piece ? (
@@ -299,6 +300,24 @@ function PieceSlot({
                 alt={piece.name[language]}
                 className="size-full icon-art object-cover"
               />
+              {/* stopPropagation, because this one sits INSIDE the tile.
+                  The old button was a sibling below it and never had to
+                  care; here the tile itself opens the description, and
+                  without this every copy would open it too. Same hazard
+                  the perk cards have — see lib/focus.ts. */}
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onCopy(piece);
+                }}
+                aria-label={
+                  t({ ru: "Копировать:", en: "Copy:" }) + " " + piece.name[language]
+                }
+                className={cn(CORNER_BUTTON, "absolute top-1 right-1 z-10")}
+              >
+                <Copy className="size-3.5" />
+              </button>
             </motion.div>
           ) : (
             <motion.div
@@ -321,36 +340,7 @@ function PieceSlot({
       >
         {piece ? piece.name[language] : " "}
       </span>
-      {piece && <PieceCopyButton size={size} onClick={() => onCopy(piece)} t={t} />}
     </div>
-  );
-}
-
-/** A small, always-visible "Copy" button under a loadout piece — matches
- *  PerkGrid's card treatment (see perk-grid.tsx) instead of the tiny
- *  hover-only icon this replaced, which a touch device could never
- *  reveal at all. */
-function PieceCopyButton({
-  size,
-  onClick,
-  t,
-}: {
-  size: "lg" | "sm";
-  onClick: () => void;
-  t: TFn;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn(
-        "tap flex items-center justify-center gap-1 rounded-md border border-border text-muted transition-colors hover:border-accent/50 hover:bg-accent/10 hover:text-accent",
-        size === "lg" ? "w-24 py-1 text-[0.625rem] sm:w-28 lg:w-32" : "w-16 py-0.5 text-[0.5625rem] sm:w-20 lg:w-24",
-      )}
-    >
-      <Copy className={size === "lg" ? "size-3" : "size-2.5"} />
-      {t({ ru: "Копировать", en: "Copy" })}
-    </button>
   );
 }
 

@@ -16,22 +16,12 @@ import { useDescription } from "@/lib/descriptions";
 import { useModal } from "@/lib/use-modal";
 import { wrongDataUrl } from "@/lib/repo";
 import { Highlighted } from "./highlighted-text";
+import {
+  CORNER_BUTTON,
+  CORNER_BUTTON_BASE,
+  CORNER_BUTTON_IDLE,
+} from "./card-affordance";
 
-/* The small circular controls in a perk card's top-right corner. Split into
-   base/idle so the padlock can reuse the shape while supplying its own
-   always-visible pinned colours. The dark plate is deliberate and doesn't
-   follow the theme: these sit on top of the perk artwork, which is light
-   line-art in both themes, so a themed plate would vanish on one of them. */
-/* `pointer-coarse` is doing real work here, not polish. These were
-   `opacity-0` until hover, and a phone never hovers — so on touch the
-   reroll and the padlock were invisible *and* 22px, which means
-   single-slot reroll and pinning simply did not exist on mobile. Revealed
-   and enlarged where there is no hover to reveal them. */
-const CORNER_BUTTON_BASE =
-  "flex size-6 pointer-coarse:size-10 items-center justify-center rounded-full backdrop-blur-sm transition-opacity disabled:pointer-events-none disabled:opacity-30";
-const CORNER_BUTTON_IDLE =
-  "bg-black/40 text-white/80 opacity-0 pointer-coarse:opacity-100 group-hover:opacity-100 hover:bg-black/60 hover:text-white focus-visible:opacity-100";
-const CORNER_BUTTON = cn(CORNER_BUTTON_BASE, CORNER_BUTTON_IDLE);
 
 /* The reroll button carries its keyboard digit, so it is a pill on pointer
    devices rather than a circle. Back to a plain circle under
