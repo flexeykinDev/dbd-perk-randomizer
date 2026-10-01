@@ -48,6 +48,7 @@ import { useRollSession, type RollSession } from "@/lib/use-roll-session";
 import { useShareExport } from "@/lib/use-share-export";
 import { PoolStatsPanel } from "./pool-stats-panel";
 import { BoardToolbar } from "./board-toolbar";
+import { ShareExportStage } from "./share-export-stage";
 import { SetupDisclosure } from "./setup-disclosure";
 import { getSeenSlugs, recordRoll } from "@/lib/stats";
 import {
@@ -81,7 +82,6 @@ import { publishObsState } from "@/lib/obs-sync";
 import { useTwitchSettings } from "@/lib/use-twitch-settings";
 import { PerkGrid } from "./perk-grid";
 import { SquadGrids } from "./squad-grids";
-import { SquadShareCard } from "./squad-share-card";
 import { LoadoutGrid } from "./loadout-grid";
 import { CopyToast } from "./copy-toast";
 import { ExcludePanel } from "./exclude-panel";
@@ -93,7 +93,6 @@ import { VaultModal } from "./vault-modal";
 import { ToggleSwitch } from "./toggle-switch";
 import { BattleRoyaleControl } from "./battle-royale-control";
 import {
-  ShareCard,
   type ShareCardPiece,
 } from "./share-card";
 import { DownloadImageButton } from "./download-image-button";
@@ -1909,52 +1908,24 @@ export function RandomizerBoard() {
           perkGridView
         ))}
 
-      {/* Off-screen — exists only so html2canvas has real, laid-out DOM to
-          rasterize when a download button is clicked; never visible itself. */}
-      <div
-        aria-hidden
-        style={{
-          position: "fixed",
-          top: 0,
-          left: -9999,
-          pointerEvents: "none",
-        }}
-      >
-        {squadActive && squad.squad.length > 0 && (
-          <SquadShareCard
-            ref={squadShareCardRef}
-            builds={squad.squad.map((build) =>
-              build.map((perk) => ({
-                slug: perk.slug,
-                icon: perk.icon,
-                name: perk.name,
-              })),
-            )}
-            role={role}
-            language={language}
-            backdrop={shareBackdrops.landscape}
-          />
-        )}
-        <ShareCard
-          ref={shareCardRef}
-          pieces={sharePieces}
-          mode={mode}
-          role={role}
-          language={language}
-          character={shareCharacter}
-          backdrop={shareBackdrops.landscape}
-        />
-        <ShareCard
-          ref={storyShareCardRef}
-          pieces={sharePieces}
-          mode={mode}
-          role={role}
-          language={language}
-          character={shareCharacter}
-          layout="story"
-          backdrop={shareBackdrops.story}
-        />
-      </div>
+      <ShareExportStage
+        squadBuilds={
+          squadActive
+            ? squad.squad.map((build) =>
+                build.map((perk) => ({ slug: perk.slug, icon: perk.icon, name: perk.name })),
+              )
+            : []
+        }
+        squadRef={squadShareCardRef}
+        shareRef={shareCardRef}
+        storyRef={storyShareCardRef}
+        pieces={sharePieces}
+        mode={mode}
+        role={role}
+        language={language}
+        character={shareCharacter}
+        backdrops={shareBackdrops}
+      />
 
       {/* What the four have in common, when they have anything.
       

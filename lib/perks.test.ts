@@ -99,7 +99,8 @@ test("isNewPerk reads the window, not the calendar", () => {
 
 test("a perk with no tags reads as matching nothing, not as an error", () => {
   // Perks scraped before tags were stored have no `tags` key at all.
-  const { tags: _omitted, ...withoutTags } = perks[0];
+  const withoutTags = { ...perks[0] };
+  delete (withoutTags as { tags?: string[] }).tags;
   assert.deepEqual(getTagsForPerk(withoutTags as typeof perks[0]), []);
 });
 

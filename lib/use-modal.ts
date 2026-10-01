@@ -52,7 +52,13 @@ export function useModal({
   useEffect(() => {
     if (!open) return;
     openerRef.current = document.activeElement as HTMLElement | null;
-    cardRef.current?.focus();
+    /* preventScroll, because focus() otherwise scrolls its target into
+       view. A fixed dialog has nowhere to scroll to, so this changed
+       nothing for eight of them — but the overlay setup also renders as a
+       PAGE now (#/stream), and there the browser dutifully scrolled the
+       card up under its own header on load. Focus still moves in, which is
+       what the dialog contract needs; the viewport simply stays put. */
+    cardRef.current?.focus({ preventScroll: true });
     return () => {
       // Back to whatever opened it, so closing a dialog doesn't dump the
       // caret at the top of the document.

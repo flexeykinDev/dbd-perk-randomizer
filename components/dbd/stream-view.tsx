@@ -89,7 +89,7 @@ export function StreamView() {
           drawn underneath the thing it is meant to escape. Caught by its own
           test: the click timed out because the button was behind the
           overlay. */}
-      <header className="fixed inset-x-0 top-0 z-[60] flex flex-wrap items-center justify-between gap-3 border-b border-border bg-surface px-4 py-3">
+      <header className="sticky top-0 z-[60] flex flex-wrap items-center justify-between gap-3 border-b border-border bg-surface px-4 py-3">
         <div>
           <h1 className="text-control font-semibold text-foreground">
             {t({ ru: "Настройка оверлея", en: "Overlay setup" })}
@@ -114,10 +114,10 @@ export function StreamView() {
         </button>
       </header>
 
-      {/* Clears the fixed bar above. */}
-      <div className="relative flex-1 pt-16">
+      <div className="relative flex-1 pt-6">
         <ObsOverlayModal
           open
+          presentation="page"
           onClose={leaveStreamMode}
           perks={perks}
           mode="perks"

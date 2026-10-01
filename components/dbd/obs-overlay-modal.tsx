@@ -78,6 +78,7 @@ export function ObsOverlayModal({
   onPieceVisibilityChange,
   twitch,
   hold,
+  presentation = "dialog",
 }: {
   open: boolean;
   onClose: () => void;
@@ -99,6 +100,15 @@ export function ObsOverlayModal({
   twitch: TwitchSettings;
   /** Owned by the board, because the publish effect it gates lives there. */
   hold: ObsHold;
+  /** "dialog" is the board's way in: a card over a dimmed page, dismissed
+   *  with Escape. "page" is #/stream, where this IS the page — no backdrop
+   *  to dim, no width to cap, and no close button, because the surface
+   *  around it already carries the way back.
+   *
+   *  The panels below do not change. Rendering them twice was the obvious
+   *  alternative and the wrong one: thirty-one controls kept in step by
+   *  hand is thirty-one chances to drift. */
+  presentation?: "dialog" | "page";
 }) {
   const t = useT();
   const titleId = useId();
@@ -108,6 +118,7 @@ export function ObsOverlayModal({
   // Escape key and focus handling it was missing, and keeps all eight
   // dialogs behaving the same way.
   const { attachCard, dialogProps } = useModal({ open, onClose, labelledBy: titleId });
+  const isPage = presentation === "page";
   const [panelTab, setPanelTab] = useState<PanelTab>("overlay");
   const [obsSetupOpen, setObsSetupOpen] = useState(false);
 
@@ -135,24 +146,38 @@ export function ObsOverlayModal({
           initial={{ opacity: 0, pointerEvents: "none" }}
           animate={{ opacity: 1, pointerEvents: "auto" }}
           exit={{ opacity: 0, pointerEvents: "none" }}
-          onClick={onClose}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+          onClick={isPage ? undefined : onClose}
+          className={cn(
+            isPage
+              ? "w-full"
+              : "fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm",
+          )}
         >
           <motion.div
-            initial={{ opacity: 0, scale: 0.96, y: 10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.96, y: 10 }}
+            initial={isPage ? false : { opacity: 0, scale: 0.96, y: 10 }}
+            animate={isPage ? undefined : { opacity: 1, scale: 1, y: 0 }}
+            exit={isPage ? undefined : { opacity: 0, scale: 0.96, y: 10 }}
             transition={{ type: "spring", stiffness: 400, damping: 34 }}
             onClick={(e) => e.stopPropagation()}
             ref={attachCard}
             {...dialogProps}
             aria-describedby={descId}
-            className="modal-card w-full max-w-lg overflow-y-auto rounded-2xl border border-border bg-surface p-5 shadow-2xl lg:max-w-xl"
+            className={cn(
+              isPage
+                /* Wide, because that was the whole argument for a page. The
+                   dialog caps at max-w-lg to stay dismissible on a phone;
+                   here the 31 controls get the room they were cramped out
+                   of, and the two-column split below lets the preview sit
+                   beside the settings instead of under them. */
+                ? "mx-auto w-full max-w-5xl px-4 pb-16"
+                : "modal-card w-full max-w-lg overflow-y-auto rounded-2xl border border-border bg-surface p-5 shadow-2xl lg:max-w-xl",
+            )}
           >
             <div aria-live="polite" className="sr-only">
               {copy.announcement}
             </div>
 
+            {!isPage && (
             <header className="flex items-start justify-between gap-3">
               <div className="flex items-center gap-2.5">
                 <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-accent/15 text-accent">
@@ -196,6 +221,7 @@ export function ObsOverlayModal({
                 <X className="size-4" />
               </button>
             </header>
+            )}
 
             {/* Tabs rather than one long scroll: the Twitch form and the
                 constructor are each occasional and opt-in, and inline they
