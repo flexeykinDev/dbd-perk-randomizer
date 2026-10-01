@@ -18,6 +18,7 @@ import { getPerksByRole } from "@/lib/perks";
 import { withBasePath } from "@/lib/asset-path";
 import { cn } from "@/lib/cn";
 import { ROLE_COLOR } from "@/lib/role-color";
+import { CORNER_REVEAL } from "./card-affordance";
 import { useT } from "@/lib/i18n";
 import { useModal } from "@/lib/use-modal";
 import { getCharacterName } from "@/lib/character-name";
@@ -435,12 +436,29 @@ export function ExcludePanel({
                         tabIndex={0}
                         onClick={() => onToggle(perk.slug)}
                         onKeyDown={(e) => {
+                          /* Only the card's OWN keys.
+                          
+                             The favourite button sits inside this card, so
+                             Enter pressed on it bubbles here — and this
+                             handler's preventDefault cancelled the button's
+                             own activation before it happened. Measured:
+                             tabbing to the star and pressing Enter toggled
+                             the perk's EXCLUSION and left the favourite
+                             untouched. It predates the star being hidden,
+                             but a control that is only revealed on focus had
+                             better work when you get there.
+                          
+                             perk-grid.tsx's card avoids this by accident:
+                             its isKeyboardFocused guard compares against
+                             document.activeElement, which is the child when
+                             a child is focused. This one had no guard. */
+                          if (e.target !== e.currentTarget) return;
                           if (e.key !== "Enter" && e.key !== " ") return;
                           e.preventDefault();
                           onToggle(perk.slug);
                         }}
                         className={cn(
-                          "relative flex cursor-pointer flex-col items-center gap-1 rounded-xl border p-2 text-center transition-all",
+                          "group relative flex cursor-pointer flex-col items-center gap-1 rounded-xl border p-2 text-center transition-all",
                           excluded
                             ? "border-border/40 opacity-35 grayscale"
                             : cn("border-border", roleColor.hoverBorder),
@@ -462,11 +480,21 @@ export function ExcludePanel({
                               ? t({ ru: "Убрать из избранного", en: "Remove from favorites" })
                               : t({ ru: "Добавить в избранное", en: "Add to favorites" })
                           }
+                          /* A set favourite is always drawn — it is the
+                             state, not an affordance. An unset one is the
+                             offer to set it, and 176 identical outlined
+                             stars is 176 marks that mean nothing until one
+                             of them does. So the empty star follows the
+                             same reveal the card controls elsewhere use.
+                          
+                             Absolutely positioned, so nothing reflows when
+                             it appears; the space was never in the flow to
+                             begin with. */
                           className={cn(
-                            "absolute top-1 left-1 flex size-4 items-center justify-center rounded-full bg-black/60 transition-colors",
+                            "absolute top-1 left-1 flex size-4 items-center justify-center rounded-full bg-black/60 transition-opacity",
                             favoriteSlugs.has(perk.slug)
-                              ? "text-amber-400"
-                              : "text-white/50 hover:text-white",
+                              ? "text-amber-400 opacity-100"
+                              : cn(CORNER_REVEAL, "text-white/50 hover:text-white"),
                           )}
                         >
                           <Star
