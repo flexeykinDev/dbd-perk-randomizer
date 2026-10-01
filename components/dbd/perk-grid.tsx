@@ -129,7 +129,13 @@ export function PerkGrid({
                 }}
                 aria-label={t({ ru: "Описание:", en: "Description:" }) + " " + perk.name[language]}
                 className={cn(
-                  "group relative flex cursor-pointer flex-col items-center gap-2 rounded-2xl border border-border bg-surface p-3 text-center transition-colors hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:outline-none",
+                  "group relative flex cursor-pointer flex-col items-center gap-2 rounded-2xl border bg-surface p-3 text-center transition-colors hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:outline-none",
+                  /* The card's edge carries the role instead of the neutral
+                     border every other surface uses. Four of these in a row
+                     is the largest thing on the board, so it is the cheapest
+                     place to say which side you are playing — and it costs
+                     no layout, only a border colour. */
+                  roleColor.edge,
                   roleColor.hoverBorder,
                   /* A pinned card is marked on the CARD, not only by the
                      padlock in its corner.

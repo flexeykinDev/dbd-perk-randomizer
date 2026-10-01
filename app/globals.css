@@ -37,6 +37,24 @@
      surface, so each theme gets a shade tuned for its own ground. */
   --highlight-survivor: #7dd3fc;
   --highlight-killer: #fda4af;
+
+  /* The two colours that mean something, as tokens rather than Tailwind
+     palette steps.
+  
+     lib/role-color.ts carried ONE value per role for both themes, and that
+     is why the roles read so weakly. Measured against the real surfaces,
+     sky-400 and rose-400 score 7.46 and 5.94 on the dark card but 2.14 and
+     2.69 on the light one, against an AA floor of 4.5. Unusable at full
+     strength in one theme, so every use was diluted to /10 and /40 until it
+     was safe — and at those alphas the two roles paint #1c2f3b and #33252d,
+     28.7 apart out of 441, which is LESS than the distance between a card
+     and its own border. Two roles less distinguishable than ordinary chrome.
+  
+     Theme-aware, the way --highlight-* above already is, so the colour can
+     be used at full strength and actually be seen. Dark keeps the values it
+     had; light takes the shades this project already validated. */
+  --role-survivor: #38bdf8;
+  --role-killer: #fb7185;
 }
 
 :root[data-theme="light"] {
@@ -61,6 +79,10 @@
      on near-black and would sit at roughly 2:1 on white. */
   --highlight-survivor: #0369a1;
   --highlight-killer: #be123c;
+  /* 5.93 and 6.29 on white — the dark theme's sky-400/rose-400 would be
+     2.14 and 2.69 here, which is the whole reason these are tokens. */
+  --role-survivor: #0369a1;
+  --role-killer: #be123c;
 }
 
 @theme inline {
@@ -73,6 +95,8 @@
   --color-accent: var(--accent);
   --color-accent-strong: var(--accent-strong);
   --color-accent-foreground: var(--accent-foreground);
+  --color-role-survivor: var(--role-survivor);
+  --color-role-killer: var(--role-killer);
   --color-highlight-survivor: var(--highlight-survivor);
   --color-highlight-killer: var(--highlight-killer);
   --font-sans: var(--font-geist-sans);

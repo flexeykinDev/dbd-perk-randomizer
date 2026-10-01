@@ -275,7 +275,9 @@ function PieceSlot({
                 piece.name[language]
               }
               className={cn(
-                "absolute inset-0 flex cursor-pointer items-center justify-center overflow-hidden rounded-xl border border-border bg-surface transition-colors hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:outline-none",
+                "absolute inset-0 flex cursor-pointer items-center justify-center overflow-hidden rounded-xl border bg-surface transition-colors hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:outline-none",
+                // Same edge as the perk cards — "All" mode shows both.
+                roleColor.edge,
                 roleColor.hoverBorder,
               )}
             >

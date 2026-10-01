@@ -1471,9 +1471,22 @@ export function RandomizerBoard() {
                 type="button"
                 onClick={() => selectRole(r)}
                 className={cn(
-                  "tap rounded-full border px-5 py-1.5 text-sm font-medium capitalize transition-colors",
+                  "tap rounded-full border px-5 py-1.5 text-sm font-medium capitalize",
+                  /* The one control whose whole job is saying which side you
+                     are playing, so it carries the colour at full strength
+                     rather than the /10 wash it used to. See the note in
+                     lib/role-color.ts for what that wash actually painted.
+
+                     No `transition-colors`, unlike every other pill here.
+                     The URL's role is applied after mount, so this button
+                     changes state on load — and animating between a muted
+                     label on bare background and a dark label on a saturated
+                     fill passes through pairs that are briefly unreadable.
+                     e2e/contrast.spec.ts caught one at 3.65:1 under load.
+                     The old /10 wash hid this by never moving far enough to
+                     matter. An instant swap has no midpoint to fail. */
                   role === r
-                    ? cn(c.border, c.bg, c.text)
+                    ? c.fill
                     : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
                 )}
               >
