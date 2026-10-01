@@ -4,6 +4,10 @@ A random build generator for **Dead by Daylight**. Perks, items, add-ons and
 offerings come from the official wiki every week, so a new chapter shows up on
 the site without anyone editing a list.
 
+**Most randomizers are a list somebody typed out once.** This one re-reads the
+wiki every Monday and ships the diff, so the week a chapter lands, its perks
+are already in the pool. The date it last checked is printed on the site.
+
 <p>
   <a href="https://github.com/flexeykinDev/dbd-perk-randomizer/actions/workflows/ci.yml"><img src="https://github.com/flexeykinDev/dbd-perk-randomizer/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="https://github.com/flexeykinDev/dbd-perk-randomizer/actions/workflows/update-perks.yml"><img src="https://github.com/flexeykinDev/dbd-perk-randomizer/actions/workflows/update-perks.yml/badge.svg" alt="Update DBD perk and loadout data"></a>

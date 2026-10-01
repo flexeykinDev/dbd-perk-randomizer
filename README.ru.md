@@ -4,6 +4,11 @@
 подношения каждую неделю подтягиваются с официальной вики, поэтому новая глава
 появляется на сайте без правок в коде.
 
+**Большинство рандомайзеров — это список, который кто-то один раз набрал
+руками.** Этот каждый понедельник перечитывает вики и выкладывает разницу,
+поэтому на той же неделе, когда выходит глава, её перки уже в пуле. Дата
+последней проверки напечатана на сайте.
+
 <p>
   <a href="https://github.com/flexeykinDev/dbd-perk-randomizer/actions/workflows/ci.yml"><img src="https://github.com/flexeykinDev/dbd-perk-randomizer/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="https://github.com/flexeykinDev/dbd-perk-randomizer/actions/workflows/update-perks.yml"><img src="https://github.com/flexeykinDev/dbd-perk-randomizer/actions/workflows/update-perks.yml/badge.svg" alt="Обновление данных DBD"></a>
@@ -80,6 +85,22 @@
 | Появление | rise, drop, flip, glide, deal, spin, none  | `anim=`  |
 
 Старая ссылка без этих параметров выглядит ровно так же, как раньше.
+
+## Встроить к себе
+
+Рандомайзер можно вставить в свою страницу:
+
+```html
+<iframe
+  src="https://flexeykindev.github.io/dbd-perk-randomizer/?r=s&n=4#/embed"
+  width="360" height="240" loading="lazy" style="border:0"
+  title="DBD Perk Randomizer"></iframe>
+```
+
+`r=s` или `r=k` выбирает сторону, `n=1`…`5` — число перков. Оба параметра
+необязательны: `#/embed` сам по себе даёт билд выжившего из четырёх. Работает
+примерно от 320x220, роллит из полного пула перков и не делает собственных
+сетевых запросов.
 
 ## Приватность и сеть
 

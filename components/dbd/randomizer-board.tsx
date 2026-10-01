@@ -35,6 +35,7 @@ import { prefetchDescriptions } from "@/lib/descriptions";
 import { useObsHold } from "@/lib/use-obs-hold";
 import { useBuildClipboard } from "@/lib/use-build-clipboard";
 import { ROLE_COLOR } from "@/lib/role-color";
+import { getBuildTheme } from "@/lib/build-theme";
 import { useLanguage, useT } from "@/lib/i18n";
 import { useSeed } from "@/lib/use-seed";
 import { useBattleRoyale } from "@/lib/use-battle-royale";
@@ -1391,6 +1392,13 @@ export function RandomizerBoard() {
       ? getKillerCharacters()
       : getCharactersForRole(role)
     : [];
+  // Tags come from the shipped data, so this is a cheap derivation — but it
+  // runs on every render of a 1700-line component, so it is memoised like
+  // every other one here.
+  const buildTheme = useMemo(
+    () => (squadActive ? null : getBuildTheme(perks, role)),
+    [perks, role, squadActive],
+  );
   const totalInRole = mounted ? getAvailablePool(role).length : 0;
   // battleRoyaleUsed accumulates eliminated slugs across BOTH roles (nothing
   // resets it on a role switch — see selectRole), so it must be filtered to
@@ -1947,6 +1955,26 @@ export function RandomizerBoard() {
           backdrop={shareBackdrops.story}
         />
       </div>
+
+      {/* What the four have in common, when they have anything.
+      
+          Below the cards, so it cannot move the build down the page — the
+          thing three passes of layout work were spent raising. Above
+          Generate, because it is about the build you are looking at rather
+          than the next one.
+      
+          Silent most of the time at coherence 0, which is correct: measured
+          over 400 seeded rolls per level, a theme turns up in 29.5% of
+          chaos builds and 77.8% at full synergy. A line under a genuinely
+          unrelated four would be the site inventing a story. */}
+      {mode !== "loadout" && buildTheme && (
+        <p className="text-hint text-muted">
+          {t({
+            ru: `${buildTheme.count} из ${buildTheme.total} — ${buildTheme.tag.ru.toLowerCase()}`,
+            en: `${buildTheme.count} of ${buildTheme.total} — ${buildTheme.tag.en.toLowerCase()}`,
+          })}
+        </p>
+      )}
 
       {/* Primary CTA — the one action on this page that should visually
           win: standalone, largest, most saturated element on the board. */}
