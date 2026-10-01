@@ -36,6 +36,29 @@ updates:
         dependency-type: production
       dev:
         dependency-type: development
+
+    # Three majors that cannot be taken yet. Held here rather than closed
+    # by hand every Tuesday, because a grouped PR is all-or-nothing: one
+    # unmergeable bump holds the eight safe ones hostage.
+    ignore:
+      # Both are decided by eslint-config-next, which is pinned to next's
+      # version and brings its own tooling. typescript-eslint 8.71 — the
+      # newest that exists — supports TypeScript >=4.8.4 <6.1.0, so TS 7
+      # fails lint outright. eslint-plugin-react, bundled in the same
+      # config, still calls context.getFilename(), which eslint 10 removed.
+      # Neither is a setting in this repo. They unblock when a newer
+      # eslint-config-next ships, which follows next.
+      - dependency-name: typescript
+        update-types: [version-update:semver-major]
+      - dependency-name: eslint
+        update-types: [version-update:semver-major]
+      # This one tracks the Node that CI, the deploy and the scrapers all
+      # run on — 22, see the workflows — not the newest release line.
+      # Typing against Node 26 APIs the runtime does not have is how you
+      # get a green build that throws in production.
+      - dependency-name: "@types/node"
+        update-types: [version-update:semver-major]
+
     commit-message:
       # Matches the scrape bot's prefix, which is the only other automated
       # committer here. Everything written by a person is a plain sentence —
