@@ -24,6 +24,32 @@ export default defineConfig({
     // load and breaks every RU-text assertion below. Pin it to match what
     // the tests actually assert against.
     locale: "ru-RU",
+    /* Every spec runs as a RETURNING visitor, with the board's setup panel
+     * already open.
+     *
+     * Character, theme, coherence, pools, the overlay and the More menu sit
+     * behind one disclosure (components/dbd/setup-disclosure.tsx) so the
+     * build starts nearer the top of the page. It is collapsed on a first
+     * visit and its contents are unmounted while closed, which means a
+     * bare `goto` puts roughly a third of the suite in front of controls
+     * that are not in the DOM yet.
+     *
+     * Seeding the saved state is closer to the truth than making every
+     * spec click the disclosure open: the state persists, so anyone who
+     * has opened it once has it open from then on, which is every returning
+     * visitor. The first-visit path is not left untested — it has its own
+     * spec (setup-disclosure.spec.ts), and the layout measurements in
+     * viewports.spec.ts clear this flag on purpose, because the collapsed
+     * state is where the measurement means something. */
+    storageState: {
+      cookies: [],
+      origins: [
+        {
+          origin: "http://localhost:3100",
+          localStorage: [{ name: "dbd-randomizer:setup-open", value: "1" }],
+        },
+      ],
+    },
   },
   projects: [
     {

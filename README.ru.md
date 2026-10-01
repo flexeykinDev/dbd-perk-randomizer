@@ -100,8 +100,8 @@ npm install
 npm run dev        # localhost:3000
 npm run lint
 npm run build      # статический экспорт в out/
-npm test           # 206 юнит-тестов
-npm run test:e2e   # сначала сборка, потом 205 тестов Playwright по экспорту
+npm test           # 399 юнит-тестов
+npm run test:e2e   # сначала сборка, потом 238 тестов Playwright по экспорту
 ```
 
 `test:e2e` работает со статическим экспортом на порту 3100, а не с `next dev`,

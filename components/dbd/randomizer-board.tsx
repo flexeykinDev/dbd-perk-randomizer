@@ -39,6 +39,7 @@ import { useLanguage, useT } from "@/lib/i18n";
 import { useSeed } from "@/lib/use-seed";
 import { useBattleRoyale } from "@/lib/use-battle-royale";
 import { useSquad } from "@/lib/use-squad";
+import { useSetupDisclosure } from "@/lib/use-setup-disclosure";
 import { useCoherence } from "@/lib/use-coherence";
 import { useDailyStreak } from "@/lib/use-daily-streak";
 import { useExclusions } from "@/lib/use-exclusions";
@@ -46,6 +47,7 @@ import { useRollSession, type RollSession } from "@/lib/use-roll-session";
 import { useShareExport } from "@/lib/use-share-export";
 import { PoolStatsPanel } from "./pool-stats-panel";
 import { BoardToolbar } from "./board-toolbar";
+import { SetupDisclosure } from "./setup-disclosure";
 import { getSeenSlugs, recordRoll } from "@/lib/stats";
 import {
   parseLoadoutKey,
@@ -402,6 +404,7 @@ export function RandomizerBoard() {
      the roll itself is lib/squad-roll.ts. Only meaningful in "perks" mode:
      a squad of loadouts is a different question and nobody has asked it. */
   const squad = useSquad();
+  const setup = useSetupDisclosure();
   const squadActive = squad.active && mode === "perks";
   /* Pulled out because the mount effect below needs it in its dependency
      list. useSquad returns a fresh object each render, so depending on the
@@ -409,6 +412,7 @@ export function RandomizerBoard() {
      `show` is a stable useCallback and does not. */
   const showSquad = squad.show;
   const hydrateSquad = squad.hydrate;
+  const hydrateSetup = setup.hydrate;
   const battleRoyale = br.active;
   const battleRoyaleUsed = br.used;
   // Named for the mount effect and the eliminate callback below, so neither
@@ -559,6 +563,7 @@ export function RandomizerBoard() {
       hydrateDailyStreak();
       hydrateSquad();
       hydrateCoherence();
+      hydrateSetup();
       setPerkCount(loadPerkCount());
       setMode(loadMode());
       setLoadoutSlots(loadLoadoutSlots());
@@ -617,6 +622,7 @@ export function RandomizerBoard() {
     hydrateDailyStreak,
     showSquad,
     hydrateSquad,
+    hydrateSetup,
     hydrateCoherence,
     setCoherenceLevel,
     hydrateShared,
@@ -1500,29 +1506,13 @@ export function RandomizerBoard() {
         </div>
       </div>
 
-      {/* Contextual filters — kept in a bordered, divided panel (rather than
-          loose in the row above) so they read as one "roll settings" group
-          distinct from the role/mode identity controls.
 
-          Deliberately NOT `flex-wrap` + `divide-x` together: a divider is
-          just a border on one side of each non-first child, so it has no
-          idea which *visual line* that child landed on once the browser
-          starts wrapping — at whatever width leaves an odd 2-then-1 (or
-          1-then-2) split, the wrapped-away child's divider renders as an
-          orphan line with nothing beside it on that row. This is a known
-          divide-x/flex-wrap incompatibility, not something fixable by
-          tweaking spacing.
-
-          Fixed by making the layout binary instead of letting the browser
-          decide a wrap point: `flex-col` (one child per row, `divide-y` for
-          horizontal rules between them — always exactly as many dividers as
-          row boundaries, no ambiguity) below `sm`, `flex-row` with NO wrap
-          at all (`divide-x` for vertical rules — likewise unambiguous,
-          every divider sits between two real same-row neighbors) from `sm`
-          up. `overflow-x-auto` is the safety net for the rare width where
-          all 3 groups' combined content doesn't quite fit unwrapped — the
-          *panel* scrolls internally rather than either wrapping (bringing
-          the bug back) or blowing out the page's own width. */}
+      {/* Build size, pulled up beside role and mode: these three are the
+          primary toolbar. The test they pass and nothing else does is that
+          changing them changes what the NEXT roll produces, and you change
+          them between rolls. Theme and coherence also change the roll but
+          are set once a session, so they went into the disclosure with the
+          rest of the setup — see SetupDisclosure. */}
       <div className="flex w-full max-w-full flex-col items-start divide-y divide-border overflow-x-auto rounded-2xl border border-border bg-surface/40 sm:w-auto sm:flex-row sm:items-center sm:divide-x sm:divide-y-0">
         {mode !== "loadout" && (
           <div className="flex shrink-0 flex-wrap items-center justify-center gap-x-2 gap-y-1.5 px-4 py-1.5 text-sm sm:py-2">
@@ -1546,63 +1536,6 @@ export function RandomizerBoard() {
                 </button>
               ),
             )}
-          </div>
-        )}
-
-        {mode !== "loadout" && mounted && getTagsForRole(role).length > 0 && (
-          <div className="flex shrink-0 flex-wrap items-center justify-center gap-x-2 gap-y-1.5 px-4 py-1.5 text-sm sm:py-2">
-            <span className="text-muted">
-              {t({ ru: "Тема:", en: "Theme:" })}
-            </span>
-            <Dropdown
-              value={themeTag ?? ""}
-              onChange={(v) => selectTheme(v || null)}
-              label={t({ ru: "Тема билда", en: "Build theme" })}
-              className="border-border bg-background text-foreground"
-              options={[
-                { value: "", label: t({ ru: "Любая", en: "Any" }) },
-                ...getTagsForRole(role).map((tag) => ({
-                  value: tag.id,
-                  label: t({ ru: tag.ru, en: tag.en }),
-                })),
-              ]}
-            />
-          </div>
-        )}
-
-        {/* Sits beside Theme because the two answer neighbouring questions,
-            and reads as the softer of the pair on purpose: Theme narrows the
-            pool to one idea, this only tilts the draw and leaves every perk
-            reachable. */}
-        {mode !== "loadout" && mounted && (
-          <div className="flex shrink-0 flex-wrap items-center justify-center gap-x-2 gap-y-1.5 px-4 py-1.5 text-sm sm:py-2">
-            <span className="text-muted">
-              {t({ ru: "Связность:", en: "Coherence:" })}
-            </span>
-            <div
-              className="flex items-center gap-1"
-              role="radiogroup"
-              aria-label={t({ ru: "Связность билда", en: "Build coherence" })}
-            >
-              {COHERENCE_LEVELS.map((level) => (
-                <button
-                  key={level}
-                  type="button"
-                  role="radio"
-                  aria-checked={coherence.level === level}
-                  onClick={() => coherence.setLevel(level)}
-                  title={t(COHERENCE_HINT[level])}
-                  className={cn(
-                    "tap rounded-full border px-2.5 py-1 text-xs font-semibold transition-colors",
-                    coherence.level === level
-                      ? cn(roleColor.border, roleColor.bg, roleColor.text)
-                      : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
-                  )}
-                >
-                  {t(COHERENCE_LABEL[level])}
-                </button>
-              ))}
-            </div>
           </div>
         )}
 
@@ -1638,99 +1571,160 @@ export function RandomizerBoard() {
         )}
       </div>
 
-      {/* Character picker (Feature #2) — picks a specific character for the
-          portrait chip below and, in Perks mode with the toggle on,
-          guarantees their own teachable perks in the roll; in Loadout mode
-          for killer, it's what actually decides whose Power/add-ons get
-          rolled (see getRandomLoadout's forcedCharacter). A modal with a
-          search + portrait grid, not a single "reroll" button — Space/
-          Generate already rerolls the build at random, so this is
-          specifically for choosing *which* character, with random still
-          available as one option inside rather than the only one. */}
-      <div className="flex flex-wrap items-center justify-center gap-2">
-        {selectedCharacter ? (
-          <div className="flex items-center gap-2 rounded-full border border-border bg-surface/60 py-1 pr-1 pl-1.5">
+      <SetupDisclosure open={setup.open} onToggle={setup.toggle}>
+        <div className="flex w-full max-w-full flex-col items-start divide-y divide-border overflow-x-auto rounded-2xl border border-border bg-surface/40 sm:w-auto sm:flex-row sm:items-center sm:divide-x sm:divide-y-0">
+          {mode !== "loadout" && mounted && getTagsForRole(role).length > 0 && (
+            <div className="flex shrink-0 flex-wrap items-center justify-center gap-x-2 gap-y-1.5 px-4 py-1.5 text-sm sm:py-2">
+              <span className="text-muted">
+                {t({ ru: "Тема:", en: "Theme:" })}
+              </span>
+              <Dropdown
+                value={themeTag ?? ""}
+                onChange={(v) => selectTheme(v || null)}
+                label={t({ ru: "Тема билда", en: "Build theme" })}
+                className="border-border bg-background text-foreground"
+                options={[
+                  { value: "", label: t({ ru: "Любая", en: "Any" }) },
+                  ...getTagsForRole(role).map((tag) => ({
+                    value: tag.id,
+                    label: t({ ru: tag.ru, en: tag.en }),
+                  })),
+                ]}
+              />
+            </div>
+          )}
+
+          {/* Sits beside Theme because the two answer neighbouring questions,
+              and reads as the softer of the pair on purpose: Theme narrows the
+              pool to one idea, this only tilts the draw and leaves every perk
+              reachable. */}
+          {mode !== "loadout" && mounted && (
+            <div className="flex shrink-0 flex-wrap items-center justify-center gap-x-2 gap-y-1.5 px-4 py-1.5 text-sm sm:py-2">
+              <span className="text-muted">
+                {t({ ru: "Связность:", en: "Coherence:" })}
+              </span>
+              <div
+                className="flex items-center gap-1"
+                role="radiogroup"
+                aria-label={t({ ru: "Связность билда", en: "Build coherence" })}
+              >
+                {COHERENCE_LEVELS.map((level) => (
+                  <button
+                    key={level}
+                    type="button"
+                    role="radio"
+                    aria-checked={coherence.level === level}
+                    onClick={() => coherence.setLevel(level)}
+                    title={t(COHERENCE_HINT[level])}
+                    className={cn(
+                      "tap rounded-full border px-2.5 py-1 text-xs font-semibold transition-colors",
+                      coherence.level === level
+                        ? cn(roleColor.border, roleColor.bg, roleColor.text)
+                        : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
+                    )}
+                  >
+                    {t(COHERENCE_LABEL[level])}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Character picker (Feature #2) — picks a specific character for the
+            portrait chip below and, in Perks mode with the toggle on,
+            guarantees their own teachable perks in the roll; in Loadout mode
+            for killer, it's what actually decides whose Power/add-ons get
+            rolled (see getRandomLoadout's forcedCharacter). A modal with a
+            search + portrait grid, not a single "reroll" button — Space/
+            Generate already rerolls the build at random, so this is
+            specifically for choosing *which* character, with random still
+            available as one option inside rather than the only one. */}
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          {selectedCharacter ? (
+            <div className="flex items-center gap-2 rounded-full border border-border bg-surface/60 py-1 pr-1 pl-1.5">
+              <button
+                type="button"
+                onClick={() => setCharacterPickerOpen(true)}
+                className="flex items-center gap-2 rounded-full"
+              >
+                <span
+                  className={cn(
+                    "relative flex size-7 shrink-0 items-center justify-center overflow-hidden rounded-full ring-1 ring-offset-1 ring-offset-surface",
+                    roleColor.ring,
+                  )}
+                >
+                  {getCharacterPortrait(selectedCharacter) ? (
+                    // eslint-disable-next-line @next/next/no-img-element -- next/image ignores basePath for unoptimized runtime src, see lib/asset-path.ts
+                    <img
+                      src={withBasePath(
+                        getCharacterPortrait(selectedCharacter) as string,
+                      )}
+                      alt={getCharacterName(selectedCharacter, language)}
+                      className="size-7 object-cover"
+                    />
+                  ) : (
+                    <span className="text-[0.625rem] text-muted">?</span>
+                  )}
+                </span>
+                <span className="text-xs font-medium text-foreground">
+                  {getCharacterName(selectedCharacter, language)}
+                </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => selectCharacter(null)}
+                aria-label={t({ ru: "Убрать персонажа", en: "Clear character" })}
+                className="flex size-5 items-center justify-center rounded-full text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+              >
+                <X className="size-3" />
+              </button>
+            </div>
+          ) : (
             <button
               type="button"
               onClick={() => setCharacterPickerOpen(true)}
-              className="flex items-center gap-2 rounded-full"
+              className="tap flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
             >
-              <span
-                className={cn(
-                  "relative flex size-7 shrink-0 items-center justify-center overflow-hidden rounded-full ring-1 ring-offset-1 ring-offset-surface",
-                  roleColor.ring,
-                )}
-              >
-                {getCharacterPortrait(selectedCharacter) ? (
-                  // eslint-disable-next-line @next/next/no-img-element -- next/image ignores basePath for unoptimized runtime src, see lib/asset-path.ts
-                  <img
-                    src={withBasePath(
-                      getCharacterPortrait(selectedCharacter) as string,
-                    )}
-                    alt={getCharacterName(selectedCharacter, language)}
-                    className="size-7 object-cover"
-                  />
-                ) : (
-                  <span className="text-[0.625rem] text-muted">?</span>
-                )}
-              </span>
-              <span className="text-xs font-medium text-foreground">
-                {getCharacterName(selectedCharacter, language)}
-              </span>
+              <Users className="size-3.5" />
+              {t({ ru: "Выбрать персонажа", en: "Choose Character" })}
             </button>
-            <button
-              type="button"
-              onClick={() => selectCharacter(null)}
-              aria-label={t({ ru: "Убрать персонажа", en: "Clear character" })}
-              className="flex size-5 items-center justify-center rounded-full text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
-            >
-              <X className="size-3" />
-            </button>
-          </div>
-        ) : (
-          <button
-            type="button"
-            onClick={() => setCharacterPickerOpen(true)}
-            className="tap flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
-          >
-            <Users className="size-3.5" />
-            {t({ ru: "Выбрать персонажа", en: "Choose Character" })}
-          </button>
-        )}
+          )}
 
-        {mode !== "loadout" && selectedCharacter && (
-          <ToggleSwitch
-            checked={guaranteeTeachables}
-            onChange={toggleGuaranteeTeachables}
-            // "Тичеблы" was the English term in Cyrillic letters and read as
-            // nonsense to anyone who had not seen "teachables" written down.
-            // The tooltip right beside it already said "собственные перки
-            // этого персонажа"; the label now uses the same words.
-            label={t({
-              ru: "Гарантировать личные перки",
-              en: "Guarantee teachables",
-            })}
-            tooltip={t({
-              ru: "В билд гарантированно попадут собственные перки этого персонажа (если они не исключены из пула).",
-              en: "The build is guaranteed to include this character's own perks (unless they're excluded from the pool).",
-            })}
-          />
-        )}
-      </div>
+          {mode !== "loadout" && selectedCharacter && (
+            <ToggleSwitch
+              checked={guaranteeTeachables}
+              onChange={toggleGuaranteeTeachables}
+              // "Тичеблы" was the English term in Cyrillic letters and read as
+              // nonsense to anyone who had not seen "teachables" written down.
+              // The tooltip right beside it already said "собственные перки
+              // этого персонажа"; the label now uses the same words.
+              label={t({
+                ru: "Гарантировать личные перки",
+                en: "Guarantee teachables",
+              })}
+              tooltip={t({
+                ru: "В билд гарантированно попадут собственные перки этого персонажа (если они не исключены из пула).",
+                en: "The build is guaranteed to include this character's own perks (unless they're excluded from the pool).",
+              })}
+            />
+          )}
+        </div>
 
-      <BoardToolbar
-        mode={mode}
-        excludedPerkCount={excludedSlugs.size}
-        excludedLoadoutCount={excludedLoadoutSlugs.size}
-        seed={seed}
-        dailyStreak={dailyStreak.streak}
-        onOpenPool={openExcludePanel}
-        onOpenObs={() => setObsModalOpen(true)}
-        onOpenStats={() => setStatsModalOpen(true)}
-        onOpenHistory={() => setHistoryModalOpen(true)}
-        onOpenPresets={() => setPresetsModalOpen(true)}
-        onOpenVault={() => setVaultModalOpen(true)}
-      />
+        <BoardToolbar
+          mode={mode}
+          excludedPerkCount={excludedSlugs.size}
+          excludedLoadoutCount={excludedLoadoutSlugs.size}
+          seed={seed}
+          dailyStreak={dailyStreak.streak}
+          onOpenPool={openExcludePanel}
+          onOpenObs={() => setObsModalOpen(true)}
+          onOpenStats={() => setStatsModalOpen(true)}
+          onOpenHistory={() => setHistoryModalOpen(true)}
+          onOpenPresets={() => setPresetsModalOpen(true)}
+          onOpenVault={() => setVaultModalOpen(true)}
+        />
+      </SetupDisclosure>
 
       {mode === "loadout" ? (
         <p className="text-sm text-muted">

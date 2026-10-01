@@ -13,6 +13,18 @@ const BASE = "http://localhost:3000";
 
 mkdirSync(OUT_DIR, { recursive: true });
 
+/** Character, pools, the overlay and the More menu live behind one
+ *  disclosure now (see components/dbd/setup-disclosure.tsx), collapsed on a
+ *  first visit. A fresh context has no saved state, so every shot that
+ *  reaches one of those controls has to open it first. */
+async function expandSetup(page) {
+  const trigger = page.getByRole("button", { name: /Персонаж, тема, пулы, оверлей/ });
+  if ((await trigger.getAttribute("aria-expanded")) === "false") {
+    await trigger.click();
+    await page.waitForTimeout(250);
+  }
+}
+
 async function shot(page, path, name, opts = {}) {
   // "load", not "networkidle". The page can hold a Firebase connection
   // open (the OBS relay, and the Daily Challenge counter), so the network
@@ -49,6 +61,7 @@ async function main() {
       // Pick a specific killer so the Power slot + portrait badge both
       // render deterministically instead of whatever the initial random
       // roll happened to land on.
+      await expandSetup(p);
       await p.getByRole("button", { name: "Выбрать персонажа" }).click();
       await p.getByRole("button", { name: "Случайный", exact: true }).click();
     },
@@ -56,12 +69,14 @@ async function main() {
   await shot(page, "/?role=survivor", "character-picker.png", {
     hideTrailer: true,
     setup: async (p) => {
+      await expandSetup(p);
       await p.getByRole("button", { name: "Выбрать персонажа" }).click();
     },
   });
   await shot(page, "/?role=survivor", "manage-pool.png", {
     hideTrailer: true,
     setup: async (p) => {
+      await expandSetup(p);
       await p.getByRole("button", { name: "Пул", exact: true }).click();
     },
   });
@@ -78,6 +93,7 @@ async function main() {
       await p.waitForTimeout(300);
       // Stats moved into the "Ещё" popover when the toolbar was
       // decluttered — it is no longer a top-level button.
+      await expandSetup(p);
       await p.getByRole("button", { name: "Ещё", exact: true }).click();
       await p.waitForTimeout(200);
       await p.getByRole("button", { name: "Статистика", exact: true }).click();
@@ -87,6 +103,7 @@ async function main() {
   await shot(page, "/?role=survivor", "preset-builds.png", {
     hideTrailer: true,
     setup: async (p) => {
+      await expandSetup(p);
       await p.getByRole("button", { name: "Ещё", exact: true }).click();
       await p.waitForTimeout(200);
       await p.getByRole("button", { name: "Готовые билды", exact: true }).click();

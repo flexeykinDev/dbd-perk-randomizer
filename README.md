@@ -114,8 +114,8 @@ npm install
 npm run dev        # localhost:3000
 npm run lint
 npm run build      # static export into out/
-npm test           # 206 unit tests
-npm run test:e2e   # builds first, then 205 Playwright tests against the export
+npm test           # 399 unit tests
+npm run test:e2e   # builds first, then 238 Playwright tests against the export
 ```
 
 `test:e2e` drives the static export on port 3100, not `next dev`, because the

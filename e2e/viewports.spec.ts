@@ -191,3 +191,65 @@ for (const vp of VIEWPORTS) {
     console.log(`\n[stages @ ${vp.name}]\n${rows.join("\n")}`);
   });
 }
+
+/* How far down the page the build starts.
+ *
+ * The board used to carry five rows of controls between the heading and the
+ * perk cards — role, mode, build size, theme, coherence, character, pools,
+ * overlay, More — all in the same pill treatment at the same weight. They
+ * are now one primary toolbar plus a single disclosure, and these are the
+ * numbers that bought:
+ *
+ *            first card      Generate
+ *   1366x768   397 -> 345     629 -> 589
+ *    360x780   795 -> 589    1215 -> 1025
+ *
+ * Asserted with headroom rather than at the measured value: an exact number
+ * fails on a font metric changing by a pixel, which teaches everyone to
+ * raise the number instead of looking. These ceilings are set where a
+ * regression means a row came back, not where the layout drifted.
+ */
+const BUILD_START_CEILING = [
+  { name: "laptop 1366x768", width: 1366, height: 768, maxCardY: 380, maxGenerateY: 620 },
+  { name: "phone  360x780", width: 360, height: 780, maxCardY: 660, maxGenerateY: 1100 },
+];
+
+for (const vp of BUILD_START_CEILING) {
+  test(`the build starts near the top on ${vp.name}`, async ({ page }) => {
+    await page.setViewportSize({ width: vp.width, height: vp.height });
+    /* Measured on a FIRST visit, with the setup panel collapsed. The config
+     * seeds every other spec as a returning visitor with it open, which is
+     * the right default for reaching controls and the wrong one for this:
+     * the number that matters is what a stranger lands on. */
+    await page.context().addInitScript(() => {
+      try {
+        localStorage.removeItem("dbd-randomizer:setup-open");
+      } catch {
+        /* private mode — the panel defaults to collapsed anyway */
+      }
+    });
+    await page.goto("/?role=survivor");
+    // The board cross-fades; a card mid-transform measures from where it is
+    // animating, not where it lands. Wait for the settled build.
+    await expect(page.locator("[data-perk-card]")).toHaveCount(4);
+    await expect(
+      page.getByRole("button", { name: "Сгенерировать новый билд" }),
+    ).toBeVisible();
+
+    const card = await page.locator("[data-perk-card]").first().boundingBox();
+    const generate = await page
+      .getByRole("button", { name: "Сгенерировать новый билд" })
+      .boundingBox();
+
+    expect(card, "no perk card to measure").not.toBeNull();
+    expect(generate, "no Generate button to measure").not.toBeNull();
+    expect(
+      Math.round(card!.y),
+      "the first perk card has drifted back down the page",
+    ).toBeLessThanOrEqual(vp.maxCardY);
+    expect(
+      Math.round(generate!.y),
+      "Generate has drifted back down the page",
+    ).toBeLessThanOrEqual(vp.maxGenerateY);
+  });
+}
