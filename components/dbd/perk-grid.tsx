@@ -307,7 +307,23 @@ export function PerkGrid({
                   height={112}
                   className="size-24 rounded-xl icon-art object-cover transition-transform group-hover:scale-105 sm:size-28 lg:size-32"
                 />
-                <span className="text-body font-medium text-foreground">{perk.name[language]}</span>
+                {/* Two lines' worth of room, whether the name needs it or not.
+
+                    On a phone the grid is two columns and a long name wraps:
+                    measured on a Pixel 7, the grid is 315px when every name
+                    fits one line and 335px when any one of the four does not.
+                    That 20px moved every control below the build — Generate,
+                    the whole export row, Pool stats, the trailer — on roughly
+                    half of all rolls, which is the "everything jumps" that the
+                    theme line was only part of.
+
+                    Scoped to below `sm` on purpose. From `sm` up the grid's
+                    own min-h-[220px] already absorbs the difference, so the
+                    desktop card measured zero movement across ten rolls and
+                    does not need the extra height. */}
+                <span className="text-body font-medium text-foreground max-sm:flex max-sm:min-h-[2.4375rem] max-sm:items-center">
+                  {perk.name[language]}
+                </span>
               </motion.div>
             );
           })}

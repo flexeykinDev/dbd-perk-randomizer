@@ -146,21 +146,48 @@ export function SetupPanel({
               // The killer's is a Power, which they always have — nothing to
               // turn off.
               .filter(([slot]) => role === "survivor" || slot !== "item")
-              .map(([slot, label]) => (
-                <button
-                  key={slot}
-                  type="button"
-                  onClick={() => onToggleLoadoutSlot(slot)}
-                  className={cn(
-                    "rounded-full border px-3 py-1 text-control font-medium transition-colors",
-                    loadoutSlots[slot]
-                      ? cn(roleColor.border, roleColor.bg, roleColor.text)
-                      : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
-                  )}
-                >
-                  {t(label)}
-                </button>
-              ))}
+              .map(([slot, label]) => {
+                /* A survivor's add-ons go INTO an item, so with no item there
+                   is nothing for them to go into — lib/loadout.ts rolls them
+                   empty, and has always said so in a comment.
+
+                   The control did not. Turning Item off left Add-ons looking
+                   switched on while silently producing nothing, which is a
+                   toggle lying about its own state: reported as "items and
+                   addons disabled but I didn't turn it off". A dependency the
+                   roll enforces has to be a dependency the control shows. */
+                const needsItem = role === "survivor" && slot === "addons";
+                const unavailable = needsItem && !loadoutSlots.item;
+                const on = loadoutSlots[slot] && !unavailable;
+                return (
+                  <button
+                    key={slot}
+                    type="button"
+                    onClick={() => onToggleLoadoutSlot(slot)}
+                    disabled={unavailable}
+                    title={
+                      unavailable
+                        ? t({
+                            ru: "Аддоны надеваются на предмет — включите «Предмет», чтобы они выпадали.",
+                            en: "Add-ons go into an item — turn Item on for these to roll.",
+                          })
+                        : undefined
+                    }
+                    className={cn(
+                      "rounded-full border px-3 py-1 text-control font-medium transition-colors",
+                      on
+                        ? cn(roleColor.border, roleColor.bg, roleColor.text)
+                        : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
+                      // Not merely off: off is a choice you made and can undo
+                      // here, this is a slot the roll cannot fill.
+                      unavailable &&
+                        "cursor-not-allowed opacity-45 hover:bg-transparent hover:text-muted",
+                    )}
+                  >
+                    {t(label)}
+                  </button>
+                );
+              })}
           </ControlGroup>
         )}
       </ControlPanel>

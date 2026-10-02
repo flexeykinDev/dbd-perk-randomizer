@@ -368,3 +368,67 @@ test("Generate stays put while rolling", async ({ page }) => {
   const drift = positions[positions.length - 1] - positions[0];
   expect(drift, `Generate moved between rolls: y = ${positions.join(", ")}`).toBeLessThanOrEqual(2);
 });
+
+/* Nothing below the build moves between rolls.
+ *
+ * "Generate stays put" above covers the one control that matters most; this is
+ * the same promise for everything else, because the complaint that prompted it
+ * was "all content jumping like buttons etc" and Generate was only the half of
+ * it anyone could name.
+ *
+ * Two causes, both now fixed and both worth stating so a future change knows
+ * what it is up against: the build-theme line mounted and unmounted with the
+ * theme it describes (42px, desktop), and on a phone a perk name that wraps to
+ * a second line made the two-column grid 20px taller, which moved every
+ * control under it on roughly half of all rolls. The first was fixed by always
+ * rendering the line's slot, the second by reserving two lines for a card's
+ * name below `sm`.
+ */
+for (const device of [
+  { name: "desktop", width: 1366, height: 900 },
+  { name: "phone", width: 390, height: 844 },
+]) {
+  test(`nothing shifts between rolls on ${device.name}`, async ({ page }) => {
+    await page.setViewportSize({ width: device.width, height: device.height });
+    await page.goto("/?role=survivor");
+
+    const settled = () =>
+      page.waitForFunction(() => {
+        const cards = [...document.querySelectorAll("[data-perk-card]")];
+        return cards.length === 4 && cards.every((c) => getComputedStyle(c).transform === "none");
+      });
+    await settled();
+
+    /* Document coordinates, not boundingBox(): Playwright scrolls an element
+       into view before measuring and reports viewport-relative numbers, which
+       measures the scroll rather than the layout. */
+    const snapshot = () =>
+      page.evaluate(() => {
+        const out: Record<string, number> = {};
+        for (const el of document.querySelectorAll("button, a, p")) {
+          const rect = el.getBoundingClientRect();
+          if (rect.width === 0 || el.closest("[data-perk-card]")) continue;
+          const key = (el.textContent ?? "").trim().slice(0, 24) || el.tagName;
+          out[key] = Math.round(rect.top + window.scrollY);
+        }
+        return out;
+      });
+
+    const runs = [];
+    for (let i = 0; i < 10; i++) {
+      runs.push(await snapshot());
+      await page.getByRole("button", { name: "Сгенерировать новый билд" }).click();
+      await settled();
+    }
+
+    const moved: string[] = [];
+    for (const key of new Set(runs.flatMap((r) => Object.keys(r)))) {
+      const seen = runs.map((r) => r[key]).filter((v) => v !== undefined);
+      if (seen.length < 2) continue;
+      const spread = Math.max(...seen) - Math.min(...seen);
+      // A couple of pixels is sub-pixel rounding in the grid, not a shift.
+      if (spread > 2) moved.push(`${key} moved ${spread}px`);
+    }
+    expect(moved, `${moved.length} elements shifted between rolls`).toEqual([]);
+  });
+}
