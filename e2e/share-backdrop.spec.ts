@@ -19,26 +19,58 @@ const backdrops = (page: Page) =>
       .filter((src) => src.startsWith("data:image/jpeg")),
   );
 
+/** Asks for an export and throws the file away. The backdrop is drawn as part
+ *  of answering, which is the only moment it exists. */
+async function exportOnce(page: Page) {
+  const download = page.waitForEvent("download");
+  await page.getByRole("button", { name: /Скачать картинку/ }).click();
+  await page.getByRole("menuitem", { name: /Стандартный/ }).click();
+  await download;
+}
+
+test("nothing is drawn until somebody asks for a picture", async ({ page }) => {
+  /* The backdrop used to be painted on every build change, from a useMemo
+   * keyed on the build. Sampled while spamming the 1-4 slot-reroll keys, the
+   * toDataURL calls behind it were 52.7% of all CPU time - 1408ms of 2669ms -
+   * and the page dropped 21 of 79 frames, for a picture only a Download Image
+   * click ever looks at. It is drawn on demand now, and this is what keeps it
+   * that way. */
+  await page.goto("/?role=killer");
+  await expect(page.locator("[data-perk-card]")).toHaveCount(4);
+  expect(
+    await backdrops(page),
+    "a backdrop was painted for a build nobody asked to export",
+  ).toEqual([]);
+
+  await page.getByRole("button", { name: "Сгенерировать новый билд" }).click();
+  await page.waitForTimeout(400);
+  expect(await backdrops(page), "rolling again painted one").toEqual([]);
+});
+
 test("the fog belongs to the build", async ({ page }) => {
   await page.goto("/?role=killer");
   await expect(page.locator("[data-perk-card]")).toHaveCount(4);
 
+  await exportOnce(page);
   const first = await backdrops(page);
-  expect(first.length, "no backdrop was generated for either card").toBe(2);
+  expect(first.length, "no backdrop was drawn for the export").toBeGreaterThan(0);
   expect(first[0].length, "the backdrop is suspiciously small").toBeGreaterThan(2000);
 
-  // An unrelated re-render must not repaint it. The memo is keyed on the
-  // build, and a fresh vortex on every render would mean the picture was not
-  // really of anything.
+  // An unrelated re-render must not repaint it. A fresh vortex on every render
+  // would mean the picture was not really of anything.
   await page.getByRole("button", { name: /^Копировать: / }).first().click();
   await page.waitForTimeout(300);
   expect(await backdrops(page), "an unrelated render changed the artwork").toEqual(first);
 
+  /* A different build is a different picture - and the old one must not be
+     left on the card, or the next export would bake in the wrong fog. */
   await page.getByRole("button", { name: "Сгенерировать новый билд" }).click();
-  await page.waitForTimeout(600);
+  await page.waitForTimeout(400);
+  expect(await backdrops(page), "the previous build's fog stayed on the card").toEqual([]);
+
+  await exportOnce(page);
   const after = await backdrops(page);
   expect(after[0], "a different build produced the same fog").not.toBe(first[0]);
-  expect(after[1], "a different build produced the same story fog").not.toBe(first[1]);
 });
 
 test("a browser without WebGL still gets its picture", async ({ page }) => {

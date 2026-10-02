@@ -1,10 +1,14 @@
 "use client";
 
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { canvasToShareBlob, EXPORT_EXTENSION, saveImage } from "./save-image";
 import { renderRitualBackdrop } from "./ritual-backdrop";
 import { useT } from "./i18n";
 import type { PerkRole, ShareCardLayout } from "./types";
+
+/** Shared so a build with nothing drawn yet hands the off-screen cards the
+ *  same object every render rather than a fresh one. */
+const EMPTY_BACKDROPS = { landscape: null, story: null } as const;
 
 /* Getting a build out of the page: as a link, or as an image.
  *
@@ -56,20 +60,57 @@ export function useShareExport({
   const squadCardRef = useRef<HTMLDivElement>(null);
 
   const key = slugs.join(",");
-  /* useMemo rather than state: the backdrop is a pure function of the build
-     and the shape of the card, and recomputing it on an unrelated render
-     would hand back a different picture for the same build. Both layouts are
-     prepared up front because the off-screen cards are always mounted — the
-     work is a single shader draw, not something worth deferring to the
-     click. */
-  const backdrops = useMemo(() => {
-    const parts = key ? key.split(",") : [];
-    if (parts.length === 0) return { landscape: null, story: null };
-    return {
-      landscape: renderRitualBackdrop({ width: 1600, height: 900, role, parts }),
-      story: renderRitualBackdrop({ width: 1080, height: 1920, role, parts }),
-    };
-  }, [key, role]);
+
+  /* The backdrop is drawn when somebody asks for an image, not when the build
+     changes.
+
+     It used to be a useMemo keyed on the build, with a comment arguing that
+     "the work is a single shader draw, not something worth deferring to the
+     click". That was wrong, and the number is large: each roll compiled a
+     shader, drew two canvases — 1600x900 and 1080x1920 — and JPEG-encoded both
+     through toDataURL. Sampled while spamming the 1-4 slot-reroll keys,
+     toDataURL alone was 52.7% of all CPU time, 1408ms out of 2669ms, and the
+     page dropped 21 of 79 frames. Holding Space or leaning on 1-4 was
+     measurably janky for everyone, to prepare a picture that is only ever
+     looked at by someone who clicks Download Image.
+
+     Cached by build and role so a second export of the same build is free, and
+     so switching between the landscape and story formats draws each once. */
+  /** What has been drawn, and for which build. Held together on purpose: the
+   *  off-screen card must never show the previous build's backdrop, because
+   *  html2canvas would bake it into the export. Pairing the picture with the
+   *  build it belongs to makes that a derivation rather than an effect that
+   *  races the render. */
+  const [drawn, setDrawn] = useState<{
+    for: string;
+    landscape: string | null;
+    story: string | null;
+  }>({ for: "", landscape: null, story: null });
+
+  const current = `${role}:${key}`;
+  const backdrops =
+    drawn.for === current
+      ? { landscape: drawn.landscape, story: drawn.story }
+      : EMPTY_BACKDROPS;
+
+  const ensureBackdrop = useCallback(
+    (layout: ShareCardLayout) => {
+      const parts = key ? key.split(",") : [];
+      if (parts.length === 0) return;
+      const size =
+        layout === "story"
+          ? { width: 1080, height: 1920 }
+          : { width: 1600, height: 900 };
+      const picture = renderRitualBackdrop({ ...size, role, parts });
+      const slot = layout === "story" ? "story" : "landscape";
+      setDrawn((prev) => {
+        const base = prev.for === `${role}:${key}` ? prev : { for: `${role}:${key}`, landscape: null, story: null };
+        if (base[slot] === picture) return base;
+        return { ...base, [slot]: picture };
+      });
+    },
+    [key, role],
+  );
 
   const copyLink = useCallback(() => {
     navigator.clipboard
@@ -90,6 +131,12 @@ export function useShareExport({
       if (!target || slugs.length === 0 || generating) return;
       setGenerating(layout);
       try {
+        /* Draw the backdrop now, and let React commit it before html2canvas
+           reads the node — a capture taken in the same tick would rasterise
+           the card without it. Two frames: one for the commit, one for the
+           paint. */
+        ensureBackdrop(layout);
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
         /* html2canvas draws text with canvas fillText using each element's
            computed font-family. If a webfont has not finished loading it does
            not fall back gracefully — it bakes the fallback face into the image
@@ -141,7 +188,7 @@ export function useShareExport({
         setGenerating(null);
       }
     },
-    [generating, role, showToast, slugs, squad, t],
+    [ensureBackdrop, generating, role, showToast, slugs, squad, t],
   );
 
   return { generating, cardRef, storyCardRef, squadCardRef, backdrops, copyLink, downloadImage };
