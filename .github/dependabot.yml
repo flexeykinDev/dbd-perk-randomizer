@@ -17,18 +17,29 @@ version: 2
 # before.
 #
 # No `open-pull-requests-limit` for npm beyond the default: with grouping,
-# there is at most one PR per group per week anyway.
+# there is at most one PR per group per run anyway.
+#
+# Monthly, not weekly. Grouping already took eleven PRs down to three, but
+# three a week is still twelve a month, and twelve batches a month is more
+# often than anyone here actually wants to read a changelog - the September
+# run produced #11, #12 and #13 on the same morning and they sat until
+# October. A batch nobody opens is worse than a batch that waits: it trains
+# you to ignore the thing that is supposed to be asking for attention.
+#
+# What this does NOT slow down is security. Dependabot security updates come
+# from advisories, not from this schedule, and still open as soon as one lands
+# against something in the lockfile. This only paces routine version bumps.
 
 updates:
   - package-ecosystem: npm
     directory: /
     schedule:
-      interval: weekly
-      # Monday morning UTC would land on top of the perk scrape's own PR
-      # (06:00 Monday, see update-perks.yml). Tuesday keeps the two apart so
-      # a scrape that needs a human look is not competing for attention with
-      # a dependency batch.
-      day: tuesday
+      interval: monthly
+      # 07:00 keeps a batch clear of the perk scrape's own PR, which opens at
+      # 06:00 (see update-perks.yml) - a scrape that needs a human look should
+      # not be competing for attention with a dependency batch. `day` is a
+      # weekly-only setting and is gone with the weekly interval; a monthly
+      # schedule runs on the day of the month it first ran.
       time: "07:00"
       timezone: Etc/UTC
     groups:
@@ -68,8 +79,12 @@ updates:
   - package-ecosystem: github-actions
     directory: /
     schedule:
-      interval: weekly
-      day: tuesday
+      # Monthly for the same reason as npm above, and with one of its own: an
+      # Actions bump is almost never urgent, and most of what it touches -
+      # the Pages deploy, the scrape bot's PR step - is not exercised by a
+      # pull request at all, so each batch costs a careful read rather than a
+      # glance at a green check.
+      interval: monthly
       time: "07:00"
       timezone: Etc/UTC
     groups:
