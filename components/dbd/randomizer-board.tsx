@@ -1,26 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {
-  Link2,
-  Dices,
-  Skull,
-  BarChart3,
-  Copy,
-  Users,
-  X,
-} from "lucide-react";
+import { Dices, Skull, BarChart3 } from "lucide-react";
 import {
   getAvailablePool,
-  getCharacterPortrait,
   getCharactersForRole,
-  getPerkBySlug,
   getPerksByRole,
 } from "@/lib/perks";
-import { getCharacterName } from "@/lib/character-name";
 import { resolvePreset, type BuildPreset } from "@/lib/build-presets";
 import { useBoardShortcuts } from "@/lib/use-board-shortcuts";
-import { getTagsForRole } from "@/lib/perk-tags";
 import type {
   Addon,
   LoadoutPiece,
@@ -46,38 +34,28 @@ import { useDailyStreak } from "@/lib/use-daily-streak";
 import { useExclusions } from "@/lib/use-exclusions";
 import { useRollSession, type RollSession } from "@/lib/use-roll-session";
 import { useShareExport } from "@/lib/use-share-export";
+import { MAX_PERK_COUNT, useBoardSettings } from "@/lib/use-board-settings";
+import { readInitialUrlState } from "@/lib/share-link";
+import {
+  resolveLoadoutKeys,
+  resolvePerkIdList,
+  resolvePerkSlugs,
+} from "@/lib/installed-build";
+import { useShareUrl } from "@/lib/use-share-url";
 import { PoolStatsPanel } from "./pool-stats-panel";
 import { BoardToolbar } from "./board-toolbar";
 import { ShareExportStage } from "./share-export-stage";
 import { SetupDisclosure } from "./setup-disclosure";
+import { SetupPanel } from "./setup-panel";
+import { RollShapePanel } from "./roll-shape-panel";
+import { ExportRow } from "./export-row";
 import { getSeenSlugs, recordRoll } from "@/lib/stats";
-import {
-  parseLoadoutKey,
-  recordHistoryEntry,
-  type HistoryEntry,
-} from "@/lib/history";
-import {
-  decodeSquadParam,
-  encodeSquadParam,
-  getIdForSlug,
-  getSlugForId,
-} from "@/lib/perk-ids";
-import { COHERENCE_LEVELS, isCoherenceLevel, type CoherenceLevel } from "@/lib/coherence";
+import { recordHistoryEntry, type HistoryEntry } from "@/lib/history";
 import { rollUnseenPerks } from "@/lib/unseen-roll";
 import type { VaultBuild } from "@/lib/vault";
 import { tallyVotes, VOTE_SLOTS, type VoteResult } from "@/lib/chat-vote";
 import type { ObsVote } from "@/lib/obs-sync";
-import { withBasePath } from "@/lib/asset-path";
-import {
-  getKillerCharacters,
-  getLoadoutPiece,
-  getLoadoutPoolForRole,
-} from "@/lib/loadout";
-import {
-  getIdForLoadoutPiece,
-  getLoadoutPieceKeyForId,
-} from "@/lib/loadout-ids";
-import { safeGet, safeGetJSON, safeSet, safeSetJSON } from "@/lib/safe-storage";
+import { getKillerCharacters, getLoadoutPoolForRole } from "@/lib/loadout";
 import { publishObsState } from "@/lib/obs-sync";
 import { useTwitchSettings } from "@/lib/use-twitch-settings";
 import { PerkGrid } from "./perk-grid";
@@ -91,48 +69,18 @@ import { HistoryModal } from "./history-modal";
 import { PresetsModal } from "./presets-modal";
 import { VaultModal } from "./vault-modal";
 import { ToggleSwitch } from "./toggle-switch";
-import { BattleRoyaleControl } from "./battle-royale-control";
 import {
   type ShareCardPiece,
 } from "./share-card";
-import { DownloadImageButton } from "./download-image-button";
-import { ObsOverlayModal, type PieceVisibility } from "./obs-overlay-modal";
+import { ObsOverlayModal } from "./obs-overlay-modal";
 import { CharacterPickerModal } from "./character-picker-modal";
-import { PresentationPicker } from "./presentation-picker";
-import { SoundControl } from "./sound-control";
 import { playSound, setSoundSurface } from "@/lib/sound";
 import { RitualStage } from "./ritual-stage";
 import { SlotsStage } from "./slots-stage";
 import { ErrorBoundary } from "../error-boundary";
 import { useIsDesktop } from "@/lib/use-is-desktop";
 import { isAvailable, usePresentation } from "@/lib/use-presentation";
-import { Dropdown } from "./dropdown";
 
-const MAX_PERK_COUNT = 4;
-const DEFAULT_PERK_COUNT = 4;
-const PERK_COUNT_STORAGE_KEY = "dbd-randomizer:perk-count";
-const MODE_STORAGE_KEY = "dbd-randomizer:mode";
-const LOADOUT_SLOT_ITEM_STORAGE_KEY = "dbd-randomizer:loadout-slot-item";
-const LOADOUT_SLOT_ADDONS_STORAGE_KEY = "dbd-randomizer:loadout-slot-addons";
-const LOADOUT_SLOT_OFFERING_STORAGE_KEY =
-  "dbd-randomizer:loadout-slot-offering";
-const DEFAULT_LOADOUT_SLOTS: LoadoutSlots = {
-  item: true,
-  addons: true,
-  offering: true,
-};
-// "all" shows the perk grid and the loadout HUD together — a real player
-// always has both equipped at once in an actual match, so this is what a
-// visitor asking for "just show me everything" gets instead of having to
-// flip between the other two.
-const GUARANTEE_TEACHABLES_STORAGE_KEY = "dbd-randomizer:guarantee-teachables";
-const PIECE_VISIBILITY_STORAGE_KEY = "dbd-randomizer:piece-visibility";
-const DEFAULT_PIECE_VISIBILITY: PieceVisibility = {
-  perks: true,
-  item: true,
-  addon: true,
-  offering: true,
-};
 const ROLE_LABEL: Record<PerkRole, { ru: string; en: string }> = {
   survivor: { ru: "выжившего", en: "survivor" },
   killer: { ru: "убийцы", en: "killer" },
@@ -141,212 +89,8 @@ const ROLE_NAME: Record<PerkRole, { ru: string; en: string }> = {
   survivor: { ru: "Выживший", en: "Survivor" },
   killer: { ru: "Убийца", en: "Killer" },
 };
-const ROLE_SHORT: Record<PerkRole, string> = { survivor: "s", killer: "k" };
-const ROLE_FROM_SHORT: Record<string, PerkRole> = {
-  s: "survivor",
-  k: "killer",
-};
 
 
-function loadPerkCount(): number {
-  const n = parseInt(safeGet("local", PERK_COUNT_STORAGE_KEY) ?? "", 10);
-  return Number.isInteger(n) && n >= 0 && n <= MAX_PERK_COUNT
-    ? n
-    : DEFAULT_PERK_COUNT;
-}
-
-/* Named rather than numbered: "2" says nothing about what it does, and the
-   scale is short enough that four words fit where four digits would. */
-const COHERENCE_LABEL: Record<CoherenceLevel, { ru: string; en: string }> = {
-  0: { ru: "Хаос", en: "Chaos" },
-  1: { ru: "Слегка", en: "Light" },
-  2: { ru: "Заметно", en: "Strong" },
-  3: { ru: "Синергия", en: "Synergy" },
-};
-
-const COHERENCE_HINT: Record<CoherenceLevel, { ru: string; en: string }> = {
-  0: {
-    ru: "Обычный случайный билд — перки не связаны между собой.",
-    en: "The ordinary random build — perks have nothing to do with each other.",
-  },
-  1: {
-    ru: "Перки, подходящие друг другу, выпадают немного чаще.",
-    en: "Perks that fit what you already rolled come up a little more often.",
-  },
-  2: {
-    ru: "Перки, подходящие друг другу, выпадают заметно чаще.",
-    en: "Perks that fit what you already rolled come up noticeably more often.",
-  },
-  3: {
-    ru: "Билд собирается вокруг одной темы. Все перки остаются доступными — просто реже.",
-    en: "The build gathers around one idea. Every perk is still reachable, just rarer.",
-  },
-};
-
-const VALID_MODES: readonly BuildMode[] = ["perks", "loadout", "all"];
-
-function loadMode(): BuildMode {
-  const stored = safeGet("local", MODE_STORAGE_KEY);
-  return VALID_MODES.includes(stored as BuildMode)
-    ? (stored as BuildMode)
-    : "perks";
-}
-
-function loadLoadoutSlots(): LoadoutSlots {
-  // Absent key (never saved yet) means "on" — DEFAULT_LOADOUT_SLOTS is
-  // all-true, and only an explicit "0" write should turn a slot off.
-  return {
-    item: safeGet("local", LOADOUT_SLOT_ITEM_STORAGE_KEY) !== "0",
-    addons: safeGet("local", LOADOUT_SLOT_ADDONS_STORAGE_KEY) !== "0",
-    offering: safeGet("local", LOADOUT_SLOT_OFFERING_STORAGE_KEY) !== "0",
-  };
-}
-
-
-interface InitialUrlState {
-  role: PerkRole;
-  mode: BuildMode;
-  seed?: string;
-  /** From `?c=` — see lib/coherence.ts. Absent means 0, which is why every
-   *  link written before this existed still opens the build it describes. */
-  coherence?: CoherenceLevel;
-  perks?: Perk[];
-  loadoutPieces?: LoadoutPiece[];
-  /** One build per player, from `?sq=` — see lib/perk-ids.ts. */
-  squad?: Perk[][];
-}
-
-/** Reads either the compact URL format (`?r=s&p=42,105,12,8`, current) or
- *  the legacy one (`?role=survivor&perks=full-slug-names`, from links
- *  shared before short IDs existed) — old links must keep working. `?seed=`
- *  takes priority over an explicit perk/loadout list either way, since a
- *  seed is enough to re-derive the build client-side. `?mode=loadout` plus
- *  `?lp=id1,id2,...` mirrors `?p=` for sharing a specific Full Loadout roll;
- *  `?mode=all` carries both `?p=` and `?lp=` together for the combined view.
- *
- *  A bare role (`?r=k`) is honoured on its own: it sets the side and nothing
- *  else. It used to be discarded unless a build or an explicit mode came
- *  with it, which meant the very parameter the site writes into its own
- *  share links opened the wrong role when a link got truncated. Applying it
- *  does not mark anything as a shared build — that still requires `p`/`lp`
- *  or a seed — so the visitor gets a normal rerollable roll. */
-function readInitialUrlState(): InitialUrlState | null {
-  if (typeof window === "undefined") return null;
-  const params = new URLSearchParams(window.location.search);
-
-  const shortRole = params.get("r");
-  const legacyRole = params.get("role");
-  const role = shortRole
-    ? ROLE_FROM_SHORT[shortRole]
-    : legacyRole === "survivor" || legacyRole === "killer"
-      ? legacyRole
-      : undefined;
-  if (!role) return null;
-
-  const modeParam = params.get("mode");
-  const mode: BuildMode =
-    modeParam === "loadout" ? "loadout" : modeParam === "all" ? "all" : "perks";
-
-  /* The level changes what a seed means — the same seed at level 0 and
-     level 3 are different builds — so it has to travel with the link or a
-     shared seed reopens as something else. Read before the seed branch
-     returns, for exactly that reason. */
-  const coherenceParam = Number(params.get("c"));
-  const coherence = isCoherenceLevel(coherenceParam) ? coherenceParam : undefined;
-
-  const seed = params.get("seed");
-  if (seed) return { role, mode, seed, coherence };
-
-  const readLoadoutPieces = (): LoadoutPiece[] => {
-    const lpParam = params.get("lp");
-    if (!lpParam) return [];
-    return lpParam
-      .split(",")
-      .map((idStr) => {
-        const id = Number(idStr);
-        const key = Number.isFinite(id)
-          ? getLoadoutPieceKeyForId(id)
-          : undefined;
-        return key ? getLoadoutPiece(key.kind, key.slug) : undefined;
-      })
-      .filter((piece): piece is LoadoutPiece => !!piece);
-  };
-
-  const readPerks = (): Perk[] => {
-    const idsParam = params.get("p");
-    if (idsParam) {
-      const matched = idsParam
-        .split(",")
-        .map((idStr) => {
-          const id = Number(idStr);
-          const slug = Number.isFinite(id) ? getSlugForId(id) : undefined;
-          return slug ? getPerkBySlug(slug) : undefined;
-        })
-        .filter((perk): perk is Perk => !!perk && perk.role === role);
-      if (matched.length > 0) return matched;
-    }
-    const slugsParam = params.get("perks");
-    if (slugsParam) {
-      return slugsParam
-        .split(",")
-        .map((slug) => getPerkBySlug(slug))
-        .filter((perk): perk is Perk => !!perk && perk.role === role);
-    }
-    return [];
-  };
-
-  if (mode === "loadout") {
-    const loadoutPieces = readLoadoutPieces();
-    if (loadoutPieces.length > 0) return { role, mode, loadoutPieces, coherence };
-    // Explicit `?mode=loadout` is itself meaningful intent — unlike a bare
-    // `?r=...` alone (which existing perk links deliberately don't treat as
-    // "shared state," see the perks branch below), a link that spells out
-    // the mode should open in that mode even without a specific build to
-    // restore.
-    return { role, mode, coherence };
-  }
-
-  if (mode === "all") {
-    const perks = readPerks();
-    const loadoutPieces = readLoadoutPieces();
-    if (perks.length > 0 || loadoutPieces.length > 0) {
-      return {
-        role,
-        mode,
-        coherence,
-        perks: perks.length > 0 ? perks : undefined,
-        loadoutPieces: loadoutPieces.length > 0 ? loadoutPieces : undefined,
-      };
-    }
-    return { role, mode, coherence }; // same "explicit mode is enough" rule as loadout above
-  }
-
-  // A squad link is read before the single-build one. They never appear
-  // together — the writer below picks exactly one — and `sq` is the more
-  // specific claim of the two, so it wins if a hand-edited link carries both.
-  const squadParam = params.get("sq");
-  if (squadParam) {
-    const squad = decodeSquadParam(squadParam)
-      .map((slugs) =>
-        slugs
-          .map((slug) => getPerkBySlug(slug))
-          .filter((perk): perk is Perk => !!perk && perk.role === role),
-      )
-      .filter((build) => build.length > 0);
-    if (squad.length > 0) return { role, mode, squad };
-  }
-
-  const perks = readPerks();
-  if (perks.length > 0) return { role, mode, perks, coherence };
-
-  // A role with nothing attached is still intent worth honouring. `r` is the
-  // short parameter the site writes into every share link it generates, so
-  // `?r=k` on its own — a link truncated in a chat client, or shortened by
-  // hand — used to open the Survivor side without a word. Only the role and
-  // mode are applied here; nothing is marked as a shared build, so the
-  // visitor gets a normal, rerollable roll for the side they asked for.
-  return { role, mode, coherence };
-}
 
 export function RandomizerBoard() {
   const t = useT();
@@ -358,13 +102,26 @@ export function RandomizerBoard() {
   // localStorage during the client's first render, which happens *before*
   // hydration reconciles against the server's (window-less) HTML and would
   // throw a hydration mismatch for any returning visitor with saved state.
-  const [perkCount, setPerkCount] = useState<number>(DEFAULT_PERK_COUNT);
-  // Full Loadout mode — same hydration-safety rule as everything else here:
-  // SSR-safe defaults, corrected from localStorage/URL in the mount effect.
-  const [mode, setMode] = useState<BuildMode>("perks");
-  const [loadoutSlots, setLoadoutSlots] = useState<LoadoutSlots>(
-    DEFAULT_LOADOUT_SLOTS,
-  );
+  //
+  // The five settings that rule applies to — perk count, mode, loadout slots,
+  // guaranteed teachables, overlay visibility — live in lib/use-board-settings.ts
+  // with their storage keys. What a change to one of them costs the build on
+  // screen is decided below, where the roll session is in scope.
+  const settings = useBoardSettings();
+  const {
+    perkCount,
+    mode,
+    loadoutSlots,
+    guaranteeTeachables,
+    pieceVisibility,
+  } = settings;
+  /* Named, like every other hook's callbacks here: the mount effect below
+     needs them in its dependency list, and `settings` is a fresh object on
+     every render. Depending on the object would restart an effect that sets
+     state — an endless loop, not merely wasted work. All three are stable. */
+  const hydrateSettings = settings.hydrate;
+  const showMode = settings.showMode;
+  const showPerkCount = settings.showPerkCount;
   // Random Character (Feature #2) — deliberately session-only, not synced
   // to the URL or localStorage: it's a flourish on top of a build, not
   // part of what a share link or a returning visit needs to restore.
@@ -374,7 +131,6 @@ export function RandomizerBoard() {
   const [selectedCharacter, setSelectedCharacter] = useState<string | null>(
     null,
   );
-  const [guaranteeTeachables, setGuaranteeTeachables] = useState(false);
   const [characterPickerOpen, setCharacterPickerOpen] = useState(false);
   const [showStats, setShowStats] = useState(false);
   const [statsModalOpen, setStatsModalOpen] = useState(false);
@@ -467,18 +223,13 @@ export function RandomizerBoard() {
   const excludePanelKind = exclusions.panelKind;
   const openExcludePanel = exclusions.openPanel;
   const { hydrate: hydrateExclusions } = exclusions;
-  // Display-only filter for the OBS overlay and Download Image — separate
-  // from `loadoutSlots` (which decides what actually gets *rolled*): a
-  // streamer might still want the full loadout rolled (to copy/reference
-  // themselves) while only showing perks + Item on stream, for instance.
-  const [pieceVisibility, setPieceVisibility] = useState<PieceVisibility>(
-    DEFAULT_PIECE_VISIBILITY,
-  );
-
   /* Seeds — Daily Challenge, a typed seed, or one carried by a share link.
-     See lib/use-seed.ts. Every path through it drops the shared build,
-     which a seeded build outranks; forgetting that on one path was how a
-     seed could silently show the wrong build. */
+     See lib/use-seed.ts. Every path through it drops the shared build on the
+     way, and must: a shared build wins over a seed in the roll session
+     (use-roll-session.ts resolves sharedBuild before activeSeed), so a seed
+     applied on top of one that was left in place would be the seed the board
+     claims and the shared build it actually draws. Forgetting that on one path
+     was how a seed could silently show the wrong build. */
   // Populated by the effect just below useRollSession.
   const rollRef = useRef<RollSession | null>(null);
   const seed = useSeed({
@@ -565,17 +316,15 @@ export function RandomizerBoard() {
       hydrateSquad();
       hydrateCoherence();
       hydrateSetup();
-      setPerkCount(loadPerkCount());
-      setMode(loadMode());
-      setLoadoutSlots(loadLoadoutSlots());
-      setGuaranteeTeachables(
-        safeGet("local", GUARANTEE_TEACHABLES_STORAGE_KEY) === "1",
-      );
+      hydrateSettings();
 
       const urlState = readInitialUrlState();
       if (urlState) {
         setRole(urlState.role);
-        setMode(urlState.mode);
+        /* `showMode`/`showPerkCount`, not the persisting setters: a link is
+           somebody else's build, and opening it once should not become your
+           saved preference. See lib/use-board-settings.ts. */
+        showMode(urlState.mode);
         /* After hydrateCoherence, so a link wins over the saved setting: the
            build someone shared was rolled at their level, and opening it at
            yours would show a different build under their link. Applied before
@@ -587,7 +336,7 @@ export function RandomizerBoard() {
           // arrived. It never marks a shared single build: the squad is the
           // build here, and the normal session underneath stays rerollable.
           showSquad(urlState.squad);
-          setPerkCount(urlState.squad[0].length);
+          showPerkCount(urlState.squad[0].length);
         } else if (urlState.seed) {
           hydrateSeedFromUrl(urlState.seed, urlState.role);
         } else {
@@ -597,18 +346,10 @@ export function RandomizerBoard() {
           // (only the last branch taken would ever run).
           // One call, both halves: an "all" link carries p= and lp= together.
           hydrateShared(urlState);
-          if (urlState.perks) setPerkCount(urlState.perks.length);
+          if (urlState.perks) showPerkCount(urlState.perks.length);
         }
       }
       hydrateBattleRoyale();
-
-      setPieceVisibility(
-        safeGetJSON(
-          "local",
-          PIECE_VISIBILITY_STORAGE_KEY,
-          DEFAULT_PIECE_VISIBILITY,
-        ),
-      );
     }
     applyInitialClientState();
     // The individual hydrate callbacks, not the hook objects that carry
@@ -627,6 +368,9 @@ export function RandomizerBoard() {
     hydrateCoherence,
     setCoherenceLevel,
     hydrateShared,
+    hydrateSettings,
+    showMode,
+    showPerkCount,
   ]);
 
   // What Download Image actually exports — perks and/or loadout pieces
@@ -702,81 +446,20 @@ export function RandomizerBoard() {
     return addon?.character ?? null;
   }, [selectedCharacter, role, loadoutPieces]);
 
-  useEffect(() => {
-    function syncUrl() {
-      const params = new URLSearchParams();
-      params.set("r", ROLE_SHORT[role]);
-      if (mode !== "perks") params.set("mode", mode); // "loadout" or "all"
-      /* Only when it is doing something. At level 0 the link is byte-for-byte
-         what this site has always written, so nothing about existing links,
-         bookmarks or the OBS overlay's URL changes for anyone who leaves the
-         setting alone. */
-      if (coherence.level !== 0) params.set("c", String(coherence.level));
-      if (activeSeed) {
-        params.set("seed", activeSeed);
-        window.history.replaceState(
-          null,
-          "",
-          `${window.location.pathname}?${params}`,
-        );
-        return;
-      }
-      if (mode !== "perks" && loadoutPieces.length > 0) {
-        const ids = loadoutPieces.map((p) =>
-          getIdForLoadoutPiece(p.kind, p.slug),
-        );
-        if (ids.every((id): id is number => id !== undefined)) {
-          params.set("lp", ids.join(","));
-        }
-        // No legacy fallback needed here (unlike perks below) — every
-        // loadout piece gets a short ID at scrape time, same guarantee
-        // data/perk-ids.json has always made for perks.
-      }
-      // A squad on screen is what the link should reopen, so it replaces the
-      // single build's `p=` rather than sitting beside it. Falls through to
-      // the normal writer before the first roll, when there is no squad yet.
-      if (squadActive && squad.squad.length > 0) {
-        const sq = encodeSquadParam(
-          squad.squad.map((build) => build.map((perk) => perk.slug)),
-        );
-        if (sq) params.set("sq", sq);
-        window.history.replaceState(
-          null,
-          "",
-          `${window.location.pathname}?${params}`,
-        );
-        return;
-      }
-      if (mode !== "loadout" && perks.length > 0) {
-        const ids = perks.map((p) => getIdForSlug(p.slug));
-        if (ids.every((id): id is number => id !== undefined)) {
-          params.set("p", ids.join(","));
-        } else {
-          // Safety net for a perk with no assigned short ID (shouldn't
-          // happen — every slug in data/perks.json gets one at scrape
-          // time) — fall back to the legacy full-slug format rather than
-          // producing a share link that silently drops perks.
-          params.set("perks", perks.map((p) => p.slug).join(","));
-        }
-      }
-      window.history.replaceState(
-        null,
-        "",
-        `${window.location.pathname}?${params}`,
-      );
-    }
-    if (mounted) syncUrl();
-  }, [
+  /* The address bar, kept describing the build on screen — see
+     lib/share-link.ts for the format and lib/use-share-url.ts for when it
+     fires. A squad is passed only while squad mode is on, because it replaces
+     the single build in the link rather than sitting beside it. */
+  useShareUrl({
+    mounted,
     role,
     mode,
+    coherence: coherence.level,
+    seed: activeSeed,
     perks,
     loadoutPieces,
-    mounted,
-    activeSeed,
-    squadActive,
-    squad.squad,
-    coherence.level,
-  ]);
+    squad: squadActive ? squad.squad : null,
+  });
 
   // Records exactly one roll event per genuine generation (initial pick,
   // regenerate, role/count switch) — deduped by content key so React 19
@@ -984,24 +667,12 @@ export function RandomizerBoard() {
   // need a ref like regenerate above since it only calls stable setState
   // functions and pure lookups, nothing that changes identity per render.
   const handleTwitchPaste = useCallback((argsText: string) => {
-    const ids = argsText
-      .split(/[,\s]+/)
-      .map((s) => Number(s.trim()))
-      .filter((n) => Number.isFinite(n));
-    if (ids.length === 0) return;
-    const matched = ids
-      .map((id) => {
-        const slug = getSlugForId(id);
-        return slug ? getPerkBySlug(slug) : undefined;
-      })
-      .filter((p): p is Perk => !!p);
+    // Parsing and the "perks decide the side" rule live in
+    // lib/installed-build.ts, which is where a shared link resolves too.
+    const matched = resolvePerkIdList(argsText);
     if (matched.length === 0) return;
-    // Mirrors readInitialUrlState's own rule for a shared-build link: perks
-    // determine the role, and any ID that doesn't match the first one's
-    // role is dropped rather than shown mixed.
-    const targetRole = matched[0].role;
-    setRole(targetRole);
-    showPerksKeepingLoadout(matched.filter((p) => p.role === targetRole));
+    setRole(matched[0].role);
+    showPerksKeepingLoadout(matched);
   }, [showPerksKeepingLoadout]);
 
   /** Shows a hand-picked build (see data/build-presets.json).
@@ -1137,43 +808,42 @@ export function RandomizerBoard() {
   );
 
   /* Reopening a saved build. Same path a preset takes — including releasing
-     an active seed, which outranks a handed-over build and would otherwise
-     swallow the press — because from the board's point of view they are the
-     same thing: a specific build, chosen rather than rolled. */
+     an active seed — because from the board's point of view they are the same
+     thing: a specific build, chosen rather than rolled.
+  
+     Releasing the seed is not what makes the build appear; a handed-over build
+     already outranks a seed in use-roll-session.ts. It is what keeps the board
+     honest about it: while a seed is active Generate is disabled and the share
+     link writes `?seed=`, so leaving one in place shows this build under a
+     link to a different one and no way to roll off it. */
   const openVaultBuild = useCallback(
     (build: VaultBuild) => {
       setRole(build.role);
       seed.release();
       if (build.mode === "perks") {
-        const perks = build.keys
-          .map((slug) => getPerkBySlug(slug))
-          .filter((perk): perk is Perk => !!perk && perk.role === build.role);
+        const perks = resolvePerkSlugs(build.keys, build.role);
         if (perks.length === 0) return;
-        setMode("perks");
-        setPerkCount(perks.length);
+        showMode("perks");
+        showPerkCount(perks.length);
         showPerksKeepingLoadout(perks);
       } else {
-        const pieces = build.keys
-          .map((key) => {
-            const parsed = parseLoadoutKey(key);
-            return parsed ? getLoadoutPiece(parsed.kind, parsed.slug) : undefined;
-          })
-          .filter((piece): piece is LoadoutPiece => !!piece);
+        const pieces = resolveLoadoutKeys(build.keys);
         if (pieces.length === 0) return;
-        setMode("loadout");
+        showMode("loadout");
         showLoadoutPieces(pieces);
       }
       setVaultModalOpen(false);
     },
-    [seed, showPerksKeepingLoadout, showLoadoutPieces],
+    [seed, showPerksKeepingLoadout, showLoadoutPieces, showMode, showPerkCount],
   );
 
   const applyPreset = useCallback((preset: BuildPreset) => {
     const perks = resolvePreset(preset);
     if (perks.length === 0) return;
     setRole(preset.role);
-    // A seeded build outranks a shared one further up, so leaving a seed
-    // active would show the seed's build and quietly ignore the pick.
+    // Same reason as openVaultBuild above: the preset shows either way, but a
+    // seed left active disables Generate and makes the share link describe the
+    // seed's build instead of this one.
     // `release`, not `clear`: this is installing a build, so the reroll
     // `clear` triggers would immediately throw it away.
     seed.release();
@@ -1214,9 +884,7 @@ export function RandomizerBoard() {
   }
 
   function toggleGuaranteeTeachables() {
-    const next = !guaranteeTeachables;
-    setGuaranteeTeachables(next);
-    safeSet("local", GUARANTEE_TEACHABLES_STORAGE_KEY, next ? "1" : "0");
+    settings.toggleGuaranteeTeachables();
     // Perks only: a shared loadout is unaffected by a perks-mode toggle.
     rerollPerks();
   }
@@ -1230,26 +898,24 @@ export function RandomizerBoard() {
   // retired from the wiki) rather than opening onto an empty build.
   function restoreHistoryEntry(entry: HistoryEntry) {
     if (entry.mode === "perks") {
-      const matched = entry.keys
-        .map((slug) => getPerkBySlug(slug))
-        .filter((p): p is Perk => !!p);
+      /* No role filter, unlike the Vault above: a history entry records the
+         role it was rolled for and is restored under it, so a slug that
+         somehow disagrees is the entry's own, not a stranger's. */
+      const matched = resolvePerkSlugs(entry.keys);
       if (matched.length === 0) return;
       setRole(entry.role);
-      setMode("perks");
-      safeSet("local", MODE_STORAGE_KEY, "perks");
+      /* The persisting setter here and the display-only one in openVaultBuild
+         above: restoring from History remembers the mode across a reload,
+         reopening from the Vault does not. An old inconsistency, carried over
+         unchanged rather than quietly settled while moving the code. */
+      settings.setMode("perks");
       showPerks(matched);
-      setPerkCount(matched.length);
+      showPerkCount(matched.length);
     } else {
-      const matched = entry.keys
-        .map((key) => {
-          const parsed = parseLoadoutKey(key);
-          return parsed ? getLoadoutPiece(parsed.kind, parsed.slug) : undefined;
-        })
-        .filter((p): p is LoadoutPiece => !!p);
+      const matched = resolveLoadoutKeys(entry.keys);
       if (matched.length === 0) return;
       setRole(entry.role);
-      setMode("loadout");
-      safeSet("local", MODE_STORAGE_KEY, "loadout");
+      settings.setMode("loadout");
       showLoadoutPieces(matched);
     }
     setHistoryModalOpen(false);
@@ -1257,23 +923,12 @@ export function RandomizerBoard() {
 
 
   function selectMode(next: BuildMode) {
-    setMode(next);
-    safeSet("local", MODE_STORAGE_KEY, next);
+    settings.setMode(next);
     rerollAll();
   }
 
   function toggleLoadoutSlot(slot: keyof LoadoutSlots) {
-    setLoadoutSlots((prev) => {
-      const next = { ...prev, [slot]: !prev[slot] };
-      const key =
-        slot === "item"
-          ? LOADOUT_SLOT_ITEM_STORAGE_KEY
-          : slot === "addons"
-            ? LOADOUT_SLOT_ADDONS_STORAGE_KEY
-            : LOADOUT_SLOT_OFFERING_STORAGE_KEY;
-      safeSet("local", key, next[slot] ? "1" : "0");
-      return next;
-    });
+    settings.toggleLoadoutSlot(slot);
     // Loadout only: which slots are rolled says nothing about the perks.
     rerollLoadout();
   }
@@ -1285,8 +940,7 @@ export function RandomizerBoard() {
   }
 
   function selectPerkCount(next: number) {
-    setPerkCount(next);
-    safeSet("local", PERK_COUNT_STORAGE_KEY, String(next));
+    settings.setPerkCount(next);
     // Perks only: how many perks to roll says nothing about a shared loadout.
     rerollPerks();
   }
@@ -1302,14 +956,6 @@ export function RandomizerBoard() {
 
   const resetExcludedLoadoutForRole = exclusions.resetLoadoutForRole;
 
-
-  function updatePieceVisibility(kind: keyof PieceVisibility, value: boolean) {
-    setPieceVisibility((prev) => {
-      const next = { ...prev, [kind]: value };
-      safeSetJSON("local", PIECE_VISIBILITY_STORAGE_KEY, next);
-      return next;
-    });
-  }
 
   // All five of these were the same eleven lines with a different string —
   // see lib/use-build-clipboard.ts, which also owns the toast.
@@ -1528,220 +1174,35 @@ export function RandomizerBoard() {
       </div>
 
 
-      {/* Build size, pulled up beside role and mode: these three are the
-          primary toolbar. The test they pass and nothing else does is that
-          changing them changes what the NEXT roll produces, and you change
-          them between rolls. Theme and coherence also change the roll but
-          are set once a session, so they went into the disclosure with the
-          rest of the setup — see SetupDisclosure. */}
-      <div className="flex w-full max-w-full flex-col items-start divide-y divide-border overflow-x-auto rounded-2xl border border-border bg-surface/40 sm:w-auto sm:flex-row sm:items-center sm:divide-x sm:divide-y-0">
-        {mode !== "loadout" && (
-          <div className="flex shrink-0 flex-wrap items-center justify-center gap-x-2 gap-y-1.5 px-4 py-1.5 text-meta sm:py-2">
-            <span className="text-muted">
-              {t({ ru: "Перков:", en: "Perks:" })}
-            </span>
-            {Array.from({ length: MAX_PERK_COUNT + 1 }, (_, n) => n).map(
-              (n) => (
-                <button
-                  key={n}
-                  type="button"
-                  onClick={() => selectPerkCount(n)}
-                  className={cn(
-                    "tap-square flex size-7 items-center justify-center rounded-full border text-control font-semibold transition-colors",
-                    perkCount === n
-                      ? cn(roleColor.border, roleColor.bg, roleColor.text)
-                      : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
-                  )}
-                >
-                  {n}
-                </button>
-              ),
-            )}
-          </div>
-        )}
-
-        {/* A whole game mode, so it belongs with the controls that decide
-            what gets rolled rather than below the keyboard legend, which is
-            where it used to be. `availableCount` is already role-filtered —
-            see lib/use-battle-royale.ts for why a raw count would disagree
-            with the pool size sitting beside it. */}
-        <BattleRoyaleControl
-          active={battleRoyale}
-          onToggle={toggleBattleRoyale}
-          remaining={availableCount}
-        />
-
-        {mode !== "perks" && (
-          <div className="flex shrink-0 flex-wrap items-center justify-center gap-x-2 gap-y-1.5 px-4 py-1.5 text-meta sm:py-2">
-            <span className="text-muted">
-              {t({ ru: "Слоты:", en: "Slots:" })}
-            </span>
-            {(
-              [
-                ["item", { ru: "Предмет", en: "Item" }],
-                ["addons", { ru: "Аддоны", en: "Add-ons" }],
-                ["offering", { ru: "Подношение", en: "Offering" }],
-              ] as const
-            )
-              .filter(([slot]) => role === "survivor" || slot !== "item")
-              .map(([slot, label]) => (
-                <button
-                  key={slot}
-                  type="button"
-                  onClick={() => toggleLoadoutSlot(slot)}
-                  className={cn(
-                    "rounded-full border px-3 py-1 text-control font-medium transition-colors",
-                    loadoutSlots[slot]
-                      ? cn(roleColor.border, roleColor.bg, roleColor.text)
-                      : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
-                  )}
-                >
-                  {t(label)}
-                </button>
-              ))}
-          </div>
-        )}
-      </div>
+      <RollShapePanel
+        mode={mode}
+        role={role}
+        perkCount={perkCount}
+        loadoutSlots={loadoutSlots}
+        battleRoyale={battleRoyale}
+        availableCount={availableCount}
+        onSelectPerkCount={selectPerkCount}
+        onToggleBattleRoyale={toggleBattleRoyale}
+        onToggleLoadoutSlot={toggleLoadoutSlot}
+      />
 
       <SetupDisclosure open={setup.open} onToggle={setup.toggle}>
-        <div className="flex w-full max-w-full flex-col items-start divide-y divide-border overflow-x-auto rounded-2xl border border-border bg-surface/40 sm:w-auto sm:flex-row sm:items-center sm:divide-x sm:divide-y-0">
-          {mode !== "loadout" && mounted && getTagsForRole(role).length > 0 && (
-            <div className="flex shrink-0 flex-wrap items-center justify-center gap-x-2 gap-y-1.5 px-4 py-1.5 text-meta sm:py-2">
-              <span className="text-muted">
-                {t({ ru: "Тема:", en: "Theme:" })}
-              </span>
-              <Dropdown
-                value={themeTag ?? ""}
-                onChange={(v) => selectTheme(v || null)}
-                label={t({ ru: "Тема билда", en: "Build theme" })}
-                className="border-border bg-background text-foreground"
-                options={[
-                  { value: "", label: t({ ru: "Любая", en: "Any" }) },
-                  ...getTagsForRole(role).map((tag) => ({
-                    value: tag.id,
-                    label: t({ ru: tag.ru, en: tag.en }),
-                  })),
-                ]}
-              />
-            </div>
-          )}
+        <SetupPanel
+          mode={mode}
+          role={role}
+          mounted={mounted}
+          language={language}
+          themeTag={themeTag}
+          onSelectTheme={selectTheme}
+          coherenceLevel={coherence.level}
+          onSelectCoherence={coherence.setLevel}
+          selectedCharacter={selectedCharacter}
+          onOpenCharacterPicker={() => setCharacterPickerOpen(true)}
+          onClearCharacter={() => selectCharacter(null)}
+          guaranteeTeachables={guaranteeTeachables}
+          onToggleGuaranteeTeachables={toggleGuaranteeTeachables}
+        />
 
-          {/* Sits beside Theme because the two answer neighbouring questions,
-              and reads as the softer of the pair on purpose: Theme narrows the
-              pool to one idea, this only tilts the draw and leaves every perk
-              reachable. */}
-          {mode !== "loadout" && mounted && (
-            <div className="flex shrink-0 flex-wrap items-center justify-center gap-x-2 gap-y-1.5 px-4 py-1.5 text-meta sm:py-2">
-              <span className="text-muted">
-                {t({ ru: "Связность:", en: "Coherence:" })}
-              </span>
-              <div
-                className="flex items-center gap-1"
-                role="radiogroup"
-                aria-label={t({ ru: "Связность билда", en: "Build coherence" })}
-              >
-                {COHERENCE_LEVELS.map((level) => (
-                  <button
-                    key={level}
-                    type="button"
-                    role="radio"
-                    aria-checked={coherence.level === level}
-                    onClick={() => coherence.setLevel(level)}
-                    title={t(COHERENCE_HINT[level])}
-                    className={cn(
-                      "tap rounded-full border px-2.5 py-1 text-control font-semibold transition-colors",
-                      coherence.level === level
-                        ? cn(roleColor.border, roleColor.bg, roleColor.text)
-                        : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
-                    )}
-                  >
-                    {t(COHERENCE_LABEL[level])}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Character picker (Feature #2) — picks a specific character for the
-            portrait chip below and, in Perks mode with the toggle on,
-            guarantees their own teachable perks in the roll; in Loadout mode
-            for killer, it's what actually decides whose Power/add-ons get
-            rolled (see getRandomLoadout's forcedCharacter). A modal with a
-            search + portrait grid, not a single "reroll" button — Space/
-            Generate already rerolls the build at random, so this is
-            specifically for choosing *which* character, with random still
-            available as one option inside rather than the only one. */}
-        <div className="flex flex-wrap items-center justify-center gap-2">
-          {selectedCharacter ? (
-            <div className="flex items-center gap-2 rounded-full border border-border bg-surface/60 py-1 pr-1 pl-1.5">
-              <button
-                type="button"
-                onClick={() => setCharacterPickerOpen(true)}
-                className="flex items-center gap-2 rounded-full"
-              >
-                <span
-                  className={cn(
-                    "relative flex size-7 shrink-0 items-center justify-center overflow-hidden rounded-full ring-1 ring-offset-1 ring-offset-surface",
-                    roleColor.ring,
-                  )}
-                >
-                  {getCharacterPortrait(selectedCharacter) ? (
-                    // eslint-disable-next-line @next/next/no-img-element -- next/image ignores basePath for unoptimized runtime src, see lib/asset-path.ts
-                    <img
-                      src={withBasePath(
-                        getCharacterPortrait(selectedCharacter) as string,
-                      )}
-                      alt={getCharacterName(selectedCharacter, language)}
-                      className="size-7 object-cover"
-                    />
-                  ) : (
-                    <span className="text-hint text-muted">?</span>
-                  )}
-                </span>
-                <span className="text-control font-medium text-foreground">
-                  {getCharacterName(selectedCharacter, language)}
-                </span>
-              </button>
-              <button
-                type="button"
-                onClick={() => selectCharacter(null)}
-                aria-label={t({ ru: "Убрать персонажа", en: "Clear character" })}
-                className="flex size-5 items-center justify-center rounded-full text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
-              >
-                <X className="size-3" />
-              </button>
-            </div>
-          ) : (
-            <button
-              type="button"
-              onClick={() => setCharacterPickerOpen(true)}
-              className="tap flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-control font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
-            >
-              <Users className="size-3.5" />
-              {t({ ru: "Выбрать персонажа", en: "Choose Character" })}
-            </button>
-          )}
-
-          {mode !== "loadout" && selectedCharacter && (
-            <ToggleSwitch
-              checked={guaranteeTeachables}
-              onChange={toggleGuaranteeTeachables}
-              // "Тичеблы" was the English term in Cyrillic letters and read as
-              // nonsense to anyone who had not seen "teachables" written down.
-              // The tooltip right beside it already said "собственные перки
-              // этого персонажа"; the label now uses the same words.
-              label={t({
-                ru: "Гарантировать личные перки",
-                en: "Guarantee teachables",
-              })}
-              tooltip={t({
-                ru: "В билд гарантированно попадут собственные перки этого персонажа (если они не исключены из пула).",
-                en: "The build is guaranteed to include this character's own perks (unless they're excluded from the pool).",
-              })}
-            />
-          )}
-        </div>
 
         <BoardToolbar
           mode={mode}
@@ -2011,85 +1472,28 @@ export function RandomizerBoard() {
         {t({ ru: "ссылка", en: "share link" })}
       </p>
 
-      {/* Export actions — what you do to a build you already like, so they
-          come AFTER Generate rather than before it.
-      
-          They used to sit directly under the cards, which put the page's
-          primary action last: measured at 1366x768, Generate landed at
-          y=671 of a 768px viewport and the shortcut legend below it was off
-          the screen entirely. Someone arriving had the three things you do
-          with a finished build in front of them and the one thing that
-          makes a build out of sight.
-      
-          Quieter by weight, not by size: the borders are transparent until
-          hover and the type stays muted, but every button keeps `.tap` and
-          its full-width phone layout, because e2e/mobile.spec.ts measures
-          every visible button against a 44px target and these are five of
-          them. Demote with colour, never with geometry. */}
-      <div className="flex w-full max-w-xs flex-col gap-2 sm:w-auto sm:max-w-none sm:flex-row sm:items-center sm:justify-center">
-        <button
-          type="button"
-          onClick={
-            mode === "loadout"
-              ? handleCopyAllLoadout
-              : mode === "all"
-                ? handleCopyAllCombined
-                : handleCopyAll
-          }
-          disabled={
-            squadActive
-              ? squad.squad.every((build) => build.length === 0)
-              : mode === "loadout"
-                ? loadoutPieces.length === 0
-                : mode === "all"
-                  ? perks.length === 0 && loadoutPieces.length === 0
-                  : perks.length === 0
-          }
-          className="tap flex w-full items-center justify-center gap-1.5 rounded-full border border-transparent px-3 py-1.5 text-control font-medium text-muted transition-colors hover:border-border hover:bg-surface-hover hover:text-foreground disabled:pointer-events-none disabled:opacity-40 sm:w-auto"
-        >
-          <Copy className="size-3.5" />
-          {mode === "loadout"
-            ? t({ ru: "Скопировать всё", en: "Copy full loadout" })
-            : t({ ru: "Скопировать всё", en: "Copy full build" })}
-        </button>
-        <button
-          type="button"
-          onClick={handleShare}
-          /* Squad links work; the four-up share card does not exist yet, so
-             only the image download below stays out of squad mode. */
-          disabled={squadActive && squad.squad.length === 0}
-          title={t({
-            ru: "Ссылка на этот билд для обычного просмотра — не для OBS, для этого есть отдельная кнопка «Оверлей OBS».",
-            en: "A link to view this exact build — not for OBS, use the separate “OBS Overlay” button for that.",
-          })}
-          className="tap flex w-full items-center justify-center gap-1.5 rounded-full border border-transparent px-3 py-1.5 text-control font-medium text-muted transition-colors hover:border-border hover:bg-surface-hover hover:text-foreground sm:w-auto"
-        >
-          <Link2 className="size-3.5" />
-          {t({ ru: "Поделиться", en: "Share" })}
-        </button>
-        <DownloadImageButton
-          onSelect={handleDownloadImage}
-          generating={generatingImage}
-          disabled={
-            squadActive
-              ? squad.squad.length === 0
-              : sharePieces.length === 0
-          }
-          /* The squad poster exists in 16:9 only — see the note on
-             useShareExport's `squad` input. Offering a story format that
-             silently rendered the landscape one would be worse than not
-             offering it. */
-          layouts={squadActive ? ["landscape"] : undefined}
-        />
-        <PresentationPicker
-          value={presentation}
-          onChange={setPresentation}
-          isDesktop={isDesktop}
-        />
-        {/* Only where there is something to hear. Sound is the slot
-            machine's, not the site's — see lib/sound.ts. */}
-        {effectivePresentation === "casino" && <SoundControl />}
-      </div>
+      <ExportRow
+        mode={mode}
+        perks={perks}
+        loadoutPieces={loadoutPieces}
+        sharePieceCount={sharePieces.length}
+        squadActive={squadActive}
+        squadBuilds={squad.squad}
+        onCopyAll={
+          mode === "loadout"
+            ? handleCopyAllLoadout
+            : mode === "all"
+              ? handleCopyAllCombined
+              : handleCopyAll
+        }
+        onShare={handleShare}
+        onDownloadImage={handleDownloadImage}
+        generatingImage={generatingImage}
+        presentation={presentation}
+        onPresentationChange={setPresentation}
+        isDesktop={isDesktop}
+        showSoundControl={effectivePresentation === "casino"}
+      />
 
 
       {mode === "perks" && (
@@ -2258,7 +1662,7 @@ export function RandomizerBoard() {
         role={role}
         character={shareCharacter}
         pieceVisibility={pieceVisibility}
-        onPieceVisibilityChange={updatePieceVisibility}
+        onPieceVisibilityChange={settings.setPieceVisibility}
         twitch={twitch}
         hold={obsHold}
       />
