@@ -11,7 +11,7 @@
 // genuinely about the modal: which tab is showing, and which props reach
 // which panel.
 import { AnimatePresence, motion } from "framer-motion";
-import { Check, ChevronDown, Copy, ExternalLink, MonitorPlay, X } from "lucide-react";
+import { Check, ChevronDown, Copy, ExternalLink, Maximize2, MonitorPlay, X } from "lucide-react";
 import { useId, useState } from "react";
 import { cn } from "@/lib/cn";
 import { useT, type Lang } from "@/lib/i18n";
@@ -257,13 +257,71 @@ export function ObsOverlayModal({
 
             {panelTab === "overlay" && (
               <>
-                {/* Sits directly under the link a streamer just pasted into
-                    OBS, because that's the moment they need to know whether
-                    it's actually working. Until this existed, a failed write
-                    was invisible: the preview keeps updating over
-                    BroadcastChannel regardless, so everything looked fine
-                    while the Browser Source on stream sat frozen. */}
-                <p className="mt-4 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-hint text-muted">
+                {/* The job, first and said out loud.
+
+                    This block used to be third, under a connection-status line
+                    and a possible error about a connection nobody had made
+                    yet. The one thing someone opens this dialog to do is get a
+                    URL into OBS, so the URL is the first thing in it and Copy
+                    is a labelled button rather than a 36px icon — the step
+                    everything else here depends on should not be the smallest
+                    control on screen. */}
+                <p className="mt-4 text-meta font-medium text-foreground">
+                  {t({
+                    ru: "1. Скопируйте ссылку и вставьте её в источник «Браузер» в OBS",
+                    en: "1. Copy this link and paste it into a Browser source in OBS",
+                  })}
+                </p>
+                <div className="mt-2 flex flex-wrap items-center gap-2">
+                  <code
+                    data-testid="obs-overlay-url"
+                    className="min-w-0 flex-1 basis-full truncate rounded-lg border border-border bg-background px-3 py-2 text-meta text-foreground sm:basis-auto"
+                  >
+                    {options.url}
+                  </code>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      copy.copy(
+                        "overlay-url",
+                        options.url,
+                        t({ ru: "Ссылка скопирована", en: "Link copied" }),
+                      )
+                    }
+                    className="tap flex shrink-0 items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-control font-semibold text-accent-foreground transition-transform hover:scale-105 active:scale-95"
+                  >
+                    {copy.isCopied("overlay-url") ? (
+                      <Check className="size-4" />
+                    ) : (
+                      <Copy className="size-4" />
+                    )}
+                    {copy.isCopied("overlay-url")
+                      ? t({ ru: "Скопировано", en: "Copied" })
+                      : t({ ru: "Скопировать", en: "Copy link" })}
+                  </button>
+                  <a
+                    href={options.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={t({ ru: "Открыть в новой вкладке", en: "Open in a new tab" })}
+                    title={t({ ru: "Открыть оверлей в новой вкладке", en: "Open the overlay in a new tab" })}
+                    className="tap flex size-9 shrink-0 items-center justify-center rounded-lg border border-border text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+                  >
+                    <ExternalLink className="size-4" />
+                  </a>
+                </div>
+
+                {/* Below the link, not above it. This is feedback about a
+                    connection the streamer has only just been given the means
+                    to make, and it used to lead the panel — a grey or red dot
+                    over a URL nobody has pasted yet reads as "broken" rather
+                    than "not started".
+
+                    It still matters once they have pasted it: a failed write
+                    is otherwise invisible, because the preview keeps updating
+                    over BroadcastChannel regardless, so everything looks fine
+                    while the Browser Source on stream sits frozen. */}
+                <p className="mt-3 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-hint text-muted">
                   <span
                     className={cn(
                       "size-1.5 shrink-0 rounded-full",
@@ -286,41 +344,31 @@ export function ObsOverlayModal({
                   </p>
                 )}
 
-                <div className="mt-3 flex items-center gap-2">
-                  <code
-                    data-testid="obs-overlay-url"
-                    className="min-w-0 flex-1 truncate rounded-lg border border-border bg-background px-3 py-2 text-meta text-foreground"
-                  >
-                    {options.url}
-                  </code>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      copy.copy(
-                        "overlay-url",
-                        options.url,
-                        t({ ru: "Ссылка скопирована", en: "Link copied" }),
-                      )
-                    }
-                    aria-label={t({ ru: "Скопировать ссылку", en: "Copy link" })}
-                    className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-border text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
-                  >
-                    {copy.isCopied("overlay-url") ? (
-                      <Check className="size-4 text-accent" />
-                    ) : (
-                      <Copy className="size-4" />
-                    )}
-                  </button>
+                {/* The roomier view of this same panel.
+
+                    It used to be a second pill in the board's toolbar, beside
+                    the one that opens this dialog — two controls in the same
+                    row leading to the same three tabs, which is not a choice
+                    so much as a question the row could not answer. Here it is
+                    plainly what it is: the thing you are already looking at,
+                    with space to work in, for the person configuring on a
+                    second monitor rather than glancing mid-match.
+
+                    Hidden when this IS the page, because a link to where you
+                    already are is the clearest possible way to say nothing. */}
+                {!isPage && (
                   <a
-                    href={options.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label={t({ ru: "Открыть в новой вкладке", en: "Open in a new tab" })}
-                    className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-border text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+                    href="#/stream"
+                    onClick={onClose}
+                    className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-transparent px-2.5 py-1.5 text-hint font-medium text-muted transition-colors hover:border-border hover:bg-surface-hover hover:text-foreground"
                   >
-                    <ExternalLink className="size-4" />
+                    <Maximize2 className="size-3.5" />
+                    {t({
+                      ru: "Открыть на целой странице",
+                      en: "Open on a full page",
+                    })}
                   </a>
-                </div>
+                )}
 
                 <ObsHoldControl hold={hold} />
 
