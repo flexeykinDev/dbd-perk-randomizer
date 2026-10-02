@@ -1159,7 +1159,17 @@ export function RandomizerBoard() {
        just fewer of them out here, and the space that bought went back into
        the gaps rather than into pulling everything further up. A short, dense
        page is not a calm one. */
-    <div className="flex flex-col items-center gap-4 sm:gap-6">
+    /* `w-full` is load-bearing, not decoration.
+    
+       This board is a flex item of a column flex container that sets
+       `items-center`, which gives it `align-self: center` and therefore a
+       shrink-to-fit width. So it sized itself to its own content and every
+       `max-w-*` below it was dead: the perk grid's `max-w-4xl` never once
+       applied. Measured on the static export, the board was 664px wide inside
+       a 1568px parent at 1920, and 746 inside 1764 at 2560 — the interface was
+       not small on a large monitor because it lacked a scale step, it was
+       small because it had never claimed the width it already had. */
+    <div className="flex w-full flex-col items-center gap-4 sm:gap-6">
       <title>{pageTitle}</title>
       {/* Polite, so it waits for the reader to finish rather than cutting in;
           the build is not urgent enough for assertive. Empty until the first

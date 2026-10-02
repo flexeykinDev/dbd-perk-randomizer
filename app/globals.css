@@ -363,16 +363,35 @@ svg {
  * they were the only things that would have stayed put.
  *
  * Breakpoints are chosen above the common desktop sizes so nothing changes
- * for a normal 1080p or 1440p screen. */
+ * for a normal 1080p or 1440p screen — 1920 and below are deliberately
+ * untouched.
+ *
+ * The 2560 step was added after the fact. A 2560-wide panel fell into the
+ * 2200 bucket and got an 18px root, which left a 239px perk card on a 27in
+ * 1440p monitor: not broken, just modest, and the whole point of these rules
+ * is that a bigger screen should mean a bigger interface rather than more
+ * margin. 20px puts the same card at 266px and the layout cap at 2000 of
+ * 2560.
+ *
+ * Note this is only half the story. The board was shrink-wrapping to its own
+ * content because it is a flex item under `items-center`, so every max-width
+ * beneath it was inert and no amount of root scaling would have widened the
+ * grid. See the comment on the board's own `w-full`. */
 @media (min-width: 2200px) {
   :root {
     font-size: 18px;
   }
 }
 
+@media (min-width: 2500px) {
+  :root {
+    font-size: 20px;
+  }
+}
+
 @media (min-width: 3000px) {
   :root {
-    font-size: 21px;
+    font-size: 22px;
   }
 }
 
