@@ -47,7 +47,8 @@ import { BoardToolbar } from "./board-toolbar";
 import { ShareExportStage } from "./share-export-stage";
 import { SetupDisclosure } from "./setup-disclosure";
 import { SetupPanel } from "./setup-panel";
-import { RollShapePanel } from "./roll-shape-panel";
+import { LoadoutSlotsPanel } from "./loadout-slots-panel";
+import { PerkCountSelect } from "./perk-count-select";
 import { ExportRow } from "./export-row";
 import { getSeenSlugs, recordRoll } from "@/lib/stats";
 import { recordHistoryEntry, type HistoryEntry } from "@/lib/history";
@@ -1061,6 +1062,14 @@ export function RandomizerBoard() {
   }
 
   const roleColor = ROLE_COLOR[role];
+  /* While Battle Royale is running, the subtitle carries the remaining count.
+     The toggle that used to display it moved into the setup disclosure (see
+     setup-panel.tsx), and a mode whose entire point is a pool draining toward
+     zero cannot keep that number behind a collapsed panel. Written as two
+     strings rather than one t({...}) because they are interpolated inside the
+     subtitle's own ru/en pair. */
+  const brRu = `Battle Royale — осталось ${availableCount}`;
+  const brEn = `Battle Royale — ${availableCount} left`;
   // Loadout mode for killer needs a character with rolled add-ons to
   // actually mean something (see getRandomLoadout's forcedCharacter) — a
   // small handful of killers have perks scraped but no add-ons yet (very
@@ -1138,10 +1147,17 @@ export function RandomizerBoard() {
   );
 
   return (
-    /* gap-2 on phones, gap-3 from sm up. Eight stacked groups at 12px each
-       is 96px of pure gap before the build on a screen that has none to
-       spare; at 8px it is 64px and nothing reads as cramped. */
-    <div className="flex flex-col items-center gap-2 sm:gap-3">
+    /* gap-3 on phones, gap-4 from sm up.
+    
+       This used to be gap-2/gap-3, and the comment here explained why: eight
+       stacked groups at 12px was 96px of pure gap before the build on a screen
+       that had none to spare. There are six groups now — the perk-count pills
+       became one control and Battle Royale moved into the disclosure — and the
+       first card came up 75px on a laptop and 108px on a phone as a result.
+       Spending a third of that back on space between the groups is what turns
+       a shorter page into a calmer one; keeping all of it would just move the
+       same density higher up. */
+    <div className="flex flex-col items-center gap-3 sm:gap-4">
       <title>{pageTitle}</title>
       {/* Polite, so it waits for the reader to finish rather than cutting in;
           the build is not urgent enough for assertive. Empty until the first
@@ -1192,9 +1208,16 @@ export function RandomizerBoard() {
               onClick={() => selectMode(m)}
               className={cn(
                 "tap rounded-full px-3 py-1 text-control font-medium transition-colors",
+                /* Deliberately quieter than the role pills beside it.
+                
+                   Both used to carry the role colour, which made them read as
+                   one bank of five equally important choices. Role is the
+                   question the page opens with; mode is a thing most people
+                   never touch. Demoted with colour and weight only — same
+                   padding, same tap target, as e2e/mobile.spec.ts requires. */
                 mode === m
-                  ? cn(roleColor.border, roleColor.bg, roleColor.text, "border")
-                  : "text-muted hover:bg-surface-hover hover:text-foreground",
+                  ? "bg-surface-hover font-semibold text-foreground"
+                  : "text-muted hover:text-foreground",
               )}
             >
               {m === "perks"
@@ -1205,20 +1228,25 @@ export function RandomizerBoard() {
             </button>
           ))}
         </div>
+
+        {/* One control where five pills used to be — see perk-count-select.tsx.
+            Sits with the mode switch because the two together answer "what am
+            I rolling", and apart from the role pills because those are the
+            only thing on this row anyone has to decide. */}
+        {mode !== "loadout" && (
+          <PerkCountSelect value={perkCount} onChange={selectPerkCount} />
+        )}
       </div>
 
-
-      <RollShapePanel
-        mode={mode}
-        role={role}
-        perkCount={perkCount}
-        loadoutSlots={loadoutSlots}
-        battleRoyale={battleRoyale}
-        availableCount={availableCount}
-        onSelectPerkCount={selectPerkCount}
-        onToggleBattleRoyale={toggleBattleRoyale}
-        onToggleLoadoutSlot={toggleLoadoutSlot}
-      />
+      {/* Only in the modes that roll one. In the default Perks mode there is
+          no panel here at all, which is most of what the board gained. */}
+      {mode !== "perks" && (
+        <LoadoutSlotsPanel
+          role={role}
+          loadoutSlots={loadoutSlots}
+          onToggleLoadoutSlot={toggleLoadoutSlot}
+        />
+      )}
 
       <SetupDisclosure open={setup.open} onToggle={setup.toggle}>
         <SetupPanel
@@ -1235,6 +1263,9 @@ export function RandomizerBoard() {
           onClearCharacter={() => selectCharacter(null)}
           guaranteeTeachables={guaranteeTeachables}
           onToggleGuaranteeTeachables={toggleGuaranteeTeachables}
+          battleRoyale={battleRoyale}
+          availableCount={availableCount}
+          onToggleBattleRoyale={toggleBattleRoyale}
           filtersAtDefault={filtersAtDefault}
           onResetFilters={resetFilters}
         />
@@ -1258,15 +1289,15 @@ export function RandomizerBoard() {
       {mode === "loadout" ? (
         <p className="text-hint text-muted">
           {t({
-            ru: `${battleRoyale ? "Battle Royale" : "Случайная экипировка"} для ${ROLE_LABEL[role].ru} — нажмите на карточку, чтобы скопировать название`,
-            en: `${battleRoyale ? "Battle Royale" : "Random loadout"} for ${ROLE_LABEL[role].en} — click a card to copy its name`,
+            ru: `${battleRoyale ? brRu : "Случайная экипировка"} для ${ROLE_LABEL[role].ru} — нажмите на карточку, чтобы скопировать название`,
+            en: `${battleRoyale ? brEn : "Random loadout"} for ${ROLE_LABEL[role].en} — click a card to copy its name`,
           })}
         </p>
       ) : mode === "all" ? (
         <p className="text-hint text-muted">
           {t({
-            ru: `${battleRoyale ? "Battle Royale" : "Случайный билд и экипировка"} для ${ROLE_LABEL[role].ru} — нажмите на карточку, чтобы скопировать название`,
-            en: `${battleRoyale ? "Battle Royale" : "Random build and loadout"} for ${ROLE_LABEL[role].en} — click a card to copy its name`,
+            ru: `${battleRoyale ? brRu : "Случайный билд и экипировка"} для ${ROLE_LABEL[role].ru} — нажмите на карточку, чтобы скопировать название`,
+            en: `${battleRoyale ? brEn : "Random build and loadout"} for ${ROLE_LABEL[role].en} — click a card to copy its name`,
           })}
         </p>
       ) : perkCount === 0 ? (
@@ -1279,8 +1310,8 @@ export function RandomizerBoard() {
       ) : (
         <p className="text-hint text-muted">
           {t({
-            ru: `${battleRoyale ? "Battle Royale" : "Случайный билд"} для ${ROLE_LABEL[role].ru} — нажмите на перк, чтобы скопировать название`,
-            en: `${battleRoyale ? "Battle Royale" : "Random build"} for ${ROLE_LABEL[role].en} — click a perk to copy its name`,
+            ru: `${battleRoyale ? brRu : "Случайный билд"} для ${ROLE_LABEL[role].ru} — нажмите на перк, чтобы скопировать название`,
+            en: `${battleRoyale ? brEn : "Random build"} for ${ROLE_LABEL[role].en} — click a perk to copy its name`,
           })}
         </p>
       )}
@@ -1485,7 +1516,11 @@ export function RandomizerBoard() {
            thumb, which is better than being 71px further up and still
            needing a scroll. Static from `sm`, where it was never a problem —
            at 1366x768 it sits at 598 of 768. */
-        className="sticky bottom-3 z-30 flex items-center gap-2.5 rounded-full bg-accent px-8 py-3.5 text-base font-bold text-accent-foreground shadow-lg shadow-accent/30 transition-transform hover:scale-105 active:scale-95 disabled:pointer-events-none disabled:opacity-40 sm:static sm:bottom-auto"
+        /* `sm:mt-2` is the one piece of asymmetric spacing on the board, and
+           it is deliberate: the primary action reads as primary partly by
+           having nothing crowding it. Only from `sm`, because the sticky phone
+           layout already floats it clear of everything. */
+        className="sticky bottom-3 z-30 flex items-center gap-2.5 rounded-full bg-accent px-8 py-3.5 text-base font-bold text-accent-foreground shadow-lg shadow-accent/30 transition-transform hover:scale-105 active:scale-95 disabled:pointer-events-none disabled:opacity-40 sm:static sm:bottom-auto sm:mt-2"
       >
         <Dices className="size-5" />
         {t({ ru: "Сгенерировать новый билд", en: "Generate a new build" })}

@@ -1,6 +1,7 @@
 "use client";
 
 import { RotateCcw, Users, X } from "lucide-react";
+import { BattleRoyaleControl } from "./battle-royale-control";
 import { ControlGroup, ControlPanel } from "./control-panel";
 import { Dropdown } from "./dropdown";
 import { ToggleSwitch } from "./toggle-switch";
@@ -71,6 +72,9 @@ export function SetupPanel({
   onClearCharacter,
   guaranteeTeachables,
   onToggleGuaranteeTeachables,
+  battleRoyale,
+  availableCount,
+  onToggleBattleRoyale,
   filtersAtDefault,
   onResetFilters,
 }: {
@@ -87,6 +91,11 @@ export function SetupPanel({
   onClearCharacter: () => void;
   guaranteeTeachables: boolean;
   onToggleGuaranteeTeachables: () => void;
+  battleRoyale: boolean;
+  /** Already filtered to the current role — see lib/use-battle-royale.ts for
+   *  why a raw count would disagree with the pool size beside it. */
+  availableCount: number;
+  onToggleBattleRoyale: () => void;
   /** Hides the reset, because a button that cannot change anything is a
    *  control you have to read before ignoring. Its absence is also the
    *  clearest statement that nothing is currently narrowing your rolls. */
@@ -163,6 +172,23 @@ export function SetupPanel({
             </p>
           </ControlGroup>
         )}
+
+        {/* Battle Royale lives here now, not on the board.
+        
+            It is a whole alternate game mode — play until the pool runs dry —
+            and it was sitting in the primary toolbar, on screen for every
+            visitor before their first roll, including the overwhelming
+            majority who will never start one. That is what "secondary" is for.
+        
+            It stays reachable in one click from the same place as the other
+            things you set once, and while it is running the board's own
+            subtitle carries the remaining count, so turning it on does not
+            mean watching a number that is behind a collapsed panel. */}
+        <BattleRoyaleControl
+          active={battleRoyale}
+          onToggle={onToggleBattleRoyale}
+          remaining={availableCount}
+        />
       </ControlPanel>
 
       {/* Character picker — picks a specific character for the portrait chip

@@ -8,6 +8,7 @@
 // rolls, that a link restores a build — is identical on a phone and is
 // covered once, at desktop, in smoke.spec.ts.
 import { test, expect, type Page } from "@playwright/test";
+import { buildSettled } from "./settled";
 
 /** Apple's and Google's guidance agree on roughly this: anything smaller
  *  is hard to hit reliably with a thumb. Applied to the control's own box,
@@ -76,10 +77,13 @@ test("the primary action is reachable without scrolling to find it", async ({ pa
 
 test("toolbar controls are big enough to hit with a thumb", async ({ page }) => {
   await page.goto("/?role=survivor");
-  // Not just "a card is visible": the board cross-fades, and a card on its
-  // way out is mid-transform, so its buttons measure smaller than they will
-  // ever actually be drawn. Waiting for exactly the build settles that.
-  await expect(page.locator("[data-perk-card]")).toHaveCount(4);
+  /* Not just "four cards exist": the board cross-fades AND the cards enter on
+     a per-slot stagger, so counting them resolves at the start of the
+     animation rather than the end. The comment here used to claim the count
+     settled it. It does not — measured on a Pixel 7, the smallest control in a
+     card is 28px at that moment and 40px once the transforms land, which is
+     sixteen phantom violations. See e2e/settled.ts. */
+  await buildSettled(page);
 
   const tooSmall: string[] = [];
   const buttons = await page.getByRole("button").all();
