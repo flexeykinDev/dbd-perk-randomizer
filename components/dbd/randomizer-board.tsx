@@ -78,7 +78,11 @@ import { RitualStage } from "./ritual-stage";
 import { SlotsStage } from "./slots-stage";
 import { ErrorBoundary } from "../error-boundary";
 import { useIsDesktop } from "@/lib/use-is-desktop";
-import { isAvailable, usePresentation } from "@/lib/use-presentation";
+import {
+  GRID_PRESENTATIONS,
+  isAvailable,
+  usePresentation,
+} from "@/lib/use-presentation";
 
 const ROLE_LABEL: Record<PerkRole, { ru: string; en: string }> = {
   survivor: { ru: "выжившего", en: "survivor" },
@@ -1124,6 +1128,17 @@ export function RandomizerBoard() {
     <PerkGrid
       perks={perks}
       language={language}
+      /* Classic, Minimal and Impact are this same grid with a different
+         entrance — see components/dbd/card-entrance.ts. Anything not a grid
+         skin falls through to a canvas stage below, and lands back here if
+         that stage fails. */
+      entrance={
+        effectivePresentation === "minimal"
+          ? "minimal"
+          : effectivePresentation === "impact"
+            ? "impact"
+            : "classic"
+      }
       loading={!mounted}
       emptyMessage={
         perkCount === 0
@@ -1360,7 +1375,7 @@ export function RandomizerBoard() {
                 : t({ ru: "Открыть пул перков", en: "Open perk pool" })}
             </button>
           </div>
-        ) : effectivePresentation !== "classic" && perks.length > 0 ? (
+        ) : !GRID_PRESENTATIONS.has(effectivePresentation) && perks.length > 0 ? (
           /* Same build, shown differently. The stages are fed `perks` and
              never roll anything themselves — see lib/use-presentation.ts.
              Pinning and per-slot reroll are grid affordances, so they stay

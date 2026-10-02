@@ -12,17 +12,21 @@ import { safeGet, safeSet } from "./safe-storage";
 
 const STORAGE_KEY = "dbd-randomizer:presentation";
 
-export const PRESENTATIONS = ["classic", "ritual", "casino"] as const;
+export const PRESENTATIONS = ["classic", "minimal", "impact", "ritual", "casino"] as const;
 export type Presentation = (typeof PRESENTATIONS)[number];
 
 export const PRESENTATION_LABEL: Record<Presentation, { ru: string; en: string }> = {
   classic: { ru: "Обычный", en: "Classic" },
+  minimal: { ru: "Без анимации", en: "Minimal" },
+  impact: { ru: "Резкий", en: "Impact" },
   ritual: { ru: "Ритуал", en: "Ritual" },
   casino: { ru: "Слоты", en: "Slots" },
 };
 
 export const PRESENTATION_HINT: Record<Presentation, { ru: string; en: string }> = {
-  classic: { ru: "Карточки как сейчас", en: "Cards, as now" },
+  classic: { ru: "Карточки по очереди", en: "Cards, one after another" },
+  minimal: { ru: "Билд появляется сразу", en: "The build is just there" },
+  impact: { ru: "Все четыре разом", en: "All four at once" },
   ritual: { ru: "Вихрь Сущности — только ПК", en: "The Entity's vortex — PC only" },
   casino: { ru: "Барабаны автомата — только ПК", en: "Slot reels — PC only" },
 };
@@ -39,6 +43,19 @@ export const PRESENTATION_HINT: Record<Presentation, { ru: string; en: string }>
  * A set rather than another `p !== …` so the next presentation has to make a
  * decision here instead of inheriting "works everywhere" by omission. */
 const DESKTOP_ONLY: ReadonlySet<Presentation> = new Set<Presentation>(["ritual", "casino"]);
+
+/* The ones drawn with real cards rather than on a canvas.
+ *
+ * Everything outside this set is the ordinary perk grid with a different
+ * entrance, which is why those three work on a phone, inherit pinning and
+ * per-slot reroll for free, and need no lifecycle of their own: framer-motion
+ * already cancels an interrupted transition and lands on the current value.
+ * A canvas stage has to be told all of that by hand — see slots-stage.tsx. */
+export const GRID_PRESENTATIONS: ReadonlySet<Presentation> = new Set<Presentation>([
+  "classic",
+  "minimal",
+  "impact",
+]);
 
 /** Anything already saved still resolves — a desktop choice must not silently
  *  become Classic on the owner's phone and then get written back. */

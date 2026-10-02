@@ -16,6 +16,7 @@ import { useDescription } from "@/lib/descriptions";
 import { useModal } from "@/lib/use-modal";
 import { wrongDataUrl } from "@/lib/repo";
 import { Highlighted } from "./highlighted-text";
+import { entranceFor, type CardEntrance } from "./card-entrance";
 import {
   CORNER_BUTTON,
   CORNER_BUTTON_BASE,
@@ -42,6 +43,7 @@ export function PerkGrid({
   pinnedSlots,
   onTogglePin,
   onRerollSlot,
+  entrance = "classic",
 }: {
   perks: Perk[];
   language: "en" | "ru";
@@ -53,6 +55,9 @@ export function PerkGrid({
   pinnedSlots?: Record<number, string>;
   onTogglePin?: (slot: number, slug: string) => void;
   onRerollSlot?: (slot: number) => void;
+  /** How a card arrives — see card-entrance.ts. The three grid skins differ
+   *  in this and in nothing else. */
+  entrance?: CardEntrance;
 }) {
   const t = useT();
   const [detailPerk, setDetailPerk] = useState<Perk | null>(null);
@@ -95,20 +100,11 @@ export function PerkGrid({
             return (
               <motion.div
                 key={perk.slug}
-                /* The same reveal the loadout row uses: a spring so each
-                   card lands rather than fades in, a small rotation so it
-                   reads as being set down, and a stagger left to right. The
-                   two halves of a build should not animate differently. */
-                initial={{ opacity: 0, scale: 0.62, y: -14, rotate: -7 }}
-                animate={{ opacity: 1, scale: 1, y: 0, rotate: 0 }}
-                exit={{ opacity: 0, scale: 0.86, y: 8, transition: { duration: 0.14 } }}
-                transition={{
-                  type: "spring",
-                  stiffness: 430,
-                  damping: 27,
-                  mass: 0.7,
-                  delay: index * 0.075,
-                }}
+                // Which of the three entrances this skin uses — see
+                // card-entrance.ts. Everything else about the card is shared,
+                // which is the point: a skin here is how the build arrives,
+                // never what the card is.
+                {...entranceFor(entrance, index)}
                 role="button"
                 tabIndex={0}
                 // Marks the card itself for the e2e suite, which has to tell

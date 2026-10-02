@@ -110,3 +110,65 @@ for (const stage of STAGES) {
     await settled(page, stage.testId);
   });
 }
+
+/* The grid skins.
+ *
+ * Classic, Minimal and Impact are the ordinary perk grid with different
+ * entrances, so they get the guarantees the canvas stages needed hand-written
+ * machinery for — framer-motion cancels an interrupted transition and
+ * re-targets it from wherever the value currently is. That is the argument for
+ * building a skin out of real cards rather than a canvas, and it is worth
+ * holding to it rather than assuming it.
+ *
+ * They are also the only skins a phone is offered: both canvas stages are
+ * desktop-only (see lib/use-presentation.ts), so before these existed a phone
+ * had exactly one choice.
+ */
+const GRID_SKINS = [
+  { name: "Minimal", presentation: "minimal", label: /Без анимации/ },
+  { name: "Impact", presentation: "impact", label: /Резкий/ },
+] as const;
+
+for (const skin of GRID_SKINS) {
+  test(`${skin.name}: spamming Generate lands on the build the board holds`, async ({
+    page,
+  }) => {
+    await page.addInitScript((p) => {
+      try {
+        localStorage.setItem("dbd-randomizer:presentation", p);
+      } catch {
+        /* private mode — the picker still works */
+      }
+    }, skin.presentation);
+    await page.setViewportSize(DESKTOP);
+    await page.goto("/?role=survivor");
+    await expect(page.locator("[data-perk-card]")).toHaveCount(4);
+
+    const generate = page.getByRole("button", { name: "Сгенерировать новый билд" });
+    for (let i = 0; i < 8; i++) {
+      await generate.click();
+      await page.waitForTimeout(70);
+    }
+
+    // Every card settles, and there are exactly four of them — no card left
+    // mid-transform and none stranded by AnimatePresence.
+    await page.waitForFunction(() => {
+      const cards = [...document.querySelectorAll("[data-perk-card]")];
+      return (
+        cards.length === 4 &&
+        cards.every((c) => getComputedStyle(c).transform === "none")
+      );
+    });
+
+    // And the grid shows the build the URL describes.
+    const ids = (new URL(page.url()).searchParams.get("p") ?? "").split(",").filter(Boolean);
+    expect(ids).toHaveLength(4);
+  });
+
+  test(`${skin.name}: a phone is offered it`, async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/?role=survivor");
+    await page.getByTestId("presentation-picker").click();
+    await expect(page.getByRole("menuitemradio", { name: skin.label })).toBeVisible();
+  });
+}
