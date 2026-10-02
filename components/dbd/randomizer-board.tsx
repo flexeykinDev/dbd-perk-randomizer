@@ -1470,24 +1470,42 @@ export function RandomizerBoard() {
           Silent most of the time at coherence 0, which is correct: measured
           over 400 seeded rolls per level, a theme turns up in 29.5% of
           chaos builds and 77.8% at full synergy. A line under a genuinely
-          unrelated four would be the site inventing a story. */}
-      {mode !== "loadout" && buildTheme && (
+          unrelated four would be the site inventing a story.
+
+          But the SLOT is always here, even when the line is not. It used to
+          mount and unmount with the theme, which moved Generate 42px down the
+          page on the roll a theme appeared and back up on the next one —
+          measured at 1366x768, y=574 without and y=616 with. The primary
+          action sliding out from under the cursor between rolls is the worst
+          place on this page to spend a layout shift, and someone pressing
+          Generate repeatedly is exactly who meets it. Holding the line's place
+          costs those 42px once, at load, and then nothing ever moves. */}
+      {mode !== "loadout" && (
         /* Says what it means now. It used to read "3 из 4 — aura", which is
            three facts and no sentence: nothing told you the number counted
            perks, and nothing said what "aura" was doing there at all. The
            title carries where it comes from, for anyone who wonders why the
            line appears on some rolls and not others. */
         <p
-          className="text-hint text-muted"
-          title={t({
-            ru: "Считается по тегам перков. Появляется, только если большинство билда тянет в одну сторону.",
-            en: "Counted from the perks' own tags. Shown only when most of the build pulls the same way.",
-          })}
+          className="min-h-[1.0625rem] text-hint text-muted"
+          /* Empty, it is a spacer — not something to read out as a blank line
+             or to offer a tooltip that explains nothing. */
+          aria-hidden={!buildTheme}
+          title={
+            buildTheme
+              ? t({
+                  ru: "Считается по тегам перков. Появляется, только если большинство билда тянет в одну сторону.",
+                  en: "Counted from the perks' own tags. Shown only when most of the build pulls the same way.",
+                })
+              : undefined
+          }
         >
-          {t({
-            ru: `${buildTheme.count} из ${buildTheme.total} перков — про ${buildTheme.tag.ru.toLowerCase()}`,
-            en: `${buildTheme.count} of ${buildTheme.total} perks are about ${buildTheme.tag.en.toLowerCase()}`,
-          })}
+          {buildTheme
+            ? t({
+                ru: `${buildTheme.count} из ${buildTheme.total} перков — про ${buildTheme.tag.ru.toLowerCase()}`,
+                en: `${buildTheme.count} of ${buildTheme.total} perks are about ${buildTheme.tag.en.toLowerCase()}`,
+              })
+            : null}
         </p>
       )}
 
@@ -1500,13 +1518,36 @@ export function RandomizerBoard() {
           !!activeSeed ||
           (mode === "perks" && (perkCount === 0 || poolExhausted))
         }
+        /* Every way this button can be dead says which one it is.
+
+           It had a reason for exactly one of its three disabled states — an
+           active seed — and stayed silent for the other two. A primary action
+           that greys out and will not say why is the worst thing on a page to
+           leave unexplained, and both silent cases are ones the visitor caused
+           themselves a moment earlier, so the answer is always within reach
+           once they know what it is. */
         title={
           activeSeed
             ? t({
                 ru: "Билд зафиксирован этим сидом — сбросьте сид, чтобы рандомизировать",
                 en: "This build is locked to the active seed — clear the seed to randomize",
               })
-            : undefined
+            : mode === "perks" && perkCount === 0
+              ? t({
+                  ru: "Выбрано ноль перков — это режим испытания. Поменяйте «Сколько перков», чтобы снова генерировать.",
+                  en: "Zero perks is the challenge mode — change how many perks to roll again.",
+                })
+              : mode === "perks" && poolExhausted
+                ? battleRoyale
+                  ? t({
+                      ru: "Перки этой роли кончились — начните Battle Royale заново или смените сторону.",
+                      en: "This role has run out of perks — restart Battle Royale or switch sides.",
+                    })
+                  : t({
+                      ru: "В пуле меньше перков, чем нужно — включите больше в «Пул» или уменьшите количество.",
+                      en: "The pool holds fewer perks than the build needs — enable more in Pool, or lower the count.",
+                    })
+                : undefined
         }
         /* Sticky on a phone, static everywhere else.
         

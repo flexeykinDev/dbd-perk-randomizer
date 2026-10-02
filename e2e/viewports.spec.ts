@@ -309,3 +309,62 @@ test("the stream page shows the whole overlay setup, and the way back", async ({
   await page.getByRole("button", { name: /К доске/ }).click();
   await expect(page.locator("[data-perk-card]")).toHaveCount(4);
 });
+
+/* The primary action does not move between rolls.
+ *
+ * The build-theme line under the cards — "3 из 4 перков — про аура-чтение" —
+ * appears on roughly 29.5% of rolls at coherence 0 and 77.8% at full synergy,
+ * and it used to mount and unmount with the theme it describes. Measured at
+ * 1366x768 that put Generate at y=574 on a plain roll and y=616 on a themed
+ * one: a 42px jump, on the one control a person presses repeatedly, timed to
+ * land exactly while they are pressing it.
+ *
+ * The slot is always rendered now. This is the assertion that keeps it that
+ * way, and it is deliberately run over enough rolls to see both cases — a
+ * single roll proves nothing, because most rolls have no theme at all.
+ */
+test("Generate stays put while rolling", async ({ page }) => {
+  await page.setViewportSize({ width: 1366, height: 900 });
+  await page.goto("/?role=survivor");
+
+  const generate = page.getByRole("button", { name: "Сгенерировать новый билд" });
+  const settled = async () => {
+    await page.waitForFunction(() => {
+      const cards = [...document.querySelectorAll("[data-perk-card]")];
+      return cards.length === 4 && cards.every((c) => getComputedStyle(c).transform === "none");
+    });
+  };
+  await settled();
+
+  /* Read through the DOM rather than with boundingBox(). Playwright scrolls an
+     element into view before measuring it and reports viewport coordinates, so
+     boundingBox() on a page taller than the window measures the scroll
+     position — the first version of this test "failed" with a 439px drift the
+     page did not have. */
+  const generateY = () =>
+    page.evaluate(() => {
+      const button = [...document.querySelectorAll("button")].find((b) =>
+        /Сгенерировать новый билд/.test(b.textContent ?? ""),
+      )!;
+      return Math.round(button.getBoundingClientRect().top + window.scrollY);
+    });
+
+  const seen = new Set<number>();
+  let themed = 0;
+  for (let i = 0; i < 14; i++) {
+    seen.add(await generateY());
+    if (await page.locator("p", { hasText: /перков — про/ }).count()) themed++;
+    await generate.click();
+    await settled();
+  }
+
+  /* Both cases have to have happened, or this passed by never seeing a theme.
+     14 rolls at ~29.5% makes a run of zero vanishingly unlikely, but "unlikely"
+     is not an assertion. */
+  expect(themed, "no themed roll came up, so the jump was never exercised").toBeGreaterThan(0);
+  expect(themed, "every roll had a theme, so the plain case was never exercised").toBeLessThan(14);
+
+  const positions = [...seen].sort((a, b) => a - b);
+  const drift = positions[positions.length - 1] - positions[0];
+  expect(drift, `Generate moved between rolls: y = ${positions.join(", ")}`).toBeLessThanOrEqual(2);
+});
