@@ -387,6 +387,13 @@ test("Generate stays put while rolling", async ({ page }) => {
 for (const device of [
   { name: "desktop", width: 1366, height: 900 },
   { name: "phone", width: 390, height: 844 },
+  /* 2K earns its place here rather than being thoroughness for its own sake.
+     The grid's min-h-[220px] is a fixed pixel value while everything inside
+     the card is rem, so at this breakpoint's 20px root the content was already
+     226px and the slack that protects 1080p was gone — a wrapped perk name
+     took the grid to 251 and moved ten elements. The guard did not see it
+     because the guard did not look here. */
+  { name: "2K", width: 2560, height: 1440 },
 ]) {
   test(`nothing shifts between rolls on ${device.name}`, async ({ page }) => {
     await page.setViewportSize({ width: device.width, height: device.height });

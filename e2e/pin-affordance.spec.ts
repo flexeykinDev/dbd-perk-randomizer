@@ -9,28 +9,46 @@ import { test, expect } from "@playwright/test";
  * silently stops applying looks exactly like the old behaviour.
  */
 
-/** The ring is drawn as a box-shadow; an unpinned card has none. */
-async function ringsOf(page: import("@playwright/test").Page) {
-  return page.locator("[data-perk-card]").evaluateAll((els) =>
-    els.map((e) => {
-      const s = getComputedStyle(e);
-      return { shadow: s.boxShadow === "none" ? "" : s.boxShadow };
-    }),
-  );
+/** How many cards are marked differently from the rest.
+ *
+ *  The ring is a box-shadow (Tailwind draws `ring-*` that way), and this used
+ *  to count cards that had any box-shadow at all on the grounds that an
+ *  unpinned card had none. That stopped being true the moment every card got a
+ *  resting shadow for depth, and the test failed while nothing about pinning
+ *  had changed.
+ *
+ *  Counting the odd ones out instead says what the feature actually promises:
+ *  a pinned card looks different from the cards beside it. That holds whatever
+ *  the base surface does next. */
+async function markedCount(page: import("@playwright/test").Page) {
+  return page.locator("[data-perk-card]").evaluateAll((els) => {
+    const shadows = els.map((e) => getComputedStyle(e).boxShadow);
+    const tally = new Map<string, number>();
+    for (const s of shadows) tally.set(s, (tally.get(s) ?? 0) + 1);
+    // The commonest shadow is the resting one; anything else is a mark.
+    let commonest = "";
+    let best = -1;
+    for (const [shadow, n] of tally) {
+      if (n > best) {
+        best = n;
+        commonest = shadow;
+      }
+    }
+    return shadows.filter((s) => s !== commonest).length;
+  });
 }
 
 test("a pinned perk is marked on the card, not just in its corner", async ({ page }) => {
   await page.goto("/?role=survivor&mode=perks");
   await expect(page.locator("[data-perk-card]")).toHaveCount(4);
 
-  const before = await ringsOf(page);
-  expect(before.filter((r) => r.shadow).length, "nothing should be ringed before pinning").toBe(0);
+  expect(await markedCount(page), "nothing should be marked before pinning").toBe(0);
 
   await page.locator("[data-perk-card]").first().hover();
   await page.getByRole("button", { name: "Закрепить перк" }).first().click();
   await page.mouse.move(2, 2);
   await expect
-    .poll(async () => (await ringsOf(page)).filter((r) => r.shadow).length)
+    .poll(async () => await markedCount(page))
     .toBe(1);
 
   // And it survives a reroll, which is the moment the mark exists for: the
@@ -38,10 +56,10 @@ test("a pinned perk is marked on the card, not just in its corner", async ({ pag
   await page.getByRole("button", { name: /Сгенерировать новый билд/ }).click();
   await page.mouse.move(2, 2);
   await expect
-    .poll(async () => (await ringsOf(page)).filter((r) => r.shadow).length, { timeout: 4000 })
+    .poll(async () => await markedCount(page), { timeout: 4000 })
     .toBe(1);
 
   await page.getByRole("button", { name: "Открепить перк" }).click();
   await page.mouse.move(2, 2);
-  await expect.poll(async () => (await ringsOf(page)).filter((r) => r.shadow).length).toBe(0);
+  await expect.poll(async () => await markedCount(page)).toBe(0);
 });

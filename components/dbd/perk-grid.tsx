@@ -125,7 +125,22 @@ export function PerkGrid({
                 }}
                 aria-label={t({ ru: "Описание:", en: "Description:" }) + " " + perk.name[language]}
                 className={cn(
-                  "group relative flex cursor-pointer flex-col items-center gap-2 rounded-2xl border bg-surface p-3 text-center transition-colors hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:outline-none",
+                  /* Depth, not decoration.
+
+                     Four of these are the largest thing on the board and they
+                     sat perfectly flat on the page, which is why the board read
+                     as a utility rather than as a result. A shadow gives them a
+                     surface to sit on; hovering deepens it and lifts the card
+                     a single pixel, which is enough to say "this one responds"
+                     without anything moving that a neighbour would notice.
+
+                     Shadow and translate are not layout, so none of this
+                     touches the grid height the whole page's stability now
+                     depends on — verified at 220px desktop and 354px phone,
+                     constant across rolls. No glow and no glass: the shadow is
+                     black at low alpha, which is what a dark surface actually
+                     does. */
+                  "group relative flex cursor-pointer flex-col items-center gap-2 rounded-2xl border bg-surface p-3 text-center shadow-sm shadow-black/25 transition-[background-color,border-color,box-shadow,transform] duration-200 ease-out hover:-translate-y-px hover:bg-surface-hover hover:shadow-lg hover:shadow-black/35 focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:outline-none",
                   /* The card's edge carries the role instead of the neutral
                      border every other surface uses. Four of these in a row
                      is the largest thing on the board, so it is the cheapest
@@ -317,11 +332,23 @@ export function PerkGrid({
                     half of all rolls, which is the "everything jumps" that the
                     theme line was only part of.
 
-                    Scoped to below `sm` on purpose. From `sm` up the grid's
-                    own min-h-[220px] already absorbs the difference, so the
-                    desktop card measured zero movement across ten rolls and
-                    does not need the extra height. */}
-                <span className="text-body font-medium text-foreground max-sm:flex max-sm:min-h-[2.4375rem] max-sm:items-center">
+                    This was scoped to below `sm` at first, on the grounds that
+                    the grid's own min-h-[220px] absorbed the difference higher
+                    up. It does, until it does not: that 220 is a fixed pixel
+                    value while everything inside the card is rem, so at the
+                    2560 breakpoint's 20px root the content is already 226px
+                    and the slack is gone. Measured there, a wrapped name took
+                    the grid from 226 to 251 and moved ten elements down the
+                    page. Reserving the line everywhere is one rule instead of
+                    a rule plus an exception that silently expires.
+                
+                    2.4375rem rather than the tidier `2lh`: rem scales with the
+                    root font, which is exactly how the large-screen steps in
+                    globals.css make everything else bigger, and it needs no
+                    opinion about which browsers have shipped `lh`. Measured,
+                    the two agree — 39px at a 16px root, 49px at 2560's 20px
+                    one. */}
+                <span className="flex min-h-[2.4375rem] items-center text-body font-medium text-foreground">
                   {perk.name[language]}
                 </span>
               </motion.div>

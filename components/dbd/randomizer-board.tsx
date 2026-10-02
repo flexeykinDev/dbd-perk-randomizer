@@ -1566,7 +1566,22 @@ export function RandomizerBoard() {
            it is deliberate: the primary action reads as primary partly by
            having nothing crowding it. Only from `sm`, because the sticky phone
            layout already floats it clear of everything. */
-        className="sticky bottom-3 z-30 flex items-center gap-2.5 rounded-full bg-accent px-8 py-3.5 text-base font-bold text-accent-foreground shadow-lg shadow-accent/30 transition-transform hover:scale-105 active:scale-95 disabled:pointer-events-none disabled:opacity-40 sm:static sm:bottom-auto sm:mt-2"
+        /* Presence from weight, not from size.
+
+           The geometry is untouched — px-8 py-3.5, 52px tall — because at
+           1366x768 this button sits at y=616 against a ceiling of 640, and
+           that ceiling exists because the build kept sinking under its own
+           chrome. There are 24 pixels of room here and they are not for
+           padding.
+
+           So what changed is how it carries itself. `hover:scale-105` read as
+           a toy: a primary action that grows 5% when you approach it is eager
+           rather than confident. It lifts instead — a deeper, wider shadow and
+           a touch more luminance — and takes a firm, fast press at 0.97 rather
+           than a springy 0.95. Tighter tracking on the label does the rest.
+           Transforms and shadows do not participate in layout, so none of this
+           spends the 24px. */
+        className="sticky bottom-3 z-30 flex items-center gap-2.5 rounded-full bg-accent px-8 py-3.5 text-base font-bold tracking-tight text-accent-foreground shadow-lg shadow-accent/25 transition-[transform,box-shadow,filter] duration-150 ease-out hover:shadow-xl hover:shadow-accent/40 hover:brightness-110 active:scale-[0.97] active:shadow-md disabled:pointer-events-none disabled:opacity-40 disabled:shadow-none sm:static sm:bottom-auto sm:mt-2"
       >
         <Dices className="size-5" />
         {t({ ru: "Сгенерировать новый билд", en: "Generate a new build" })}
@@ -1600,111 +1615,129 @@ export function RandomizerBoard() {
         {t({ ru: "ссылка", en: "share link" })}
       </p>
 
-      <ExportRow
-        mode={mode}
-        perks={perks}
-        loadoutPieces={loadoutPieces}
-        sharePieceCount={sharePieces.length}
-        squadActive={squadActive}
-        squadBuilds={squad.squad}
-        onCopyAll={
-          mode === "loadout"
-            ? handleCopyAllLoadout
-            : mode === "all"
-              ? handleCopyAllCombined
-              : handleCopyAll
-        }
-        onShare={handleShare}
-        onDownloadImage={handleDownloadImage}
-        generatingImage={generatingImage}
-        presentation={presentation}
-        onPresentationChange={setPresentation}
-        isDesktop={isDesktop}
-        showSoundControl={effectivePresentation === "casino"}
-      />
+      {/* Everything you might do after a build, as one quiet cluster.
+
+          These were four siblings of the root column — export row, squad
+          toggle, Pool stats, and the panels it opens — each separated from the
+          next by the same 16/24px the board uses between its major groups. Four
+          evenly spaced rows under the primary action read as four more things
+          to consider, which is the opposite of what a secondary zone is for.
+
+          Grouped, they take the root's spacing once, above the group, and a
+          tighter rhythm inside it. Inter-group spacing up, intra-group spacing
+          down: the cluster separates from Generate more clearly than before
+          while occupying less of the page.
+
+          All of it is BELOW Generate, which is the only reason this pass could
+          touch spacing at all — at 1366x768 Generate sits at y=616 against a
+          640 ceiling, so there is no budget above it. */}
+      <div className="flex w-full flex-col items-center gap-2 sm:gap-2.5">
+        <ExportRow
+          mode={mode}
+          perks={perks}
+          loadoutPieces={loadoutPieces}
+          sharePieceCount={sharePieces.length}
+          squadActive={squadActive}
+          squadBuilds={squad.squad}
+          onCopyAll={
+            mode === "loadout"
+              ? handleCopyAllLoadout
+              : mode === "all"
+                ? handleCopyAllCombined
+                : handleCopyAll
+          }
+          onShare={handleShare}
+          onDownloadImage={handleDownloadImage}
+          generatingImage={generatingImage}
+          presentation={presentation}
+          onPresentationChange={setPresentation}
+          isDesktop={isDesktop}
+          showSoundControl={effectivePresentation === "casino"}
+        />
 
 
-      {mode === "perks" && (
-        <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2">
-          <ToggleSwitch
-            checked={squad.active}
-            onChange={squad.toggle}
-            label={t({ ru: "Билды на группу", en: "Squad builds" })}
-            activeClassName="bg-accent"
-            tooltip={t({
-              ru: "Один билд на каждого в группе, без повторов перков между игроками.",
-              en: "One build per player in your group, with no perk repeated across the team.",
+        {mode === "perks" && (
+          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2">
+            <ToggleSwitch
+              checked={squad.active}
+              onChange={squad.toggle}
+              label={t({ ru: "Билды на группу", en: "Squad builds" })}
+              activeClassName="bg-accent"
+              tooltip={t({
+                ru: "Один билд на каждого в группе, без повторов перков между игроками.",
+                en: "One build per player in your group, with no perk repeated across the team.",
+              })}
+            />
+            {squad.active && (
+              <div
+                className="flex items-center gap-1"
+                role="radiogroup"
+                aria-label={t({ ru: "Сколько игроков", en: "How many players" })}
+              >
+                {[2, 3, 4].map((n) => (
+                  <button
+                    key={n}
+                    type="button"
+                    role="radio"
+                    aria-checked={squad.players === n}
+                    onClick={() => squad.setPlayers(n)}
+                    className={cn(
+                      "tap size-7 rounded-full border text-control font-semibold transition-colors",
+                      squad.players === n
+                        ? "border-accent bg-accent text-accent-foreground"
+                        : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
+                    )}
+                  >
+                    {n}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        <button
+          type="button"
+          onClick={() => setShowStats((v) => !v)}
+          className="tap flex items-center gap-1.5 text-control text-muted transition-colors hover:text-muted"
+        >
+          <BarChart3 className="size-3.5" />
+          {t({ ru: "Статистика пула", en: "Pool stats" })}
+        </button>
+        {showStats && mounted && mode !== "loadout" && (
+          <PoolStatsPanel
+            totalLabel={t({
+              ru: `Всего перков ${ROLE_LABEL[role].ru}:`,
+              en: `Total ${ROLE_LABEL[role].en} perks:`,
             })}
+            total={totalInRole}
+            excluded={excludedSlugs.size}
+            battleRoyale={
+              battleRoyale
+                ? { usedInRole: battleRoyaleUsedInRole, remaining: availableCount }
+                : undefined
+            }
           />
-          {squad.active && (
-            <div
-              className="flex items-center gap-1"
-              role="radiogroup"
-              aria-label={t({ ru: "Сколько игроков", en: "How many players" })}
-            >
-              {[2, 3, 4].map((n) => (
-                <button
-                  key={n}
-                  type="button"
-                  role="radio"
-                  aria-checked={squad.players === n}
-                  onClick={() => squad.setPlayers(n)}
-                  className={cn(
-                    "tap size-7 rounded-full border text-control font-semibold transition-colors",
-                    squad.players === n
-                      ? "border-accent bg-accent text-accent-foreground"
-                      : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
-                  )}
-                >
-                  {n}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
-
-      <button
-        type="button"
-        onClick={() => setShowStats((v) => !v)}
-        className="tap flex items-center gap-1.5 text-control text-muted transition-colors hover:text-muted"
-      >
-        <BarChart3 className="size-3.5" />
-        {t({ ru: "Статистика пула", en: "Pool stats" })}
-      </button>
-      {showStats && mounted && mode !== "loadout" && (
-        <PoolStatsPanel
-          totalLabel={t({
-            ru: `Всего перков ${ROLE_LABEL[role].ru}:`,
-            en: `Total ${ROLE_LABEL[role].en} perks:`,
-          })}
-          total={totalInRole}
-          excluded={excludedSlugs.size}
-          battleRoyale={
-            battleRoyale
-              ? { usedInRole: battleRoyaleUsedInRole, remaining: availableCount }
-              : undefined
-          }
-        />
-      )}
-      {showStats && mounted && mode !== "perks" && (
-        <PoolStatsPanel
-          totalLabel={t({
-            ru: `Всего предметов экипировки для ${ROLE_LABEL[role].ru}:`,
-            en: `Total ${ROLE_LABEL[role].en} loadout pieces:`,
-          })}
-          total={totalLoadoutInRole}
-          excluded={excludedLoadoutSlugs.size}
-          battleRoyale={
-            battleRoyale
-              ? {
-                  usedInRole: battleRoyaleUsedLoadoutInRole,
-                  remaining: availableLoadoutCount,
-                }
-              : undefined
-          }
-        />
-      )}
+        )}
+        {showStats && mounted && mode !== "perks" && (
+          <PoolStatsPanel
+            totalLabel={t({
+              ru: `Всего предметов экипировки для ${ROLE_LABEL[role].ru}:`,
+              en: `Total ${ROLE_LABEL[role].en} loadout pieces:`,
+            })}
+            total={totalLoadoutInRole}
+            excluded={excludedLoadoutSlugs.size}
+            battleRoyale={
+              battleRoyale
+                ? {
+                    usedInRole: battleRoyaleUsedLoadoutInRole,
+                    remaining: availableLoadoutCount,
+                  }
+                : undefined
+            }
+          />
+        )}
+      </div>
 
       {excludePanelKind === "perks" ? (
         <ExcludePanel
