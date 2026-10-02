@@ -9,6 +9,7 @@
 // later disagree with the build the rest of the page is showing.
 import { useCallback, useEffect, useState } from "react";
 import { safeGet, safeSet } from "./safe-storage";
+import { track } from "./track";
 
 const STORAGE_KEY = "dbd-randomizer:presentation";
 
@@ -85,6 +86,9 @@ export function usePresentation(): [Presentation, (p: Presentation) => void] {
   }, []);
 
   const setPresentation = useCallback((p: Presentation) => {
+    // Whether anyone actually uses the canvas skins is the question that
+    // decides if they are worth their 1100 lines — see lib/track.ts.
+    track({ name: "skin_chosen", skin: p });
     setPresentationState(p);
     safeSet("local", STORAGE_KEY, p);
   }, []);

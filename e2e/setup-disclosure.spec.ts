@@ -10,7 +10,7 @@ import { test, expect } from "@playwright/test";
  * entirely untested. This is that test.
  */
 
-const TRIGGER = /Режим, перки, персонаж, пулы, оверлей/;
+const TRIGGER = /Сколько перков, персонаж, пулы, оверлей/;
 const STORAGE_KEY = "dbd-randomizer:setup-open";
 
 /** A browser that has never been here. */

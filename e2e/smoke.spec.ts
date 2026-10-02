@@ -16,6 +16,21 @@ import { test, expect, type Page } from "@playwright/test";
 // the separate "Пул перков" / "Пул экип." buttons that All mode shows out.
 import { readFile } from "node:fs/promises";
 
+/** Picks a build mode.
+ *
+ * Mode was three pills on the board; it is one quiet dropdown beside the role
+ * now (components/dbd/mode-select.tsx), so a spec cannot click the label
+ * directly any more. Centralised here because five tests need it and the next
+ * person to change that control should have one place to fix.
+ */
+async function chooseMode(page: Page, option: RegExp) {
+  await page.getByRole("button", { name: "Что генерировать" }).click();
+  await page
+    .getByRole("listbox", { name: "Что генерировать" })
+    .getByRole("option", { name: option })
+    .click();
+}
+
 /** The perk names currently on the board, read off the card images.
  *
  *  Waits for the card count to settle first: a regenerate cross-fades, so
@@ -284,7 +299,7 @@ test.describe("Full Loadout", () => {
     page,
   }) => {
     await page.goto("/?role=survivor");
-    await page.getByRole("button", { name: "Экипировка" }).click();
+    await chooseMode(page, /^Экипировка/);
 
     await expect(
       page.getByText("Случайная экипировка для выжившего"),
@@ -581,7 +596,7 @@ test.describe("Combined All mode", () => {
     await expect(
       page.locator("main").locator("img[alt]").first(),
     ).toBeVisible();
-    await page.getByRole("button", { name: "Всё", exact: true }).click();
+    await chooseMode(page, /^Всё/);
 
     await expect(page.getByTestId("loadout-slot-item")).toBeVisible();
     await expect(page.getByTestId("loadout-slot-addons")).toBeVisible();
@@ -617,7 +632,7 @@ test.describe("Combined All mode", () => {
     await expect(
       page.locator("main").locator("img[alt]").first(),
     ).toBeVisible();
-    await page.getByRole("button", { name: "Всё", exact: true }).click();
+    await chooseMode(page, /^Всё/);
     await page
       .getByRole("button", { name: "Сгенерировать новый билд" })
       .click();
@@ -648,7 +663,7 @@ test.describe("Combined All mode", () => {
     await expect(
       page.locator("main").locator("img[alt]").first(),
     ).toBeVisible();
-    await page.getByRole("button", { name: "Всё", exact: true }).click();
+    await chooseMode(page, /^Всё/);
 
     await page.getByRole("button", { name: "Пул перков" }).click();
     await expect(page.getByText("Настроить пул перков")).toBeVisible();
@@ -710,7 +725,7 @@ test.describe("Character picker", () => {
     // Loadout mode has no "teachable perks" concept — forcing the killer
     // character (see the next test) is what the picker does there instead,
     // so the toggle should disappear rather than sit around inert.
-    await page.getByRole("button", { name: "Экипировка" }).click();
+    await chooseMode(page, /^Экипировка/);
     await expect(toggle).not.toBeVisible();
   });
 

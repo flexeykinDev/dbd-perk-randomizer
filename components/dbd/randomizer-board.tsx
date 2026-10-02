@@ -36,6 +36,7 @@ import { useRollSession, type RollSession } from "@/lib/use-roll-session";
 import { useShareExport } from "@/lib/use-share-export";
 import { MAX_PERK_COUNT, useBoardSettings } from "@/lib/use-board-settings";
 import { readInitialUrlState } from "@/lib/share-link";
+import { track } from "@/lib/track";
 import {
   resolveLoadoutKeys,
   resolvePerkIdList,
@@ -47,6 +48,7 @@ import { BoardToolbar } from "./board-toolbar";
 import { ShareExportStage } from "./share-export-stage";
 import { SetupDisclosure } from "./setup-disclosure";
 import { SetupPanel } from "./setup-panel";
+import { ModeSelect } from "./mode-select";
 import { ExportRow } from "./export-row";
 import { getSeenSlugs, recordRoll } from "@/lib/stats";
 import { recordHistoryEntry, type HistoryEntry } from "@/lib/history";
@@ -623,7 +625,12 @@ export function RandomizerBoard() {
   });
 
 
-  const regenerate = useCallback(() => {
+  /* `source` exists for one question: whether the Space shortcut is used
+     enough to be worth documenting on the board. The button passes it
+     explicitly rather than being wired straight to onClick, because onClick
+     would hand the MouseEvent in as the first argument. */
+  const regenerate = useCallback((source: "button" | "keyboard" | "chat" = "button") => {
+    track({ name: "build_generated", source });
     playSound("roll");
     // Squad mode replaces the single build on screen, so Generate rolls the
     // squad and leaves the single-build session alone — including Battle
@@ -728,7 +735,7 @@ export function RandomizerBoard() {
 
   const twitch = useTwitchSettings({
     mounted,
-    onReroll: useCallback(() => regenerateRef.current(), []),
+    onReroll: useCallback(() => regenerateRef.current("chat"), []),
     onPaste: handleTwitchPaste,
     onVoteEnd: handleVoteEnd,
   });
@@ -864,13 +871,14 @@ export function RandomizerBoard() {
     modalOpen: excludePanelOpen || statsModalOpen || obsModalOpen,
     hasPerks: perks.length > 0,
     hasLoadout: loadoutPieces.length > 0,
-    regenerate,
+    regenerate: useCallback(() => regenerate("keyboard"), [regenerate]),
     handleCopyAll,
     handleShare,
     rerollSlot,
   });
 
   function selectRole(next: PerkRole) {
+    track({ name: "role_chosen", role: next });
     releaseShared();
     setSelectedCharacter(null); // survivor/killer character lists don't overlap
     setRole(next);
@@ -926,6 +934,7 @@ export function RandomizerBoard() {
 
 
   function selectMode(next: BuildMode) {
+    track({ name: "mode_chosen", mode: next });
     settings.setMode(next);
     rerollAll();
   }
@@ -1018,6 +1027,7 @@ export function RandomizerBoard() {
   }
 
   function toggleBattleRoyale() {
+    track({ name: "battle_royale_toggled", active: !battleRoyale });
     // The mode itself is the hook's; dropping whatever build is on screen
     // and rolling into the new pool is the board's.
     br.toggle();
@@ -1231,12 +1241,17 @@ export function RandomizerBoard() {
               </button>
             );
           })}
+
+        {/* Quiet, and beside the role rather than under it. Role is the
+            question; this is what the answer produces. See mode-select.tsx for
+            why this one control came back out of the disclosure when
+            everything else stayed in. */}
+        <ModeSelect value={mode} onChange={selectMode} />
       </div>
 
       <SetupDisclosure open={setup.open} onToggle={setup.toggle}>
         <SetupPanel
           mode={mode}
-          onSelectMode={selectMode}
           perkCount={perkCount}
           onSelectPerkCount={selectPerkCount}
           loadoutSlots={loadoutSlots}
@@ -1480,7 +1495,7 @@ export function RandomizerBoard() {
           win: standalone, largest, most saturated element on the board. */}
       <button
         type="button"
-        onClick={regenerate}
+        onClick={() => regenerate("button")}
         disabled={
           !!activeSeed ||
           (mode === "perks" && (perkCount === 0 || poolExhausted))

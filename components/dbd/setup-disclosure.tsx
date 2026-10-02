@@ -14,10 +14,14 @@ import { useT } from "@/lib/i18n";
  * how many perks, loadout slots, character, theme, coherence, pools, the
  * overlay and the More menu — is in here.
  *
- * The trigger names what is inside rather than saying "Settings", and that
- * matters more now than it did. A disclosure whose label does not say what it
- * hides is how the character picker would have become undiscoverable, and Full
- * Loadout is now behind this label too — so "Режим" leads it.
+ * The trigger names what is inside rather than saying "Settings". A disclosure
+ * whose label does not say what it hides is how the character picker would
+ * have become undiscoverable.
+ *
+ * Mode was briefly in here and is listed no longer: it went back onto the
+ * board, because Full Loadout is not a setting on the thing you came for, it
+ * is a different thing to come for — see mode-select.tsx. A label that still
+ * promised it would be pointing at the wrong place.
  *
  * Not `<details>`: the content has to animate, and the open state is owned
  * by useSetupDisclosure so it can persist. A button with aria-expanded and
@@ -48,8 +52,8 @@ export function SetupDisclosure({
           className={cn("size-3.5 transition-transform", open && "rotate-180")}
         />
         {t({
-          ru: "Режим, перки, персонаж, пулы, оверлей",
-          en: "Mode, perks, character, pools, overlay",
+          ru: "Сколько перков, персонаж, пулы, оверлей",
+          en: "Perk count, character, pools, overlay",
         })}
       </button>
 

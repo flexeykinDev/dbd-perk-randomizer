@@ -19,6 +19,7 @@ import { getCharacterPortrait } from "@/lib/perks";
 import type { LoadoutPiece, Perk, PerkRole, PieceVisibility } from "@/lib/types";
 import { pasteCommandFor, useBuildConstructor } from "@/lib/use-build-constructor";
 import { useCopyFeedback } from "@/lib/use-copy-feedback";
+import { track } from "@/lib/track";
 import { useObsPublishStatus, type ObsPublishState } from "@/lib/use-obs-mode";
 import { useModal } from "@/lib/use-modal";
 import { previewPiecesFor, useObsOverlayOptions } from "@/lib/use-obs-overlay-options";
@@ -281,13 +282,14 @@ export function ObsOverlayModal({
                   </code>
                   <button
                     type="button"
-                    onClick={() =>
+                    onClick={() => {
+                      track({ name: "obs_link_copied" });
                       copy.copy(
                         "overlay-url",
                         options.url,
                         t({ ru: "Ссылка скопирована", en: "Link copied" }),
-                      )
-                    }
+                      );
+                    }}
                     className="tap flex shrink-0 items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-control font-semibold text-accent-foreground transition-transform hover:scale-105 active:scale-95"
                   >
                     {copy.isCopied("overlay-url") ? (
@@ -303,6 +305,7 @@ export function ObsOverlayModal({
                     href={options.url}
                     target="_blank"
                     rel="noreferrer"
+                    onClick={() => track({ name: "obs_overlay_opened" })}
                     aria-label={t({ ru: "Открыть в новой вкладке", en: "Open in a new tab" })}
                     title={t({ ru: "Открыть оверлей в новой вкладке", en: "Open the overlay in a new tab" })}
                     className="tap flex size-9 shrink-0 items-center justify-center rounded-lg border border-border text-muted transition-colors hover:bg-surface-hover hover:text-foreground"

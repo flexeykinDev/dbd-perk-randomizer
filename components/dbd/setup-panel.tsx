@@ -61,7 +61,6 @@ const COHERENCE_HINT: Record<CoherenceLevel, { ru: string; en: string }> = {
  */
 export function SetupPanel({
   mode,
-  onSelectMode,
   perkCount,
   onSelectPerkCount,
   loadoutSlots,
@@ -85,7 +84,6 @@ export function SetupPanel({
   onResetFilters,
 }: {
   mode: BuildMode;
-  onSelectMode: (next: BuildMode) => void;
   perkCount: number;
   onSelectPerkCount: (next: number) => void;
   loadoutSlots: LoadoutSlots;
@@ -119,41 +117,14 @@ export function SetupPanel({
 
   return (
     <>
-      {/* What you are rolling. First in the panel because it is the broadest
-          question here, and the only one that changes which grids the board
-          draws at all.
+      {/* How much of a roll, and of what.
       
-          These two were on the board until this pass. Role is the one choice
-          worth making before a first roll — the defaults answer everything
-          else well — so the board now carries role, this disclosure, the
-          result and Generate, and nothing more. The trigger enumerates what
-          is inside precisely so moving them in here does not make Full
-          Loadout undiscoverable. */}
+          Mode itself went back onto the board — see mode-select.tsx for why it
+          is the one control that earned its way out of here. What is left is
+          genuinely settings: how many perks, and which loadout slots get
+          filled. Both have defaults that answer the question for almost
+          everyone. */}
       <ControlPanel>
-        <ControlGroup label={t({ ru: "Режим:", en: "Mode:" })}>
-          <div className="flex items-center gap-1 rounded-full border border-border bg-surface/60 p-1 text-control">
-            {(["perks", "loadout", "all"] as const).map((m) => (
-              <button
-                key={m}
-                type="button"
-                onClick={() => onSelectMode(m)}
-                className={cn(
-                  "tap rounded-full px-3 py-1 text-control font-medium transition-colors",
-                  mode === m
-                    ? "bg-surface-hover font-semibold text-foreground"
-                    : "text-muted hover:text-foreground",
-                )}
-              >
-                {m === "perks"
-                  ? t({ ru: "Перки", en: "Perks" })
-                  : m === "loadout"
-                    ? t({ ru: "Экипировка", en: "Full Loadout" })
-                    : t({ ru: "Всё", en: "Both" })}
-              </button>
-            ))}
-          </div>
-        </ControlGroup>
-
         {mode !== "loadout" && (
           <ControlGroup label={t({ ru: "Сколько:", en: "How many:" })}>
             <PerkCountSelect value={perkCount} onChange={onSelectPerkCount} />
