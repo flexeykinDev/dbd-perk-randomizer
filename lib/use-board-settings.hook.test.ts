@@ -167,3 +167,52 @@ test("a zero-perk challenge is a real saved choice, not a falsy mistake", () => 
   act(() => s.s.setPerkCount(0));
   assert.equal(reopened().s.perkCount, 0);
 });
+
+test("reset puts all five back, and remembers that it did", () => {
+  const s = setup();
+  act(() => {
+    s.s.setPerkCount(2);
+    s.s.setMode("all");
+    s.s.toggleLoadoutSlot("offering");
+    s.s.toggleGuaranteeTeachables();
+    s.s.setPieceVisibility("item", false);
+  });
+  assert.equal(s.s.isDefault, false);
+
+  act(() => s.s.reset());
+  assert.equal(s.s.perkCount, 4);
+  assert.equal(s.s.mode, "perks");
+  assert.deepEqual(s.s.loadoutSlots, { item: true, addons: true, offering: true });
+  assert.equal(s.s.guaranteeTeachables, false);
+  assert.equal(s.s.pieceVisibility.item, true);
+  assert.equal(s.s.isDefault, true);
+
+  // Written, not cleared: coming back must find the defaults rather than the
+  // settings from before the reset.
+  assert.deepEqual(reopened().s.loadoutSlots, {
+    item: true,
+    addons: true,
+    offering: true,
+  });
+  assert.equal(reopened().s.perkCount, 4);
+  assert.equal(reopened().s.mode, "perks");
+});
+
+test("a fresh board is already at its defaults, so there is nothing to reset", () => {
+  assert.equal(setup().s.isDefault, true);
+});
+
+test("isDefault notices each setting on its own", () => {
+  for (const change of [
+    (s: BoardSettings) => s.setPerkCount(3),
+    (s: BoardSettings) => s.setMode("loadout"),
+    (s: BoardSettings) => s.toggleLoadoutSlot("item"),
+    (s: BoardSettings) => s.toggleGuaranteeTeachables(),
+    (s: BoardSettings) => s.setPieceVisibility("offering", false),
+  ]) {
+    localStorage.clear();
+    const s = setup();
+    act(() => change(s.s));
+    assert.equal(s.s.isDefault, false, `${change} should leave isDefault false`);
+  }
+});

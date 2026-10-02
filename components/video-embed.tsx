@@ -36,13 +36,26 @@ export function VideoEmbed({ src, title }: { src: string; title: string }) {
   const t = useT();
   const [playing, setPlaying] = useState(false);
   const [qualityIndex, setQualityIndex] = useState(0);
-  const [collapsed, setCollapsed] = useState(false);
+  /* Collapsed until asked for.
+  
+     This is a utility: people arrive to roll a build, and the trailer is the
+     one thing on the page nobody came for. Measured on a first visit at
+     1366x768 it was a 432px box in a 1370px document — 31% of everything
+     below the fold was a video, and on a phone it added 201px plus a request
+     to YouTube's thumbnail CDN before anyone had asked to see it.
+  
+     Not removed, because it is the author's own trailer and it belongs here:
+     one line, one click, and the choice is remembered either way. */
+  const [collapsed, setCollapsed] = useState(true);
   const mounted = useMounted();
   const videoId = extractVideoId(src);
 
   useEffect(() => {
     function applyStoredCollapse() {
-      setCollapsed(safeGet("local", COLLAPSED_STORAGE_KEY) === "1");
+      // Absent means collapsed, so only an explicit "0" — someone who opened
+      // it — expands it on a later visit. Same shape as the loadout slots'
+      // "absent means on", inverted.
+      setCollapsed(safeGet("local", COLLAPSED_STORAGE_KEY) !== "0");
     }
     applyStoredCollapse();
   }, []);
@@ -55,11 +68,14 @@ export function VideoEmbed({ src, title }: { src: string; title: string }) {
     });
   }
 
-  // The server (and the client's very first render) always show the player
-  // expanded — applying a localStorage-derived collapsed state before mount
-  // would make that first render disagree with the server's HTML and throw
-  // a hydration mismatch, same trap as the board's other persisted state.
-  const isCollapsed = mounted && collapsed;
+  /* The server, and the client's first render, always show the collapsed bar:
+     the saved choice is applied from the mount effect, because reading
+     localStorage before hydration would disagree with the HTML the server
+     sent and throw a mismatch — the same trap as the board's other persisted
+     state. `mounted` no longer changes what the first paint looks like, since
+     collapsed is now both the default and the pre-mount state; it stays so
+     that someone who expanded the player does not see it flash shut. */
+  const isCollapsed = !mounted || collapsed;
 
   return (
     <div className="mx-auto w-full max-w-3xl">

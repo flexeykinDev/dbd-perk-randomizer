@@ -1,6 +1,6 @@
 "use client";
 
-import { Users, X } from "lucide-react";
+import { RotateCcw, Users, X } from "lucide-react";
 import { ControlGroup, ControlPanel } from "./control-panel";
 import { Dropdown } from "./dropdown";
 import { ToggleSwitch } from "./toggle-switch";
@@ -71,6 +71,8 @@ export function SetupPanel({
   onClearCharacter,
   guaranteeTeachables,
   onToggleGuaranteeTeachables,
+  filtersAtDefault,
+  onResetFilters,
 }: {
   mode: BuildMode;
   role: PerkRole;
@@ -85,6 +87,11 @@ export function SetupPanel({
   onClearCharacter: () => void;
   guaranteeTeachables: boolean;
   onToggleGuaranteeTeachables: () => void;
+  /** Hides the reset, because a button that cannot change anything is a
+   *  control you have to read before ignoring. Its absence is also the
+   *  clearest statement that nothing is currently narrowing your rolls. */
+  filtersAtDefault: boolean;
+  onResetFilters: () => void;
 }) {
   const t = useT();
   const roleColor = ROLE_COLOR[role];
@@ -141,6 +148,19 @@ export function SetupPanel({
                 </button>
               ))}
             </div>
+            {/* The same sentence the title attribute carries, said out loud for
+                the selected level.
+            
+                A `title` is a mouse affordance: it never appears for someone
+                tabbing through the radios, and on a touch screen it does not
+                exist at all. Four words on a pill cannot explain what
+                "Синергия" does to a roll, and this is the one control here
+                whose effect is invisible until you have rolled a few times.
+                Costs nothing at rest — the whole panel is behind the
+                disclosure. */}
+            <p className="w-full text-hint text-muted">
+              {t(COHERENCE_HINT[coherenceLevel])}
+            </p>
           </ControlGroup>
         )}
       </ControlPanel>
@@ -221,6 +241,30 @@ export function SetupPanel({
               en: "The build is guaranteed to include this character's own perks (unless they're excluded from the pool).",
             })}
           />
+        )}
+
+        {/* Appears only when there is something to undo.
+        
+            Sits at the end of the panel it undoes, rather than next to
+            Generate: it belongs to the settings, and a destructive-sounding
+            word beside the primary action would make people hesitate over the
+            one button they came to press. Quiet by weight like the export row
+            — muted type, border only on hover — because undoing a filter is
+            not an achievement. It does not touch the perk pool; that has its
+            own Reset inside Manage Pool, where the list is visible. */}
+        {!filtersAtDefault && (
+          <button
+            type="button"
+            onClick={onResetFilters}
+            title={t({
+              ru: "Сбрасывает количество перков, режим, слоты, тему, связность, персонажа, Battle Royale, группу и сид. Пул перков и избранное не трогает.",
+              en: "Resets perk count, mode, slots, theme, coherence, character, Battle Royale, squad and seed. Leaves your perk pool and favourites alone.",
+            })}
+            className="tap flex items-center gap-1.5 rounded-full border border-transparent px-3 py-1.5 text-control font-medium text-muted transition-colors hover:border-border hover:bg-surface-hover hover:text-foreground"
+          >
+            <RotateCcw className="size-3.5" />
+            {t({ ru: "Сбросить настройки", en: "Reset settings" })}
+          </button>
         )}
       </div>
     </>

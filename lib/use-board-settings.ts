@@ -115,6 +115,19 @@ export interface BoardSettings {
   /** Reads all five from storage. Called once after mount — see the note at
    *  the top of the file for why this cannot be a lazy initialiser. */
   hydrate: () => void;
+
+  /** Back to a first visit's settings, and saved as such.
+   *
+   *  Writes rather than clearing the keys: a visitor who resets and comes back
+   *  should find the defaults, not whatever they had set two weeks ago. The
+   *  board composes this with the other hooks' resets — see resetFilters
+   *  there — because "reset" spans a dozen hooks and only the board sees them
+   *  all. */
+  reset: () => void;
+
+  /** Whether all five are at their defaults, so the board can hide a reset
+   *  that would do nothing. */
+  isDefault: boolean;
 }
 
 export function useBoardSettings(): BoardSettings {
@@ -168,6 +181,31 @@ export function useBoardSettings(): BoardSettings {
     [],
   );
 
+  const reset = useCallback(() => {
+    setPerkCount(DEFAULT_PERK_COUNT);
+    setMode("perks");
+    for (const slot of ["item", "addons", "offering"] as const) {
+      safeSet("local", SLOT_STORAGE_KEY[slot], "1");
+    }
+    setLoadoutSlots(DEFAULT_LOADOUT_SLOTS);
+    safeSet("local", GUARANTEE_TEACHABLES_STORAGE_KEY, "0");
+    setGuaranteeTeachables(false);
+    safeSetJSON("local", PIECE_VISIBILITY_STORAGE_KEY, DEFAULT_PIECE_VISIBILITY);
+    setPieceVisibilityState(DEFAULT_PIECE_VISIBILITY);
+  }, [setPerkCount, setMode]);
+
+  const isDefault =
+    perkCount === DEFAULT_PERK_COUNT &&
+    mode === "perks" &&
+    loadoutSlots.item &&
+    loadoutSlots.addons &&
+    loadoutSlots.offering &&
+    !guaranteeTeachables &&
+    pieceVisibility.perks &&
+    pieceVisibility.item &&
+    pieceVisibility.addon &&
+    pieceVisibility.offering;
+
   const hydrate = useCallback(() => {
     setPerkCountState(loadPerkCount());
     setModeState(loadMode());
@@ -194,5 +232,7 @@ export function useBoardSettings(): BoardSettings {
     showPerkCount: setPerkCountState,
     showMode: setModeState,
     hydrate,
+    reset,
+    isDefault,
   };
 }

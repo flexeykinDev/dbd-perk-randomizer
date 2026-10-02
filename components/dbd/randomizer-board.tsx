@@ -1026,6 +1026,40 @@ export function RandomizerBoard() {
     rerollAll();
   }
 
+  /* Everything that narrows or reshapes a roll, back to a first visit.
+  
+     Not the role, which is the question the page opens with rather than a
+     filter, and deliberately NOT the perk pool or favourites. Those are a
+     curation someone built by hand over many visits, and wiping them from a
+     one-click button in a settings panel would be the most destructive thing
+     on the site — Manage Pool has its own per-role Reset, next to the list it
+     empties, where you can see what you are about to lose. `nothingToReset`
+     below is what keeps this honest: a visitor who has changed nothing never
+     sees the button, so it also says what "default" means. */
+  const filtersAtDefault =
+    settings.isDefault &&
+    themeTag === null &&
+    coherence.level === 0 &&
+    selectedCharacter === null &&
+    !battleRoyale &&
+    !squad.active &&
+    !activeSeed;
+
+  function resetFilters() {
+    settings.reset();
+    setThemeTag(null);
+    coherence.setLevel(0);
+    setSelectedCharacter(null);
+    // Both are toggles rather than setters, so only touch them when they are
+    // actually on — calling toggle() unconditionally would turn them on.
+    if (battleRoyale) br.toggle();
+    if (squad.active) squad.toggle();
+    // `clear`, not `release`: there is no build being installed here, so the
+    // reroll it triggers is exactly what should happen.
+    if (activeSeed) seed.clear();
+    rerollAll();
+  }
+
   const roleColor = ROLE_COLOR[role];
   // Loadout mode for killer needs a character with rolled add-ons to
   // actually mean something (see getRandomLoadout's forcedCharacter) — a
@@ -1201,6 +1235,8 @@ export function RandomizerBoard() {
           onClearCharacter={() => selectCharacter(null)}
           guaranteeTeachables={guaranteeTeachables}
           onToggleGuaranteeTeachables={toggleGuaranteeTeachables}
+          filtersAtDefault={filtersAtDefault}
+          onResetFilters={resetFilters}
         />
 
 
@@ -1400,10 +1436,21 @@ export function RandomizerBoard() {
           chaos builds and 77.8% at full synergy. A line under a genuinely
           unrelated four would be the site inventing a story. */}
       {mode !== "loadout" && buildTheme && (
-        <p className="text-hint text-muted">
+        /* Says what it means now. It used to read "3 из 4 — aura", which is
+           three facts and no sentence: nothing told you the number counted
+           perks, and nothing said what "aura" was doing there at all. The
+           title carries where it comes from, for anyone who wonders why the
+           line appears on some rolls and not others. */
+        <p
+          className="text-hint text-muted"
+          title={t({
+            ru: "Считается по тегам перков. Появляется, только если большинство билда тянет в одну сторону.",
+            en: "Counted from the perks' own tags. Shown only when most of the build pulls the same way.",
+          })}
+        >
           {t({
-            ru: `${buildTheme.count} из ${buildTheme.total} — ${buildTheme.tag.ru.toLowerCase()}`,
-            en: `${buildTheme.count} of ${buildTheme.total} — ${buildTheme.tag.en.toLowerCase()}`,
+            ru: `${buildTheme.count} из ${buildTheme.total} перков — про ${buildTheme.tag.ru.toLowerCase()}`,
+            en: `${buildTheme.count} of ${buildTheme.total} perks are about ${buildTheme.tag.en.toLowerCase()}`,
           })}
         </p>
       )}
