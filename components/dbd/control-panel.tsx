@@ -14,10 +14,20 @@ import type { ReactNode } from "react";
  * `overflow-x-auto` rather than wrapping, deliberately: a divider inside a
  * `flex-wrap` row cannot know which visual line it landed on and orphans the
  * moment the row wraps.
+ *
+ * Which is why the row does not begin until `lg`. It used to begin at `sm`,
+ * and the widest panel here — Theme beside Coherence and its helper line —
+ * wants 903px. So from 640px to roughly 910px it scrolled sideways and parked
+ * controls outside their own box: two of them at 640. That shipped, and the
+ * guard in e2e/setup-disclosure.spec.ts caught it on CI rather than locally,
+ * because the check is whether a control's rectangle falls inside the panel's
+ * and Linux and Windows disagree about Cyrillic glyph widths by just enough to
+ * move one across the line. A horizontal row that cannot fit is not a layout,
+ * so it stacks until there is room for one.
  */
 export function ControlPanel({ children }: { children: ReactNode }) {
   return (
-    <div className="flex w-full max-w-full flex-col items-start divide-y divide-border overflow-x-auto rounded-2xl border border-border bg-surface/40 sm:w-auto sm:flex-row sm:items-center sm:divide-x sm:divide-y-0">
+    <div className="flex w-full max-w-full flex-col items-start divide-y divide-border overflow-x-auto rounded-2xl border border-border bg-surface/40 lg:w-auto lg:flex-row lg:items-center lg:divide-x lg:divide-y-0">
       {children}
     </div>
   );

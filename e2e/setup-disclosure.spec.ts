@@ -103,7 +103,16 @@ test("collapsing it again sticks too", async ({ page }) => {
  * This measures what someone opening the panel can actually reach, at the
  * widths where the row is most likely to overflow.
  */
-for (const width of [1366, 1024, 768]) {
+/* The widths that have actually gone wrong, not a tidy set.
+ *
+ * 900 and 820 are here because the Theme + Coherence panel wanted 903px and
+ * the row began at 640, so everything between was broken; 640 is the old
+ * breakpoint itself, where two controls sat outside the box. The first version
+ * of this list checked 1366/1024/768 and passed on Windows while failing on
+ * CI, because whether a control's rectangle crosses the edge comes down to
+ * Cyrillic glyph widths and the two platforms disagree. Checking either side
+ * of the boundary is what makes that a property rather than a coin toss. */
+for (const width of [1366, 1200, 1024, 900, 820, 768, 700, 640]) {
   test(`every control in the setup panel is reachable at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/?role=survivor");
