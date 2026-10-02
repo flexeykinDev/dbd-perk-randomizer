@@ -9,14 +9,15 @@ import { useT } from "@/lib/i18n";
  *
  * Five rows of controls used to sit between the heading and the build, all
  * in the same pill treatment at the same weight, so nothing read as more
- * important than anything else. Role, mode and build size stay out here
- * because changing them changes what the next roll produces; character,
- * theme, coherence, pools, the overlay and the More menu go inside, because
- * they are set once and then stopped thinking about.
+ * important than anything else. Role is the only one left outside, because it
+ * is the only thing the defaults cannot guess for you: everything else — mode,
+ * how many perks, loadout slots, character, theme, coherence, pools, the
+ * overlay and the More menu — is in here.
  *
- * The trigger names what is inside rather than saying "Settings". A
- * disclosure whose label does not say what it hides is how the character
- * picker would have become undiscoverable.
+ * The trigger names what is inside rather than saying "Settings", and that
+ * matters more now than it did. A disclosure whose label does not say what it
+ * hides is how the character picker would have become undiscoverable, and Full
+ * Loadout is now behind this label too — so "Режим" leads it.
  *
  * Not `<details>`: the content has to animate, and the open state is owned
  * by useSetupDisclosure so it can persist. A button with aria-expanded and
@@ -47,8 +48,8 @@ export function SetupDisclosure({
           className={cn("size-3.5 transition-transform", open && "rotate-180")}
         />
         {t({
-          ru: "Персонаж, тема, пулы, оверлей",
-          en: "Character, theme, pools, overlay",
+          ru: "Режим, перки, персонаж, пулы, оверлей",
+          en: "Mode, perks, character, pools, overlay",
         })}
       </button>
 

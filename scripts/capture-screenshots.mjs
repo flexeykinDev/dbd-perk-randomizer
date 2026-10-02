@@ -18,7 +18,7 @@ mkdirSync(OUT_DIR, { recursive: true });
  *  first visit. A fresh context has no saved state, so every shot that
  *  reaches one of those controls has to open it first. */
 async function expandSetup(page) {
-  const trigger = page.getByRole("button", { name: /Персонаж, тема, пулы, оверлей/ });
+  const trigger = page.getByRole("button", { name: /Режим, перки, персонаж, пулы, оверлей/ });
   if ((await trigger.getAttribute("aria-expanded")) === "false") {
     await trigger.click();
     await page.waitForTimeout(250);

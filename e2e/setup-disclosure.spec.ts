@@ -10,7 +10,7 @@ import { test, expect } from "@playwright/test";
  * entirely untested. This is that test.
  */
 
-const TRIGGER = /Персонаж, тема, пулы, оверлей/;
+const TRIGGER = /Режим, перки, персонаж, пулы, оверлей/;
 const STORAGE_KEY = "dbd-randomizer:setup-open";
 
 /** A browser that has never been here. */
@@ -90,3 +90,42 @@ test("collapsing it again sticks too", async ({ page }) => {
     "false",
   );
 });
+
+/* Nothing inside the panel is parked outside its own box.
+ *
+ * A ControlPanel scrolls horizontally rather than wrapping, deliberately: its
+ * segments are separated by a divider, and a divider inside a flex-wrap row
+ * cannot know which visual line it landed on. The cost is that one segment too
+ * many does not reflow, it leaves — and because every measurement taken while
+ * reducing the board was of the COLLAPSED state, a switch sitting at x=1103 in
+ * an 834px panel shipped unnoticed for a commit.
+ *
+ * This measures what someone opening the panel can actually reach, at the
+ * widths where the row is most likely to overflow.
+ */
+for (const width of [1366, 1024, 768]) {
+  test(`every control in the setup panel is reachable at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/?role=survivor");
+    const trigger = page.getByRole("button", { name: TRIGGER });
+    if ((await trigger.getAttribute("aria-expanded")) === "false") await trigger.click();
+    await expect(page.locator("#setup-panel")).toBeVisible();
+
+    const clipped = await page.evaluate(() => {
+      const out: string[] = [];
+      for (const panel of document.querySelectorAll<HTMLElement>("#setup-panel .overflow-x-auto")) {
+        if (panel.scrollWidth <= panel.clientWidth + 1) continue;
+        const box = panel.getBoundingClientRect();
+        for (const control of panel.querySelectorAll<HTMLElement>("button,[role=switch],[role=radio],select")) {
+          const r = control.getBoundingClientRect();
+          if (r.left >= box.left - 1 && r.right <= box.right + 1) continue;
+          const label = control.textContent?.trim() || control.getAttribute("aria-label") || "(unlabelled)";
+          out.push(`${label} — ${Math.round(r.left)}..${Math.round(r.right)} outside ${Math.round(box.left)}..${Math.round(box.right)}`);
+        }
+      }
+      return out;
+    });
+
+    expect(clipped, `${clipped.length} controls sit outside their panel`).toEqual([]);
+  });
+}

@@ -4,6 +4,7 @@ import { RotateCcw, Users, X } from "lucide-react";
 import { BattleRoyaleControl } from "./battle-royale-control";
 import { ControlGroup, ControlPanel } from "./control-panel";
 import { Dropdown } from "./dropdown";
+import { PerkCountSelect } from "./perk-count-select";
 import { ToggleSwitch } from "./toggle-switch";
 import { getTagsForRole } from "@/lib/perk-tags";
 import { getCharacterName } from "@/lib/character-name";
@@ -13,7 +14,7 @@ import { ROLE_COLOR } from "@/lib/role-color";
 import { COHERENCE_LEVELS, type CoherenceLevel } from "@/lib/coherence";
 import { cn } from "@/lib/cn";
 import { useT, type Lang } from "@/lib/i18n";
-import type { BuildMode, PerkRole } from "@/lib/types";
+import type { BuildMode, LoadoutSlots, PerkRole } from "@/lib/types";
 
 /* Named rather than numbered: "2" says nothing about what it does, and the
    scale is short enough that four words fit where four digits would. */
@@ -60,6 +61,11 @@ const COHERENCE_HINT: Record<CoherenceLevel, { ru: string; en: string }> = {
  */
 export function SetupPanel({
   mode,
+  onSelectMode,
+  perkCount,
+  onSelectPerkCount,
+  loadoutSlots,
+  onToggleLoadoutSlot,
   role,
   mounted,
   language,
@@ -79,6 +85,11 @@ export function SetupPanel({
   onResetFilters,
 }: {
   mode: BuildMode;
+  onSelectMode: (next: BuildMode) => void;
+  perkCount: number;
+  onSelectPerkCount: (next: number) => void;
+  loadoutSlots: LoadoutSlots;
+  onToggleLoadoutSlot: (slot: keyof LoadoutSlots) => void;
   role: PerkRole;
   mounted: boolean;
   language: Lang;
@@ -108,6 +119,81 @@ export function SetupPanel({
 
   return (
     <>
+      {/* What you are rolling. First in the panel because it is the broadest
+          question here, and the only one that changes which grids the board
+          draws at all.
+      
+          These two were on the board until this pass. Role is the one choice
+          worth making before a first roll — the defaults answer everything
+          else well — so the board now carries role, this disclosure, the
+          result and Generate, and nothing more. The trigger enumerates what
+          is inside precisely so moving them in here does not make Full
+          Loadout undiscoverable. */}
+      <ControlPanel>
+        <ControlGroup label={t({ ru: "Режим:", en: "Mode:" })}>
+          <div className="flex items-center gap-1 rounded-full border border-border bg-surface/60 p-1 text-control">
+            {(["perks", "loadout", "all"] as const).map((m) => (
+              <button
+                key={m}
+                type="button"
+                onClick={() => onSelectMode(m)}
+                className={cn(
+                  "tap rounded-full px-3 py-1 text-control font-medium transition-colors",
+                  mode === m
+                    ? "bg-surface-hover font-semibold text-foreground"
+                    : "text-muted hover:text-foreground",
+                )}
+              >
+                {m === "perks"
+                  ? t({ ru: "Перки", en: "Perks" })
+                  : m === "loadout"
+                    ? t({ ru: "Экипировка", en: "Full Loadout" })
+                    : t({ ru: "Всё", en: "Both" })}
+              </button>
+            ))}
+          </div>
+        </ControlGroup>
+
+        {mode !== "loadout" && (
+          <ControlGroup label={t({ ru: "Сколько:", en: "How many:" })}>
+            <PerkCountSelect value={perkCount} onChange={onSelectPerkCount} />
+          </ControlGroup>
+        )}
+
+        {/* Beside the mode that summons them, rather than on the board.
+            Leaving these outside meant switching to Full Loadout in here and
+            then finding its slots somewhere else entirely. */}
+        {mode !== "perks" && (
+          <ControlGroup label={t({ ru: "Слоты:", en: "Slots:" })}>
+            {(
+              [
+                ["item", { ru: "Предмет", en: "Item" }],
+                ["addons", { ru: "Аддоны", en: "Add-ons" }],
+                ["offering", { ru: "Подношение", en: "Offering" }],
+              ] as const
+            )
+              // The killer's is a Power, which they always have — nothing to
+              // turn off.
+              .filter(([slot]) => role === "survivor" || slot !== "item")
+              .map(([slot, label]) => (
+                <button
+                  key={slot}
+                  type="button"
+                  onClick={() => onToggleLoadoutSlot(slot)}
+                  className={cn(
+                    "rounded-full border px-3 py-1 text-control font-medium transition-colors",
+                    loadoutSlots[slot]
+                      ? cn(roleColor.border, roleColor.bg, roleColor.text)
+                      : "border-border text-muted hover:bg-surface-hover hover:text-foreground",
+                  )}
+                >
+                  {t(label)}
+                </button>
+              ))}
+          </ControlGroup>
+        )}
+      </ControlPanel>
+
       <ControlPanel>
         {mode !== "loadout" && tags.length > 0 && (
           <ControlGroup label={t({ ru: "Тема:", en: "Theme:" })}>
@@ -173,6 +259,9 @@ export function SetupPanel({
           </ControlGroup>
         )}
 
+      </ControlPanel>
+
+      <ControlPanel>
         {/* Battle Royale lives here now, not on the board.
         
             It is a whole alternate game mode — play until the pool runs dry —
@@ -183,7 +272,15 @@ export function SetupPanel({
             It stays reachable in one click from the same place as the other
             things you set once, and while it is running the board's own
             subtitle carries the remaining count, so turning it on does not
-            mean watching a number that is behind a collapsed panel. */}
+            mean watching a number that is behind a collapsed panel.
+        
+            In a row of its own rather than beside Theme and Coherence. Those
+            two plus the coherence helper measured 1233px of content inside an
+            834px panel at 1366px wide, which put this switch at x=1103 —
+            outside the box, reachable only by a horizontal scrollbar nobody
+            looks for. A ControlPanel scrolls rather than wraps on purpose (a
+            divider cannot know which line it landed on), so the fix is fewer
+            segments per row, not a different overflow. */}
         <BattleRoyaleControl
           active={battleRoyale}
           onToggle={onToggleBattleRoyale}

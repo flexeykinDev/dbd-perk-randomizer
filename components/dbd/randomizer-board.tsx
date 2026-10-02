@@ -47,8 +47,6 @@ import { BoardToolbar } from "./board-toolbar";
 import { ShareExportStage } from "./share-export-stage";
 import { SetupDisclosure } from "./setup-disclosure";
 import { SetupPanel } from "./setup-panel";
-import { LoadoutSlotsPanel } from "./loadout-slots-panel";
-import { PerkCountSelect } from "./perk-count-select";
 import { ExportRow } from "./export-row";
 import { getSeenSlugs, recordRoll } from "@/lib/stats";
 import { recordHistoryEntry, type HistoryEntry } from "@/lib/history";
@@ -1147,17 +1145,21 @@ export function RandomizerBoard() {
   );
 
   return (
-    /* gap-3 on phones, gap-4 from sm up.
+    /* gap-4 on phones, gap-6 from sm up.
     
-       This used to be gap-2/gap-3, and the comment here explained why: eight
-       stacked groups at 12px was 96px of pure gap before the build on a screen
-       that had none to spare. There are six groups now — the perk-count pills
-       became one control and Battle Royale moved into the disclosure — and the
-       first card came up 75px on a laptop and 108px on a phone as a result.
-       Spending a third of that back on space between the groups is what turns
-       a shorter page into a calmer one; keeping all of it would just move the
-       same density higher up. */
-    <div className="flex flex-col items-center gap-3 sm:gap-4">
+       The history of this number is the history of the board. It was gap-2/
+       gap-3 when eight groups stacked above the build and 96px of pure gap was
+       more than the page could spare. Mode, count and the slots panel have
+       since moved into the disclosure, so four groups sit above the result
+       instead of eight — and gap scales with how many things it separates.
+       Four groups at 24px is 96px of rhythm doing what 96px of damage control
+       used to.
+    
+       This is the whole trade: the controls did not get smaller, there are
+       just fewer of them out here, and the space that bought went back into
+       the gaps rather than into pulling everything further up. A short, dense
+       page is not a calm one. */
+    <div className="flex flex-col items-center gap-4 sm:gap-6">
       <title>{pageTitle}</title>
       {/* Polite, so it waits for the reader to finish rather than cutting in;
           the build is not urgent enough for assertive. Empty until the first
@@ -1165,8 +1167,14 @@ export function RandomizerBoard() {
       <div aria-live="polite" aria-atomic="true" className="sr-only">
         {announced && `${t({ ru: "Новый билд", en: "New build" })}: ${announced}`}
       </div>
-      <div className="flex flex-wrap items-center justify-center gap-3">
-        <div className="flex flex-wrap items-center justify-center gap-2">
+      {/* The only strongly emphasised choice on the board.
+      
+          Everything else that shapes a roll — mode, how many, slots, theme,
+          coherence, character, pools, the overlay — is one click away in the
+          disclosure below. Which side you are playing is the one thing the
+          defaults genuinely cannot guess, so it is the one thing asked out
+          loud. */}
+      <div className="flex flex-wrap items-center justify-center gap-2">
           {(Object.keys(ROLE_LABEL) as PerkRole[]).map((r) => {
             const c = ROLE_COLOR[r];
             return (
@@ -1198,59 +1206,16 @@ export function RandomizerBoard() {
               </button>
             );
           })}
-        </div>
-
-        <div className="flex items-center gap-1 rounded-full border border-border bg-surface/60 p-1 text-control">
-          {(["perks", "loadout", "all"] as const).map((m) => (
-            <button
-              key={m}
-              type="button"
-              onClick={() => selectMode(m)}
-              className={cn(
-                "tap rounded-full px-3 py-1 text-control font-medium transition-colors",
-                /* Deliberately quieter than the role pills beside it.
-                
-                   Both used to carry the role colour, which made them read as
-                   one bank of five equally important choices. Role is the
-                   question the page opens with; mode is a thing most people
-                   never touch. Demoted with colour and weight only — same
-                   padding, same tap target, as e2e/mobile.spec.ts requires. */
-                mode === m
-                  ? "bg-surface-hover font-semibold text-foreground"
-                  : "text-muted hover:text-foreground",
-              )}
-            >
-              {m === "perks"
-                ? t({ ru: "Перки", en: "Perks" })
-                : m === "loadout"
-                  ? t({ ru: "Экипировка", en: "Full Loadout" })
-                  : t({ ru: "Всё", en: "Both" })}
-            </button>
-          ))}
-        </div>
-
-        {/* One control where five pills used to be — see perk-count-select.tsx.
-            Sits with the mode switch because the two together answer "what am
-            I rolling", and apart from the role pills because those are the
-            only thing on this row anyone has to decide. */}
-        {mode !== "loadout" && (
-          <PerkCountSelect value={perkCount} onChange={selectPerkCount} />
-        )}
       </div>
-
-      {/* Only in the modes that roll one. In the default Perks mode there is
-          no panel here at all, which is most of what the board gained. */}
-      {mode !== "perks" && (
-        <LoadoutSlotsPanel
-          role={role}
-          loadoutSlots={loadoutSlots}
-          onToggleLoadoutSlot={toggleLoadoutSlot}
-        />
-      )}
 
       <SetupDisclosure open={setup.open} onToggle={setup.toggle}>
         <SetupPanel
           mode={mode}
+          onSelectMode={selectMode}
+          perkCount={perkCount}
+          onSelectPerkCount={selectPerkCount}
+          loadoutSlots={loadoutSlots}
+          onToggleLoadoutSlot={toggleLoadoutSlot}
           role={role}
           mounted={mounted}
           language={language}
