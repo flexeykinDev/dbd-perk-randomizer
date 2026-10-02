@@ -54,6 +54,22 @@ interface Reel {
   /** Whether this reel has already fired its ratchet, so becoming the last
    *  reel turning announces itself once rather than every frame. */
   ticked: number;
+  /* The brake, as a tween with a known length.
+  
+     It used to be an exponential approach — `offset += remaining * dt * rate`
+     — which never arrives, only gets close, and whose duration depends on how
+     far round the strip the reel happened to be when the brake came on.
+     Measured end to end, a single Slots roll took 2.43s to reach a settled
+     state, nearly all of it the last reel creeping toward a 0.012 threshold.
+  
+     A tween from a recorded start to a recorded end over a fixed duration
+     lands on the exact symbol at a known time, which is both shorter and the
+     thing that makes "the animation always finishes" true by construction
+     rather than by convergence. */
+  brakeFrom: number;
+  brakeTo: number;
+  brakeStart: number;
+  brakeFor: number;
 }
 
 export function SlotsStage({
@@ -96,6 +112,8 @@ export function SlotsStage({
     /** Slugs the reels were last built for, to tell a single-slot reroll
      *  apart from a whole new build. */
     shown: [] as string[],
+    /** Mirrors data-settled, so the frame loop only writes on a change. */
+    settled: false,
   });
 
   const perkKey = perks.map((p) => p.slug).join(",");
@@ -139,14 +157,33 @@ export function SlotsStage({
       // A full pull staggers left to right — the last reel landing is what
       // makes it a result. A single respun reel has nothing to stagger
       // against, so it just goes.
-      const delay = reduced ? 0.01 : everything ? 0.55 + order * 0.32 : 0.42;
+      /* Measured end to end, the old 0.55 + 0.32i put the fourth reel's brake
+         at 1.51s and a full settle past 2s — long enough that a second
+         Generate almost always landed mid-spin. 0.34 + 0.16i brakes the last
+         reel at 0.82s. The stagger still reads left to right, which is the
+         part that makes it a result rather than four things stopping at
+         once. */
+      const delay = reduced ? 0.01 : everything ? 0.34 + order * 0.16 : 0.26;
       order++;
       return {
         strip,
         names,
         slugs,
+        brakeFrom: 0,
+        brakeTo: 0,
+        brakeStart: 0,
+        brakeFor: 0,
         target: 0,
-        offset: previous && !everything ? previous.offset : 0,
+        /* Continue from wherever this reel actually is.
+        
+           It used to snap to 0 whenever the whole build changed, so pressing
+           Generate during a spin teleported every reel back to the top of its
+           strip and started again from there — the jump read as the animation
+           being cut off, which is exactly what it was. A reel is a loop; there
+           is no reason the next spin cannot begin from the current offset, and
+           starting there is what makes an interrupted roll look like one
+           continuous machine rather than two halves of different ones. */
+        offset: previous ? previous.offset : 0,
         speed: 26 + i * 2,
         stopAt: now + delay,
         settled: false,
@@ -155,6 +192,8 @@ export function SlotsStage({
     });
     s.shown = perks.map((p) => p.slug);
     s.flash = 0;
+    s.settled = false;
+    if (hostRef.current) hostRef.current.dataset.settled = "false";
     /* What the reels will actually stop on, read back off the strips the
        canvas draws from rather than off the props. A stage that quietly
        showed different perks than the board rolled would be invisible to any
@@ -265,16 +304,24 @@ export function SlotsStage({
         if (!reel.settled) {
           allSettled = false;
           if (time >= reel.stopAt) {
-            // Ease into the target rather than snapping: the deceleration is
-            // the part that reads as a slot machine.
-            const distance = (reel.target - reel.offset) % STRIP;
-            const wrapped = distance < 0 ? distance + STRIP : distance;
             /* The last reel still turning takes noticeably longer to settle.
              * Four reels braking at the same rate land in a clump and the
              * result is over before anyone has looked at it; letting the last
              * one hang is the whole shape of a slot machine. */
             const alone = s.reels.filter((r) => !r.settled).length === 1;
-            reel.offset += Math.max(wrapped, 0.0001) * Math.min(1, dt * (alone ? 2.6 : 6));
+
+            if (!reel.brakeFor) {
+              /* Record the whole brake once, the moment it begins. The target
+                 is taken forward of where the reel is now — never backward,
+                 which would read as the machine reversing — plus most of a
+                 turn so the stop is a slowing rather than a stop. */
+              const ahead = (reel.target - reel.offset) % STRIP;
+              const wrapped = ahead < 0 ? ahead + STRIP : ahead;
+              reel.brakeFrom = reel.offset;
+              reel.brakeTo = reel.offset + wrapped + (alone ? STRIP : 0);
+              reel.brakeStart = time;
+              reel.brakeFor = alone ? 0.62 : 0.34;
+            }
 
             /* The near miss.
              *
@@ -289,7 +336,13 @@ export function SlotsStage({
               playSound("ratchet");
             }
 
-            if (wrapped < 0.012) {
+            const k = Math.min(1, (time - reel.brakeStart) / reel.brakeFor);
+            // Cubic ease-out: fast at the hand-off from free spin, flat at the
+            // stop, so there is no visible seam where the brake takes over.
+            const eased = 1 - Math.pow(1 - k, 3);
+            reel.offset = reel.brakeFrom + (reel.brakeTo - reel.brakeFrom) * eased;
+
+            if (k >= 1) {
               reel.offset = reel.target;
               reel.settled = true;
               s.flash = 1;
@@ -354,6 +407,15 @@ export function SlotsStage({
 
       // Pay line across the reels, brightening as the last one lands.
       if (s.flash > 0) s.flash = Math.max(0, s.flash - dt * 1.6);
+      /* Published so a test can wait for the machine to stop.
+      
+         "The animation always reaches a settled state" is not a claim anyone
+         could check before this: the stage is a canvas, and a canvas tells the
+         DOM nothing. Written only on change — this runs every frame. */
+      if (allSettled !== s.settled && host) {
+        s.settled = allSettled;
+        host.dataset.settled = String(allSettled);
+      }
       const lineAlpha = 0.1 + (allSettled ? 0.28 : 0.06) + s.flash * 0.3;
       const grad = ctx!.createLinearGradient(startX, 0, startX + n * rw + (n - 1) * gap, 0);
       grad.addColorStop(0, "rgba(127,127,127,0)");

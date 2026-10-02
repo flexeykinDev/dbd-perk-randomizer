@@ -167,6 +167,8 @@ export function RitualStage({
     swap: [] as number[],
     /** Cards the draw loop last painted — see the draw loop. */
     drawnCards: -1,
+    /** Mirrors data-settled, so the frame loop only writes on a change. */
+    settled: false,
     W: 0,
     H: 0,
   });
@@ -313,15 +315,31 @@ export function RitualStage({
       return;
     }
 
-    // Rebuilt rather than reset in place. Every mote starts a roll with no
-    // tween on it, and a fresh array is both clearer than clearing three
-    // fields on each one and the shape the compiler can actually verify.
-    const fresh: Mote[] = s.motes.map((m) => ({
-      ...m,
-      from: null,
-      to: null,
-      card: false,
-    }));
+    /* Rebuilt rather than reset in place. Every mote starts a roll with no
+       tween on it, and a fresh array is both clearer than clearing three
+       fields on each one and the shape the compiler can actually verify.
+    
+       The exception is a card that is still on its way to the table. Clearing
+       its tween made it vanish from the frame it was in, so pressing Generate
+       mid-deal did not interrupt the deal so much as delete it — cards simply
+       stopped existing and new ones appeared a beat later. A card caught in
+       flight is now sent back into the funnel over 0.22s, the same exit the
+       one-slot swap already used, so an interrupted roll reads as the table
+       being cleared rather than as a dropped frame. */
+    const now0 = performance.now() / 1000;
+    const fresh: Mote[] = s.motes.map((m) => {
+      const inFlight = m.card && m.to !== null;
+      if (!inFlight) return { ...m, from: null, to: null, card: false };
+      const at = m.to!;
+      return {
+        ...m,
+        from: { x: at.x, y: at.y, s: at.s, a: 1 },
+        to: { x: at.x, y: at.y + 18, s: at.s * 0.92, a: 0 },
+        t0: now0,
+        dur: 0.22,
+        card: true,
+      };
+    });
     const taken = new Set<Mote>();
     const hand: Mote[] = [];
     for (const perk of perks) {
@@ -341,7 +359,12 @@ export function RitualStage({
     s.dim = 1;
     s.dimTarget = 1;
     s.calmAt = 0;
-    s.dealAt = performance.now() / 1000 + 0.45;
+    /* 0.45 was the funnel's wind-up before the cards appear. At 0.28 the
+       gesture still registers and a second Generate is far less likely to
+       land in the middle of it. */
+    s.dealAt = now0 + 0.28;
+    s.settled = false;
+    if (hostRef.current) hostRef.current.dataset.settled = "false";
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [perkKey]);
 
@@ -642,6 +665,22 @@ export function RitualStage({
       if (cardCount !== s.drawnCards && hostRef.current) {
         s.drawnCards = cardCount;
         hostRef.current.dataset.cards = String(cardCount);
+      }
+      /* Settled means: the hand is on the table and nothing is still tweening.
+      
+         Published for the same reason SlotsStage publishes it — a canvas tells
+         the DOM nothing, so "the animation always finishes" was a claim no
+         test could make. The deal timer counts too: between a new build
+         arriving and `dealAt` firing, nothing is moving yet but the roll is
+         plainly not over. */
+      const settled =
+        !s.dealAt &&
+        s.hand.length > 0 &&
+        cardCount === s.hand.length &&
+        list.every((d) => d.m.to === null || time >= d.m.t0 + d.m.dur);
+      if (settled !== s.settled && hostRef.current) {
+        s.settled = settled;
+        hostRef.current.dataset.settled = String(settled);
       }
       for (const d of list) {
         if (d.card) {
