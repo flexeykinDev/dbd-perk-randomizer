@@ -4,7 +4,12 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { idProblems, type IdMap } from "./id-stability";
+import {
+  guardIdentityStability,
+  identityProblems,
+  idProblems,
+  type IdMap,
+} from "./id-stability";
 
 const dataDir = join(dirname(fileURLToPath(import.meta.url)), "..", "data");
 const load = <T>(file: string): T => JSON.parse(readFileSync(join(dataDir, file), "utf8")) as T;
@@ -95,5 +100,89 @@ test("retired slugs keep their ids rather than being tidied away", () => {
   assert.ok(
     Object.keys(perkIds).length >= shipped,
     `perk-ids.json has ${Object.keys(perkIds).length} entries for ${shipped} shipped perks — ids appear to have been dropped`,
+  );
+});
+
+/* A slug that keeps its id and stops meaning what it meant.
+ *
+ * The id checks above all pass for this, which is the point: it was found in
+ * production data on 6 October 2026 by reading a scrape diff by hand, after a
+ * run reported "1044 stable, 1 new" and was otherwise ready to auto-merge.
+ */
+test("a slug that swaps owners is caught, even though every id is stable", () => {
+  // The real case, with the real ids. Two add-ons are both called "Mirror
+  // Shards"; the scraper gives the first it meets the bare slug and suffixes
+  // the rest, so a change in the wiki's ordering swapped them.
+  const previous = {
+    "addon:mirror-shards": { character: "Good Guy", name: "Mirror Shards" },
+    "addon:mirror-shards-slasher": { character: "Slasher", name: "Mirror Shards" },
+  };
+  const next = {
+    "addon:mirror-shards": { character: "Slasher", name: "Mirror Shards" },
+    "addon:mirror-shards-good-guy": { character: "Good Guy", name: "Mirror Shards" },
+  };
+
+  // Nothing is wrong with the ids: 501 still belongs to addon:mirror-shards.
+  assert.deepEqual(
+    idProblems(
+      { "addon:mirror-shards": 501, "addon:mirror-shards-slasher": 940 },
+      { "addon:mirror-shards": 501, "addon:mirror-shards-slasher": 940, "addon:mirror-shards-good-guy": 1044 },
+    ),
+    [],
+    "the id map alone cannot see this, which is why the identity check exists",
+  );
+
+  const problems = identityProblems(previous, next);
+  assert.equal(problems.length, 1);
+  assert.equal(problems[0].key, "addon:mirror-shards");
+  assert.equal(problems[0].field, "character");
+  assert.match(problems[0].detail, /Good Guy.*Slasher/);
+});
+
+test("a renamed piece is caught too", () => {
+  const problems = identityProblems(
+    { "addon:x": { character: "Trapper", name: "Old Name" } },
+    { "addon:x": { character: "Trapper", name: "New Name" } },
+  );
+  assert.equal(problems.length, 1);
+  assert.equal(problems[0].field, "name");
+});
+
+test("an unchanged scrape raises nothing, and new pieces are not a change", () => {
+  const previous = { "addon:a": { character: "Trapper", name: "A" } };
+  const next = {
+    "addon:a": { character: "Trapper", name: "A" },
+    "addon:b": { character: "Nurse", name: "B" },
+  };
+  assert.deepEqual(identityProblems(previous, next), []);
+});
+
+test("a piece that disappeared is left to the id guard, not reported twice", () => {
+  // Its absence is already a "dropped" id problem; saying it twice would make
+  // the real message harder to read.
+  assert.deepEqual(
+    identityProblems({ "addon:gone": { character: "Trapper", name: "Gone" } }, {}),
+    [],
+  );
+});
+
+test("guardIdentityStability throws, and names the slug and the field", () => {
+  assert.throws(
+    () =>
+      guardIdentityStability(
+        "loadout piece",
+        "data/addons.json",
+        { "addon:mirror-shards": { character: "Good Guy", name: "Mirror Shards" } },
+        { "addon:mirror-shards": { character: "Slasher", name: "Mirror Shards" } },
+      ),
+    /addon:mirror-shards.*character.*Good Guy.*Slasher/s,
+  );
+});
+
+test("a first run has nothing to compare against and does not throw", () => {
+  assert.doesNotThrow(() =>
+    guardIdentityStability("loadout piece", "data/addons.json", null, {
+      "addon:a": { character: "Trapper", name: "A" },
+    }),
   );
 });

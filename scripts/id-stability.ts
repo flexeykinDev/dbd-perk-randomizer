@@ -113,3 +113,96 @@ export function guardIdStability(label: string, path: string, next: IdMap, keys:
       `  extended, never regenerated.`,
   );
 }
+
+/* ------------------------------------------------------------------------ *
+ * The other half of the promise.
+ *
+ * Everything above protects slug -> id: an id, once handed out, never moves
+ * to something else. That turns out to be only half of what a share link
+ * needs, because a slug can keep its id and stop meaning what it meant.
+ *
+ * Found on 6 October 2026, on a routine loadout scrape. Two add-ons are both
+ * called "Mirror Shards" — Chucky's and the Slasher's — and the scraper gives
+ * the first one it meets the bare slug and suffixes the rest. The wiki's
+ * ordering changed, so they swapped:
+ *
+ *     committed   addon:mirror-shards          = Good Guy   (id 501)
+ *                 addon:mirror-shards-slasher  = Slasher    (id 940)
+ *     scraped     addon:mirror-shards          = Slasher    (id 501)
+ *                 addon:mirror-shards-good-guy = Good Guy   (id 1044, new)
+ *
+ * Every id check passed. 501 still pointed at `addon:mirror-shards`, nothing
+ * was reassigned, nothing was dropped from the map — the run reported "1044
+ * stable, 1 new" and would have been auto-merged by update-perks.yml. And yet
+ * id 501, which is in share links and saved pools already out in the world,
+ * had quietly become a different add-on.
+ *
+ * So this compares what the slugs NAME, not what they are numbered. A slug
+ * whose owner changes is either a rename worth recording in the aliases file
+ * or a disambiguation that has become unstable, and both need a person.
+ * ------------------------------------------------------------------------ */
+
+/** The identifying facts about a piece, as the shipped data records them. */
+export interface PieceIdentity {
+  /** Who it belongs to. The field that moved in the Mirror Shards swap. */
+  character?: string | null;
+  /** English name. A slug keeping its id while renaming is a real rename. */
+  name?: string;
+}
+
+export interface IdentityProblem {
+  key: string;
+  field: string;
+  detail: string;
+}
+
+/** Slugs that still exist but no longer name the same thing.
+ *
+ *  Only compares keys present on both sides: a key that disappeared is already
+ *  a "dropped" id problem, and a new key cannot have changed meaning. */
+export function identityProblems(
+  previous: Record<string, PieceIdentity>,
+  next: Record<string, PieceIdentity>,
+): IdentityProblem[] {
+  const problems: IdentityProblem[] = [];
+  for (const [key, before] of Object.entries(previous)) {
+    const after = next[key];
+    if (!after) continue;
+    for (const field of ["character", "name"] as const) {
+      const a = before[field] ?? null;
+      const b = after[field] ?? null;
+      if (a !== b) {
+        problems.push({ key, field, detail: `${field} ${JSON.stringify(a)} -> ${JSON.stringify(b)}` });
+      }
+    }
+  }
+  return problems;
+}
+
+/** Throws when a slug has changed what it names, naming every one of them. */
+export function guardIdentityStability(
+  label: string,
+  path: string,
+  previous: Record<string, PieceIdentity> | null,
+  next: Record<string, PieceIdentity>,
+): void {
+  if (!previous) {
+    console.log(`  ${label} identities: nothing to compare against yet`);
+    return;
+  }
+  const problems = identityProblems(previous, next);
+  if (problems.length === 0) {
+    console.log(`  ${label} identities: ${Object.keys(next).length} unchanged`);
+    return;
+  }
+  throw new Error(
+    `${problems.length} ${label}${problems.length === 1 ? "" : "s"} kept its slug but changed what it names, against ${path}:\n` +
+      problems.map((p) => `    "${p.key}" — ${p.detail}`).join("\n") +
+      `\n  The id stays put while the thing behind it moves, so every share link and\n` +
+      `  saved pool carrying that slug now resolves to something else — with no error\n` +
+      `  and nothing to notice.\n` +
+      `  If this is a rename, record it in the aliases file and update the data by hand.\n` +
+      `  If two pieces share a name, the disambiguation suffix has become unstable and\n` +
+      `  the fix belongs in the scraper, not in the data.`,
+  );
+}

@@ -25,7 +25,11 @@ import sharp from "sharp";
 import { slugify } from "../lib/slugify";
 import { gateScrapedRows, partitionByRelease } from "./release-gate";
 import { guardAgainstShrink } from "./scrape-census";
-import { guardIdStability } from "./id-stability";
+import {
+  guardIdentityStability,
+  guardIdStability,
+  type PieceIdentity,
+} from "./id-stability";
 import { splitDescriptions, type DescriptionEntry, type DescriptionLookup } from "./split-descriptions";
 import { resolveImageUrl, WIKI_GG } from "./wiki-source";
 import {
@@ -44,6 +48,53 @@ const PUBLIC_LOADOUT_DIR = join(__dirname, "../public/loadout");
 const ITEMS_JSON = join(DATA_DIR, "items.json");
 const ADDONS_JSON = join(DATA_DIR, "addons.json");
 const OFFERINGS_JSON = join(DATA_DIR, "offerings.json");
+
+/* The three loadout files, read as "what does each slug name right now".
+ *
+ * Keyed `kind:slug` to match the id map, because an item, an add-on and an
+ * offering can all slugify to the same string. Missing files mean a first run
+ * and are reported as "nothing to compare against" rather than failing. */
+function readCommittedIdentities(): Record<string, PieceIdentity> | null {
+  const sources: ReadonlyArray<readonly [string, string]> = [
+    ["item", ITEMS_JSON],
+    ["addon", ADDONS_JSON],
+    ["offering", OFFERINGS_JSON],
+  ];
+  const out: Record<string, PieceIdentity> = {};
+  let sawAny = false;
+  for (const [kind, path] of sources) {
+    if (!existsSync(path)) continue;
+    sawAny = true;
+    const rows = JSON.parse(readFileSync(path, "utf8")) as Array<{
+      slug: string;
+      character?: string | null;
+      name?: { en?: string };
+    }>;
+    for (const row of rows) {
+      out[`${kind}:${row.slug}`] = { character: row.character ?? null, name: row.name?.en };
+    }
+  }
+  return sawAny ? out : null;
+}
+
+/** The same shape, for what this run is about to write. */
+function identitiesOf(
+  items: ReadonlyArray<{ slug: string; character?: string | null; name: { en: string } }>,
+  addons: ReadonlyArray<{ slug: string; character?: string | null; name: { en: string } }>,
+  offerings: ReadonlyArray<{ slug: string; character?: string | null; name: { en: string } }>,
+): Record<string, PieceIdentity> {
+  const out: Record<string, PieceIdentity> = {};
+  for (const [kind, rows] of [
+    ["item", items],
+    ["addon", addons],
+    ["offering", offerings],
+  ] as const) {
+    for (const row of rows) {
+      out[`${kind}:${row.slug}`] = { character: row.character ?? null, name: row.name.en };
+    }
+  }
+  return out;
+}
 const LOADOUT_DESCRIPTIONS_JSON = join(DATA_DIR, "loadout-descriptions.json");
 const LOADOUT_META_JSON = join(DATA_DIR, "loadout-meta.json");
 const LOADOUT_IDS_JSON = join(DATA_DIR, "loadout-ids.json");
@@ -1245,6 +1296,17 @@ async function main() {
     ...addons.map((p) => `addon:${p.slug}`),
     ...offerings.map((p) => `offering:${p.slug}`),
   ]);
+  /* And that each of those slugs still names the same piece — see the note on
+     guardIdentityStability. The id map alone cannot see a slug that keeps its
+     number and swaps owners, which is exactly what two add-ons sharing a name
+     did here. Read from the committed JSON rather than from anything this run
+     produced, for the same reason the census and the id guard do. */
+  guardIdentityStability(
+    "loadout piece",
+    ADDONS_JSON,
+    readCommittedIdentities(),
+    identitiesOf(items, addons, offerings),
+  );
 
   // One lookup across all three kinds — they're opened by the same detail
   // modal, so splitting them further would only mean two more requests for
