@@ -175,7 +175,9 @@ test("guardIdentityStability throws, and names the slug and the field", () => {
         { "addon:mirror-shards": { character: "Good Guy", name: "Mirror Shards" } },
         { "addon:mirror-shards": { character: "Slasher", name: "Mirror Shards" } },
       ),
-    /addon:mirror-shards.*character.*Good Guy.*Slasher/s,
+    // [\s\S] rather than the /s flag: this file is typechecked against a
+    // target older than es2018, where dotAll does not exist.
+    /addon:mirror-shards[\s\S]*character[\s\S]*Good Guy[\s\S]*Slasher/,
   );
 });
 
