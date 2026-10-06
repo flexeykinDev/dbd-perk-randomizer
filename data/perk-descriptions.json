@@ -825,7 +825,7 @@
     "descriptionRuRaw": "Когда вас снимают с крюка, но не все генераторы еще отремонтированы, то в течение следующих 40/50/60 сек., когда убийца хватает вас, один раз за матч вы должны пройти особую проверку реакции, и в случае успеха вы: оглушите убийцу на 4 сек.; станете объектом одержимости. Действия, привлекающие внимание, отменяют этот эффект. В начале матча у вас больше шансов стать объектом одержимости."
   },
   "windows-of-opportunity": {
-    "description": "Unlocks potential in your Aura-reading ability. The Auras of Windows are revealed to you within 40/35/30 seconds.. You vault Windows +10 % faster. Windows of Opportunity goes on a 40/35/30 seconds cool-down when you vault a Window. \"Rise and shine, work hard, carve out your name,Take aim, pull the trigger, hit the bulls eye for fame,Know the value of faith, an' family, and don't you complain,Open wide, your windows of opportunity\" — Kate Denson's \"Windows of Opportunity\"",
+    "description": "Unlocks potential in your Aura-reading ability. The Auras of Windows are revealed to you within 24 metres. You vault Windows +10 % faster. Windows of Opportunity goes on a 40/35/30 seconds cool-down when you vault a Window.",
     "descriptionRuRaw": "В радиусе 24/28/32 м: вы видите ауры досок; вы видите ауры разрушаемых стен; вы видите ауры окон."
   },
   "wiretap": {
