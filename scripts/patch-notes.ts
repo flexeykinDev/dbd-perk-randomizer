@@ -174,23 +174,41 @@ export function disagreements(
   noted: readonly NotedPerk[],
   shipped: ReadonlyMap<string, { slug: string; description: string }>,
 ): Disagreement[] {
-  const out: Disagreement[] = [];
+  /* Keyed by slug, because the notes list most perks TWICE — once under
+     "Survivor Perks"/"Killer Perks" and again in the section explaining why
+     they changed. Reporting each occurrence separately said "17 perks
+     disagree" where nine do, which overstates the problem and makes the list
+     tedious to work through. The values from both mentions are merged: either
+     one matching is agreement. */
+  const bySlug = new Map<string, Disagreement>();
+  const agreed = new Set<string>();
+
   for (const perk of noted) {
     const entry = lookup(shipped, perk.name);
     if (!entry) continue;
     const found = tierValues(entry.description);
-    const agrees = perk.values.some((v) => found.includes(v));
-    if (!agrees) {
-      out.push({
+    if (perk.values.some((v) => found.includes(v))) {
+      agreed.add(entry.slug);
+      continue;
+    }
+    const existing = bySlug.get(entry.slug);
+    if (existing) {
+      existing.expected = [...new Set([...existing.expected, ...perk.values])];
+      existing.rework = existing.rework || perk.rework;
+    } else {
+      bySlug.set(entry.slug, {
         perk: perk.name,
         slug: entry.slug,
-        expected: perk.values,
+        expected: [...perk.values],
         found,
         rework: perk.rework,
       });
     }
   }
-  return out;
+
+  // A perk mentioned twice where only one mention matched is not a problem.
+  for (const slug of agreed) bySlug.delete(slug);
+  return [...bySlug.values()];
 }
 
 /** Name matching, with the one spelling difference that actually occurs.

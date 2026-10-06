@@ -23,6 +23,9 @@
         ]
       }
     },
+    "bitter-murmur": {
+      "descriptionEn": "Unlocks potential in your Aura-reading ability.Whenever a Generator is completed, Bitter Murmur triggers its primary effect: The Auras of any Survivors within 20 metres of that Generator are revealed to you for 10 seconds. Once the last Generator is completed, Bitter Murmur triggers its secondary effect: The Auras of all Survivors are revealed to you for 16/18/20 seconds."
+    },
     "boon-steadfast": {
       "descriptionRu": {
         "full": "Находясь рядом с тотемом, используйте кнопку особой способности, чтобы благословить его и создать уникальный тотем со всеми вашими Дарами. Генераторы в пределах Дара регрессируют на 50 % медленнее и чинятся на 8/9/10 % быстрее. Выжившие в пределах Дара видят ауры затронутых им генераторов.",
@@ -54,6 +57,9 @@
         "quote": "«Лишняя пара глаз никогда не помешает» — Хонас Васкес"
       }
     },
+    "dark-sense": {
+      "descriptionEn": "Unlocks potential in your Aura-reading ability.Whenever a Generator is completed, Dark Sense activates: When the Killer gets within 20 metres of you, Dark Sense activates for 13/14/15 seconds: You see the Killer's aura. You see auras of other Survivors. You see the auras of Pallets and Windows within 32 metres. Dark Sense deactivates after use. \"Take it from an old-timer: Slow down, don't rush and try not to worry so much! The best way to beat him is to know how he thinks.\" — Murf, The Lost Tapes"
+    },
     "darkness-revealed": {
       "descriptionRu": {
         "full": "В вашем присутствии места, которые когда-то считались безопасными, зачастую оказываются самыми опасными. Обыск шкафчика активирует следующий эффект: ауры всех выживших в радиусе 8 метров от любого шкафчика открываются вам на 6/7/8 секунд. Время восстановления «Явления мрака» — 30 секунд.",
@@ -68,6 +74,9 @@
     "deja-vu": {
       "nameEn": "Deja Vu"
     },
+    "do-no-harm": {
+      "descriptionEn": "\"Helping those in need comes easily, no matter how dire things get.\" When healing another Survivor, depending on their accumulated Hook Stages, you benefit from the following effects: Increases your Altruistic Healing speed by 30/35/40 % per Hook Stage. Increases the Progression bonus of Great Healing Skill Checks by +3 %. Increases the odds of triggering a Skill Check by +5 %. \"Look at me. My name's Orela, and I'm gonna make sure you're all right.\" — Orela Rose"
+    },
     "down-to-the-last": {
       "descriptionRu": {
         "full": "Чем больше ваших друзей гибнет от рук убийцы, тем сильнее вы окутаны изоляцией, мешающей убийце читать вашу ауру. За каждого погибшего или принесённого в жертву выжившего (кроме вас) вы получаете жетон, максимум 3: каждый жетон даёт суммируемый радиус в 20/22/24 метра, вплоть до 60/66/72 метров, в котором убийца не может видеть вашу ауру. Когда вы остаётесь последним живым выжившим: скорость ремонта увеличивается на 75%, скорость открытия ворот и люка — на 50%, а шанс изначально стать объектом одержимости увеличивается на 100%. Убийца может быть одержим только одним выжившим одновременно.",
@@ -78,6 +87,9 @@
         ],
         "quote": "«Это был бугимен» — Лори Строуд"
       }
+    },
+    "empathic-connection": {
+      "descriptionEn": "\"Your presence psychically projects itself to those in danger.\" You benefit from the following permanent primary effect: Increases your Altruistic Healing speed by 30/35/40 %. Whenever any other Survivor is injured, Empathic Connection applies its secondary effect: Your Aura as a potential Healer is revealed to them."
     },
     "empathy": {
       "descriptionRu": {
@@ -115,7 +127,7 @@
       }
     },
     "help-wanted": {
-      "descriptionEn": "\"Try as they might, you know how to stay one step ahead of your guests.\" After performing the Damage Generator action, Help Wanted activates: Causes that Generator to become a Compromised Generator. Once the Compromised Generator is completed, you benefit from the following effect for 40/50/60 seconds: Increases the Recovery speed of successful Basic Attacks by +25 %. \"You only think you are in control...\" — Springtrap"
+      "descriptionEn": "\"Try as they might, you know how to stay one step ahead of your guests.\" After performing the Damage Generator action, Help Wanted activates: Causes that Generator to become a Compromised Generator. Once the Compromised Generator is completed, you benefit from the following effects for 70/80/90 seconds: Increases the Recovery speed of successful Basic Attacks by +25 %. Causes Generators that are not being repaired to regress at 150 % of the normal Regression speed. Up to 3 Generators can be Compromised at a time. \"You only think you are in control...\" — Springtrap"
     },
     "hex-fortune-s-fool": {
       "descriptionEn": "The first time you hook each Survivor, they become Cursed and a Dull Totem ignites. For 90 seconds, the Cursed Totem is blocked for other Survivors. Cursed Survivors: are afflicted with the Oblivious Status Effect. See the Cursed Totem's Aura within a 24/20/16 metre radius. Oblivious Survivors do not hear the Killer's Terror Radius.",
@@ -123,6 +135,9 @@
     },
     "hex-nothing-but-misery": {
       "descriptionEn": "\"You've been driven to the absolute depths of pain, and now you're ready to inflict that pain on others.\" After damaging Survivors a total of 8 times with Basic Attacks, a random Dull Totem becomes a Hex Totem, cursing all Survivors: Survivors damaged by a Basic Attack suffer from a -5 % Hindered Status Effect for 10/12.5/15 seconds. The Hex Effects persist until the Hex Totem is either blessed or cleansed by a Survivor, disabling it for the remainder of the Trial. \"All of the liabilities of this world are due to the inadequacies of the person involved.\" — Ken Kaneki"
+    },
+    "hex-thrill-of-the-hunt": {
+      "descriptionEn": "\"A Hex rooting its power on hope.The false hope of Survivors fills you with excitement and strengthens your Totems.\" The first time you hook a Survivor, Hex: Thrill of the Hunt lights a Dull Totem. Whenever you hook a Survivor, all Hex Totems are blocked by the Entity for 4/5/6 seconds for each lit Hex Totem. The Hex Effects persist until the Hex Totem is either blessed or cleansed by a Survivor, disabling it for the remainder of the Trial."
     },
     "hex-under-your-thumb": {
       "descriptionRu": {
@@ -145,6 +160,9 @@
         ],
         "quote": "«Я взываю к духам ночи — помогите нам в отчаянном бегстве!» — Сейбл"
       }
+    },
+    "knock-out": {
+      "descriptionEn": "\"The trauma caused by your brutal attacks makes crying for help painfully difficult.\" Whenever a Survivor moves farther than 10 metres from a Pallet within 6 seconds of dropping it and without the Pallet being destroyed, Knock Out triggers its effect: Causes them to suffer from a -20 % Hindered Status Effect for 2/3/4 seconds. This ends early if the Pallet is broken. \"Oh, that gun's no good. The old way... with a sledge! You see, that way's better. They die better that way.\" — Nubbins Sawyer"
     },
     "lay-waste": {
       "descriptionRu": {
@@ -206,6 +224,9 @@
     "phantom-fear": {
       "descriptionEn": "\"You have always had a reputation for startling unsuspecting guests.\" Whenever a Survivor within your Terror Radius looks at you, they suffer from the following effects: Causes them to scream and reveal their Aura to you for 2 seconds. Phantom Fear has a cool-down of 80/70/60 seconds. \"Excellent. Your screams please me.\" — Springtrap"
     },
+    "premonition": {
+      "descriptionEn": "\"You have the undeniable capability to sense danger.\" While not being chased, looking in the Killer's direction within a range of 32 metres triggers Premonition: Triggers an audio cue Reveals the Killer's aura for 3 seconds. Premonition has a cool-down of 55/50/45 seconds. \"I have a bad feeling about this!\""
+    },
     "repressed-alliance": {
       "descriptionEn": "You are accustomed to being hunted by malicious forces, and you have begun using it to your advantage. After repairing Generators for a total of 40/35/30 seconds, Repressed Alliance activates: Press the Active Ability button to call upon The Entity to block the Generator you are currently repairing for 15 seconds, after which Repressed Alliance deactivates. The Aura of the blocked Generator is revealed to all Survivors in white. Repressed Alliance can only be triggered when no other Survivors are repairing your Generator.",
       "descriptionRu": {
@@ -260,6 +281,9 @@
         ],
         "quote": "«Здесь ничего не будет сделано, если не сделаю я» — Габриэль Сома"
       }
+    },
+    "undone": {
+      "descriptionEn": "\"Hope is the delusion that keeps its victims alive.\" For every time you hook a Survivor, Undone gains +1 Token, up to a maximum of 3 Tokens.Performing the Damage Generator action on a Generator consumes all accumulated Tokens and applies the following effects per Token spent: Instantly regresses the Damaged Generator by 8/9/10 % of its total Progression. Blocks the Damaged Generator for 8/9/10 seconds. Causes the Damaged Generator to start regressing once it becomes unblocked. \"Erratic behavior in machinery could be related to [REDACTED], further testing required.\" — OSS Report, 12/02/1943"
     },
     "vigil": {
       "descriptionEn": "\"You watch over your friends, even in dire situations.\" You recover 20/25/30 % faster from the Exhausted Status Effect. Vigil extends its effect to all Survivors within 16 metres of your location and lingers for 15 seconds after leaving its Area of Effect. Survivors can only be affected by one instance of Vigil at a time. \"I am gonna be here when you wake up. You are gonna make it.\" — Quentin Smith",
