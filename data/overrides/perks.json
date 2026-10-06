@@ -24,7 +24,14 @@
       }
     },
     "bitter-murmur": {
-      "descriptionEn": "Unlocks potential in your Aura-reading ability.Whenever a Generator is completed, Bitter Murmur triggers its primary effect: The Auras of any Survivors within 20 metres of that Generator are revealed to you for 10 seconds. Once the last Generator is completed, Bitter Murmur triggers its secondary effect: The Auras of all Survivors are revealed to you for 16/18/20 seconds."
+      "descriptionEn": "Unlocks potential in your Aura-reading ability.Whenever a Generator is completed, Bitter Murmur triggers its primary effect: The Auras of any Survivors within 20 metres of that Generator are revealed to you for 10 seconds. Once the last Generator is completed, Bitter Murmur triggers its secondary effect: The Auras of all Survivors are revealed to you for 16/18/20 seconds.",
+      "descriptionRu": {
+        "full": "Раскрывает потенциал вашей способности видеть ауры. Каждый раз, когда завершается починка генератора, вы в течение 10 сек. видите ауры выживших в 20 метрах от него. Когда починены все генераторы, вы в течение 16/18/20 сек. видите ауры всех выживших.",
+        "core": [
+          "При починке генератора вы **10 сек.** видите ауры выживших в **20 м** от него.",
+          "Когда починены все генераторы — ауры **всех** выживших на **16/18/20 сек.**"
+        ]
+      }
     },
     "boon-steadfast": {
       "descriptionRu": {
@@ -58,7 +65,16 @@
       }
     },
     "dark-sense": {
-      "descriptionEn": "Unlocks potential in your Aura-reading ability.Whenever a Generator is completed, Dark Sense activates: When the Killer gets within 20 metres of you, Dark Sense activates for 13/14/15 seconds: You see the Killer's aura. You see auras of other Survivors. You see the auras of Pallets and Windows within 32 metres. Dark Sense deactivates after use. \"Take it from an old-timer: Slow down, don't rush and try not to worry so much! The best way to beat him is to know how he thinks.\" — Murf, The Lost Tapes"
+      "descriptionEn": "Unlocks potential in your Aura-reading ability.Whenever a Generator is completed, Dark Sense activates: When the Killer gets within 20 metres of you, Dark Sense activates for 13/14/15 seconds: You see the Killer's aura. You see auras of other Survivors. You see the auras of Pallets and Windows within 32 metres. Dark Sense deactivates after use. \"Take it from an old-timer: Slow down, don't rush and try not to worry so much! The best way to beat him is to know how he thinks.\" — Murf, The Lost Tapes",
+      "descriptionRu": {
+        "full": "Раскрывает потенциал вашей способности видеть ауры. Каждый раз, когда завершается починка генератора и убийца подходит к вам ближе 20 метров, вы в течение 13/14/15 сек. видите ауры досок и окон в 32 метрах, ауры других выживших и ауру убийцы.",
+        "core": [
+          "После починки генератора, когда убийца подойдёт ближе **20 м**, на **13/14/15 сек.** открываются:",
+          "ауры **досок и окон** в **32 м**;",
+          "ауры **других выживших**;",
+          "аура **убийцы**."
+        ]
+      }
     },
     "darkness-revealed": {
       "descriptionRu": {
@@ -75,7 +91,15 @@
       "nameEn": "Deja Vu"
     },
     "do-no-harm": {
-      "descriptionEn": "\"Helping those in need comes easily, no matter how dire things get.\" When healing another Survivor, depending on their accumulated Hook Stages, you benefit from the following effects: Increases your Altruistic Healing speed by 30/35/40 % per Hook Stage. Increases the Progression bonus of Great Healing Skill Checks by +3 %. Increases the odds of triggering a Skill Check by +5 %. \"Look at me. My name's Orela, and I'm gonna make sure you're all right.\" — Orela Rose"
+      "descriptionEn": "\"Helping those in need comes easily, no matter how dire things get.\" When healing another Survivor, depending on their accumulated Hook Stages, you benefit from the following effects: Increases your Altruistic Healing speed by 30/35/40 % per Hook Stage. Increases the Progression bonus of Great Healing Skill Checks by +3 %. Increases the odds of triggering a Skill Check by +5 %. \"Look at me. My name's Orela, and I'm gonna make sure you're all right.\" — Orela Rose",
+      "descriptionRu": {
+        "full": "Во время лечения другого выжившего, за каждую его стадию повешения вы лечите на 30/35/40 % быстрее. Бонус за попадание в отличную базовую проверку реакции даёт на 3 % больше прогресса. Шанс возникновения проверок реакции повышен на 5 %.",
+        "core": [
+          "Лечение другого выжившего быстрее на **30/35/40 %** за каждую его **стадию повешения**.",
+          "Отличная базовая проверка реакции даёт на **3 %** больше прогресса.",
+          "Шанс проверок реакции выше на **5 %**."
+        ]
+      }
     },
     "down-to-the-last": {
       "descriptionRu": {
@@ -89,7 +113,14 @@
       }
     },
     "empathic-connection": {
-      "descriptionEn": "\"Your presence psychically projects itself to those in danger.\" You benefit from the following permanent primary effect: Increases your Altruistic Healing speed by 30/35/40 %. Whenever any other Survivor is injured, Empathic Connection applies its secondary effect: Your Aura as a potential Healer is revealed to them."
+      "descriptionEn": "\"Your presence psychically projects itself to those in danger.\" You benefit from the following permanent primary effect: Increases your Altruistic Healing speed by 30/35/40 %. Whenever any other Survivor is injured, Empathic Connection applies its secondary effect: Your Aura as a potential Healer is revealed to them.",
+      "descriptionRu": {
+        "full": "Вы лечите союзников на 30/35/40 % быстрее. Раненые выжившие видят вашу ауру.",
+        "core": [
+          "Вы лечите союзников на **30/35/40 %** быстрее.",
+          "Раненые выжившие видят **вашу ауру**."
+        ]
+      }
     },
     "empathy": {
       "descriptionRu": {
@@ -127,7 +158,15 @@
       }
     },
     "help-wanted": {
-      "descriptionEn": "\"Try as they might, you know how to stay one step ahead of your guests.\" After performing the Damage Generator action, Help Wanted activates: Causes that Generator to become a Compromised Generator. Once the Compromised Generator is completed, you benefit from the following effects for 70/80/90 seconds: Increases the Recovery speed of successful Basic Attacks by +25 %. Causes Generators that are not being repaired to regress at 150 % of the normal Regression speed. Up to 3 Generators can be Compromised at a time. \"You only think you are in control...\" — Springtrap"
+      "descriptionEn": "\"Try as they might, you know how to stay one step ahead of your guests.\" After performing the Damage Generator action, Help Wanted activates: Causes that Generator to become a Compromised Generator. Once the Compromised Generator is completed, you benefit from the following effects for 70/80/90 seconds: Increases the Recovery speed of successful Basic Attacks by +25 %. Causes Generators that are not being repaired to regress at 150 % of the normal Regression speed. Up to 3 Generators can be Compromised at a time. \"You only think you are in control...\" — Springtrap",
+      "descriptionRu": {
+        "full": "Когда вы повреждаете генератор, он становится дефектным. Одновременно дефектными могут быть 3 генератора. Когда выжившие чинят дефектный генератор, в течение 70/80/90 сек. восстановление после успешных базовых атак ускоряется на 25 %, а генераторы, которые никто не чинит, откатываются со скоростью 150 %. Остальные генераторы теряют дефект.",
+        "core": [
+          "Повреждённый генератор становится **дефектным**; одновременно их может быть **3**.",
+          "Когда дефектный генератор дочинят, на **70/80/90 сек.** восстановление после успешных базовых атак быстрее на **25 %**.",
+          "В это же время генераторы, которые никто не чинит, откатываются на **150 %** обычной скорости."
+        ]
+      }
     },
     "hex-fortune-s-fool": {
       "descriptionEn": "The first time you hook each Survivor, they become Cursed and a Dull Totem ignites. For 90 seconds, the Cursed Totem is blocked for other Survivors. Cursed Survivors: are afflicted with the Oblivious Status Effect. See the Cursed Totem's Aura within a 24/20/16 metre radius. Oblivious Survivors do not hear the Killer's Terror Radius.",
@@ -137,7 +176,14 @@
       "descriptionEn": "\"You've been driven to the absolute depths of pain, and now you're ready to inflict that pain on others.\" After damaging Survivors a total of 8 times with Basic Attacks, a random Dull Totem becomes a Hex Totem, cursing all Survivors: Survivors damaged by a Basic Attack suffer from a -5 % Hindered Status Effect for 10/12.5/15 seconds. The Hex Effects persist until the Hex Totem is either blessed or cleansed by a Survivor, disabling it for the remainder of the Trial. \"All of the liabilities of this world are due to the inadequacies of the person involved.\" — Ken Kaneki"
     },
     "hex-thrill-of-the-hunt": {
-      "descriptionEn": "\"A Hex rooting its power on hope.The false hope of Survivors fills you with excitement and strengthens your Totems.\" The first time you hook a Survivor, Hex: Thrill of the Hunt lights a Dull Totem. Whenever you hook a Survivor, all Hex Totems are blocked by the Entity for 4/5/6 seconds for each lit Hex Totem. The Hex Effects persist until the Hex Totem is either blessed or cleansed by a Survivor, disabling it for the remainder of the Trial."
+      "descriptionEn": "\"A Hex rooting its power on hope.The false hope of Survivors fills you with excitement and strengthens your Totems.\" The first time you hook a Survivor, Hex: Thrill of the Hunt lights a Dull Totem. Whenever you hook a Survivor, all Hex Totems are blocked by the Entity for 4/5/6 seconds for each lit Hex Totem. The Hex Effects persist until the Hex Totem is either blessed or cleansed by a Survivor, disabling it for the remainder of the Trial.",
+      "descriptionRu": {
+        "full": "При первом повешении выжившего на крюк тусклый тотем становится тотемом Порчи. Каждый раз, когда вы вешаете выжившего на крюк, все тотемы Порчи блокируются Сущностью на 4/5/6 сек. за каждый горящий тотем Порчи. Эффекты Порчи действуют, пока её тотем не будет очищен или благословлён выжившим.",
+        "core": [
+          "При **первом** повешении на крюк загорается тотем Порчи.",
+          "Каждое повешение блокирует все тотемы Порчи на **4/5/6 сек.** за каждый горящий тотем Порчи."
+        ]
+      }
     },
     "hex-under-your-thumb": {
       "descriptionRu": {
@@ -162,7 +208,14 @@
       }
     },
     "knock-out": {
-      "descriptionEn": "\"The trauma caused by your brutal attacks makes crying for help painfully difficult.\" Whenever a Survivor moves farther than 10 metres from a Pallet within 6 seconds of dropping it and without the Pallet being destroyed, Knock Out triggers its effect: Causes them to suffer from a -20 % Hindered Status Effect for 2/3/4 seconds. This ends early if the Pallet is broken. \"Oh, that gun's no good. The old way... with a sledge! You see, that way's better. They die better that way.\" — Nubbins Sawyer"
+      "descriptionEn": "\"The trauma caused by your brutal attacks makes crying for help painfully difficult.\" Whenever a Survivor moves farther than 10 metres from a Pallet within 6 seconds of dropping it and without the Pallet being destroyed, Knock Out triggers its effect: Causes them to suffer from a -20 % Hindered Status Effect for 2/3/4 seconds. This ends early if the Pallet is broken. \"Oh, that gun's no good. The old way... with a sledge! You see, that way's better. They die better that way.\" — Nubbins Sawyer",
+      "descriptionRu": {
+        "full": "Каждый раз, когда выживший сбрасывает доску, если в течение 6 сек. он отойдёт от неё на 10 метров, он получает Замедление 20 % на 2/3/4 сек. Эффект заканчивается раньше, если доску сломают.",
+        "core": [
+          "Отошёл от сброшенной доски на **10 м** за **6 сек.** — Замедление **20 %** на **2/3/4 сек.**",
+          "Заканчивается раньше, если доску **сломают**."
+        ]
+      }
     },
     "lay-waste": {
       "descriptionRu": {
@@ -225,7 +278,15 @@
       "descriptionEn": "\"You have always had a reputation for startling unsuspecting guests.\" Whenever a Survivor within your Terror Radius looks at you, they suffer from the following effects: Causes them to scream and reveal their Aura to you for 2 seconds. Phantom Fear has a cool-down of 80/70/60 seconds. \"Excellent. Your screams please me.\" — Springtrap"
     },
     "premonition": {
-      "descriptionEn": "\"You have the undeniable capability to sense danger.\" While not being chased, looking in the Killer's direction within a range of 32 metres triggers Premonition: Triggers an audio cue Reveals the Killer's aura for 3 seconds. Premonition has a cool-down of 55/50/45 seconds. \"I have a bad feeling about this!\""
+      "descriptionEn": "\"You have the undeniable capability to sense danger.\" While not being chased, looking in the Killer's direction within a range of 32 metres triggers Premonition: Triggers an audio cue Reveals the Killer's aura for 3 seconds. Premonition has a cool-down of 55/50/45 seconds. \"I have a bad feeling about this!\"",
+      "descriptionRu": {
+        "full": "Будучи вне погони, каждый раз, когда вы посмотрите в сторону убийцы в пределах 32 метров, вы получите уведомление и увидите ауру убийцы на 3 сек. Перезарядка: 55/50/45 сек.",
+        "core": [
+          "Вне погони взгляд в сторону убийцы в пределах **32 м** даёт уведомление.",
+          "Вы видите ауру убийцы **3 сек.**",
+          "Перезарядка: **55/50/45 сек.**"
+        ]
+      }
     },
     "repressed-alliance": {
       "descriptionEn": "You are accustomed to being hunted by malicious forces, and you have begun using it to your advantage. After repairing Generators for a total of 40/35/30 seconds, Repressed Alliance activates: Press the Active Ability button to call upon The Entity to block the Generator you are currently repairing for 15 seconds, after which Repressed Alliance deactivates. The Aura of the blocked Generator is revealed to all Survivors in white. Repressed Alliance can only be triggered when no other Survivors are repairing your Generator.",
@@ -283,7 +344,14 @@
       }
     },
     "undone": {
-      "descriptionEn": "\"Hope is the delusion that keeps its victims alive.\" For every time you hook a Survivor, Undone gains +1 Token, up to a maximum of 3 Tokens.Performing the Damage Generator action on a Generator consumes all accumulated Tokens and applies the following effects per Token spent: Instantly regresses the Damaged Generator by 8/9/10 % of its total Progression. Blocks the Damaged Generator for 8/9/10 seconds. Causes the Damaged Generator to start regressing once it becomes unblocked. \"Erratic behavior in machinery could be related to [REDACTED], further testing required.\" — OSS Report, 12/02/1943"
+      "descriptionEn": "\"Hope is the delusion that keeps its victims alive.\" For every time you hook a Survivor, Undone gains +1 Token, up to a maximum of 3 Tokens.Performing the Damage Generator action on a Generator consumes all accumulated Tokens and applies the following effects per Token spent: Instantly regresses the Damaged Generator by 8/9/10 % of its total Progression. Blocks the Damaged Generator for 8/9/10 seconds. Causes the Damaged Generator to start regressing once it becomes unblocked. \"Erratic behavior in machinery could be related to [REDACTED], further testing required.\" — OSS Report, 12/02/1943",
+      "descriptionRu": {
+        "full": "Каждый раз, когда вы вешаете выжившего на крюк, вы получаете 1 жетон, вплоть до максимальных 3. Когда вы повреждаете генератор, все жетоны тратятся. За каждый потраченный жетон генератор теряет 8/9/10 % прогресса и блокируется на 8/9/10 сек.",
+        "core": [
+          "За каждое повешение на крюк — **1 жетон**, максимум **3**.",
+          "Повреждение генератора тратит все жетоны: за каждый он теряет **8/9/10 %** прогресса и блокируется на **8/9/10 сек.**"
+        ]
+      }
     },
     "vigil": {
       "descriptionEn": "\"You watch over your friends, even in dire situations.\" You recover 20/25/30 % faster from the Exhausted Status Effect. Vigil extends its effect to all Survivors within 16 metres of your location and lingers for 15 seconds after leaving its Area of Effect. Survivors can only be affected by one instance of Vigil at a time. \"I am gonna be here when you wake up. You are gonna make it.\" — Quentin Smith",
