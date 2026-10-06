@@ -71,3 +71,7 @@ dev-server-launch.cmd
 # Marketing assets for the Steam guide — not part of the app, kept out of
 # the repo on purpose.
 docs/steam-guide/
+# Same reason as the line above: promo renders are marketing assets for the
+# store page, not part of the app. The .webm alone is 38 MB and a binary that
+# large lives in every clone forever once it is committed.
+docs/promo/

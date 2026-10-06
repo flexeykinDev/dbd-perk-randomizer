@@ -1,75 +1,87 @@
-/* Is there a patch the wiki has not caught up with yet?
- *
- * The weekly scrape trusts the wiki, and the wiki lags BHVR. On 1 September
- * the 10.1.1 notes changed Repressed Alliance and Vigil, and a scrape run that
- * day returned the old numbers with nothing to say anything was wrong — the
- * only reason we noticed is that somebody read the patch notes and said so.
- *
- * This does NOT parse patch notes into perk data. They are prose, the format
- * shifts patch to patch, and a parser would fail silently, which is the exact
- * failure it would be trying to prevent. It answers one question: has BHVR
- * shipped a patch since the data was last scraped? A human reads the notes.
- *
- * Steam's public news API, not the store page: the page is a single-page app
- * that serves a shell to anything without a browser, and the API returns the
- * same posts as JSON with no key and no scraping.
- */
+// Does the shipped data say what BHVR says?
+//
+//   npm run check:patch-notes
+//
+// Reads the newest live patch notes from Steam and compares every perk they
+// mention against the description this site ships. Prints what disagrees and
+// exits non-zero, so it can gate a release or just be run after a scrape.
+//
+// It never writes. A disagreement is not automatically the wiki being wrong —
+// it can be a rework whose prose moved the numbers around, or a perk the wiki
+// has corrected and the notes have not. The fix, when there is one, is an entry
+// in data/overrides/perks.json, written by a person who looked.
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { disagreements, fetchPatchNotes } from "./patch-notes";
 
-const DBD_APP_ID = 381210;
-const API = `https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/?appid=${DBD_APP_ID}&count=10&maxlength=1`;
+const dataDir = join(dirname(fileURLToPath(import.meta.url)), "..", "data");
 
-interface NewsItem {
-  title: string;
-  url: string;
-  date: number;
+interface Perk {
+  slug: string;
+  name: { en: string };
 }
+/* data/perk-descriptions.json is an OBJECT keyed by slug, and its entries do
+   not repeat the slug inside. Reading it as a list of records produced a map of
+   `undefined -> text`, every description came back empty, and the checker
+   cheerfully reported 68 disagreements on its first run — a checker that claims
+   everything is broken is as useless as one that claims nothing is. */
+type DescriptionFile = Record<string, { description?: string }>;
 
-/** A patch, as opposed to a sale, a Top Sellers list or a blog post. BHVR
- *  titles theirs "10.1.1 | Bugfix Patch", "10.1.0 | Chorus of Sin". */
-function isPatch(title: string): boolean {
-  return /^\d+\.\d+\.\d+\s*\|/.test(title.trim());
-}
-
-async function main(): Promise<void> {
-  const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-  const scrapedAt = new Date(
-    (JSON.parse(readFileSync(join(root, "data/meta.json"), "utf8")) as { scrapedAt: string })
-      .scrapedAt,
+function shippedDescriptions(): Map<string, { slug: string; description: string }> {
+  const perks = JSON.parse(readFileSync(join(dataDir, "perks.json"), "utf8")) as Perk[];
+  const bySlug = JSON.parse(
+    readFileSync(join(dataDir, "perk-descriptions.json"), "utf8"),
+  ) as DescriptionFile;
+  return new Map(
+    perks.map((p) => [
+      p.name.en.toLowerCase(),
+      { slug: p.slug, description: bySlug[p.slug]?.description ?? "" },
+    ]),
   );
+}
 
-  let items: NewsItem[];
-  try {
-    const res = await fetch(API);
-    if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
-    items = ((await res.json()) as { appnews?: { newsitems?: NewsItem[] } }).appnews?.newsitems ?? [];
-  } catch (err) {
-    // Never fail the scrape over this. It is a note for a human, not a gate.
-    console.log(`Could not reach Steam's news API (${String(err)}). Skipping the patch check.`);
+async function main() {
+  const notes = await fetchPatchNotes();
+  if (!notes) {
+    console.log("No live patch notes with perk changes found — nothing to check.");
     return;
   }
 
-  const newer = items
-    .filter((n) => isPatch(n.title) && n.date * 1000 > scrapedAt.getTime())
-    .sort((a, b) => b.date - a.date);
+  const shipped = shippedDescriptions();
+  const problems = disagreements(notes.perks, shipped);
+  const checked = notes.perks.filter((p) => shipped.has(p.name.toLowerCase())).length;
 
-  if (newer.length === 0) {
-    console.log(`No DBD patch since the last scrape (${scrapedAt.toISOString().slice(0, 10)}).`);
-    return;
-  }
-
-  console.log(`::warning::${newer.length} DBD patch(es) since the last scrape — the wiki may be behind.`);
-  for (const n of newer) {
-    console.log(`  ${new Date(n.date * 1000).toISOString().slice(0, 10)}  ${n.title}`);
-    console.log(`    ${n.url}`);
-  }
+  console.log(`Checked against "${notes.title}" (${notes.date.toISOString().slice(0, 10)})`);
+  console.log(`  ${notes.url}`);
   console.log(
-    "\nThe wiki is scraped, not the notes. If a perk changed and the wiki has not\n" +
-      "caught up, put the corrected text in data/overrides/perks.json — it is\n" +
-      "superseded automatically once the wiki agrees.",
+    `  ${notes.perks.length} perks in the notes, ${checked} of them shipped here, ` +
+      `${checked - problems.length} agree\n`,
   );
+
+  if (problems.length === 0) {
+    console.log("Every perk the notes mention states the same values here.");
+    return;
+  }
+
+  for (const p of problems) {
+    console.log(`  ${p.perk}${p.rework ? "  (marked a rework)" : ""}`);
+    console.log(`     notes say : ${p.expected.join(", ")}`);
+    console.log(`     we say    : ${p.found.join(", ") || "(no tier values in our text)"}`);
+    console.log(`     slug      : ${p.slug}`);
+  }
+
+  console.log(
+    `\n${problems.length} perk${problems.length === 1 ? "" : "s"} disagree with the official notes.\n` +
+      `  The usual cause is the wiki documenting the PTB build: BHVR changes a value\n` +
+      `  between the PTB and the live release and the wiki is not always corrected.\n` +
+      `  Check the game, then record the live value in data/overrides/perks.json and\n` +
+      `  re-run \`npm run scrape:perks\`. Delete the entry once the wiki catches up.`,
+  );
+  process.exitCode = 1;
 }
 
-void main();
+main().catch((error) => {
+  console.error(error instanceof Error ? error.message : error);
+  process.exitCode = 1;
+});

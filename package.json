@@ -10,6 +10,7 @@
     "test": "tsx --test --test-force-exit --import ./lib/test-dom.ts scripts/*.test.ts lib/*.test.ts components/dbd/*.test.ts",
     "scrape:perks": "tsx scripts/scrape-perks.ts",
     "scrape:loadout": "tsx scripts/scrape-loadout.ts",
+    "check:patch-notes": "tsx scripts/check-patch-notes.ts",
     "sync:localization": "tsx scripts/sync-localization.ts",
     "sync:characters": "tsx scripts/sync-characters.ts",
     "sync:descriptions": "tsx scripts/sync-descriptions.ts",
