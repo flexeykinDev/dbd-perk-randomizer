@@ -207,16 +207,27 @@ test("every control can be named, on the page and in every panel", async ({ page
   expect([...new Set(findings)], `${findings.length} accessibility problems`).toEqual([]);
 });
 
-test("text clears WCAG AA in both themes", async ({ page }) => {
+test("text clears WCAG AA in every theme", async ({ page }) => {
   const findings: string[] = [];
-  for (const theme of ["dark", "light"] as const) {
+  for (const theme of ["dark", "light", "pixel"] as const) {
+    /* Seeded rather than clicked. The toggle is a three-way cycle now, so
+       "click once if it is not the theme you wanted" reaches light and nothing
+       else — a loop written that way would have measured dark twice and called
+       it two themes. */
+    await page.addInitScript(
+      (t) => {
+        try {
+          localStorage.setItem("dbd-randomizer:theme", t);
+        } catch {
+          /* private mode — the attribute assertion below catches it */
+        }
+      },
+      theme,
+    );
     await page.goto("/?role=survivor");
     await expect(page.locator("[data-perk-card]")).toHaveCount(4);
     const current = await page.evaluate(() => document.documentElement.dataset.theme ?? "dark");
-    if (current !== theme) {
-      await page.getByRole("button", { name: "Переключить тему" }).click();
-      await page.waitForTimeout(400);
-    }
+    expect(current, `the ${theme} theme did not apply`).toBe(theme);
     await eachPanel(page, async (label) => {
       const found = (await page.evaluate(`(() => {
         ${CONTRAST_HELPERS}

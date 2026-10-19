@@ -784,16 +784,40 @@ test.describe("Character picker", () => {
 });
 
 test.describe("theme toggle", () => {
-  test("switches theme and persists across interaction", async ({ page }) => {
+  test("cycles every theme and persists across interaction", async ({ page }) => {
+    await page.goto("/");
+    const toggle = page.getByRole("button", { name: "Переключить тему" });
+    const html = page.locator("html");
+
+    /* One button, three grounds. Walking the whole cycle rather than one press
+       is the point: a third theme is only reachable if every step lands, and
+       the failure mode of a cycle is one that skips or sticks. */
+    await toggle.click();
+    await expect(html).toHaveAttribute("data-theme", "light");
+    await toggle.click();
+    await expect(html).toHaveAttribute("data-theme", "pixel");
+    await toggle.click();
+    await expect(html).toHaveAttribute("data-theme", "dark");
+
+    // And it survives a roll, which re-renders the whole board under it.
+    await toggle.click();
+    await expect(html).toHaveAttribute("data-theme", "light");
+    await page.getByRole("button", { name: "Сгенерировать новый билд" }).click();
+    await expect(html).toHaveAttribute("data-theme", "light");
+  });
+
+  test("the pixel theme survives a reload", async ({ page }) => {
+    /* The pre-paint script in app/layout.tsx used to apply only `light`, so a
+       stored `pixel` fell through and the page painted dark until React caught
+       up — the exact flash that script exists to prevent. */
     await page.goto("/");
     const toggle = page.getByRole("button", { name: "Переключить тему" });
     await toggle.click();
-    await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+    await toggle.click();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "pixel");
 
-    await page
-      .getByRole("button", { name: "Сгенерировать новый билд" })
-      .click();
-    await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+    await page.reload();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "pixel");
   });
 });
 

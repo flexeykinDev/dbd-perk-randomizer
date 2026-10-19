@@ -349,20 +349,39 @@ test("Generate stays put while rolling", async ({ page }) => {
       return Math.round(button.getBoundingClientRect().top + window.scrollY);
     });
 
+  /* The slot that holds the build-theme line, whether or not there is a line in
+     it today. Reserving it is the fix this test exists to protect, so its
+     presence and height are the deterministic half of the check. */
+  const slotHeight = () =>
+    page.evaluate(() => {
+      const slot = [...document.querySelectorAll("p")].find((p) =>
+        getComputedStyle(p).minHeight === "17px",
+      );
+      return slot ? Math.round(slot.getBoundingClientRect().height) : 0;
+    });
+
   const seen = new Set<number>();
+  const slots = new Set<number>();
   let themed = 0;
   for (let i = 0; i < 14; i++) {
     seen.add(await generateY());
+    slots.add(await slotHeight());
     if (await page.locator("p", { hasText: /перков — про/ }).count()) themed++;
     await generate.click();
     await settled();
   }
 
-  /* Both cases have to have happened, or this passed by never seeing a theme.
-     14 rolls at ~29.5% makes a run of zero vanishingly unlikely, but "unlikely"
-     is not an assertion. */
-  expect(themed, "no themed roll came up, so the jump was never exercised").toBeGreaterThan(0);
-  expect(themed, "every roll had a theme, so the plain case was never exercised").toBeLessThan(14);
+  /* The slot is always there and always the same height. This is the mechanism,
+     and unlike counting themed rolls it does not depend on the dice.
+  
+     An earlier version asserted that both a themed and a plain roll occurred,
+     to prove the test was not vacuous. That made the test itself probabilistic:
+     a theme turns up on about 29.5% of rolls at coherence 0, so fourteen plain
+     ones in a row is roughly a 0.7% chance — rare enough to look like a real
+     failure and common enough to hit CI. It failed exactly once that way. */
+  expect([...slots], "the theme line's slot changed height between rolls").toHaveLength(1);
+  expect([...slots][0], "the slot collapsed, so the line can still move Generate").toBeGreaterThan(0);
+  console.log(`[stays put] ${themed} of 14 rolls had a build theme`);
 
   const positions = [...seen].sort((a, b) => a - b);
   const drift = positions[positions.length - 1] - positions[0];

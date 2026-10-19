@@ -105,6 +105,171 @@
   --status-pending: #b45309;
 }
 
+/* The third theme: pixel dot-matrix.
+ *
+ * Near-black ground, one lavender accent, stepped "pixel" corners instead of
+ * radii, and a film grain over everything. A whole visual language rather than
+ * a palette swap, but it still arrives entirely through the tokens the rest of
+ * the app is already styled from — which is the reason it is a theme and not a
+ * fork of every component.
+ *
+ * Three decisions worth recording, because each one is a place the style and
+ * this product disagreed:
+ *
+ * 1. The roles keep their own colours. The style asks for a single accent, and
+ *    for most products that is right. Here Survivor and Killer are the primary
+ *    distinction on the page, and lib/role-color.ts exists because a washed-out
+ *    role read as meaningless. So lavender is the CHROME accent and the two
+ *    roles stay separable — desaturated into this palette rather than deleted
+ *    from it. One accent would have cost the one thing the colour system is for.
+ *
+ * 2. It is additive. Light is untouched and still the second theme; this is a
+ *    third. The style does not work on a light ground, and removing a theme to
+ *    add one is a worse trade than offering three.
+ *
+ * 3. Every value below clears WCAG AA against the surface it lands on, measured
+ *    by e2e/contrast.spec.ts in this theme like the other two. The style's own
+ *    --dim (#55555e) sits at about 2.6:1 on this panel and is used here only
+ *    for 1px rules and dot-matrix "off" pixels — never for text. */
+:root[data-theme="pixel"] {
+  color-scheme: dark;
+  --background: #09090b;
+  --surface: #0f0f12;
+  --surface-hover: #17171d;
+  --border: #2a2a31;
+  --foreground: #ececf1;
+  /* 5.6:1 on --surface. The reference palette's #85858f measures 5.2 and would
+     also pass, but muted carries real prose here (helper lines, the keyboard
+     legend) rather than only labels, so it gets the headroom. */
+  --muted: #9b9baa;
+
+  /* Chrome. Lavender is the one accent, and --accent-foreground is the near
+     black it sits on: #b9a8ff against #17132a is 9.1:1, so the primary button's
+     own label is the highest-contrast text on the page, which is what a primary
+     action should be. */
+  --accent: #b9a8ff;
+  --accent-strong: #d6cbff;
+  --accent-foreground: #17132a;
+
+  /* The roles. Pulled toward the palette's cool cast so they sit in the same
+     world as the lavender, but kept far enough apart in hue that a glance still
+     answers "which side am I on" — the question the whole colour system exists
+     to answer. */
+  --role-survivor: #7cc4f0;
+  --role-killer: #f08a9b;
+  --highlight-survivor: #9ed4f5;
+  --highlight-killer: #f5a8b5;
+
+  /* Warning is the style's second colour and has exactly one job. Battle Royale
+     retires perks permanently, which is the only destructive thing on the
+     board, so it is the only place this appears. */
+  --danger: #e2683a;
+  --status-ok: #7fd4a8;
+  --status-pending: #e2b23a;
+}
+
+/* Structure, not colour: the part of the style the tokens cannot carry. */
+:root[data-theme="pixel"] {
+  /* The step of a corner notch, and the notch itself. */
+  --px-s: 3px;
+  --px-notch: polygon(
+    0 calc(var(--px-s) * 2), var(--px-s) calc(var(--px-s) * 2), var(--px-s) var(--px-s),
+    calc(var(--px-s) * 2) var(--px-s), calc(var(--px-s) * 2) 0,
+    calc(100% - var(--px-s) * 2) 0, calc(100% - var(--px-s) * 2) var(--px-s),
+    calc(100% - var(--px-s)) var(--px-s), calc(100% - var(--px-s)) calc(var(--px-s) * 2),
+    100% calc(var(--px-s) * 2), 100% calc(100% - var(--px-s) * 2),
+    calc(100% - var(--px-s)) calc(100% - var(--px-s) * 2),
+    calc(100% - var(--px-s)) calc(100% - var(--px-s)),
+    calc(100% - var(--px-s) * 2) calc(100% - var(--px-s)),
+    calc(100% - var(--px-s) * 2) 100%, calc(var(--px-s) * 2) 100%,
+    calc(var(--px-s) * 2) calc(100% - var(--px-s)), var(--px-s) calc(100% - var(--px-s)),
+    var(--px-s) calc(100% - var(--px-s) * 2), 0 calc(100% - var(--px-s) * 2));
+}
+
+/* No radii anywhere. The style has none, and the app sets them per component,
+   so this is the one rule that turns every rounded-* in the tree square. */
+:root[data-theme="pixel"] :where(.rounded-full, .rounded-2xl, .rounded-xl, .rounded-lg, .rounded-md, .rounded, .rounded-sm) {
+  border-radius: 0;
+}
+
+/* Stepped corners on the things that read as panels and cards.
+ *
+ * Deliberately NOT applied to anything focusable. `clip-path` crops a
+ * focus ring to the clipped shape, and a ring that is partly cut off is worse
+ * than a square one — so buttons and cards keep their rings and get their pixel
+ * edge from the square corners above instead. This is the accessibility cost
+ * the preview had and this does not. */
+:root[data-theme="pixel"] :where([data-perk-card], [data-loadout-slot], .modal-card) {
+  clip-path: var(--px-notch);
+}
+
+/* Film grain, and the dust the style asks for, over everything but under the
+   modals' own layer. */
+:root[data-theme="pixel"] body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 40;
+  opacity: 0.13;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* The themed animation: a card materialises in four steps rather than easing.
+ *
+ * Animates `clip-path` on purpose. framer-motion drives opacity and transform
+ * inline for every card entrance (see components/dbd/card-entrance.ts), and an
+ * inline style wins over a stylesheet — so a CSS animation on those properties
+ * would simply lose. clip-path is untouched by the entrance, so the two compose
+ * instead of fighting: whichever entrance the visitor has chosen still runs, and
+ * this wipes over the top of it.
+ *
+ * AnimatePresence keys each card by perk slug, so a new build remounts them and
+ * the animation replays on every roll without a line of JavaScript. */
+@keyframes px-wipe {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0); }
+}
+
+/* The wipe is a shutter over the card, not a clip of the card itself.
+ *
+ * Animating the card's own `clip-path` was the obvious way and it was wrong:
+ * the stepped corner IS a clip-path, so the animation overwrote it and the
+ * cards ended the roll as plain rectangles — the one piece of the style people
+ * would actually notice, quietly cancelled by the other piece. Two rules
+ * cannot own one property.
+ *
+ * A pseudo-element costs nothing and composes with everything: the parent's
+ * notch clips the shutter for free, framer-motion keeps opacity and transform
+ * on the card, and the corner survives the animation that runs over it. */
+:root[data-theme="pixel"] [data-perk-card]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background: var(--background);
+  transform-origin: right center;
+  animation: px-wipe 260ms steps(4, end) both;
+}
+
+/* Four discrete steps is the whole idea, so a stagger would read as a smear.
+   Each card is offset by one step's length instead, which keeps the left-to-
+   right order the grid already has. */
+:root[data-theme="pixel"] [data-perk-card]:nth-child(2)::after { animation-delay: 65ms; }
+:root[data-theme="pixel"] [data-perk-card]:nth-child(3)::after { animation-delay: 130ms; }
+:root[data-theme="pixel"] [data-perk-card]:nth-child(4)::after { animation-delay: 195ms; }
+
+/* A wipe is motion, and someone who asked for less of it gets the card whole.
+   The repo's own rule: kill transforms and animation, keep colour. */
+@media (prefers-reduced-motion: reduce) {
+  :root[data-theme="pixel"] [data-perk-card]::after {
+    animation: none;
+    display: none;
+  }
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-surface: var(--surface);

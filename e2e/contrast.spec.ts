@@ -209,7 +209,11 @@ const VIEWS = [
   { name: "loadout", url: "/?role=survivor&mode=all" },
 ];
 
-for (const theme of ["light", "dark"] as const) {
+/* All three grounds, not two. A theme no contrast test visits is a theme whose
+   colours were chosen by eye, and the pixel palette is the one most likely to
+   get this wrong: it is built from near-blacks where small changes in a token
+   move the ratio a long way. */
+for (const theme of ["light", "dark", "pixel"] as const) {
   for (const view of VIEWS) {
     test(`${theme}: text on ${view.name} meets WCAG AA`, async ({ page }) => {
       await page.addInitScript(
@@ -218,12 +222,15 @@ for (const theme of ["light", "dark"] as const) {
       );
       await page.goto(view.url);
       await expect(page.locator("[data-perk-card]")).toHaveCount(4);
-      // Dark is the document default and does not always stamp the
-      // attribute; light always opts in explicitly.
-      if (theme === "light") {
-        await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
-      } else {
+      /* Dark is the document default and does not always stamp the attribute;
+         light and pixel both opt in explicitly. Asserting the attribute matters
+         more than it looks — without it a theme that silently failed to apply
+         would be measured as dark and pass. */
+      if (theme === "dark") {
         await expect(page.locator("html")).not.toHaveAttribute("data-theme", "light");
+        await expect(page.locator("html")).not.toHaveAttribute("data-theme", "pixel");
+      } else {
+        await expect(page.locator("html")).toHaveAttribute("data-theme", theme);
       }
 
       const audit = await auditContrast(page);

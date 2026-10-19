@@ -84,7 +84,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           type={typeof window === "undefined" ? "text/javascript" : "text/plain"}
           suppressHydrationWarning
           dangerouslySetInnerHTML={{
-            __html: `try{if(localStorage.getItem('${THEME_STORAGE_KEY}')==='light')document.documentElement.dataset.theme='light'}catch(e){}`,
+            /* Any stored theme, not just light. This used to compare against
+               the one non-default value, which was correct while there were
+               two; with a third, `pixel` fell through and the page painted
+               dark before React corrected it — the exact flash this script
+               exists to prevent. The allow-list is inline because this runs
+               before any module does. */
+            __html: `try{var t=localStorage.getItem('${THEME_STORAGE_KEY}');if(t==='light'||t==='pixel')document.documentElement.dataset.theme=t}catch(e){}`,
           }}
         />
         {/* Same before-first-paint trick as the theme script above, for
