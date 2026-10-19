@@ -1,0 +1,1166 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DBD Clock Callouts</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='28' fill='%23c8102e'/%3E%3Cpath d='M32 14v18l12 8' stroke='white' stroke-width='6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<script>
+  // apply saved theme before first paint (no flash)
+  try {
+    const t = localStorage.getItem("dbd.theme");
+    if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+    if (localStorage.getItem("dbd.motion") === "\"min\"") document.documentElement.classList.add("calm");
+  } catch (e) {}
+</script>
+<style>
+/* =============================== tokens =============================== */
+:root {
+  --accent-l: #c8102e; --accent-d: #ff4458;
+  --bg: #f2f0ec; --surface: #ffffff; --surface-2: #f6f4f1; --text: #1b1a19; --muted: #6b6762;
+  --border: #e0dcd5; --border-strong: #cfc9c0; --hl: #ffeaa0; --thumb-bg: #e2e0dd;
+  --shadow-1: 0 1px 2px rgba(28, 20, 12, .06), 0 2px 8px rgba(28, 20, 12, .05);
+  --shadow-2: 0 2px 6px rgba(28, 20, 12, .08), 0 18px 40px -12px rgba(28, 20, 12, .22);
+  --viewer-bg: #121110; --img-filter: none; --light-top: rgba(255, 255, 255, .9);
+  --accent: var(--accent-l); --accent-ink: #fff;
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d0d0f; --surface: #17171b; --surface-2: #1e1e23; --text: #ecebe7; --muted: #99969d;
+    --border: #26262c; --border-strong: #34343c; --hl: #5a4812; --thumb-bg: #26262b;
+    --shadow-1: 0 1px 2px rgba(0, 0, 0, .4); --shadow-2: 0 2px 8px rgba(0, 0, 0, .35), 0 24px 50px -16px rgba(0, 0, 0, .7);
+    --viewer-bg: #08080a; --img-filter: brightness(.9) contrast(1.04); --light-top: rgba(255, 255, 255, .06);
+    --accent: var(--accent-d); --accent-ink: #120708;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d0d0f; --surface: #17171b; --surface-2: #1e1e23; --text: #ecebe7; --muted: #99969d;
+  --border: #26262c; --border-strong: #34343c; --hl: #5a4812; --thumb-bg: #26262b;
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, .4); --shadow-2: 0 2px 8px rgba(0, 0, 0, .35), 0 24px 50px -16px rgba(0, 0, 0, .7);
+  --viewer-bg: #08080a; --img-filter: brightness(.9) contrast(1.04); --light-top: rgba(255, 255, 255, .06);
+  --accent: var(--accent-d); --accent-ink: #120708;
+  color-scheme: dark;
+}
+:root { --accent-soft: color-mix(in srgb, var(--accent) 10%, transparent); }
+
+/* =============================== base =============================== */
+* { box-sizing: border-box; }
+html { background: var(--bg); }
+body {
+  margin: 0; color: var(--text); min-height: 100vh;
+  font: 15px/1.45 "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+  font-feature-settings: "tnum" 1;
+  /* key light from above, tinted by the accent; kept low so it reads as lighting, not decoration */
+  background:
+    radial-gradient(1100px 520px at 50% -160px, color-mix(in srgb, var(--accent) 11%, transparent), transparent 70%),
+    radial-gradient(900px 600px at 100% 110%, color-mix(in srgb, var(--accent) 5%, transparent), transparent 70%),
+    var(--bg);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color .3s;
+}
+::selection { background: color-mix(in srgb, var(--accent) 30%, transparent); }
+button { font: inherit; color: inherit; }
+svg.i { width: 18px; height: 18px; flex: none; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+kbd { font: 600 11px/1 ui-monospace, Consolas, monospace; padding: 3px 6px; border-radius: 5px; border: 1px solid var(--border);
+  border-bottom-width: 2px; background: var(--surface-2); color: var(--muted); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* =============================== header =============================== */
+header { position: sticky; top: 0; z-index: 30; background: color-mix(in srgb, var(--bg) 95%, transparent); transition: box-shadow .25s; }
+header::after { /* light line along the bottom edge */
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--accent) 50%, var(--border)) 50%, transparent), var(--border); }
+header.scrolled { box-shadow: 0 10px 30px -18px rgba(0, 0, 0, .45); }
+.bar { max-width: 1400px; margin: 0 auto; padding: 14px 16px 10px; display: flex; gap: 10px; align-items: center; }
+.logo { display: flex; align-items: center; gap: 10px; font-weight: 750; letter-spacing: .1px; white-space: nowrap; }
+.logo .mark { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-soft), 0 6px 18px -6px var(--accent); transition: background .4s, box-shadow .4s; }
+.logo .mark svg { width: 20px; height: 20px; stroke: var(--accent-ink); stroke-width: 2.6; fill: none; stroke-linecap: round; }
+.logo .hand { transform-box: view-box; transform-origin: 12px 12px; animation: tick 60s steps(60) infinite; }
+@keyframes tick { to { transform: rotate(360deg); } }
+.logo small { display: block; font-weight: 500; color: var(--muted); font-size: 12px; }
+.event-chip { display: none; align-items: center; gap: 6px; height: 28px; padding: 0 10px 0 8px; border-radius: 8px; cursor: pointer;
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--border)); background: var(--accent-soft); color: var(--text);
+  font-size: 12px; font-weight: 650; }
+.event-chip.on { display: inline-flex; animation: rise .5s var(--ease-out) both; }
+.event-chip svg { width: 16px; height: 16px; color: var(--accent); }
+.spacer { flex: 1; }
+
+.search { position: relative; z-index: 5; flex: 1 1 520px; min-width: 0; max-width: 760px; }
+.search input { width: 100%; height: 50px; padding: 0 92px 0 46px; border-radius: 14px; border: 1px solid var(--border-strong);
+  background: var(--surface); color: var(--text); font-size: 17px; outline: none;
+  box-shadow: inset 0 1px 0 var(--light-top), var(--shadow-1); transition: border-color .2s, box-shadow .2s; }
+.search input::placeholder { color: color-mix(in srgb, var(--muted) 80%, transparent); }
+.search input:focus { border-color: var(--accent); box-shadow: inset 0 1px 0 var(--light-top), 0 0 0 4px var(--accent-soft), var(--shadow-2); }
+input[type="search"]::-webkit-search-cancel-button, input[type="search"]::-webkit-search-decoration { -webkit-appearance: none; display: none; }
+.search .ico { position: absolute; left: 15px; top: 15px; width: 20px; height: 20px; color: var(--muted); pointer-events: none; transition: color .2s; }
+.search:focus-within .ico { color: var(--accent); }
+.search .hint { position: absolute; right: 12px; top: 14px; display: flex; gap: 4px; pointer-events: none; transition: opacity .15s; }
+.search .clear { position: absolute; right: 8px; top: 8px; width: 34px; height: 34px; border-radius: 9px; border: 0; background: transparent;
+  cursor: pointer; display: grid; place-items: center; color: var(--muted); opacity: 0; pointer-events: none; transition: opacity .15s, background .15s; }
+.search .clear:hover { background: var(--surface-2); color: var(--text); }
+.search.has-q .clear { opacity: 1; pointer-events: auto; }
+.search.has-q .hint { opacity: 0; }
+
+.iconbtn { height: 42px; min-width: 42px; padding: 0 12px; border-radius: 12px; border: 1px solid var(--border);
+  background: var(--surface); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  font-weight: 650; font-size: 13px; box-shadow: inset 0 1px 0 var(--light-top), var(--shadow-1);
+  transition: border-color .2s, transform .12s var(--ease-out), background .2s; }
+.iconbtn:hover { border-color: color-mix(in srgb, var(--accent) 55%, var(--border)); }
+.iconbtn:active { transform: scale(.95); }
+#setBtn svg { transition: transform .5s var(--ease-out); }
+#setBtn.on svg { transform: rotate(60deg); }
+
+/* suggestions */
+.sugg { position: absolute; left: 0; right: 0; top: 56px; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 14px; box-shadow: var(--shadow-2); padding: 6px; max-height: min(70vh, 640px); overflow: auto;
+  opacity: 0; transform: translateY(-6px) scale(.985); transform-origin: 50% 0; pointer-events: none; visibility: hidden;
+  transition: opacity .16s var(--ease-out), transform .2s var(--ease-out), visibility 0s .2s; }
+.sugg.open { opacity: 1; transform: none; pointer-events: auto; visibility: visible; transition: opacity .16s var(--ease-out), transform .22s var(--ease-out); }
+.sugg .head { padding: 6px 10px 4px; font-size: 12px; color: var(--muted); display: flex; justify-content: space-between; gap: 8px; }
+.sugg .fix { padding: 8px 10px; font-size: 14px; color: var(--muted); display: flex; gap: 8px; align-items: center; }
+.sugg .fix b { color: var(--text); }
+.si { display: flex; gap: 12px; align-items: center; padding: 7px 10px; border-radius: 10px; cursor: pointer; position: relative; }
+.si::before { content: ""; position: absolute; left: 0; top: 10px; bottom: 10px; width: 3px; border-radius: 2px; background: var(--accent);
+  transform: scaleY(0); transition: transform .18s var(--ease-out); }
+.si.sel { background: var(--accent-soft); }
+.si.sel::before { transform: scaleY(1); }
+.si:hover:not(.sel) { background: var(--surface-2); }
+.si img { width: 44px; height: 44px; object-fit: contain; background: var(--thumb-bg); border-radius: 8px; flex: none; filter: var(--img-filter); }
+.si .t { min-width: 0; flex: 1; }
+.si .t1 { font-weight: 650; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.si .t2 { color: var(--muted); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.si mark { background: var(--hl); color: inherit; border-radius: 3px; padding: 0 1px; }
+.si .enter { opacity: 0; transition: opacity .15s; }
+.si.sel .enter { opacity: 1; }
+.tag { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 650; padding: 2px 7px; border-radius: 6px;
+  border: 1px solid var(--border); color: var(--muted); background: var(--surface-2); }
+.tag svg { width: 12px; height: 12px; }
+.tag.fuzzy { border-color: transparent; background: var(--hl); color: var(--text); }
+.tag.pin { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 35%, var(--border)); background: var(--accent-soft); }
+
+/* realm nav */
+.chips { max-width: 1400px; margin: 0 auto; padding: 0 16px 11px; display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; scroll-behavior: smooth; }
+.chips::-webkit-scrollbar { display: none; }
+.chip { flex: none; height: 30px; padding: 0 12px; border-radius: 9px; border: 1px solid var(--border); background: var(--surface);
+  cursor: pointer; font-size: 13px; font-weight: 600; white-space: nowrap; color: var(--muted);
+  transition: color .2s, background .25s, border-color .25s, transform .12s var(--ease-out), box-shadow .25s; }
+.chip:hover { color: var(--text); border-color: var(--border-strong); }
+.chip:active { transform: scale(.96); }
+.chip.on { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); box-shadow: 0 6px 16px -8px var(--accent); }
+
+/* garland (winter event) */
+.garland { position: absolute; z-index: 1; left: 0; right: 0; bottom: -7px; height: 12px; pointer-events: none; overflow: hidden; }
+.garland i { position: absolute; top: 2px; width: 7px; height: 9px; border-radius: 50% 50% 45% 45%; animation: blink 2.4s ease-in-out infinite; }
+
+/* =============================== grid =============================== */
+main { max-width: 1400px; margin: 0 auto; padding: 8px 16px 80px; position: relative; z-index: 2; }
+.sec { margin: 26px 0 12px; display: flex; align-items: baseline; gap: 10px; }
+.sec h2 { font-size: 18px; margin: 0; letter-spacing: -.1px; }
+.sec span { color: var(--muted); font-size: 13px; }
+.sec .line { flex: 1; height: 1px; background: linear-gradient(90deg, var(--border), transparent); align-self: center; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(172px, 1fr)); gap: 12px; }
+.card { --mx: 50%; --my: 0%; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; cursor: pointer;
+  display: flex; flex-direction: column; position: relative; isolation: isolate;
+  box-shadow: inset 0 1px 0 var(--light-top), var(--shadow-1);
+  transition: transform .28s var(--ease-out), box-shadow .28s var(--ease-out), border-color .2s; }
+.card::before { /* pointer spotlight */
+  content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: 0; transition: opacity .3s;
+  background: radial-gradient(260px circle at var(--mx) var(--my), color-mix(in srgb, var(--accent) 13%, transparent), transparent 65%); }
+.card::after { /* lit rim that follows the pointer */
+  content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none; border-radius: inherit; padding: 1px; opacity: 0; transition: opacity .3s;
+  background: radial-gradient(220px circle at var(--mx) var(--my), color-mix(in srgb, var(--accent) 75%, transparent), transparent 70%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+.card:hover { transform: translateY(-3px); box-shadow: inset 0 1px 0 var(--light-top), var(--shadow-2); }
+.card:hover::before, .card:hover::after { opacity: 1; }
+.card:active { transform: translateY(-1px) scale(.985); transition-duration: .1s; }
+.card.sel { border-color: color-mix(in srgb, var(--accent) 70%, var(--border)); box-shadow: 0 0 0 3px var(--accent-soft), var(--shadow-2); }
+.card .im { aspect-ratio: 1 / 1.05; background: var(--thumb-bg); display: grid; place-items: center; overflow: hidden; }
+.card .im img { width: 100%; height: 100%; object-fit: contain; filter: var(--img-filter); transition: transform .5s var(--ease-out); }
+.card:hover .im img { transform: scale(1.035); }
+.card .tx { padding: 9px 11px 11px; display: flex; flex-direction: column; gap: 2px; }
+.card .n1 { font-weight: 700; font-size: 14px; line-height: 1.25; }
+.card .n2 { color: var(--muted); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card .tags { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 6px; }
+.card .go { position: absolute; top: 8px; right: 8px; z-index: 4; opacity: 0; transform: translateY(-4px); transition: .2s var(--ease-out); }
+.card.sel .go { opacity: 1; transform: none; }
+.card .pinmark { position: absolute; top: 8px; left: 8px; z-index: 4; width: 26px; height: 26px; border-radius: 7px; display: grid; place-items: center;
+  background: var(--accent); color: var(--accent-ink); box-shadow: var(--shadow-1); }
+.card .pinmark svg { width: 14px; height: 14px; }
+.empty { padding: 60px 10px; text-align: center; color: var(--muted); }
+.foot { margin-top: 40px; color: var(--muted); font-size: 12.5px; line-height: 1.8; border-top: 1px solid var(--border); padding-top: 16px; }
+
+/* entrance motion */
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } }
+@keyframes fade { from { opacity: 0; } }
+@keyframes blink { 0%, 100% { opacity: .35; } 50% { opacity: 1; box-shadow: 0 0 8px 1px currentColor; } }
+.intro .card { animation: rise .5s var(--ease-out) both; animation-delay: calc(min(var(--d, 0), 18) * 22ms); }
+.intro .sec { animation: fade .5s var(--ease-out) both; }
+.swap .grid, .swap .sec, .swap .empty { animation: rise .26s var(--ease-out) both; }
+
+/* =============================== viewer =============================== */
+.viewer { position: fixed; inset: 0; z-index: 50; overflow: hidden; touch-action: none; visibility: hidden; transition: visibility 0s .42s; }
+.viewer.open { visibility: visible; transition: none; }
+.viewer .backdrop { position: absolute; inset: 0; background: var(--viewer-bg); opacity: 0; transition: opacity .32s var(--ease-out); }
+.viewer.open .backdrop { opacity: 1; }
+.viewer .backdrop::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 45%, transparent 55%, rgba(0, 0, 0, .55)); }
+.stage { position: absolute; inset: 0; cursor: grab; }
+.stage.drag { cursor: grabbing; }
+.stage img { position: absolute; left: 0; top: 0; transform-origin: 0 0; user-select: none; -webkit-user-drag: none; max-width: none;
+  filter: var(--img-filter); will-change: transform; box-shadow: 0 30px 80px -20px rgba(0, 0, 0, .8); }
+.stage img.anim { transition: transform .42s var(--ease-out), opacity .2s; }
+.stage img.quick { transition: transform .2s var(--ease-out), opacity .2s; }
+.chrome { opacity: 0; transition: opacity .2s var(--ease-out), transform .3s var(--ease-out); }
+.vtop.chrome { transform: translateY(-8px); }
+.vbot.chrome { transform: translateY(8px); }
+.viewer.open .chrome { opacity: 1; transform: none; transition-delay: .1s; }
+.vtop { position: absolute; left: 0; right: 0; top: 0; padding: 12px 14px 30px; display: flex; gap: 10px; align-items: flex-start;
+  background: linear-gradient(rgba(0, 0, 0, .7), transparent); color: #f2f1ee; pointer-events: none; }
+.vtop > * { pointer-events: auto; }
+.vtitle { flex: 1; min-width: 0; }
+.vtitle .a { font-size: 20px; font-weight: 750; letter-spacing: -.1px; text-shadow: 0 1px 3px rgba(0, 0, 0, .6); }
+.vtitle .b { font-size: 13px; opacity: .78; }
+.vtitle.slide { animation: rise .3s var(--ease-out); }
+.vbtns { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.vbtn { height: 38px; min-width: 38px; padding: 0 12px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, .14);
+  background: rgba(28, 28, 32, .85); color: #f2f1ee; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  font-weight: 650; font-size: 13px; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06); transition: border-color .2s, background .2s, transform .12s var(--ease-out); }
+.vbtn:hover { border-color: var(--accent-d); }
+.vbtn:active { transform: scale(.94); }
+.vbtn.on { background: var(--accent-d); color: #120708; border-color: var(--accent-d); }
+.vbot { position: absolute; left: 0; right: 0; bottom: 0; padding: 30px 14px 14px; display: flex; gap: 8px; overflow-x: auto;
+  background: linear-gradient(transparent, rgba(0, 0, 0, .72)); scrollbar-width: none; scroll-behavior: smooth; }
+.vbot::-webkit-scrollbar { display: none; }
+.vsib { flex: none; display: flex; align-items: center; gap: 8px; padding: 4px 12px 4px 4px; border-radius: 10px; cursor: pointer;
+  background: rgba(28, 28, 32, .85); color: #e9e8e4; border: 1px solid rgba(255, 255, 255, .12); font-size: 13px; font-weight: 600;
+  transition: border-color .2s, transform .12s var(--ease-out); }
+.vsib:hover { border-color: rgba(255, 255, 255, .35); }
+.vsib:active { transform: scale(.96); }
+.vsib img { width: 32px; height: 32px; object-fit: contain; border-radius: 6px; background: #ddd; }
+.vsib.on { border-color: var(--accent-d); box-shadow: 0 0 0 1px var(--accent-d) inset, 0 8px 20px -10px var(--accent-d); }
+.vhelp { position: absolute; right: 14px; bottom: 74px; color: rgba(255, 255, 255, .78); font-size: 12px; text-align: right; pointer-events: none;
+  background: rgba(0, 0, 0, .62); padding: 7px 11px; border-radius: 9px; transition: opacity .5s; line-height: 1.6; }
+.vhelp.hide { opacity: 0; }
+.loader { position: absolute; left: 50%; top: 50%; width: 34px; height: 34px; margin: -17px; border-radius: 50%; opacity: 0;
+  border: 3px solid rgba(255, 255, 255, .15); border-top-color: var(--accent-d); animation: spin .8s linear infinite; transition: opacity .2s; pointer-events: none; }
+.viewer.loading .loader { opacity: 1; transition-delay: .25s; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* =============================== menus & panels =============================== */
+.menu { position: fixed; z-index: 80; min-width: 236px; padding: 5px; border-radius: 12px; background: var(--surface);
+  border: 1px solid var(--border-strong); box-shadow: var(--shadow-2), inset 0 1px 0 var(--light-top);
+  opacity: 0; transform: scale(.96); transition: opacity .12s var(--ease-out), transform .16s var(--ease-out); pointer-events: none; }
+.menu.open { opacity: 1; transform: none; pointer-events: auto; }
+.menu .mh { padding: 6px 10px 4px; font-size: 11.5px; color: var(--muted); font-weight: 650; letter-spacing: .2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 300px; }
+.menu button { width: 100%; display: flex; align-items: center; gap: 10px; padding: 8px 10px; border: 0; border-radius: 8px; background: transparent;
+  cursor: pointer; text-align: left; font-size: 13.5px; white-space: nowrap; }
+.menu button:hover, .menu button.act { background: var(--accent-soft); }
+.menu button .k { margin-left: auto; padding-left: 16px; color: var(--muted); font-size: 12px; }
+.menu button svg { color: var(--muted); transition: color .15s; }
+.menu button:hover svg, .menu button.act svg { color: var(--accent); }
+.menu hr { border: 0; height: 1px; background: var(--border); margin: 5px 6px; }
+
+.panel { position: fixed; z-index: 70; top: 66px; right: 16px; width: min(372px, calc(100vw - 32px)); padding: 16px; border-radius: 14px;
+  background: var(--surface); border: 1px solid var(--border-strong); box-shadow: var(--shadow-2), inset 0 1px 0 var(--light-top);
+  opacity: 0; transform: translateY(-8px) scale(.98); transform-origin: 100% 0; pointer-events: none; visibility: hidden;
+  transition: opacity .18s var(--ease-out), transform .24s var(--ease-out), visibility 0s .24s; max-height: calc(100vh - 90px); overflow: auto; }
+.panel.open { opacity: 1; transform: none; pointer-events: auto; visibility: visible; transition: opacity .18s var(--ease-out), transform .24s var(--ease-out); }
+.panel h3 { margin: 0 0 6px; font-size: 12.5px; color: var(--muted); font-weight: 650; }
+.panel .row { margin-bottom: 16px; }
+.seg { display: flex; padding: 3px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--border); position: relative; }
+.seg button { flex: 1; height: 32px; border: 0; background: transparent; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--muted);
+  position: relative; z-index: 1; transition: color .2s; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+.seg button svg { width: 15px; height: 15px; }
+.seg button.on { color: var(--text); }
+.seg .thumb { position: absolute; top: 3px; bottom: 3px; left: 3px; border-radius: 8px; background: var(--surface); box-shadow: var(--shadow-1);
+  transition: left .3s var(--ease-out), width .3s var(--ease-out); }
+.sw { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; padding-bottom: 16px; }
+.sw button { aspect-ratio: 1; border-radius: 10px; border: 0; cursor: pointer; position: relative; transition: transform .15s var(--ease-out);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .12); }
+.sw button:hover { transform: translateY(-2px); }
+.sw button.on { box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--text); }
+.sw button.auto { display: grid; place-items: center; color: #fff; }
+.sw button.auto svg { width: 18px; height: 18px; filter: drop-shadow(0 1px 1px rgba(0,0,0,.35)); }
+.sw button span { position: absolute; left: 50%; top: calc(100% + 4px); transform: translateX(-50%); font-size: 10.5px; color: var(--muted); white-space: nowrap; }
+.evlist { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.evlist button { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 9px; border: 1px solid var(--border); background: var(--surface-2);
+  cursor: pointer; font-size: 12.5px; font-weight: 600; text-align: left; transition: border-color .2s, background .2s; }
+.evlist button svg { width: 16px; height: 16px; color: var(--ev, var(--muted)); }
+.evlist button.on { border-color: var(--accent); background: var(--accent-soft); }
+.note { font-size: 12px; color: var(--muted); margin-top: 8px; line-height: 1.5; }
+
+.toast { position: fixed; left: 50%; bottom: 24px; z-index: 90; transform: translate(-50%, 12px); background: var(--text); color: var(--bg);
+  padding: 9px 14px; border-radius: 10px; font-size: 13px; font-weight: 600; opacity: 0; pointer-events: none;
+  transition: opacity .2s var(--ease-out), transform .3s var(--ease-out); box-shadow: var(--shadow-2); }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+/* =============================== events =============================== */
+#fx { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
+.fog { position: fixed; left: -5%; right: -5%; bottom: 0; height: 40vh; z-index: 1; pointer-events: none; display: none; opacity: .6;
+  background:
+    radial-gradient(60% 70% at 20% 100%, color-mix(in srgb, var(--muted) 24%, transparent), transparent 70%),
+    radial-gradient(50% 60% at 75% 100%, color-mix(in srgb, var(--muted) 20%, transparent), transparent 70%);
+  animation: drift 26s ease-in-out infinite alternate; }
+.ev-halloween .fog { display: block; }
+@keyframes drift { from { transform: translateX(-3%); } to { transform: translateX(3%); } }
+
+/* theme switch: circular reveal */
+::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+
+/* calm motion: user setting or OS "reduce motion" */
+.calm *, .calm *::before, .calm *::after { animation-duration: .001ms !important; animation-delay: 0ms !important; transition-duration: .001ms !important; }
+.calm #fx, .calm .fog { display: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-delay: 0ms !important; transition-duration: .001ms !important; }
+  #fx, .fog { display: none !important; }
+}
+
+@media (max-width: 760px) {
+  .bar { flex-wrap: wrap; padding-top: 10px; }
+  .logo small, .event-chip span { display: none; }
+  .search { order: 3; flex-basis: 100%; max-width: none; }
+  .search .hint { display: none; }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(142px, 1fr)); gap: 10px; }
+  .vhelp { display: none; }
+  .vtitle .a { font-size: 17px; }
+  .vbtn .lbl { display: none; }
+  .panel { top: 118px; }
+}
+</style>
+</head>
+<body>
+<canvas id="fx" aria-hidden="true"></canvas>
+<div class="fog" aria-hidden="true"></div>
+
+<header id="hdr">
+  <div class="bar">
+    <div class="logo">
+      <div class="mark"><svg viewBox="0 0 24 24"><path class="hand" d="M12 12V5.5"/><path d="M12 12l3.5 2"/></svg></div>
+      <div>DBD Callouts<small id="count"></small></div>
+    </div>
+    <button class="event-chip" id="evChip" title="Сезонный ивент — настройки"></button>
+    <div class="spacer"></div>
+    <div class="search" id="searchBox">
+      <svg class="ico i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" type="search" autocomplete="off" spellcheck="false" autofocus
+             placeholder="Карта или реалм: азаров, coal 2, лачуга, рпд…" aria-label="Поиск карты" aria-autocomplete="list" aria-controls="sugg">
+      <span class="hint"><kbd>Enter</kbd></span>
+      <button class="clear" id="clear" title="Очистить (Esc)" aria-label="Очистить"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+      <div class="sugg" id="sugg" role="listbox"></div>
+    </div>
+    <button class="iconbtn" id="langBtn" title="Язык названий">RU</button>
+    <button class="iconbtn" id="setBtn" title="Оформление" aria-label="Оформление"><svg class="i" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></button>
+  </div>
+  <nav class="chips" id="chips" aria-label="Реалмы"></nav>
+  <div class="garland" id="garland"></div>
+</header>
+
+<main id="main"></main>
+
+<div class="viewer" id="viewer" aria-modal="true" role="dialog">
+  <div class="backdrop"></div>
+  <div class="stage" id="stage"><img id="vimg" alt=""></div>
+  <div class="loader"></div>
+  <div class="vtop chrome">
+    <div class="vtitle" id="vTitle"><div class="a" id="vA"></div><div class="b" id="vB"></div></div>
+    <div class="vbtns">
+      <button class="vbtn" id="vOld" title="Старая раскладка с тайлами (O)"><svg class="i" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg><span class="lbl">Старая версия</span></button>
+      <button class="vbtn" id="vZoomOut" title="Отдалить (−)"><svg class="i" viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button>
+      <button class="vbtn" id="vZoomIn" title="Приблизить (+)"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+      <button class="vbtn" id="vFit" title="Вписать (0)"><svg class="i" viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><span class="lbl">Вписать</span></button>
+      <button class="vbtn" id="vClose" title="Закрыть (Esc)"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
+  </div>
+  <div class="vhelp" id="vhelp">колесо / щипок — зум · перетаскивание — сдвиг · двойной клик — приблизить<br>← → другие карты реалма · ПКМ — меню · любая буква — новый поиск · Esc — назад</div>
+  <div class="vbot chrome" id="vSibs"></div>
+</div>
+
+<div class="menu" id="menu" role="menu"></div>
+<div class="panel" id="panel" role="dialog" aria-label="Оформление"></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+"use strict";
+const DATA = {"maps": [{"n": "Coal Tower I", "ru": "Угольная башня I", "b": "Coal Tower", "v": 1, "r": "The MacMillan Estate", "f": "The MacMillan Estate/Coal Tower I.jpg", "t": "_thumbs/The MacMillan Estate/Coal Tower I.webp", "a": ["угольная башня", "башня", "ct", "коал"], "k": "tiles", "s": 132, "w": 1536, "h": 2048}, {"n": "Coal Tower II", "ru": "Угольная башня II", "b": "Coal Tower", "v": 2, "r": "The MacMillan Estate", "f": "The MacMillan Estate/Coal Tower II.jpg", "t": "_thumbs/The MacMillan Estate/Coal Tower II.webp", "a": ["угольная башня", "башня", "ct", "коал"], "k": "tiles", "s": 136, "w": 1792, "h": 2048}, {"n": "Groaning Storehouse I", "ru": "Стонущий склад I", "b": "Groaning Storehouse", "v": 1, "r": "The MacMillan Estate", "f": "The MacMillan Estate/Groaning Storehouse I.jpg", "t": "_thumbs/The MacMillan Estate/Groaning Storehouse I.webp", "a": ["склад", "стонущий склад", "gs", "гроунинг"], "k": "tiles", "s": 156, "w": 2304, "h": 2304}, {"n": "Groaning Storehouse II", "ru": "Стонущий склад II", "b": "Groaning Storehouse", "v": 2, "r": "The MacMillan Estate", "f": "The MacMillan Estate/Groaning Storehouse II.jpg", "t": "_thumbs/The MacMillan Estate/Groaning Storehouse II.webp", "a": ["склад", "стонущий склад", "gs", "гроунинг"], "k": "tiles", "s": 148, "w": 2048, "h": 2048}, {"n": "Ironworks of Misery I", "ru": "Завод страданий I", "b": "Ironworks of Misery", "v": 1, "r": "The MacMillan Estate", "f": "The MacMillan Estate/Ironworks of Misery I.jpg", "t": "_thumbs/The MacMillan Estate/Ironworks of Misery I.webp", "a": ["литейка", "литейная", "айронворкс", "iom", "iron"], "k": "tiles", "s": 160, "w": 1792, "h": 2048}, {"n": "Ironworks of Misery II", "ru": "Завод страданий II", "b": "Ironworks of Misery", "v": 2, "r": "The MacMillan Estate", "f": "The MacMillan Estate/Ironworks of Misery II.jpg", "t": "_thumbs/The MacMillan Estate/Ironworks of Misery II.webp", "a": ["литейка", "литейная", "айронворкс", "iom", "iron"], "k": "tiles", "s": 156, "w": 2048, "h": 1792}, {"n": "Shelter Woods I", "ru": "Лесная опушка I", "b": "Shelter Woods", "v": 1, "r": "The MacMillan Estate", "f": "The MacMillan Estate/Shelter Woods I.jpg", "t": "_thumbs/The MacMillan Estate/Shelter Woods I.webp", "a": ["шелтер", "лес", "убежище в лесу", "sw"], "k": "tiles", "s": 176, "w": 2048, "h": 2048}, {"n": "Shelter Woods II", "ru": "Лесная опушка II", "b": "Shelter Woods", "v": 2, "r": "The MacMillan Estate", "f": "The MacMillan Estate/Shelter Woods II.jpg", "t": "_thumbs/The MacMillan Estate/Shelter Woods II.webp", "a": ["шелтер", "лес", "убежище в лесу", "sw"], "k": "tiles", "s": 176, "w": 2048, "h": 2048}, {"n": "Suffocation Pit I", "ru": "Удушающая яма I", "b": "Suffocation Pit", "v": 1, "r": "The MacMillan Estate", "f": "The MacMillan Estate/Suffocation Pit I.jpg", "t": "_thumbs/The MacMillan Estate/Suffocation Pit I.webp", "a": ["яма", "удушающая яма", "суффокейшн", "sp"], "k": "tiles", "s": 160, "w": 1536, "h": 2304}, {"n": "Suffocation Pit II", "ru": "Удушающая яма II", "b": "Suffocation Pit", "v": 2, "r": "The MacMillan Estate", "f": "The MacMillan Estate/Suffocation Pit II.jpg", "t": "_thumbs/The MacMillan Estate/Suffocation Pit II.webp", "a": ["яма", "удушающая яма", "суффокейшн", "sp"], "k": "tiles", "s": 152, "w": 2048, "h": 2048}, {"n": "Azarov's Resting Place", "ru": "Место упокоения Азарова", "b": "Azarov's Resting Place", "v": 0, "r": "Autohaven Wreckers", "f": "Autohaven Wreckers/Azarov's Resting Place.jpg", "t": "_thumbs/Autohaven Wreckers/Azarov's Resting Place.webp", "a": ["азаров", "azarov", "arp"], "k": "tiles", "s": 176, "w": 1792, "h": 2560}, {"n": "Blood Lodge", "ru": "Кровавая лачуга", "b": "Blood Lodge", "v": 0, "r": "Autohaven Wreckers", "f": "Autohaven Wreckers/Blood Lodge.jpg", "t": "_thumbs/Autohaven Wreckers/Blood Lodge.webp", "a": ["блад лодж", "кровавая сторожка", "лодж", "bl"], "k": "tiles", "s": 156, "w": 1792, "h": 2048}, {"n": "Gas Heaven", "ru": "Гэс Хэвен", "b": "Gas Heaven", "v": 0, "r": "Autohaven Wreckers", "f": "Autohaven Wreckers/Gas Heaven.jpg", "t": "_thumbs/Autohaven Wreckers/Gas Heaven.webp", "a": ["гас хевен", "заправка", "газ", "gh"], "k": "tiles", "s": 156, "w": 2048, "h": 1792}, {"n": "Wreckers' Yard", "ru": "Зона свалки", "b": "Wreckers' Yard", "v": 0, "r": "Autohaven Wreckers", "f": "Autohaven Wreckers/Wreckers' Yard.jpg", "t": "_thumbs/Autohaven Wreckers/Wreckers' Yard.webp", "a": ["рекерс", "двор", "wy"], "k": "tiles", "s": 144, "w": 1792, "h": 2304}, {"n": "Wretched Shop", "ru": "Магазин барахольщика", "b": "Wretched Shop", "v": 0, "r": "Autohaven Wreckers", "f": "Autohaven Wreckers/Wretched Shop.jpg", "t": "_thumbs/Autohaven Wreckers/Wretched Shop.webp", "a": ["ретчед", "мастерская", "магазин", "ws"], "k": "tiles", "s": 164, "w": 2048, "h": 2048}, {"n": "Fractured Cowshed", "ru": "Разрушенный хлев", "b": "Fractured Cowshed", "v": 0, "r": "Coldwind Farm", "f": "Coldwind Farm/Fractured Cowshed.jpg", "t": "_thumbs/Coldwind Farm/Fractured Cowshed.webp", "a": ["коровник", "fc", "фрактурд"], "k": "tiles", "s": 152, "w": 1792, "h": 2048}, {"n": "Rancid Abattoir", "ru": "Заброшенная скотобойня", "b": "Rancid Abattoir", "v": 0, "r": "Coldwind Farm", "f": "Coldwind Farm/Rancid Abattoir.jpg", "t": "_thumbs/Coldwind Farm/Rancid Abattoir.webp", "a": ["бойня", "ra", "рансид"], "k": "tiles", "s": 140, "w": 2048, "h": 1792}, {"n": "Rotten Fields", "ru": "Сгнившие поля", "b": "Rotten Fields", "v": 0, "r": "Coldwind Farm", "f": "Coldwind Farm/Rotten Fields.jpg", "t": "_thumbs/Coldwind Farm/Rotten Fields.webp", "a": ["гнилые поля", "поля", "кукуруза", "rf"], "k": "tiles", "s": 160, "w": 1792, "h": 2304}, {"n": "The Thompson House", "ru": "Дом Томпсонов", "b": "The Thompson House", "v": 0, "r": "Coldwind Farm", "f": "Coldwind Farm/The Thompson House.jpg", "t": "_thumbs/Coldwind Farm/The Thompson House.webp", "a": ["томпсон", "дом томпсона", "th"], "k": "tiles", "s": 152, "w": 2048, "h": 2048}, {"n": "Torment Creek", "ru": "Ручей страданий", "b": "Torment Creek", "v": 0, "r": "Coldwind Farm", "f": "Coldwind Farm/Torment Creek.png", "t": "_thumbs/Coldwind Farm/Torment Creek.webp", "a": ["тормент", "ручей", "tc"], "k": "outline", "s": 156, "o": "_Old layouts/Torment Creek (old, 168 sqT).jpg", "ot": "_thumbs/_Old layouts/Torment Creek (old, 168 sqT).webp", "w": 1646, "h": 2402, "ow": 1792, "oh": 2304}, {"n": "Disturbed Ward", "ru": "Отделение для буйных", "b": "Disturbed Ward", "v": 0, "r": "Crotus Prenn Asylum", "f": "Crotus Prenn Asylum/Disturbed Ward.png", "t": "_thumbs/Crotus Prenn Asylum/Disturbed Ward.webp", "a": ["палата", "психушка", "dw", "дистурбд"], "k": "outline", "s": 152, "o": "_Old layouts/Disturbed Ward (old, 172 sqT).png", "ot": "_thumbs/_Old layouts/Disturbed Ward (old, 172 sqT).webp", "w": 1832, "h": 2118, "ow": 1792, "oh": 1792}, {"n": "Father Campbell's Chapel", "ru": "Часовня отца Кэмпбелла", "b": "Father Campbell's Chapel", "v": 0, "r": "Crotus Prenn Asylum", "f": "Crotus Prenn Asylum/Father Campbell's Chapel.jpg", "t": "_thumbs/Crotus Prenn Asylum/Father Campbell's Chapel.webp", "a": ["часовня", "кэмпбелл", "кемпбелл", "fcc", "chapel"], "k": "tiles", "s": 140, "w": 1260, "h": 1620}, {"n": "Lampkin Lane", "ru": "Переулок Лэмпкин", "b": "Lampkin Lane", "v": 0, "r": "Haddonfield", "f": "Haddonfield/Lampkin Lane.png", "t": "_thumbs/Haddonfield/Lampkin Lane.webp", "a": ["лампкин", "хэддонфилд", "haddonfield", "майерс", "ll"], "k": "outline", "s": 132, "w": 1808, "h": 2354}, {"n": "Grim Pantry", "ru": "Чудовищная кладовая", "b": "Grim Pantry", "v": 0, "r": "Backwater Swamp", "f": "Backwater Swamp/Grim Pantry.png", "t": "_thumbs/Backwater Swamp/Grim Pantry.webp", "a": ["грим пантри", "кладовая", "gp"], "k": "tiles", "s": 168, "w": 1792, "h": 1792}, {"n": "The Pale Rose", "ru": "Бледная роза", "b": "The Pale Rose", "v": 0, "r": "Backwater Swamp", "f": "Backwater Swamp/The Pale Rose.jpg", "t": "_thumbs/Backwater Swamp/The Pale Rose.webp", "a": ["пейл роуз", "бледная роза", "роза", "pr"], "k": "tiles", "s": 161, "w": 1792, "h": 2048}, {"n": "Treatment Theatre", "ru": "Лечебный зал", "b": "Treatment Theatre", "v": 0, "r": "Lery's Memorial Institute", "f": "Lery's Memorial Institute/Treatment Theatre.png", "t": "_thumbs/Lery's Memorial Institute/Treatment Theatre.webp", "a": ["театр", "лэри", "операционная", "lery", "tt"], "k": "outline", "s": 98, "o": "_Old layouts/Treatment Theatre (old, 148 sqT).jpg", "ot": "_thumbs/_Old layouts/Treatment Theatre (old, 148 sqT).webp", "w": 1336, "h": 2444, "ow": 1536, "oh": 2688}, {"n": "Mother's Dwelling", "ru": "Обитель матери", "b": "Mother's Dwelling", "v": 0, "r": "Red Forest", "f": "Red Forest/Mother's Dwelling.png", "t": "_thumbs/Red Forest/Mother's Dwelling.webp", "a": ["мазер", "дом матери", "жилище матери", "md"], "k": "outline", "s": 152, "o": "_Old layouts/Mother's Dwelling (old, 188 sqT).jpg", "ot": "_thumbs/_Old layouts/Mother's Dwelling (old, 188 sqT).webp", "w": 1976, "h": 2258, "ow": 2304, "oh": 2304}, {"n": "The Temple of Purgation", "ru": "Храм очищения", "b": "The Temple of Purgation", "v": 0, "r": "Red Forest", "f": "Red Forest/The Temple of Purgation.png", "t": "_thumbs/Red Forest/The Temple of Purgation.webp", "a": ["храм", "temple", "tp"], "k": "outline", "s": 136, "o": "_Old layouts/The Temple of Purgation (old, 156 sqT).png", "ot": "_thumbs/_Old layouts/The Temple of Purgation (old, 156 sqT).webp", "w": 2110, "h": 2414, "ow": 2048, "oh": 2048}, {"n": "Badham Preschool I", "ru": "Детский сад Бэдхем I", "b": "Badham Preschool", "v": 1, "r": "Springwood", "f": "Springwood/Badham Preschool I.jpg", "t": "_thumbs/Springwood/Badham Preschool I.webp", "a": ["бадхем", "бэтхам", "бэдхэм", "садик", "детский сад", "badham", "bp"], "k": "tiles", "s": 144, "w": 1792, "h": 1792}, {"n": "Badham Preschool II", "ru": "Детский сад Бэдхем II", "b": "Badham Preschool", "v": 2, "r": "Springwood", "f": "Springwood/Badham Preschool II.png", "t": "_thumbs/Springwood/Badham Preschool II.webp", "a": ["бадхем", "бэтхам", "бэдхэм", "садик", "детский сад", "badham", "bp"], "k": "outline", "s": 144, "w": 2132, "h": 2332}, {"n": "Badham Preschool III", "ru": "Детский сад Бэдхем III", "b": "Badham Preschool", "v": 3, "r": "Springwood", "f": "Springwood/Badham Preschool III.jpg", "t": "_thumbs/Springwood/Badham Preschool III.webp", "a": ["бадхем", "бэтхам", "бэдхэм", "садик", "детский сад", "badham", "bp"], "k": "tiles", "s": 144, "w": 1792, "h": 1792}, {"n": "Badham Preschool IV", "ru": "Детский сад Бэдхем IV", "b": "Badham Preschool", "v": 4, "r": "Springwood", "f": "Springwood/Badham Preschool IV.png", "t": "_thumbs/Springwood/Badham Preschool IV.webp", "a": ["бадхем", "бэтхам", "бэдхэм", "садик", "детский сад", "badham", "bp"], "k": "outline", "s": 140, "w": 1548, "h": 2454}, {"n": "Badham Preschool V", "ru": "Детский сад Бэдхем V", "b": "Badham Preschool", "v": 5, "r": "Springwood", "f": "Springwood/Badham Preschool V.png", "t": "_thumbs/Springwood/Badham Preschool V.webp", "a": ["бадхем", "бэтхам", "бэдхэм", "садик", "детский сад", "badham", "bp"], "k": "outline", "s": 148, "w": 2156, "h": 2044}, {"n": "The Game", "ru": "Игра", "b": "The Game", "v": 0, "r": "Gideon Meat Plant", "f": "Gideon Meat Plant/The Game.jpg", "t": "_thumbs/Gideon Meat Plant/The Game.webp", "a": ["гейм", "игра", "гидеон", "game"], "k": "tiles", "s": 142, "w": 1408, "h": 2688}, {"n": "Family Residence I", "ru": "Семейная резиденция I", "b": "Family Residence", "v": 1, "r": "Yamaoka Estate", "f": "Yamaoka Estate/Family Residence I.jpg", "t": "_thumbs/Yamaoka Estate/Family Residence I.webp", "a": ["фэмили", "резиденция", "семейная резиденция", "fr"], "k": "tiles", "s": 156, "w": 1792, "h": 2304}, {"n": "Family Residence II", "ru": "Семейная резиденция II", "b": "Family Residence", "v": 2, "r": "Yamaoka Estate", "f": "Yamaoka Estate/Family Residence II.png", "t": "_thumbs/Yamaoka Estate/Family Residence II.webp", "a": ["фэмили", "резиденция", "семейная резиденция", "fr"], "k": "outline", "s": 156, "w": 1562, "h": 2298}, {"n": "Sanctum of Wrath I", "ru": "Прибежище гнева I", "b": "Sanctum of Wrath", "v": 1, "r": "Yamaoka Estate", "f": "Yamaoka Estate/Sanctum of Wrath I.png", "t": "_thumbs/Yamaoka Estate/Sanctum of Wrath I.webp", "a": ["санктум", "святилище", "святилище гнева", "sow"], "k": "outline", "s": 156, "w": 2082, "h": 2366}, {"n": "Sanctum of Wrath II", "ru": "Прибежище гнева II", "b": "Sanctum of Wrath", "v": 2, "r": "Yamaoka Estate", "f": "Yamaoka Estate/Sanctum of Wrath II.png", "t": "_thumbs/Yamaoka Estate/Sanctum of Wrath II.webp", "a": ["санктум", "святилище", "святилище гнева", "sow"], "k": "outline", "s": 148, "w": 1852, "h": 2134}, {"n": "Mount Ormond Resort I", "ru": "Курорт «Гора Ормонд» I", "b": "Mount Ormond Resort", "v": 1, "r": "Ormond", "f": "Ormond/Mount Ormond Resort I.jpg", "t": "_thumbs/Ormond/Mount Ormond Resort I.webp", "a": ["ормонд", "курорт", "mor"], "k": "tiles", "s": 156, "w": 2048, "h": 2048}, {"n": "Mount Ormond Resort II", "ru": "Курорт «Гора Ормонд» II", "b": "Mount Ormond Resort", "v": 2, "r": "Ormond", "f": "Ormond/Mount Ormond Resort II.png", "t": "_thumbs/Ormond/Mount Ormond Resort II.webp", "a": ["ормонд", "курорт", "mor"], "k": "outline", "s": 160, "w": 1562, "h": 2300}, {"n": "Mount Ormond Resort III", "ru": "Курорт «Гора Ормонд» III", "b": "Mount Ormond Resort", "v": 3, "r": "Ormond", "f": "Ormond/Mount Ormond Resort III.png", "t": "_thumbs/Ormond/Mount Ormond Resort III.webp", "a": ["ормонд", "курорт", "mor"], "k": "outline", "s": 156, "w": 1960, "h": 2236}, {"n": "Ormond Lake Mine", "ru": "Шахта у озера Ормонд", "b": "Ormond Lake Mine", "v": 0, "r": "Ormond", "f": "Ormond/Ormond Lake Mine.png", "t": "_thumbs/Ormond/Ormond Lake Mine.webp", "a": ["шахта", "лейк майн", "озеро", "olm", "mine"], "k": "outline", "s": 132, "w": 1906, "h": 2186}, {"n": "The Underground Complex", "ru": "Подземный комплекс", "b": "The Underground Complex", "v": 0, "r": "Hawkins National Laboratory", "f": "Hawkins National Laboratory/The Underground Complex.png", "t": "_thumbs/Hawkins National Laboratory/The Underground Complex.webp", "a": ["хоукинс", "лаба", "лаборатория", "hawkins", "uc"], "k": "outline", "s": 138, "w": 1618, "h": 2016}, {"n": "Dead Dawg Saloon", "ru": "Салун «Мертвяк вусмерть»", "b": "Dead Dawg Saloon", "v": 0, "r": "Grave of Glenvale", "f": "Grave of Glenvale/Dead Dawg Saloon.png", "t": "_thumbs/Grave of Glenvale/Dead Dawg Saloon.webp", "a": ["салун", "дед дог", "дэд дог", "dds", "saloon"], "k": "tiles", "s": 136, "w": 1792, "h": 1792}, {"n": "Midwich Elementary School (RU room names)", "ru": "Начальная школа Мидвич (русские комнаты)", "b": "Midwich Elementary School (RU room names)", "v": 0, "r": "Silent Hill", "f": "Silent Hill/Midwich Elementary School (RU room names).jpg", "t": "_thumbs/Silent Hill/Midwich Elementary School (RU room names).webp", "a": ["мидвич", "школа", "midwich", "русский"], "k": "ru", "w": 1792, "h": 1792}, {"n": "Midwich Elementary School", "ru": "Начальная школа Мидвич", "b": "Midwich Elementary School", "v": 0, "r": "Silent Hill", "f": "Silent Hill/Midwich Elementary School.jpg", "t": "_thumbs/Silent Hill/Midwich Elementary School.webp", "a": ["мидвич", "школа", "сайлент хилл", "midwich"], "k": "tiles", "s": 113.5, "w": 1920, "h": 4096}, {"n": "Raccoon City Police Station East Wing", "ru": "Полицейский участок Раккун-Сити: восточное крыло", "b": "Raccoon City Police Station East Wing", "v": 0, "r": "Raccoon City", "f": "Raccoon City/Raccoon City Police Station East Wing.jpg", "t": "_thumbs/Raccoon City/Raccoon City Police Station East Wing.webp", "a": ["рпд", "rpd", "ракун", "полиция", "восток", "ист", "east"], "k": "tiles", "w": 2816, "h": 3264}, {"n": "Raccoon City Police Station West Wing", "ru": "Полицейский участок Раккун-Сити: западное крыло", "b": "Raccoon City Police Station West Wing", "v": 0, "r": "Raccoon City", "f": "Raccoon City/Raccoon City Police Station West Wing.jpg", "t": "_thumbs/Raccoon City/Raccoon City Police Station West Wing.webp", "a": ["рпд", "rpd", "ракун", "полиция", "запад", "вест", "west"], "k": "tiles", "w": 2816, "h": 3264}, {"n": "Dead Sands", "ru": "Бесплодные пески", "b": "Dead Sands", "v": 0, "r": "Forsaken Boneyard", "f": "Forsaken Boneyard/Dead Sands.png", "t": "_thumbs/Forsaken Boneyard/Dead Sands.webp", "a": ["дед сэндс", "пески", "мертвые пески", "ds"], "k": "outline", "s": 140, "w": 2052, "h": 2068}, {"n": "Eyrie of Crows", "ru": "Воронье гнездовье", "b": "Eyrie of Crows", "v": 0, "r": "Forsaken Boneyard", "f": "Forsaken Boneyard/Eyrie of Crows.jpg", "t": "_thumbs/Forsaken Boneyard/Eyrie of Crows.webp", "a": ["гнездо", "воронье гнездо", "эйри", "айри", "eoc"], "k": "tiles", "s": 148, "w": 2048, "h": 1792}, {"n": "Fallen Refuge", "ru": "Павший приют", "b": "Fallen Refuge", "v": 0, "r": "Withered Isle", "f": "Withered Isle/Fallen Refuge.png", "t": "_thumbs/Withered Isle/Fallen Refuge.webp", "a": ["фоллен", "убежище", "рефьюдж", "fr"], "k": "outline", "s": 128, "w": 1572, "h": 1968}, {"n": "Freddy Fazbear's Pizza", "ru": "Пиццерия Фредди Фазбера", "b": "Freddy Fazbear's Pizza", "v": 0, "r": "Withered Isle", "f": "Withered Isle/Freddy Fazbear's Pizza.png", "t": "_thumbs/Withered Isle/Freddy Fazbear's Pizza.webp", "a": ["фредди", "пицца", "фнаф", "fnaf", "ffp"], "k": "outline", "s": 148, "w": 2126, "h": 2086}, {"n": "Garden of Joy", "ru": "Сад счастья", "b": "Garden of Joy", "v": 0, "r": "Withered Isle", "f": "Withered Isle/Garden of Joy.jpg", "t": "_thumbs/Withered Isle/Garden of Joy.webp", "a": ["сад", "сад радости", "гарден", "goj"], "k": "tiles", "s": 164, "w": 2048, "h": 1792}, {"n": "Greenville Square", "ru": "Площадь Гринвилла", "b": "Greenville Square", "v": 0, "r": "Withered Isle", "f": "Withered Isle/Greenville Square.png", "t": "_thumbs/Withered Isle/Greenville Square.webp", "a": ["гринвилл", "гринвиль", "площадь", "gs"], "k": "outline", "s": 160, "w": 1460, "h": 2364}, {"n": "Forgotten Ruins", "ru": "Забытые руины", "b": "Forgotten Ruins", "v": 0, "r": "The Decimated Borgo", "f": "The Decimated Borgo/Forgotten Ruins.png", "t": "_thumbs/The Decimated Borgo/Forgotten Ruins.webp", "a": ["форготтен", "руины", "забытые руины", "подземелье", "fr"], "k": "outline", "s": 132, "w": 2026, "h": 2304}, {"n": "The Shattered Square", "ru": "Разрушенная площадь", "b": "The Shattered Square", "v": 0, "r": "The Decimated Borgo", "f": "The Decimated Borgo/The Shattered Square.png", "t": "_thumbs/The Decimated Borgo/The Shattered Square.webp", "a": ["шаттеред", "разрушенная площадь", "площадь", "ss"], "k": "tiles", "s": 144, "w": 1792, "h": 1792}, {"n": "Nostromo Wreckage", "ru": "Крушение «Ностромо»", "b": "Nostromo Wreckage", "v": 0, "r": "Dvarka Deepwood", "f": "Dvarka Deepwood/Nostromo Wreckage.png", "t": "_thumbs/Dvarka Deepwood/Nostromo Wreckage.webp", "a": ["ностромо", "чужой", "alien", "nw"], "k": "outline", "s": 152, "o": "_Old layouts/Nostromo Wreckage (old, 134 sqT).jpg", "ot": "_thumbs/_Old layouts/Nostromo Wreckage (old, 134 sqT).webp", "w": 1680, "h": 2370, "ow": 1792, "oh": 1792}, {"n": "Toba Landing", "ru": "Площадка Тоба", "b": "Toba Landing", "v": 0, "r": "Dvarka Deepwood", "f": "Dvarka Deepwood/Toba Landing.png", "t": "_thumbs/Dvarka Deepwood/Toba Landing.webp", "a": ["тоба", "toba", "tl"], "k": "outline", "s": 136, "o": "_Old layouts/Toba Landing (old, 130 sqT).jpg", "ot": "_thumbs/_Old layouts/Toba Landing (old, 130 sqT).webp", "w": 1980, "h": 2020, "ow": 2048, "oh": 1792}, {"n": "Trickster's Delusion", "ru": "Морок Трюкача", "b": "Trickster's Delusion", "v": 0, "r": "Sleepless District", "f": "Sleepless District/Trickster's Delusion.png", "t": "_thumbs/Sleepless District/Trickster's Delusion.webp", "a": ["трикстер", "сеул", "клуб", "td"], "k": "outline", "w": 1998, "h": 2212}], "realms": [{"n": "The MacMillan Estate", "ru": "Поместье МакМиллан", "a": ["макмилан", "макмиллан", "mcmillan", "macmillan"]}, {"n": "Autohaven Wreckers", "ru": "Свалка Автохевен", "a": ["автохевен", "автохейвен", "свалка", "autohaven"]}, {"n": "Coldwind Farm", "ru": "Ферма Колдвинд", "a": ["колдвин", "ферма", "coldwind"]}, {"n": "Crotus Prenn Asylum", "ru": "Психлечебница Кротус Пренн", "a": ["кротус", "психушка", "лечебница", "asylum"]}, {"n": "Haddonfield", "ru": "Хэддонфилд", "a": ["хэддонфилд", "хеддонфилд", "майерс", "myers"]}, {"n": "Backwater Swamp", "ru": "Гнилое болото", "a": ["болото", "swamp"]}, {"n": "Lery's Memorial Institute", "ru": "Мемориальный институт Лэри", "a": ["лэри", "лери", "lery", "lerys"]}, {"n": "Red Forest", "ru": "Красный лес", "a": ["красный лес", "лес", "red forest"]}, {"n": "Springwood", "ru": "Спрингвуд", "a": ["спрингвуд", "бэтхам", "бадхем", "бэдхэм", "фредди крюгер"]}, {"n": "Gideon Meat Plant", "ru": "Мясокомбинат «Гидеон»", "a": ["гидеон", "мясокомбинат", "gideon"]}, {"n": "Yamaoka Estate", "ru": "Поместье Ямаоки", "a": ["ямаока", "ямаоки", "yamaoka"]}, {"n": "Ormond", "ru": "Ормонд", "a": ["ормонд", "ormond"]}, {"n": "Hawkins National Laboratory", "ru": "Национальная лаборатория Хоукинса", "a": ["хоукинс", "лаба", "лаборатория", "hawkins", "lab"]}, {"n": "Grave of Glenvale", "ru": "Могила в Гленвейле", "a": ["гленвейл", "салун", "glenvale"]}, {"n": "Silent Hill", "ru": "Сайлент Хилл", "a": ["сайлент хилл", "silent hill", "сх"]}, {"n": "Raccoon City", "ru": "Раккун-Сити", "a": ["ракун", "ракун сити", "rpd", "рпд", "racoon"]}, {"n": "Forsaken Boneyard", "ru": "Заброшенное кладбище", "a": ["гнездо", "кладбище", "boneyard"]}, {"n": "Withered Isle", "ru": "Зачахший остров", "a": ["острова", "остров", "withered"]}, {"n": "The Decimated Borgo", "ru": "Разоренная деревушка-борго", "a": ["борго", "borgo"]}, {"n": "Dvarka Deepwood", "ru": "Заросли Дварки", "a": ["дварка", "dvarka"]}, {"n": "Sleepless District", "ru": "Бессонный район", "a": ["трикстер", "sleepless", "сеул"]}]};
+const MAPS = DATA.maps, REALMS = DATA.realms;
+const $ = (id) => document.getElementById(id);
+const root = document.documentElement;
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} },
+};
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const url = (p) => p.split("/").map(encodeURIComponent).join("/");
+const clamp = (v, a, b) => Math.min(Math.max(v, a), b);
+const realmRu = Object.fromEntries(REALMS.map((r) => [r.n, r.ru]));
+const motionOK = () => !root.classList.contains("calm") && !matchMedia("(prefers-reduced-motion: reduce)").matches;
+let lang = store.get("dbd.lang", (navigator.language || "ru").toLowerCase().startsWith("ru") ? "ru" : "en");
+const primary = (m) => (lang === "ru" ? m.ru : m.n);
+const secondary = (m) => (lang === "ru" ? m.n : m.ru);
+const realmName = (r) => (lang === "ru" ? realmRu[r] : r);
+MAPS.forEach((m, i) => (m.i = i));
+
+/* icons: inline SVG, one stroke style, no emoji */
+const I = (d) => `<svg class="i" viewBox="0 0 24 24">${d}</svg>`;
+const IC = {
+  open: I('<path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>'),
+  eye: I('<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'),
+  hist: I('<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/>'),
+  pin: I('<path d="M12 17v5M9 3h6l-1 6 3 3v2H7v-2l3-3z"/>'),
+  copy: I('<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/>'),
+  save: I('<path d="M12 3v12M7 10l5 5 5-5M5 21h14"/>'),
+  realm: I('<path d="M3 6h18M3 12h18M3 18h12"/>'),
+  fit: I('<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>'),
+  plus: I('<path d="M12 5v14M5 12h14"/>'), minus: I('<path d="M5 12h14"/>'),
+  close: I('<path d="M6 6l12 12M18 6 6 18"/>'),
+  sun: I('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>'),
+  moon: I('<path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z"/>'),
+  auto: I('<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/>'),
+  lang: I('<path d="M4 5h9M8.5 3v2M6 5c0 4 3 7 6 8M11 5c0 4-3 7-7 8M13 21l4-9 4 9M14.5 18h5"/>'),
+  palette: I('<path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/>'),
+  search: I('<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>'),
+  top: I('<path d="M12 19V5M5 12l7-7 7 7"/>'),
+  pumpkin: I('<path d="M12 7c-5 0-8 3-8 7s3 6 8 6 8-2 8-6-3-7-8-7z"/><path d="M12 7c-2 2-2 11 0 13M12 7c2 2 2 11 0 13M12 7c0-2 1-3 3-4"/>'),
+  snow: I('<path d="M12 2v20M4.9 6l14.2 12M19.1 6 4.9 18M9 4l3 2 3-2M9 20l3-2 3 2"/>'),
+  lantern: I('<path d="M12 2v3M9 5h6M8 8c0-2 8-2 8 0v8c0 2-8 2-8 0z"/><path d="M8 12h8M12 19v3M10 22h4"/>'),
+  heart: I('<path d="M12 20s-7-4.4-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.6-9 9-9 9z"/>'),
+  flower: I('<circle cx="12" cy="9" r="2.2"/><path d="M12 6.8C12 4 15 4 14.6 6.4M14.2 9c2.8 0 2.8 3 .4 2.6M12 11.2c0 2.8-3 2.8-2.6.4M9.8 9C7 9 7 6 9.4 6.4M12 11.5V22M12 17c2-2 4-2 5-1"/>'),
+  cake: I('<path d="M4 21h16M5 21v-7h14v7M5 16c2 1.5 4 1.5 7 0s5-1.5 7 0M12 14v-4M12 7c-1-1 0-2.5 0-3 .5.6 1.5 1.8 0 3z"/>'),
+  off: I('<circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/>'),
+};
+
+/* ======================= fuzzy search engine ======================= */
+const TR = { а:"a",б:"b",в:"v",г:"g",д:"d",е:"e",ё:"e",ж:"zh",з:"z",и:"i",й:"i",к:"k",л:"l",м:"m",н:"n",о:"o",п:"p",р:"r",
+  с:"s",т:"t",у:"u",ф:"f",х:"h",ц:"ts",ч:"ch",ш:"sh",щ:"sh",ъ:"",ы:"i",ь:"",э:"e",ю:"yu",я:"ya" };
+const EN = "`qwertyuiop[]asdfghjkl;'zxcvbnm,./", RU = "ёйцукенгшщзхъфывапролджэячсмитьбю.";
+const swapLayout = (s) => [...s].map((c) => {
+  const lc = c.toLowerCase(); let i = EN.indexOf(lc); if (i >= 0) return RU[i];
+  i = RU.indexOf(lc); return i >= 0 ? EN[i] : c; }).join("");
+const STOP = new Set(["the", "of", "у", "в", "на", "для", "отца"]);
+const ROM = { i: 1, ii: 2, iii: 3, iv: 4, v: 5 };
+function norm(s) {
+  return s.toLowerCase().replace(/ё/g, "е").replace(/['’`]/g, "")
+    .replace(/[«»"“”.,:;!?()\[\]{}\-–—\/\\_+*#]/g, " ")
+    .replace(/([a-zа-я])(\d)/g, "$1 $2").replace(/(\d)([a-zа-я])/g, "$1 $2")
+    .replace(/\s+/g, " ").trim();
+}
+function phon(w) {
+  w = [...w].map((c) => TR[c] ?? c).join("");
+  return w.replace(/dzh|dg|dj/g, "J").replace(/zh/g, "J").replace(/ch/g, "C").replace(/sh/g, "S")
+    .replace(/ph/g, "f").replace(/th/g, "t").replace(/ck/g, "k").replace(/[cq]/g, "k").replace(/w/g, "v")
+    .replace(/x/g, "ks").replace(/ea|ae/g, "e").replace(/ee/g, "i").replace(/oo|ou/g, "u").replace(/yu/g, "u")
+    .replace(/ya/g, "a").replace(/y/g, "i").replace(/(.)\1+/g, "$1");
+}
+function osa(a, b, max) {
+  const la = a.length, lb = b.length;
+  if (Math.abs(la - lb) > max) return max + 1;
+  let p2 = null, p = Array.from({ length: lb + 1 }, (_, j) => j);
+  for (let i = 1; i <= la; i++) {
+    const c = [i]; let best = i;
+    for (let j = 1; j <= lb; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      let v = Math.min(p[j] + 1, c[j - 1] + 1, p[j - 1] + cost);
+      if (p2 && i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) v = Math.min(v, p2[j - 2] + 1);
+      c[j] = v; if (v < best) best = v;
+    }
+    if (best > max) return max + 1;
+    p2 = p; p = c;
+  }
+  return p[lb];
+}
+for (const m of MAPS) {
+  const toks = [];
+  const add = (text, w, field) => {
+    for (const raw of norm(text).split(" ")) {
+      if (!raw || STOP.has(raw) || /^\d+$/.test(raw)) continue;
+      if (ROM[raw] && field === "name") continue;
+      toks.push({ raw, k: phon(raw), w, field });
+    }
+  };
+  add(m.ru, 1, "name"); add(m.n, 1, "name");
+  m.a.forEach((a) => add(a, 0.92, "alias"));
+  const R = REALMS.find((r) => r.n === m.r);
+  add(R.n, 0.62, "realm"); add(R.ru, 0.62, "realm"); R.a.forEach((a) => add(a, 0.6, "realm"));
+  m.toks = toks;
+  const ini = (s) => norm(s).split(" ").filter((w) => w && !STOP.has(w) && !ROM[w] && !/^\d+$/.test(w)).map((w) => w[0]).join("");
+  m.ini = [ini(m.n) + (m.v || ""), ini(m.ru) + (m.v || ""), ini(m.n), ini(m.ru)];
+  m.phrases = [norm(m.ru), norm(m.n), ...m.a.map(norm)];
+}
+function matchToken(q, qk, t) {
+  if (t.raw.startsWith(q) || t.k.startsWith(qk)) return { s: (t.raw === q || t.k === qk) ? 1.05 : 1, fuzzy: false };
+  const L = qk.length;
+  if (L >= 3) {
+    const max = L <= 4 ? 1 : L <= 7 ? 2 : 3;
+    let d = max + 1;
+    for (const n of [L - 1, L, L + 1]) if (n > 0 && n <= t.k.length + 1) d = Math.min(d, osa(qk, t.k.slice(0, n), max));
+    if (d <= max) return { s: 0.86 - 0.3 * d / L, fuzzy: true };
+    if (t.k.includes(qk)) return { s: 0.62, fuzzy: false };
+  }
+  return null;
+}
+function scoreMap(m, qn) {
+  const words = qn.split(" ").filter((w) => w && !STOP.has(w));
+  if (!words.length) return null;
+  let total = 0, fuzzy = false, digit = 0, used = 0;
+  for (const w of words) {
+    if (/^\d$/.test(w) || (ROM[w] && w.length > 1)) { digit = /^\d$/.test(w) ? +w : ROM[w]; continue; }
+    const qk = phon(w);
+    let best = null, bw = 0;
+    for (const t of m.toks) { const r = matchToken(w, qk, t); if (r && r.s * t.w > bw) { bw = r.s * t.w; best = r; } }
+    if (ROM[w] && !best) { digit = ROM[w]; continue; }
+    if (!best) return null;
+    total += bw; used++; if (best.fuzzy) fuzzy = true;
+  }
+  let s = used ? total / used : 0.7;
+  if (digit) { if (m.v === digit || (!m.v && digit === 1)) s += 0.25; else if (m.v) s -= 0.5; else s -= 0.15; }
+  const compact = qn.replace(/ /g, "");
+  if (compact.length >= 2 && m.ini.some((x) => x === compact)) { s = Math.max(s, 1.2); fuzzy = false; }
+  else if (compact.length >= 2 && !used && !digit) return null;
+  if (m.phrases.some((p) => p.startsWith(qn))) s += 0.3;
+  if (!m.v || m.v === 1) s += 0.02;
+  if (m.k === "ru") s -= 0.03;
+  if (pins.includes(m.n)) s += 0.04;
+  return s > 0.35 ? { s, fuzzy } : null;
+}
+function search(q) {
+  const qn = norm(q);
+  if (!qn) return { res: [], swapped: false };
+  const run = (qq) => MAPS.map((m) => { const r = scoreMap(m, qq); return r && { m, ...r }; }).filter(Boolean).sort((a, b) => b.s - a.s);
+  let res = run(qn), swapped = false;
+  const alt = norm(swapLayout(q));
+  if (alt && alt !== qn) {
+    const r2 = run(alt);
+    const top = (r) => (r.length ? r[0].s - (r[0].fuzzy ? 0.25 : 0) : 0);
+    if (top(r2) > top(res) + 0.05) { res = r2; swapped = alt; }
+  }
+  if (res.length) { const top = res[0].s; res = res.filter((r) => r.s >= top - 0.45); }
+  return { res, swapped };
+}
+
+/* ======================= appearance: accent kit + seasonal events ======================= */
+const ACCENTS = [
+  { id: "blood", name: "Кровь", l: "#c8102e", d: "#ff4458" },
+  { id: "ember", name: "Угли", l: "#c9500c", d: "#ff8a3d" },
+  { id: "bone", name: "Кость", l: "#8f6d2f", d: "#dcb673" },
+  { id: "fog", name: "Туман", l: "#2f7a72", d: "#6ccabd" },
+  { id: "ice", name: "Лёд", l: "#1f69b8", d: "#6cb8ff" },
+  { id: "moss", name: "Мох", l: "#4d7a1c", d: "#a2d25a" },
+];
+const inRange = (date, a, b) => {
+  const v = (date.getMonth() + 1) * 100 + date.getDate(), x = a[0] * 100 + a[1], y = b[0] * 100 + b[1];
+  return x <= y ? v >= x && v <= y : v >= x || v <= y;
+};
+const LUNAR = { 2025: [1, 29], 2026: [2, 17], 2027: [2, 6], 2028: [1, 26], 2029: [2, 13], 2030: [2, 3], 2031: [1, 23], 2032: [2, 11] };
+const EVENTS = [
+  { id: "halloween", name: "Хэллоуин", icon: "pumpkin", l: "#c4500a", d: "#ff8a2a", fx: "halloween", when: (t) => inRange(t, [10, 10], [11, 3]) },
+  { id: "winter", name: "Новый год", icon: "snow", l: "#1f6fbf", d: "#7cc6ff", fx: "snow", when: (t) => inRange(t, [12, 15], [1, 12]) },
+  { id: "valentine", name: "День влюблённых", icon: "heart", l: "#cc1f57", d: "#ff6b9a", fx: "hearts", when: (t) => inRange(t, [2, 9], [2, 15]) },
+  { id: "lunar", name: "Китайский Новый год", icon: "lantern", l: "#b8141f", d: "#ffc94a", fx: "lanterns",
+    when: (t) => { const L = LUNAR[t.getFullYear()]; if (!L) return false; const d = (t - new Date(t.getFullYear(), L[0] - 1, L[1])) / 864e5; return d >= -4 && d <= 14; } },
+  { id: "march8", name: "8 Марта", icon: "flower", l: "#b8336f", d: "#ff8fc2", fx: "petals", when: (t) => inRange(t, [3, 5], [3, 9]) },
+  { id: "anniversary", name: "Годовщина DBD", icon: "cake", l: "#a8790a", d: "#ffcc52", fx: "embers", when: (t) => inRange(t, [6, 8], [6, 25]) },
+];
+const settings = {
+  theme: (() => { try { return localStorage.getItem("dbd.theme") || "auto"; } catch (e) { return "auto"; } })(),
+  accent: store.get("dbd.accent", "auto"),
+  event: store.get("dbd.event", "auto"),
+  motion: store.get("dbd.motion", "full"),
+  smooth: store.get("dbd.smooth", true),
+};
+let activeEvent = null;
+function resolveEvent() {
+  if (settings.event === "off") return null;
+  if (settings.event !== "auto") return EVENTS.find((e) => e.id === settings.event) || null;
+  const t = new Date(); return EVENTS.find((e) => e.when(t)) || null;
+}
+const effectiveDark = () => settings.theme === "dark" || (settings.theme === "auto" && matchMedia("(prefers-color-scheme: dark)").matches);
+function applyAppearance() {
+  activeEvent = resolveEvent();
+  EVENTS.forEach((e) => root.classList.toggle("ev-" + e.id, activeEvent === e));
+  const a = ACCENTS.find((x) => x.id === settings.accent) || activeEvent || ACCENTS[0];
+  root.style.setProperty("--accent-l", a.l); root.style.setProperty("--accent-d", a.d);
+  root.classList.toggle("calm", settings.motion === "min");
+  const chip = $("evChip");
+  if (activeEvent) { chip.innerHTML = IC[activeEvent.icon] + `<span>${activeEvent.name}</span>`; chip.classList.add("on"); }
+  else chip.classList.remove("on");
+  buildGarland(); fx.set(activeEvent ? activeEvent.fx : null);
+}
+function setTheme(next, origin) {
+  const run = () => {
+    settings.theme = next;
+    if (next === "auto") delete root.dataset.theme; else root.dataset.theme = next;
+    try { localStorage.setItem("dbd.theme", next); } catch (e) {}
+    paintPanel(); fx.recolor();
+  };
+  if (document.startViewTransition && motionOK() && origin) {
+    const r = origin.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
+    const rad = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+    document.startViewTransition(run).ready.then(() => root.animate(
+      { clipPath: [`circle(0 at ${x}px ${y}px)`, `circle(${rad}px at ${x}px ${y}px)`] },
+      { duration: 560, easing: "cubic-bezier(.16,1,.3,1)", pseudoElement: "::view-transition-new(root)" })).catch(() => {});
+  } else run();
+}
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => { fx.recolor(); paintPanel(); });
+function buildGarland() {
+  const g = $("garland");
+  if (!activeEvent || activeEvent.id !== "winter") { g.innerHTML = ""; return; }
+  const cols = ["#ff5a5a", "#ffd34d", "#5ad17a", "#5ab8ff"], n = Math.ceil(innerWidth / 34);
+  g.innerHTML = Array.from({ length: n }, (_, i) =>
+    `<i style="left:${i * 34 + 12}px;background:${cols[i % 4]};color:${cols[i % 4]};animation-delay:${(i % 4) * .6}s"></i>`).join("");
+}
+
+/* ======================= seasonal particles (one canvas, pauses when hidden) ======================= */
+const fx = (() => {
+  const cv = $("fx"), ctx = cv.getContext("2d");
+  let kind = null, parts = [], raf = 0, W = 0, H = 0, last = 0, paused = false, pal = {};
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  function size() { const dpr = Math.min(devicePixelRatio || 1, 2); W = innerWidth; H = innerHeight; cv.width = W * dpr; cv.height = H * dpr;
+    cv.style.width = W + "px"; cv.style.height = H + "px"; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); }
+  function count() { const base = { halloween: 24, snow: 70, hearts: 16, lanterns: 12, petals: 24, embers: 36 }[kind] || 0;
+    return Math.round(base * clamp(W * H / (1400 * 900), .35, 1.4)); }
+  function spawn(init) {
+    const p = { x: rnd(0, W), t: rnd(0, 6.28), s: rnd(.6, 1.2), a: rnd(.35, .9) };
+    if (kind === "halloween") {
+      p.bat = Math.random() < .28;
+      if (p.bat) { p.y = rnd(60, H * .5); p.x = init ? rnd(0, W) : -30; p.vx = rnd(.6, 1.3); }
+      else { p.y = init ? rnd(0, H) : -20; p.vx = rnd(-.3, .3); p.vy = rnd(.35, .8); p.r = rnd(0, 6.28); p.vr = rnd(-.02, .02); p.c = Math.floor(rnd(0, 3)); }
+    } else if (kind === "snow") { p.y = init ? rnd(0, H) : -6; p.vy = rnd(.3, 1.1); p.rad = rnd(1, 3.2); }
+    else if (kind === "petals") { p.y = init ? rnd(0, H) : -20; p.vy = rnd(.4, .9); p.vx = rnd(-.2, .4); p.r = rnd(0, 6.28); p.vr = rnd(-.03, .03); }
+    else { p.y = init ? rnd(0, H) : H + 30; p.vy = -rnd(.25, kind === "embers" ? 1.1 : .6); }
+    return p;
+  }
+  function recolor() {
+    const dark = effectiveDark();
+    pal = {
+      leaf: dark ? ["#c2561a", "#8f3d12", "#d9902a"] : ["#c25210", "#9a4a12", "#cf8a1d"],
+      bat: dark ? "rgba(6,6,8,.9)" : "rgba(30,24,20,.65)",
+      snow: dark ? "235,245,255" : "110,150,195",
+      heart: dark ? "#ff6b9a" : "#d6336c", lantern: "#d42a2a", gold: "#ffcf5a",
+      petal: dark ? "#ffb3d1" : "#e07aa5", ember: dark ? "255,170,60" : "215,115,20",
+    };
+  }
+  function heart(x, y, s) { ctx.beginPath(); ctx.moveTo(x, y + s * .3); ctx.bezierCurveTo(x, y, x - s * .5, y, x - s * .5, y + s * .3);
+    ctx.bezierCurveTo(x - s * .5, y + s * .6, x, y + s * .8, x, y + s); ctx.bezierCurveTo(x, y + s * .8, x + s * .5, y + s * .6, x + s * .5, y + s * .3);
+    ctx.bezierCurveTo(x + s * .5, y, x, y, x, y + s * .3); ctx.fill(); }
+  function frame(now) {
+    raf = requestAnimationFrame(frame);
+    if (paused) { last = now; return; }
+    const dt = Math.min(2.5, (now - last) / 16.7 || 1); last = now;
+    ctx.clearRect(0, 0, W, H);
+    for (let i = 0; i < parts.length; i++) {
+      const p = parts[i]; p.t += .02 * dt;
+      if (kind === "halloween") {
+        if (p.bat) {
+          p.x += p.vx * dt * 1.4; p.y += Math.sin(p.t * 2) * .6 * dt;
+          const f = Math.sin(p.t * 9) * .8, z = 8 * p.s; ctx.save(); ctx.translate(p.x, p.y); ctx.fillStyle = pal.bat;
+          ctx.beginPath(); ctx.moveTo(0, 0); ctx.quadraticCurveTo(-z, -z * f, -z * 2, -z * .2 * f); ctx.quadraticCurveTo(-z * 1.3, z * .1, -z * .9, z * .35);
+          ctx.quadraticCurveTo(-z * .5, z * .1, 0, z * .45); ctx.quadraticCurveTo(z * .5, z * .1, z * .9, z * .35);
+          ctx.quadraticCurveTo(z * 1.3, z * .1, z * 2, -z * .2 * f); ctx.quadraticCurveTo(z, -z * f, 0, 0); ctx.fill(); ctx.restore();
+          if (p.x > W + 40) parts[i] = spawn(false);
+        } else {
+          p.x += (p.vx + Math.sin(p.t) * .5) * dt; p.y += p.vy * dt; p.r += p.vr * dt;
+          ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.globalAlpha = p.a * .75; ctx.fillStyle = pal.leaf[p.c];
+          const z = 7 * p.s; ctx.beginPath(); ctx.moveTo(0, -z); ctx.quadraticCurveTo(z * .9, 0, 0, z); ctx.quadraticCurveTo(-z * .9, 0, 0, -z); ctx.fill(); ctx.restore();
+          if (p.y > H + 20) parts[i] = spawn(false);
+        }
+      } else if (kind === "snow") {
+        p.y += p.vy * dt; p.x += Math.sin(p.t + p.vy * 3) * .4 * dt;
+        ctx.fillStyle = `rgba(${pal.snow},${(p.a * .9).toFixed(2)})`; ctx.beginPath(); ctx.arc(p.x, p.y, p.rad, 0, 6.28); ctx.fill();
+        if (p.y > H + 6) parts[i] = spawn(false);
+      } else if (kind === "hearts") {
+        p.y += p.vy * dt; p.x += Math.sin(p.t) * .35 * dt;
+        ctx.globalAlpha = p.a * .5 * Math.min(1, clamp(p.y / H, 0, 1) * 2.5); ctx.fillStyle = pal.heart; heart(p.x, p.y, 13 * p.s); ctx.globalAlpha = 1;
+        if (p.y < -30) parts[i] = spawn(false);
+      } else if (kind === "lanterns") {
+        p.y += p.vy * dt; p.x += Math.sin(p.t * .7) * .25 * dt; const z = 11 * p.s;
+        ctx.save(); ctx.globalAlpha = p.a * .85 * Math.min(1, clamp(p.y / H, 0, 1) * 2.2); ctx.translate(p.x, p.y);
+        const g = ctx.createRadialGradient(0, 0, 1, 0, 0, z * 2.4); g.addColorStop(0, "rgba(255,190,80,.35)"); g.addColorStop(1, "rgba(255,190,80,0)");
+        ctx.fillStyle = g; ctx.fillRect(-z * 2.4, -z * 2.4, z * 4.8, z * 4.8);
+        ctx.fillStyle = pal.lantern; ctx.beginPath(); ctx.ellipse(0, 0, z * .75, z, 0, 0, 6.28); ctx.fill();
+        ctx.fillStyle = pal.gold; ctx.fillRect(-z * .4, -z * 1.1, z * .8, z * .25); ctx.fillRect(-z * .4, z * .85, z * .8, z * .25); ctx.fillRect(-1, z * 1.1, 2, z * .6);
+        ctx.restore();
+        if (p.y < -40) parts[i] = spawn(false);
+      } else if (kind === "petals") {
+        p.y += p.vy * dt; p.x += (p.vx + Math.sin(p.t) * .6) * dt; p.r += p.vr * dt;
+        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.globalAlpha = p.a * .7; ctx.fillStyle = pal.petal;
+        ctx.beginPath(); ctx.ellipse(0, 0, 6 * p.s, 3.2 * p.s * (.6 + .4 * Math.abs(Math.sin(p.t * 2))), 0, 0, 6.28); ctx.fill(); ctx.restore();
+        if (p.y > H + 20) parts[i] = spawn(false);
+      } else if (kind === "embers") {
+        p.y += p.vy * dt; p.x += Math.sin(p.t * 1.3) * .5 * dt; const fl = .55 + .45 * Math.sin(p.t * 7), r = 1.6 * p.s + 1;
+        const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r * 4);
+        g.addColorStop(0, `rgba(${pal.ember},${(p.a * fl).toFixed(2)})`); g.addColorStop(1, `rgba(${pal.ember},0)`);
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y, r * 4, 0, 6.28); ctx.fill();
+        if (p.y < -10) parts[i] = spawn(false);
+      }
+    }
+  }
+  function set(k) {
+    kind = motionOK() ? k : null; cancelAnimationFrame(raf); raf = 0; ctx.clearRect(0, 0, W, H);
+    if (!kind) { cv.style.display = "none"; return; }
+    cv.style.display = ""; size(); recolor(); parts = Array.from({ length: count() }, () => spawn(true));
+    last = performance.now(); raf = requestAnimationFrame(frame);
+  }
+  addEventListener("resize", () => { if (kind) { size(); const n = count(); while (parts.length < n) parts.push(spawn(true)); parts.length = n; } buildGarland(); });
+  document.addEventListener("visibilitychange", () => { paused = document.hidden; });
+  return { set, recolor, pause(v) { paused = v || document.hidden; } };
+})();
+
+/* ======================= UI state ======================= */
+const qEl = $("q"), suggEl = $("sugg"), mainEl = $("main"), boxEl = $("searchBox");
+let results = [], sel = 0, suggOpen = false, cardEls = [], suggItems = [], firstRender = true;
+let recent = store.get("dbd.recent", []).filter((n) => MAPS.some((m) => m.n === n));
+let pins = store.get("dbd.pins", []).filter((n) => MAPS.some((m) => m.n === n));
+$("count").textContent = MAPS.length + " карт · " + REALMS.length + " реалм";
+
+function tagHtml(m) {
+  const t = [];
+  if (m.s) t.push(`<span class="tag">${m.s} sqT</span>`);
+  t.push(`<span class="tag">${m.k === "outline" ? "контур" : m.k === "ru" ? "RU" : "тайлы"}</span>`);
+  if (m.o) t.push(`<span class="tag">+ старая</span>`);
+  return t.join("");
+}
+function highlight(text, qn) {
+  if (!qn) return esc(text);
+  let out = esc(text);
+  for (const w of qn.split(" ").filter((w) => w && !/^\d$/.test(w)).sort((a, b) => b.length - a.length)) {
+    const re = new RegExp("(^|[\\s«\"'(\\-])(" + w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")", "i");
+    out = out.replace(re, "$1<mark>$2</mark>");
+  }
+  return out;
+}
+function card(m, k, d) {
+  return `<div class="card" data-i="${m.i}" data-k="${k}" style="--d:${d}">
+    ${pins.includes(m.n) ? `<span class="pinmark" title="Закреплено">${IC.pin}</span>` : ""}
+    <span class="go"><kbd>Enter</kbd></span>
+    <div class="im"><img loading="lazy" decoding="async" src="${url(m.t)}" alt=""></div>
+    <div class="tx"><div class="n1">${esc(primary(m))}</div><div class="n2">${esc(secondary(m))}</div>
+    <div class="n2">${esc(realmName(m.r))}</div><div class="tags">${tagHtml(m)}</div></div></div>`;
+}
+const sec = (title, sub, id) => `<div class="sec"${id ? ` id="${id}"` : ""}><h2>${esc(title)}</h2><span>${esc(sub)}</span><div class="line"></div></div>`;
+const realmId = (r) => "realm-" + REALMS.findIndex((x) => x.n === r);
+const headerH = () => $("hdr").offsetHeight;
+
+function renderChips() {
+  $("chips").innerHTML = REALMS.map((r, i) => `<button class="chip" data-r="${i}">${esc(lang === "ru" ? r.ru : r.n)}</button>`).join("");
+}
+$("chips").addEventListener("click", (e) => {
+  const b = e.target.closest(".chip"); if (!b) return;
+  if (qEl.value) { qEl.value = ""; update(); }
+  jumpTo("realm-" + b.dataset.r);
+});
+function jumpTo(id) { const el = $(id); if (el) scrollToY(el.getBoundingClientRect().top + scrollY - headerH() - 10); }
+
+function update() {
+  const q = qEl.value;
+  boxEl.classList.toggle("has-q", !!q);
+  const { res, swapped } = search(q);
+  results = q ? res.map((r) => r.m) : MAPS.slice(); sel = 0;
+  let html = "", d = 0;
+  if (q) {
+    html += sec(`Найдено: ${results.length}`, swapped ? `раскладка исправлена → «${swapped}»` : "");
+    html += results.length ? `<div class="grid">${results.map((m, k) => card(m, k, d++)).join("")}</div>`
+      : `<div class="empty">Ничего не нашлось. Попробуйте часть названия, реалм или сокращение (ct2, rpd, мазер).</div>`;
+  } else {
+    const pm = pins.map((n) => MAPS.find((m) => m.n === n)).filter(Boolean);
+    if (pm.length) html += sec("Закреплённые", "ПКМ по карте — открепить") + `<div class="grid">${pm.map((m) => card(m, -1, d++)).join("")}</div>`;
+    const rm = recent.map((n) => MAPS.find((m) => m.n === n)).filter((m) => m && !pins.includes(m.n)).slice(0, 6);
+    if (rm.length) html += sec("Недавние", "последние открытые") + `<div class="grid">${rm.map((m) => card(m, -1, d++)).join("")}</div>`;
+    let k = 0;
+    REALMS.forEach((r, ri) => {
+      const ms = MAPS.filter((m) => m.r === r.n);
+      html += sec(lang === "ru" ? r.ru : r.n, `${lang === "ru" ? r.n : r.ru} · ${ms.length}`, "realm-" + ri);
+      html += `<div class="grid">${ms.map((m) => card(m, k++, d++)).join("")}</div>`;
+    });
+    html += `<div class="foot">Начните печатать сразу — поиск понимает русские и английские названия, транслит, опечатки и неправильную раскладку
+      («сщфд» → coal). <kbd>↑</kbd> <kbd>↓</kbd> выбор · <kbd>Enter</kbd> открыть · <kbd>Esc</kbd> очистить · <kbd>/</kbd> к поиску · ПКМ — меню
+      (<kbd>Shift</kbd>+ПКМ — меню браузера).<br>«контур» — актуальный контур без спавнов тайлов, «тайлы» — подробные схемы с тайлами.</div>`;
+  }
+  mainEl.classList.remove("intro", "swap"); void mainEl.offsetWidth;
+  mainEl.innerHTML = html;
+  if (motionOK()) mainEl.classList.add(firstRender ? "intro" : "swap");
+  firstRender = false;
+  cardEls = [...mainEl.querySelectorAll('.card:not([data-k="-1"])')];
+  observeSections();
+  renderSugg(q, res, swapped);
+  markSel();
+}
+function renderSugg(q, res, swapped) {
+  const qn = norm(swapped || q);
+  let items, head;
+  if (!q) {
+    const lst = [...pins, ...recent.filter((n) => !pins.includes(n))].map((n) => MAPS.find((m) => m.n === n)).filter(Boolean);
+    if (!lst.length || document.activeElement !== qEl) { closeSugg(); suggItems = []; return; }
+    items = lst.slice(0, 6).map((m) => ({ m, fuzzy: false })); head = pins.length ? "Закреплённые и недавние" : "Недавние";
+  } else { items = res.slice(0, 8); head = items.length ? "Подсказки" : ""; }
+  let html = "";
+  if (swapped) html += `<div class="fix">${IC.lang}<span>Раскладка исправлена: <b>${esc(swapped)}</b></span></div>`;
+  else if (items[0] && items[0].fuzzy) html += `<div class="fix">${IC.search}<span>Возможно, вы имели в виду: <b>${esc(primary(items[0].m))}</b></span></div>`;
+  if (head) html += `<div class="head"><span>${head}</span><span><kbd>↑</kbd> <kbd>↓</kbd> <kbd>Enter</kbd></span></div>`;
+  html += items.map((r, i) => `<div class="si" role="option" data-i="${r.m.i}" data-k="${i}">
+      <img src="${url(r.m.t)}" alt="">
+      <div class="t"><div class="t1">${highlight(primary(r.m), qn)}</div>
+      <div class="t2">${highlight(secondary(r.m), qn)} · ${esc(realmName(r.m.r))}</div></div>
+      ${pins.includes(r.m.n) ? `<span class="tag pin">${IC.pin}</span>` : ""}${r.fuzzy ? '<span class="tag fuzzy">≈</span>' : ""}<span class="enter"><kbd>Enter</kbd></span></div>`).join("");
+  if (q && !items.length) html += `<div class="fix">Нет совпадений для «${esc(q)}»</div>`;
+  suggEl.innerHTML = html;
+  suggItems = items.map((r) => r.m);
+  suggEl.classList.toggle("open", !!html && document.activeElement === qEl);
+  suggOpen = suggEl.classList.contains("open");
+}
+function closeSugg() { suggEl.classList.remove("open"); suggOpen = false; }
+function markSel() {
+  const list = suggOpen && suggItems.length ? suggItems : results;
+  sel = clamp(sel, 0, Math.max(0, list.length - 1));
+  suggEl.querySelectorAll(".si").forEach((el) => el.classList.toggle("sel", +el.dataset.k === sel));
+  const cur = list[sel];
+  cardEls.forEach((el) => el.classList.toggle("sel", !!cur && +el.dataset.i === cur.i && !!qEl.value));
+  const s = suggEl.querySelector(".si.sel"); if (s) s.scrollIntoView({ block: "nearest" });
+  if (cur && qEl.value) preload(cur);
+}
+const current = () => (suggOpen && suggItems.length ? suggItems : results)[sel];
+const pre = new Map();
+function preload(m) { if (pre.has(m.f)) return pre.get(m.f); const im = new Image(); im.decoding = "async"; im.src = url(m.f); pre.set(m.f, im); return im; }
+const thumbFor = (m) => suggEl.querySelector(`.si[data-i="${m.i}"] img`) || mainEl.querySelector(`.card[data-i="${m.i}"] .im img`);
+
+let deb = 0;
+qEl.addEventListener("input", () => { clearTimeout(deb); deb = setTimeout(() => { deb = 0; update(); if (scrollY > 0) scrollToY(0); }, 40); });
+qEl.addEventListener("focus", () => { const s = search(qEl.value); renderSugg(qEl.value, s.res, s.swapped); markSel(); });
+qEl.addEventListener("blur", () => setTimeout(closeSugg, 150));
+$("clear").addEventListener("click", () => { qEl.value = ""; update(); qEl.focus(); });
+suggEl.addEventListener("mousedown", (e) => { const it = e.target.closest(".si"); if (it && e.button === 0) { e.preventDefault(); openMap(MAPS[+it.dataset.i], it.querySelector("img")); } });
+mainEl.addEventListener("click", (e) => { const c = e.target.closest(".card"); if (c) openMap(MAPS[+c.dataset.i], c.querySelector(".im img")); });
+mainEl.addEventListener("pointermove", (e) => {
+  const c = e.target.closest(".card"); if (!c) return;
+  const r = c.getBoundingClientRect(); c.style.setProperty("--mx", e.clientX - r.left + "px"); c.style.setProperty("--my", e.clientY - r.top + "px");
+});
+mainEl.addEventListener("pointerover", (e) => { const c = e.target.closest(".card"); if (c) preload(MAPS[+c.dataset.i]); });
+qEl.addEventListener("keydown", (e) => {
+  const list = suggOpen && suggItems.length ? suggItems : results;
+  if (e.key === "ArrowDown") { e.preventDefault(); sel = Math.min(sel + 1, list.length - 1); markSel(); }
+  else if (e.key === "ArrowUp") { e.preventDefault(); sel = Math.max(sel - 1, 0); markSel(); }
+  else if (e.key === "Enter") { e.preventDefault(); if (deb) { clearTimeout(deb); deb = 0; update(); } const m = current(); if (m) openMap(m, thumbFor(m)); }
+  else if (e.key === "Escape") { e.preventDefault(); if (qEl.value) { qEl.value = ""; update(); } else { closeSugg(); qEl.blur(); } }
+});
+
+/* ======================= smooth scrolling + scrollspy ======================= */
+const sm = { y: scrollY, target: scrollY, raf: 0 };
+const maxY = () => document.documentElement.scrollHeight - innerHeight;
+function smLoop() {
+  sm.y += (sm.target - sm.y) * 0.14;
+  if (Math.abs(sm.target - sm.y) < 0.6) { sm.y = sm.target; scrollTo(0, sm.y); sm.raf = 0; return; }
+  scrollTo(0, sm.y); sm.raf = requestAnimationFrame(smLoop);
+}
+function scrollToY(y) {
+  y = clamp(y, 0, maxY());
+  if (!motionOK()) { scrollTo(0, y); return; }
+  if (!sm.raf) sm.y = scrollY; sm.target = y; if (!sm.raf) sm.raf = requestAnimationFrame(smLoop);
+}
+addEventListener("wheel", (e) => {
+  if (!settings.smooth || !motionOK() || vm || e.ctrlKey || e.defaultPrevented) return;
+  if (e.target.closest(".sugg, .menu, .panel, .chips, .vbot")) return;
+  if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+  e.preventDefault();
+  const d = e.deltaMode === 1 ? e.deltaY * 38 : e.deltaMode === 2 ? e.deltaY * innerHeight : e.deltaY;
+  if (!sm.raf) sm.y = sm.target = scrollY;
+  sm.target = clamp(sm.target + d, 0, maxY());
+  if (!sm.raf) sm.raf = requestAnimationFrame(smLoop);
+}, { passive: false });
+addEventListener("scroll", () => {
+  if (!sm.raf) sm.y = sm.target = scrollY;
+  $("hdr").classList.toggle("scrolled", scrollY > 4);
+  closeMenu(); spyTick();
+}, { passive: true });
+let spyRaf = 0;
+function spyTick() { if (!spyRaf) spyRaf = requestAnimationFrame(() => { spyRaf = 0; spyUpdate(); }); }
+function spyUpdate() {
+  const secs = [...mainEl.querySelectorAll(".sec[id^='realm-']")], chips = [...document.querySelectorAll(".chip")];
+  if (!secs.length) { chips.forEach((c) => c.classList.remove("on")); return; }
+  const lim = headerH() + 140; let cur = secs[0].id;
+  for (const s of secs) { if (s.getBoundingClientRect().top < lim) cur = s.id; else break; }
+  if (scrollY < 10 && !qEl.value) cur = secs[0].id;
+  chips.forEach((c) => {
+    const on = "realm-" + c.dataset.r === cur;
+    if (on && !c.classList.contains("on")) { const box = $("chips"); box.scrollTo({ left: c.offsetLeft - box.clientWidth / 2 + c.offsetWidth / 2 }); }
+    c.classList.toggle("on", on);
+  });
+}
+const observeSections = spyUpdate;
+
+/* ======================= viewer (shared-element motion) ======================= */
+const viewer = $("viewer"), stage = $("stage"), img = $("vimg");
+let vm = null, useOld = false, Z = { s: 1, x: 0, y: 0, fit: 1, w: 1, h: 1 }, loadTok = 0;
+function apply(mode) {
+  img.classList.toggle("anim", mode === "anim"); img.classList.toggle("quick", mode === "quick");
+  img.style.transform = `translate(${Z.x}px, ${Z.y}px) scale(${Z.s})`;
+}
+function fitZ() {
+  const W = stage.clientWidth, H = stage.clientHeight, top = W < 760 ? 70 : 74, bot = 70;
+  const s = Math.min(W / Z.w, (H - top - bot) / Z.h) * 0.97;
+  return { s, x: (W - Z.w * s) / 2, y: top + (H - top - bot - Z.h * s) / 2 };
+}
+function fit(mode) { const f = fitZ(); Z.fit = f.s; Object.assign(Z, f); apply(mode); }
+function zoomAt(f, cx, cy, mode) {
+  const ns = clamp(Z.s * f, Z.fit * 0.6, Z.fit * 10);
+  Z.x = cx - (cx - Z.x) * (ns / Z.s); Z.y = cy - (cy - Z.y) * (ns / Z.s); Z.s = ns; apply(mode);
+}
+function rectOf(el, w, h) {   // where the thumbnail is painted inside its object-fit: contain box
+  const r = el.getBoundingClientRect(), s = Math.min(r.width / w, r.height / h);
+  return { s, x: r.left + (r.width - w * s) / 2, y: r.top + (r.height - h * s) / 2 };
+}
+function setImage(m, old) {
+  const o = old && m.o, src = o ? m.o : m.f;
+  Z.w = o ? m.ow : m.w; Z.h = o ? m.oh : m.h; img.style.width = Z.w + "px"; img.style.height = Z.h + "px";
+  const tok = ++loadTok, full = preload({ f: src });
+  const done = () => { if (tok !== loadTok) return; img.src = full.src; viewer.classList.remove("loading"); };
+  if (full.complete && full.naturalWidth) { img.src = full.src; viewer.classList.remove("loading"); }
+  else { img.src = url(o ? m.ot : m.t); viewer.classList.add("loading"); (full.decode ? full.decode() : Promise.reject()).then(done, () => (full.onload = done)); }
+}
+function remember(m) { recent = [m.n, ...recent.filter((n) => n !== m.n)].slice(0, 10); store.set("dbd.recent", recent); }
+function openMap(m, el) {
+  closeSugg(); closeMenu(); closePanel(); qEl.blur(); remember(m);
+  useOld = false; vm = m; setImage(m, false); paintViewer(m);
+  const f = fitZ(); Z.fit = f.s;
+  img.style.opacity = "1";
+  if (el && el.isConnected && motionOK()) {
+    const r = rectOf(el, Z.w, Z.h); Object.assign(Z, { s: r.s, x: r.x, y: r.y }); apply("none");
+    viewer.classList.add("open"); void img.offsetWidth;
+    Object.assign(Z, f); apply("anim");
+  } else { Object.assign(Z, f); apply("none"); viewer.classList.add("open"); }
+  document.body.style.overflow = "hidden"; fx.pause(true);
+  const h = $("vhelp"); h.classList.remove("hide"); clearTimeout(h._t); h._t = setTimeout(() => h.classList.add("hide"), 2800);
+}
+function paintViewer(m) {
+  const t = $("vTitle"); t.classList.remove("slide"); void t.offsetWidth; if (motionOK()) t.classList.add("slide");
+  $("vA").textContent = primary(m);
+  $("vB").textContent = [secondary(m), realmName(m.r), m.s ? m.s + " sqT" : "", m.k === "outline" ? "актуальный контур" : ""].filter(Boolean).join(" · ");
+  const old = $("vOld"); old.style.display = m.o ? "" : "none"; old.classList.toggle("on", useOld);
+  const sibs = MAPS.filter((x) => x.r === m.r);
+  $("vSibs").innerHTML = sibs.length > 1 ? sibs.map((x) => `<button class="vsib ${x === m ? "on" : ""}" data-i="${x.i}"><img src="${url(x.t)}" alt="">${esc(primary(x))}</button>`).join("") : "";
+  const on = $("vSibs").querySelector(".on"); if (on) { const b = $("vSibs"); b.scrollTo({ left: on.offsetLeft - b.clientWidth / 2 + on.offsetWidth / 2 }); }
+}
+function switchTo(m, dir) {
+  vm = m; useOld = false; remember(m); paintViewer(m);
+  if (!motionOK()) { setImage(m, false); fit("none"); return; }
+  img.classList.add("quick"); img.style.opacity = "0";
+  img.style.transform = `translate(${Z.x - dir * 40}px, ${Z.y}px) scale(${Z.s})`;
+  setTimeout(() => {
+    setImage(m, false); const f = fitZ(); Z.fit = f.s; Object.assign(Z, f, { x: f.x + dir * 40 }); apply("none");
+    void img.offsetWidth; img.style.opacity = "1"; Z.x = f.x; apply("quick");
+  }, 130);
+}
+function toggleOld() {
+  if (!vm || !vm.o) return; useOld = !useOld; paintViewer(vm);
+  img.classList.add("quick"); img.style.opacity = "0";
+  setTimeout(() => { setImage(vm, useOld); fit("none"); void img.offsetWidth; img.style.opacity = "1"; }, 130);
+  toast(useOld ? "Старая версия — с тайлами, контур устарел" : "Актуальная версия");
+}
+function hideViewer() { viewer.classList.remove("open"); document.body.style.overflow = ""; fx.pause(false); }
+function closeViewer() {
+  if (!vm) return;
+  const m = vm, wasOld = useOld; vm = null; closeMenu();
+  qEl.value = ""; update();
+  const target = mainEl.querySelector(`.card[data-i="${m.i}"] .im img`), r = target && target.getBoundingClientRect();
+  if (motionOK() && target && !wasOld && r.top > headerH() && r.bottom < innerHeight) {
+    const t = rectOf(target, Z.w, Z.h); Object.assign(Z, { s: t.s, x: t.x, y: t.y }); apply("anim"); hideViewer();
+  } else if (motionOK()) { img.classList.add("anim"); img.style.opacity = "0"; zoomAt(0.94, innerWidth / 2, innerHeight / 2, "anim"); hideViewer(); }
+  else hideViewer();
+  qEl.focus({ preventScroll: true });
+}
+function step(d) {
+  if (!vm) return; const sibs = MAPS.filter((x) => x.r === vm.r); if (sibs.length < 2) return;
+  switchTo(sibs[(sibs.indexOf(vm) + d + sibs.length) % sibs.length], d);
+}
+$("vClose").onclick = closeViewer;
+$("vFit").onclick = () => fit("anim");
+$("vZoomIn").onclick = () => zoomAt(1.45, stage.clientWidth / 2, stage.clientHeight / 2, "quick");
+$("vZoomOut").onclick = () => zoomAt(1 / 1.45, stage.clientWidth / 2, stage.clientHeight / 2, "quick");
+$("vOld").onclick = toggleOld;
+$("vSibs").addEventListener("click", (e) => {
+  const b = e.target.closest(".vsib"); if (!b || !vm) return; const m = MAPS[+b.dataset.i]; if (m === vm) return;
+  const sibs = MAPS.filter((x) => x.r === vm.r); switchTo(m, sibs.indexOf(m) > sibs.indexOf(vm) ? 1 : -1);
+});
+stage.addEventListener("wheel", (e) => { e.preventDefault(); zoomAt(Math.exp(-e.deltaY * 0.0016), e.clientX, e.clientY, "none"); }, { passive: false });
+stage.addEventListener("dblclick", (e) => { if (Z.s > Z.fit * 1.3) fit("anim"); else zoomAt(2.4, e.clientX, e.clientY, "anim"); });
+const ptrs = new Map(); let pinch = null;
+stage.addEventListener("pointerdown", (e) => { if (e.button !== 0) return; stage.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY }); stage.classList.add("drag"); pinch = null; });
+stage.addEventListener("pointermove", (e) => {
+  if (!ptrs.has(e.pointerId)) return;
+  const prev = ptrs.get(e.pointerId); ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  if (ptrs.size === 1) { Z.x += e.clientX - prev.x; Z.y += e.clientY - prev.y; apply("none"); }
+  else if (ptrs.size === 2) {
+    const [a, b] = [...ptrs.values()], d = Math.hypot(a.x - b.x, a.y - b.y), cx = (a.x + b.x) / 2, cy = (a.y + b.y) / 2;
+    if (pinch) { Z.x += cx - pinch.cx; Z.y += cy - pinch.cy; zoomAt(d / pinch.d, cx, cy, "none"); }
+    pinch = { d, cx, cy };
+  }
+});
+const up = (e) => { ptrs.delete(e.pointerId); pinch = null; if (!ptrs.size) stage.classList.remove("drag"); };
+stage.addEventListener("pointerup", up); stage.addEventListener("pointercancel", up);
+addEventListener("resize", () => { if (vm) fit("none"); });
+
+/* ======================= custom context menu (RMB) ======================= */
+const menuEl = $("menu"); let menuItems = [], menuSel = -1;
+function showMenu(x, y, title, items) {
+  menuItems = items.filter(Boolean); menuSel = -1;
+  menuEl.innerHTML = (title ? `<div class="mh">${esc(title)}</div>` : "") + menuItems.map((it, i) => it === "-" ? "<hr>" :
+    `<button data-k="${i}">${it.icon || ""}<span>${esc(it.label)}</span>${it.kbd ? `<span class="k">${esc(it.kbd)}</span>` : ""}</button>`).join("");
+  menuEl.classList.remove("open"); menuEl.style.left = "-9999px"; menuEl.style.top = "0px";
+  const r = menuEl.getBoundingClientRect();
+  const flipX = x + r.width > innerWidth - 8, flipY = y + r.height > innerHeight - 8;
+  menuEl.style.left = clamp(flipX ? x - r.width : x, 8, innerWidth - r.width - 8) + "px";
+  menuEl.style.top = clamp(flipY ? y - r.height : y, 8, innerHeight - r.height - 8) + "px";
+  menuEl.style.transformOrigin = `${flipX ? "100%" : "0"} ${flipY ? "100%" : "0"}`;
+  void menuEl.offsetWidth; menuEl.classList.add("open");
+}
+function closeMenu() { menuEl.classList.remove("open"); menuItems = []; }
+menuEl.addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; const it = menuItems[+b.dataset.k]; closeMenu(); if (it && it.run) it.run(); });
+menuEl.addEventListener("contextmenu", (e) => e.preventDefault());
+document.addEventListener("pointerdown", (e) => {
+  if (!menuEl.contains(e.target)) closeMenu();
+  if (!$("panel").contains(e.target) && !e.target.closest("#setBtn, #evChip")) closePanel();
+}, true);
+addEventListener("blur", closeMenu); addEventListener("resize", closeMenu);
+
+async function copy(text) {
+  try { await navigator.clipboard.writeText(text); }
+  catch (e) { const t = document.createElement("textarea"); t.value = text; document.body.appendChild(t); t.select(); document.execCommand("copy"); t.remove(); }
+  toast("Скопировано: " + text);
+}
+function togglePin(m) {
+  pins = pins.includes(m.n) ? pins.filter((n) => n !== m.n) : [m.n, ...pins];
+  store.set("dbd.pins", pins); toast(pins.includes(m.n) ? "Закреплено наверху" : "Откреплено");
+  if (!vm) { const y = scrollY; update(); scrollTo(0, y); }
+}
+function saveImage(m) { const p = useOld && vm === m && m.o ? m.o : m.f; const a = document.createElement("a"); a.href = url(p); a.download = p.split("/").pop(); document.body.appendChild(a); a.click(); a.remove(); }
+function mapMenu(m, el) {
+  return [
+    { label: "Открыть", icon: IC.eye, kbd: "Enter", run: () => openMap(m, el) },
+    m.o && { label: "Открыть старую версию", icon: IC.hist, run: () => { openMap(m, el); setTimeout(toggleOld, 450); } },
+    { label: "Открыть в новой вкладке", icon: IC.open, run: () => open(url(m.f), "_blank") },
+    "-",
+    { label: pins.includes(m.n) ? "Открепить" : "Закрепить наверху", icon: IC.pin, run: () => togglePin(m) },
+    { label: "Копировать «" + m.ru + "»", icon: IC.copy, run: () => copy(m.ru) },
+    { label: "Copy “" + m.n + "”", icon: IC.copy, run: () => copy(m.n) },
+    "-",
+    { label: "Все карты: " + realmName(m.r), icon: IC.realm, run: () => { if (vm) closeViewer(); else if (qEl.value) { qEl.value = ""; update(); } setTimeout(() => jumpTo(realmId(m.r)), 60); } },
+    { label: "Сохранить изображение", icon: IC.save, run: () => saveImage(m) },
+  ];
+}
+function pageMenu() {
+  const dark = effectiveDark();
+  return [
+    { label: "Поиск", icon: IC.search, kbd: "/", run: () => { qEl.focus(); qEl.select(); } },
+    scrollY > 200 && { label: "Наверх", icon: IC.top, run: () => scrollToY(0) },
+    "-",
+    { label: dark ? "Светлая тема" : "Тёмная тема", icon: dark ? IC.sun : IC.moon, run: () => setTheme(dark ? "light" : "dark", $("setBtn")) },
+    { label: lang === "ru" ? "Названия на английском" : "Названия на русском", icon: IC.lang, run: () => $("langBtn").click() },
+    { label: "Оформление и ивенты…", icon: IC.palette, run: () => openPanel() },
+  ];
+}
+document.addEventListener("contextmenu", (e) => {
+  if (e.target === qEl || e.shiftKey) return;           // native menu in the search box; Shift+RMB = browser menu
+  e.preventDefault();
+  const c = e.target.closest(".card, .si, .vsib");
+  if (c) { const m = MAPS[+c.dataset.i]; showMenu(e.clientX, e.clientY, primary(m), mapMenu(m, c.querySelector("img"))); return; }
+  if (vm && viewer.contains(e.target)) {
+    showMenu(e.clientX, e.clientY, primary(vm), [
+      { label: "Вписать", icon: IC.fit, kbd: "0", run: () => fit("anim") },
+      { label: "Приблизить сюда", icon: IC.plus, kbd: "+", run: () => zoomAt(2, e.clientX, e.clientY, "anim") },
+      { label: "Отдалить", icon: IC.minus, kbd: "−", run: () => zoomAt(1 / 1.6, e.clientX, e.clientY, "anim") },
+      vm.o && { label: useOld ? "Актуальная версия" : "Старая версия (с тайлами)", icon: IC.hist, kbd: "O", run: toggleOld },
+      "-", ...mapMenu(vm, null).filter((x) => x && x !== "-" && x.icon !== IC.eye && x.icon !== IC.hist), "-",
+      { label: "Закрыть", icon: IC.close, kbd: "Esc", run: closeViewer },
+    ]);
+    return;
+  }
+  showMenu(e.clientX, e.clientY, "", pageMenu());
+});
+
+/* ======================= settings panel ======================= */
+const panel = $("panel");
+const seg = (name, opts, cur) => `<div class="seg" data-seg="${name}"><span class="thumb"></span>${opts.map(([v, l, ic]) =>
+  `<button data-v="${v}" class="${v === cur ? "on" : ""}">${ic || ""}${l}</button>`).join("")}</div>`;
+function placeThumbs() {
+  panel.querySelectorAll(".seg").forEach((s) => { const on = s.querySelector("button.on"), th = s.querySelector(".thumb");
+    if (on) { th.style.left = on.offsetLeft + "px"; th.style.width = on.offsetWidth + "px"; } });
+}
+function paintPanel() {
+  const dark = effectiveDark();
+  panel.innerHTML = `
+    <div class="row"><h3>Тема</h3>${seg("theme", [["auto", "Авто", IC.auto], ["dark", "Тёмная", IC.moon], ["light", "Светлая", IC.sun]], settings.theme)}</div>
+    <div class="row"><h3>Акцент</h3><div class="sw">
+      <button class="auto ${settings.accent === "auto" ? "on" : ""}" data-acc="auto" title="Цвет текущего ивента" style="background:${(e => dark ? e.d : e.l)(activeEvent || ACCENTS[0])}">${IC.auto}<span>Авто</span></button>
+      ${ACCENTS.map((a) => `<button data-acc="${a.id}" class="${settings.accent === a.id ? "on" : ""}" style="background:${dark ? a.d : a.l}" title="${a.name}"><span>${a.name}</span></button>`).join("")}
+    </div></div>
+    <div class="row"><h3>Сезонный ивент</h3><div class="evlist">
+      <button data-ev="auto" class="${settings.event === "auto" ? "on" : ""}">${IC.auto}По дате</button>
+      <button data-ev="off" class="${settings.event === "off" ? "on" : ""}">${IC.off}Выключить</button>
+      ${EVENTS.map((ev) => `<button data-ev="${ev.id}" class="${settings.event === ev.id ? "on" : ""}" style="--ev:${dark ? ev.d : ev.l}">${IC[ev.icon]}${ev.name}</button>`).join("")}
+    </div><div class="note">${activeEvent ? "Сейчас: <b>" + activeEvent.name + "</b>." : "Сейчас ивентов нет."} «По дате» сам включает Хэллоуин, Новый год, Китайский Новый год, День влюблённых, 8 Марта и годовщину DBD.</div></div>
+    <div class="row"><h3>Анимации</h3>${seg("motion", [["full", "Полные"], ["min", "Минимум"]], settings.motion)}</div>
+    <div class="row" style="margin:0"><h3>Плавная прокрутка колесом</h3>${seg("smooth", [["on", "Вкл"], ["off", "Выкл"]], settings.smooth ? "on" : "off")}</div>`;
+  placeThumbs();
+}
+panel.addEventListener("click", (e) => {
+  const b = e.target.closest("button"); if (!b) return;
+  const segEl = b.closest(".seg");
+  if (segEl) {
+    segEl.querySelectorAll("button").forEach((x) => x.classList.toggle("on", x === b)); placeThumbs();   // slide first, repaint after
+    const v = b.dataset.v, name = segEl.dataset.seg;
+    if (name === "theme") { setTimeout(() => setTheme(v, b), 120); return; }
+    if (name === "motion") { settings.motion = v; store.set("dbd.motion", v); applyAppearance(); }
+    if (name === "smooth") { settings.smooth = v === "on"; store.set("dbd.smooth", settings.smooth); }
+    setTimeout(paintPanel, 260); return;
+  }
+  if (b.dataset.acc) { settings.accent = b.dataset.acc; store.set("dbd.accent", settings.accent); applyAppearance(); }
+  if (b.dataset.ev) { settings.event = b.dataset.ev; store.set("dbd.event", settings.event); applyAppearance(); }
+  paintPanel();
+});
+function openPanel() { paintPanel(); panel.classList.add("open"); $("setBtn").classList.add("on"); requestAnimationFrame(placeThumbs); }
+function closePanel() { panel.classList.remove("open"); $("setBtn").classList.remove("on"); }
+$("setBtn").addEventListener("click", () => (panel.classList.contains("open") ? closePanel() : openPanel()));
+$("evChip").addEventListener("click", openPanel);
+$("langBtn").addEventListener("click", () => {
+  lang = lang === "ru" ? "en" : "ru"; store.set("dbd.lang", lang); $("langBtn").textContent = lang.toUpperCase();
+  renderChips(); const y = scrollY; update(); scrollTo(0, y); if (vm) paintViewer(vm);
+  toast(lang === "ru" ? "Названия на русском" : "Names in English");
+});
+let tt; function toast(s) { const t = $("toast"); t.textContent = s; t.classList.add("show"); clearTimeout(tt); tt = setTimeout(() => t.classList.remove("show"), 1600); }
+
+/* ======================= global keys ======================= */
+document.addEventListener("keydown", (e) => {
+  if (menuItems.length) {
+    const btns = [...menuEl.querySelectorAll("button")];
+    if (e.key === "Escape") { e.preventDefault(); closeMenu(); return; }
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); menuSel = (menuSel + (e.key === "ArrowDown" ? 1 : -1) + btns.length) % btns.length; btns.forEach((b, i) => b.classList.toggle("act", i === menuSel)); return; }
+    if (e.key === "Enter" && btns[menuSel]) { e.preventDefault(); btns[menuSel].click(); return; }
+  }
+  if (e.key === "Escape" && panel.classList.contains("open")) { closePanel(); return; }
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  const printable = e.key.length === 1 && e.key !== " ";
+  if (vm) {
+    if (e.key === "Escape") { e.preventDefault(); closeViewer(); }
+    else if (e.key === "ArrowRight") { e.preventDefault(); step(1); }
+    else if (e.key === "ArrowLeft") { e.preventDefault(); step(-1); }
+    else if (e.key === "+" || e.key === "=") zoomAt(1.45, stage.clientWidth / 2, stage.clientHeight / 2, "quick");
+    else if (e.key === "-") zoomAt(1 / 1.45, stage.clientWidth / 2, stage.clientHeight / 2, "quick");
+    else if (e.key === "0") fit("anim");
+    else if ("oOщЩ".includes(e.key) && vm.o) toggleOld();
+    else if (printable) { e.preventDefault(); vm = null; hideViewer(); qEl.value = e.key; qEl.focus(); update(); }
+    return;
+  }
+  if (document.activeElement === qEl || panel.contains(document.activeElement)) return;
+  if (e.key === "/") { e.preventDefault(); qEl.focus(); qEl.select(); return; }
+  if (e.key === "Enter" && qEl.value) { const m = current(); if (m) openMap(m, thumbFor(m)); return; }
+  if (e.key === "ArrowDown" || e.key === "ArrowUp") { qEl.focus(); return; }
+  if (printable) qEl.focus();
+});
+
+$("langBtn").textContent = lang.toUpperCase();
+renderChips(); applyAppearance(); update(); qEl.focus();
+</script>
+</body>
+</html>

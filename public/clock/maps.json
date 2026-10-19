@@ -1,0 +1,1367 @@
+{
+ "maps": [
+  {
+   "n": "Coal Tower I",
+   "ru": "Угольная башня I",
+   "b": "Coal Tower",
+   "v": 1,
+   "r": "The MacMillan Estate",
+   "f": "The MacMillan Estate/Coal Tower I.jpg",
+   "t": "_thumbs/The MacMillan Estate/Coal Tower I.webp",
+   "a": [
+    "угольная башня",
+    "башня",
+    "ct",
+    "коал"
+   ],
+   "k": "tiles",
+   "s": 132,
+   "w": 1536,
+   "h": 2048
+  },
+  {
+   "n": "Coal Tower II",
+   "ru": "Угольная башня II",
+   "b": "Coal Tower",
+   "v": 2,
+   "r": "The MacMillan Estate",
+   "f": "The MacMillan Estate/Coal Tower II.jpg",
+   "t": "_thumbs/The MacMillan Estate/Coal Tower II.webp",
+   "a": [
+    "угольная башня",
+    "башня",
+    "ct",
+    "коал"
+   ],
+   "k": "tiles",
+   "s": 136,
+   "w": 1792,
+   "h": 2048
+  },
+  {
+   "n": "Groaning Storehouse I",
+   "ru": "Стонущий склад I",
+   "b": "Groaning Storehouse",
+   "v": 1,
+   "r": "The MacMillan Estate",
+   "f": "The MacMillan Estate/Groaning Storehouse I.jpg",
+   "t": "_thumbs/The MacMillan Estate/Groaning Storehouse I.webp",
+   "a": [
+    "склад",
+    "стонущий склад",
+    "gs",
+    "гроунинг"
+   ],
+   "k": "tiles",
+   "s": 156,
+   "w": 2304,
+   "h": 2304
+  },
+  {
+   "n": "Groaning Storehouse II",
+   "ru": "Стонущий склад II",
+   "b": "Groaning Storehouse",
+   "v": 2,
+   "r": "The MacMillan Estate",
+   "f": "The MacMillan Estate/Groaning Storehouse II.jpg",
+   "t": "_thumbs/The MacMillan Estate/Groaning Storehouse II.webp",
+   "a": [
+    "склад",
+    "стонущий склад",
+    "gs",
+    "гроунинг"
+   ],
+   "k": "tiles",
+   "s": 148,
+   "w": 2048,
+   "h": 2048
+  },
+  {
+   "n": "Ironworks of Misery I",
+   "ru": "Завод страданий I",
+   "b": "Ironworks of Misery",
+   "v": 1,
+   "r": "The MacMillan Estate",
+   "f": "The MacMillan Estate/Ironworks of Misery I.jpg",
+   "t": "_thumbs/The MacMillan Estate/Ironworks of Misery I.webp",
+   "a": [
+    "литейка",
+    "литейная",
+    "айронворкс",
+    "iom",
+    "iron"
+   ],
+   "k": "tiles",
+   "s": 160,
+   "w": 1792,
+   "h": 2048
+  },
+  {
+   "n": "Ironworks of Misery II",
+   "ru": "Завод страданий II",
+   "b": "Ironworks of Misery",
+   "v": 2,
+   "r": "The MacMillan Estate",
+   "f": "The MacMillan Estate/Ironworks of Misery II.jpg",
+   "t": "_thumbs/The MacMillan Estate/Ironworks of Misery II.webp",
+   "a": [
+    "литейка",
+    "литейная",
+    "айронворкс",
+    "iom",
+    "iron"
+   ],
+   "k": "tiles",
+   "s": 156,
+   "w": 2048,
+   "h": 1792
+  },
+  {
+   "n": "Shelter Woods I",
+   "ru": "Лесная опушка I",
+   "b": "Shelter Woods",
+   "v": 1,
+   "r": "The MacMillan Estate",
+   "f": "The MacMillan Estate/Shelter Woods I.jpg",
+   "t": "_thumbs/The MacMillan Estate/Shelter Woods I.webp",
+   "a": [
+    "шелтер",
+    "лес",
+    "убежище в лесу",
+    "sw"
+   ],
+   "k": "tiles",
+   "s": 176,
+   "w": 2048,
+   "h": 2048
+  },
+  {
+   "n": "Shelter Woods II",
+   "ru": "Лесная опушка II",
+   "b": "Shelter Woods",
+   "v": 2,
+   "r": "The MacMillan Estate",
+   "f": "The MacMillan Estate/Shelter Woods II.jpg",
+   "t": "_thumbs/The MacMillan Estate/Shelter Woods II.webp",
+   "a": [
+    "шелтер",
+    "лес",
+    "убежище в лесу",
+    "sw"
+   ],
+   "k": "tiles",
+   "s": 176,
+   "w": 2048,
+   "h": 2048
+  },
+  {
+   "n": "Suffocation Pit I",
+   "ru": "Удушающая яма I",
+   "b": "Suffocation Pit",
+   "v": 1,
+   "r": "The MacMillan Estate",
+   "f": "The MacMillan Estate/Suffocation Pit I.jpg",
+   "t": "_thumbs/The MacMillan Estate/Suffocation Pit I.webp",
+   "a": [
+    "яма",
+    "удушающая яма",
+    "суффокейшн",
+    "sp"
+   ],
+   "k": "tiles",
+   "s": 160,
+   "w": 1536,
+   "h": 2304
+  },
+  {
+   "n": "Suffocation Pit II",
+   "ru": "Удушающая яма II",
+   "b": "Suffocation Pit",
+   "v": 2,
+   "r": "The MacMillan Estate",
+   "f": "The MacMillan Estate/Suffocation Pit II.jpg",
+   "t": "_thumbs/The MacMillan Estate/Suffocation Pit II.webp",
+   "a": [
+    "яма",
+    "удушающая яма",
+    "суффокейшн",
+    "sp"
+   ],
+   "k": "tiles",
+   "s": 152,
+   "w": 2048,
+   "h": 2048
+  },
+  {
+   "n": "Azarov's Resting Place",
+   "ru": "Место упокоения Азарова",
+   "b": "Azarov's Resting Place",
+   "v": 0,
+   "r": "Autohaven Wreckers",
+   "f": "Autohaven Wreckers/Azarov's Resting Place.jpg",
+   "t": "_thumbs/Autohaven Wreckers/Azarov's Resting Place.webp",
+   "a": [
+    "азаров",
+    "azarov",
+    "arp"
+   ],
+   "k": "tiles",
+   "s": 176,
+   "w": 1792,
+   "h": 2560
+  },
+  {
+   "n": "Blood Lodge",
+   "ru": "Кровавая лачуга",
+   "b": "Blood Lodge",
+   "v": 0,
+   "r": "Autohaven Wreckers",
+   "f": "Autohaven Wreckers/Blood Lodge.jpg",
+   "t": "_thumbs/Autohaven Wreckers/Blood Lodge.webp",
+   "a": [
+    "блад лодж",
+    "кровавая сторожка",
+    "лодж",
+    "bl"
+   ],
+   "k": "tiles",
+   "s": 156,
+   "w": 1792,
+   "h": 2048
+  },
+  {
+   "n": "Gas Heaven",
+   "ru": "Гэс Хэвен",
+   "b": "Gas Heaven",
+   "v": 0,
+   "r": "Autohaven Wreckers",
+   "f": "Autohaven Wreckers/Gas Heaven.jpg",
+   "t": "_thumbs/Autohaven Wreckers/Gas Heaven.webp",
+   "a": [
+    "гас хевен",
+    "заправка",
+    "газ",
+    "gh"
+   ],
+   "k": "tiles",
+   "s": 156,
+   "w": 2048,
+   "h": 1792
+  },
+  {
+   "n": "Wreckers' Yard",
+   "ru": "Зона свалки",
+   "b": "Wreckers' Yard",
+   "v": 0,
+   "r": "Autohaven Wreckers",
+   "f": "Autohaven Wreckers/Wreckers' Yard.jpg",
+   "t": "_thumbs/Autohaven Wreckers/Wreckers' Yard.webp",
+   "a": [
+    "рекерс",
+    "двор",
+    "wy"
+   ],
+   "k": "tiles",
+   "s": 144,
+   "w": 1792,
+   "h": 2304
+  },
+  {
+   "n": "Wretched Shop",
+   "ru": "Магазин барахольщика",
+   "b": "Wretched Shop",
+   "v": 0,
+   "r": "Autohaven Wreckers",
+   "f": "Autohaven Wreckers/Wretched Shop.jpg",
+   "t": "_thumbs/Autohaven Wreckers/Wretched Shop.webp",
+   "a": [
+    "ретчед",
+    "мастерская",
+    "магазин",
+    "ws"
+   ],
+   "k": "tiles",
+   "s": 164,
+   "w": 2048,
+   "h": 2048
+  },
+  {
+   "n": "Fractured Cowshed",
+   "ru": "Разрушенный хлев",
+   "b": "Fractured Cowshed",
+   "v": 0,
+   "r": "Coldwind Farm",
+   "f": "Coldwind Farm/Fractured Cowshed.jpg",
+   "t": "_thumbs/Coldwind Farm/Fractured Cowshed.webp",
+   "a": [
+    "коровник",
+    "fc",
+    "фрактурд"
+   ],
+   "k": "tiles",
+   "s": 152,
+   "w": 1792,
+   "h": 2048
+  },
+  {
+   "n": "Rancid Abattoir",
+   "ru": "Заброшенная скотобойня",
+   "b": "Rancid Abattoir",
+   "v": 0,
+   "r": "Coldwind Farm",
+   "f": "Coldwind Farm/Rancid Abattoir.jpg",
+   "t": "_thumbs/Coldwind Farm/Rancid Abattoir.webp",
+   "a": [
+    "бойня",
+    "ra",
+    "рансид"
+   ],
+   "k": "tiles",
+   "s": 140,
+   "w": 2048,
+   "h": 1792
+  },
+  {
+   "n": "Rotten Fields",
+   "ru": "Сгнившие поля",
+   "b": "Rotten Fields",
+   "v": 0,
+   "r": "Coldwind Farm",
+   "f": "Coldwind Farm/Rotten Fields.jpg",
+   "t": "_thumbs/Coldwind Farm/Rotten Fields.webp",
+   "a": [
+    "гнилые поля",
+    "поля",
+    "кукуруза",
+    "rf"
+   ],
+   "k": "tiles",
+   "s": 160,
+   "w": 1792,
+   "h": 2304
+  },
+  {
+   "n": "The Thompson House",
+   "ru": "Дом Томпсонов",
+   "b": "The Thompson House",
+   "v": 0,
+   "r": "Coldwind Farm",
+   "f": "Coldwind Farm/The Thompson House.jpg",
+   "t": "_thumbs/Coldwind Farm/The Thompson House.webp",
+   "a": [
+    "томпсон",
+    "дом томпсона",
+    "th"
+   ],
+   "k": "tiles",
+   "s": 152,
+   "w": 2048,
+   "h": 2048
+  },
+  {
+   "n": "Torment Creek",
+   "ru": "Ручей страданий",
+   "b": "Torment Creek",
+   "v": 0,
+   "r": "Coldwind Farm",
+   "f": "Coldwind Farm/Torment Creek.png",
+   "t": "_thumbs/Coldwind Farm/Torment Creek.webp",
+   "a": [
+    "тормент",
+    "ручей",
+    "tc"
+   ],
+   "k": "outline",
+   "s": 156,
+   "o": "_Old layouts/Torment Creek (old, 168 sqT).jpg",
+   "ot": "_thumbs/_Old layouts/Torment Creek (old, 168 sqT).webp",
+   "w": 1646,
+   "h": 2402,
+   "ow": 1792,
+   "oh": 2304
+  },
+  {
+   "n": "Disturbed Ward",
+   "ru": "Отделение для буйных",
+   "b": "Disturbed Ward",
+   "v": 0,
+   "r": "Crotus Prenn Asylum",
+   "f": "Crotus Prenn Asylum/Disturbed Ward.png",
+   "t": "_thumbs/Crotus Prenn Asylum/Disturbed Ward.webp",
+   "a": [
+    "палата",
+    "психушка",
+    "dw",
+    "дистурбд"
+   ],
+   "k": "outline",
+   "s": 152,
+   "o": "_Old layouts/Disturbed Ward (old, 172 sqT).png",
+   "ot": "_thumbs/_Old layouts/Disturbed Ward (old, 172 sqT).webp",
+   "w": 1832,
+   "h": 2118,
+   "ow": 1792,
+   "oh": 1792
+  },
+  {
+   "n": "Father Campbell's Chapel",
+   "ru": "Часовня отца Кэмпбелла",
+   "b": "Father Campbell's Chapel",
+   "v": 0,
+   "r": "Crotus Prenn Asylum",
+   "f": "Crotus Prenn Asylum/Father Campbell's Chapel.jpg",
+   "t": "_thumbs/Crotus Prenn Asylum/Father Campbell's Chapel.webp",
+   "a": [
+    "часовня",
+    "кэмпбелл",
+    "кемпбелл",
+    "fcc",
+    "chapel"
+   ],
+   "k": "tiles",
+   "s": 140,
+   "w": 1260,
+   "h": 1620
+  },
+  {
+   "n": "Lampkin Lane",
+   "ru": "Переулок Лэмпкин",
+   "b": "Lampkin Lane",
+   "v": 0,
+   "r": "Haddonfield",
+   "f": "Haddonfield/Lampkin Lane.png",
+   "t": "_thumbs/Haddonfield/Lampkin Lane.webp",
+   "a": [
+    "лампкин",
+    "хэддонфилд",
+    "haddonfield",
+    "майерс",
+    "ll"
+   ],
+   "k": "outline",
+   "s": 132,
+   "w": 1808,
+   "h": 2354
+  },
+  {
+   "n": "Grim Pantry",
+   "ru": "Чудовищная кладовая",
+   "b": "Grim Pantry",
+   "v": 0,
+   "r": "Backwater Swamp",
+   "f": "Backwater Swamp/Grim Pantry.png",
+   "t": "_thumbs/Backwater Swamp/Grim Pantry.webp",
+   "a": [
+    "грим пантри",
+    "кладовая",
+    "gp"
+   ],
+   "k": "tiles",
+   "s": 168,
+   "w": 1792,
+   "h": 1792
+  },
+  {
+   "n": "The Pale Rose",
+   "ru": "Бледная роза",
+   "b": "The Pale Rose",
+   "v": 0,
+   "r": "Backwater Swamp",
+   "f": "Backwater Swamp/The Pale Rose.jpg",
+   "t": "_thumbs/Backwater Swamp/The Pale Rose.webp",
+   "a": [
+    "пейл роуз",
+    "бледная роза",
+    "роза",
+    "pr"
+   ],
+   "k": "tiles",
+   "s": 161,
+   "w": 1792,
+   "h": 2048
+  },
+  {
+   "n": "Treatment Theatre",
+   "ru": "Лечебный зал",
+   "b": "Treatment Theatre",
+   "v": 0,
+   "r": "Lery's Memorial Institute",
+   "f": "Lery's Memorial Institute/Treatment Theatre.png",
+   "t": "_thumbs/Lery's Memorial Institute/Treatment Theatre.webp",
+   "a": [
+    "театр",
+    "лэри",
+    "операционная",
+    "lery",
+    "tt"
+   ],
+   "k": "outline",
+   "s": 98,
+   "o": "_Old layouts/Treatment Theatre (old, 148 sqT).jpg",
+   "ot": "_thumbs/_Old layouts/Treatment Theatre (old, 148 sqT).webp",
+   "w": 1336,
+   "h": 2444,
+   "ow": 1536,
+   "oh": 2688
+  },
+  {
+   "n": "Mother's Dwelling",
+   "ru": "Обитель матери",
+   "b": "Mother's Dwelling",
+   "v": 0,
+   "r": "Red Forest",
+   "f": "Red Forest/Mother's Dwelling.png",
+   "t": "_thumbs/Red Forest/Mother's Dwelling.webp",
+   "a": [
+    "мазер",
+    "дом матери",
+    "жилище матери",
+    "md"
+   ],
+   "k": "outline",
+   "s": 152,
+   "o": "_Old layouts/Mother's Dwelling (old, 188 sqT).jpg",
+   "ot": "_thumbs/_Old layouts/Mother's Dwelling (old, 188 sqT).webp",
+   "w": 1976,
+   "h": 2258,
+   "ow": 2304,
+   "oh": 2304
+  },
+  {
+   "n": "The Temple of Purgation",
+   "ru": "Храм очищения",
+   "b": "The Temple of Purgation",
+   "v": 0,
+   "r": "Red Forest",
+   "f": "Red Forest/The Temple of Purgation.png",
+   "t": "_thumbs/Red Forest/The Temple of Purgation.webp",
+   "a": [
+    "храм",
+    "temple",
+    "tp"
+   ],
+   "k": "outline",
+   "s": 136,
+   "o": "_Old layouts/The Temple of Purgation (old, 156 sqT).png",
+   "ot": "_thumbs/_Old layouts/The Temple of Purgation (old, 156 sqT).webp",
+   "w": 2110,
+   "h": 2414,
+   "ow": 2048,
+   "oh": 2048
+  },
+  {
+   "n": "Badham Preschool I",
+   "ru": "Детский сад Бэдхем I",
+   "b": "Badham Preschool",
+   "v": 1,
+   "r": "Springwood",
+   "f": "Springwood/Badham Preschool I.jpg",
+   "t": "_thumbs/Springwood/Badham Preschool I.webp",
+   "a": [
+    "бадхем",
+    "бэтхам",
+    "бэдхэм",
+    "садик",
+    "детский сад",
+    "badham",
+    "bp"
+   ],
+   "k": "tiles",
+   "s": 144,
+   "w": 1792,
+   "h": 1792
+  },
+  {
+   "n": "Badham Preschool II",
+   "ru": "Детский сад Бэдхем II",
+   "b": "Badham Preschool",
+   "v": 2,
+   "r": "Springwood",
+   "f": "Springwood/Badham Preschool II.png",
+   "t": "_thumbs/Springwood/Badham Preschool II.webp",
+   "a": [
+    "бадхем",
+    "бэтхам",
+    "бэдхэм",
+    "садик",
+    "детский сад",
+    "badham",
+    "bp"
+   ],
+   "k": "outline",
+   "s": 144,
+   "w": 2132,
+   "h": 2332
+  },
+  {
+   "n": "Badham Preschool III",
+   "ru": "Детский сад Бэдхем III",
+   "b": "Badham Preschool",
+   "v": 3,
+   "r": "Springwood",
+   "f": "Springwood/Badham Preschool III.jpg",
+   "t": "_thumbs/Springwood/Badham Preschool III.webp",
+   "a": [
+    "бадхем",
+    "бэтхам",
+    "бэдхэм",
+    "садик",
+    "детский сад",
+    "badham",
+    "bp"
+   ],
+   "k": "tiles",
+   "s": 144,
+   "w": 1792,
+   "h": 1792
+  },
+  {
+   "n": "Badham Preschool IV",
+   "ru": "Детский сад Бэдхем IV",
+   "b": "Badham Preschool",
+   "v": 4,
+   "r": "Springwood",
+   "f": "Springwood/Badham Preschool IV.png",
+   "t": "_thumbs/Springwood/Badham Preschool IV.webp",
+   "a": [
+    "бадхем",
+    "бэтхам",
+    "бэдхэм",
+    "садик",
+    "детский сад",
+    "badham",
+    "bp"
+   ],
+   "k": "outline",
+   "s": 140,
+   "w": 1548,
+   "h": 2454
+  },
+  {
+   "n": "Badham Preschool V",
+   "ru": "Детский сад Бэдхем V",
+   "b": "Badham Preschool",
+   "v": 5,
+   "r": "Springwood",
+   "f": "Springwood/Badham Preschool V.png",
+   "t": "_thumbs/Springwood/Badham Preschool V.webp",
+   "a": [
+    "бадхем",
+    "бэтхам",
+    "бэдхэм",
+    "садик",
+    "детский сад",
+    "badham",
+    "bp"
+   ],
+   "k": "outline",
+   "s": 148,
+   "w": 2156,
+   "h": 2044
+  },
+  {
+   "n": "The Game",
+   "ru": "Игра",
+   "b": "The Game",
+   "v": 0,
+   "r": "Gideon Meat Plant",
+   "f": "Gideon Meat Plant/The Game.jpg",
+   "t": "_thumbs/Gideon Meat Plant/The Game.webp",
+   "a": [
+    "гейм",
+    "игра",
+    "гидеон",
+    "game"
+   ],
+   "k": "tiles",
+   "s": 142,
+   "w": 1408,
+   "h": 2688
+  },
+  {
+   "n": "Family Residence I",
+   "ru": "Семейная резиденция I",
+   "b": "Family Residence",
+   "v": 1,
+   "r": "Yamaoka Estate",
+   "f": "Yamaoka Estate/Family Residence I.jpg",
+   "t": "_thumbs/Yamaoka Estate/Family Residence I.webp",
+   "a": [
+    "фэмили",
+    "резиденция",
+    "семейная резиденция",
+    "fr"
+   ],
+   "k": "tiles",
+   "s": 156,
+   "w": 1792,
+   "h": 2304
+  },
+  {
+   "n": "Family Residence II",
+   "ru": "Семейная резиденция II",
+   "b": "Family Residence",
+   "v": 2,
+   "r": "Yamaoka Estate",
+   "f": "Yamaoka Estate/Family Residence II.png",
+   "t": "_thumbs/Yamaoka Estate/Family Residence II.webp",
+   "a": [
+    "фэмили",
+    "резиденция",
+    "семейная резиденция",
+    "fr"
+   ],
+   "k": "outline",
+   "s": 156,
+   "w": 1562,
+   "h": 2298
+  },
+  {
+   "n": "Sanctum of Wrath I",
+   "ru": "Прибежище гнева I",
+   "b": "Sanctum of Wrath",
+   "v": 1,
+   "r": "Yamaoka Estate",
+   "f": "Yamaoka Estate/Sanctum of Wrath I.png",
+   "t": "_thumbs/Yamaoka Estate/Sanctum of Wrath I.webp",
+   "a": [
+    "санктум",
+    "святилище",
+    "святилище гнева",
+    "sow"
+   ],
+   "k": "outline",
+   "s": 156,
+   "w": 2082,
+   "h": 2366
+  },
+  {
+   "n": "Sanctum of Wrath II",
+   "ru": "Прибежище гнева II",
+   "b": "Sanctum of Wrath",
+   "v": 2,
+   "r": "Yamaoka Estate",
+   "f": "Yamaoka Estate/Sanctum of Wrath II.png",
+   "t": "_thumbs/Yamaoka Estate/Sanctum of Wrath II.webp",
+   "a": [
+    "санктум",
+    "святилище",
+    "святилище гнева",
+    "sow"
+   ],
+   "k": "outline",
+   "s": 148,
+   "w": 1852,
+   "h": 2134
+  },
+  {
+   "n": "Mount Ormond Resort I",
+   "ru": "Курорт «Гора Ормонд» I",
+   "b": "Mount Ormond Resort",
+   "v": 1,
+   "r": "Ormond",
+   "f": "Ormond/Mount Ormond Resort I.jpg",
+   "t": "_thumbs/Ormond/Mount Ormond Resort I.webp",
+   "a": [
+    "ормонд",
+    "курорт",
+    "mor"
+   ],
+   "k": "tiles",
+   "s": 156,
+   "w": 2048,
+   "h": 2048
+  },
+  {
+   "n": "Mount Ormond Resort II",
+   "ru": "Курорт «Гора Ормонд» II",
+   "b": "Mount Ormond Resort",
+   "v": 2,
+   "r": "Ormond",
+   "f": "Ormond/Mount Ormond Resort II.png",
+   "t": "_thumbs/Ormond/Mount Ormond Resort II.webp",
+   "a": [
+    "ормонд",
+    "курорт",
+    "mor"
+   ],
+   "k": "outline",
+   "s": 160,
+   "w": 1562,
+   "h": 2300
+  },
+  {
+   "n": "Mount Ormond Resort III",
+   "ru": "Курорт «Гора Ормонд» III",
+   "b": "Mount Ormond Resort",
+   "v": 3,
+   "r": "Ormond",
+   "f": "Ormond/Mount Ormond Resort III.png",
+   "t": "_thumbs/Ormond/Mount Ormond Resort III.webp",
+   "a": [
+    "ормонд",
+    "курорт",
+    "mor"
+   ],
+   "k": "outline",
+   "s": 156,
+   "w": 1960,
+   "h": 2236
+  },
+  {
+   "n": "Ormond Lake Mine",
+   "ru": "Шахта у озера Ормонд",
+   "b": "Ormond Lake Mine",
+   "v": 0,
+   "r": "Ormond",
+   "f": "Ormond/Ormond Lake Mine.png",
+   "t": "_thumbs/Ormond/Ormond Lake Mine.webp",
+   "a": [
+    "шахта",
+    "лейк майн",
+    "озеро",
+    "olm",
+    "mine"
+   ],
+   "k": "outline",
+   "s": 132,
+   "w": 1906,
+   "h": 2186
+  },
+  {
+   "n": "The Underground Complex",
+   "ru": "Подземный комплекс",
+   "b": "The Underground Complex",
+   "v": 0,
+   "r": "Hawkins National Laboratory",
+   "f": "Hawkins National Laboratory/The Underground Complex.png",
+   "t": "_thumbs/Hawkins National Laboratory/The Underground Complex.webp",
+   "a": [
+    "хоукинс",
+    "лаба",
+    "лаборатория",
+    "hawkins",
+    "uc"
+   ],
+   "k": "outline",
+   "s": 138,
+   "w": 1618,
+   "h": 2016
+  },
+  {
+   "n": "Dead Dawg Saloon",
+   "ru": "Салун «Мертвяк вусмерть»",
+   "b": "Dead Dawg Saloon",
+   "v": 0,
+   "r": "Grave of Glenvale",
+   "f": "Grave of Glenvale/Dead Dawg Saloon.png",
+   "t": "_thumbs/Grave of Glenvale/Dead Dawg Saloon.webp",
+   "a": [
+    "салун",
+    "дед дог",
+    "дэд дог",
+    "dds",
+    "saloon"
+   ],
+   "k": "tiles",
+   "s": 136,
+   "w": 1792,
+   "h": 1792
+  },
+  {
+   "n": "Midwich Elementary School (RU room names)",
+   "ru": "Начальная школа Мидвич (русские комнаты)",
+   "b": "Midwich Elementary School (RU room names)",
+   "v": 0,
+   "r": "Silent Hill",
+   "f": "Silent Hill/Midwich Elementary School (RU room names).jpg",
+   "t": "_thumbs/Silent Hill/Midwich Elementary School (RU room names).webp",
+   "a": [
+    "мидвич",
+    "школа",
+    "midwich",
+    "русский"
+   ],
+   "k": "ru",
+   "w": 1792,
+   "h": 1792
+  },
+  {
+   "n": "Midwich Elementary School",
+   "ru": "Начальная школа Мидвич",
+   "b": "Midwich Elementary School",
+   "v": 0,
+   "r": "Silent Hill",
+   "f": "Silent Hill/Midwich Elementary School.jpg",
+   "t": "_thumbs/Silent Hill/Midwich Elementary School.webp",
+   "a": [
+    "мидвич",
+    "школа",
+    "сайлент хилл",
+    "midwich"
+   ],
+   "k": "tiles",
+   "s": 113.5,
+   "w": 1920,
+   "h": 4096
+  },
+  {
+   "n": "Raccoon City Police Station East Wing",
+   "ru": "Полицейский участок Раккун-Сити: восточное крыло",
+   "b": "Raccoon City Police Station East Wing",
+   "v": 0,
+   "r": "Raccoon City",
+   "f": "Raccoon City/Raccoon City Police Station East Wing.jpg",
+   "t": "_thumbs/Raccoon City/Raccoon City Police Station East Wing.webp",
+   "a": [
+    "рпд",
+    "rpd",
+    "ракун",
+    "полиция",
+    "восток",
+    "ист",
+    "east"
+   ],
+   "k": "tiles",
+   "w": 2816,
+   "h": 3264
+  },
+  {
+   "n": "Raccoon City Police Station West Wing",
+   "ru": "Полицейский участок Раккун-Сити: западное крыло",
+   "b": "Raccoon City Police Station West Wing",
+   "v": 0,
+   "r": "Raccoon City",
+   "f": "Raccoon City/Raccoon City Police Station West Wing.jpg",
+   "t": "_thumbs/Raccoon City/Raccoon City Police Station West Wing.webp",
+   "a": [
+    "рпд",
+    "rpd",
+    "ракун",
+    "полиция",
+    "запад",
+    "вест",
+    "west"
+   ],
+   "k": "tiles",
+   "w": 2816,
+   "h": 3264
+  },
+  {
+   "n": "Dead Sands",
+   "ru": "Бесплодные пески",
+   "b": "Dead Sands",
+   "v": 0,
+   "r": "Forsaken Boneyard",
+   "f": "Forsaken Boneyard/Dead Sands.png",
+   "t": "_thumbs/Forsaken Boneyard/Dead Sands.webp",
+   "a": [
+    "дед сэндс",
+    "пески",
+    "мертвые пески",
+    "ds"
+   ],
+   "k": "outline",
+   "s": 140,
+   "w": 2052,
+   "h": 2068
+  },
+  {
+   "n": "Eyrie of Crows",
+   "ru": "Воронье гнездовье",
+   "b": "Eyrie of Crows",
+   "v": 0,
+   "r": "Forsaken Boneyard",
+   "f": "Forsaken Boneyard/Eyrie of Crows.jpg",
+   "t": "_thumbs/Forsaken Boneyard/Eyrie of Crows.webp",
+   "a": [
+    "гнездо",
+    "воронье гнездо",
+    "эйри",
+    "айри",
+    "eoc"
+   ],
+   "k": "tiles",
+   "s": 148,
+   "w": 2048,
+   "h": 1792
+  },
+  {
+   "n": "Fallen Refuge",
+   "ru": "Павший приют",
+   "b": "Fallen Refuge",
+   "v": 0,
+   "r": "Withered Isle",
+   "f": "Withered Isle/Fallen Refuge.png",
+   "t": "_thumbs/Withered Isle/Fallen Refuge.webp",
+   "a": [
+    "фоллен",
+    "убежище",
+    "рефьюдж",
+    "fr"
+   ],
+   "k": "outline",
+   "s": 128,
+   "w": 1572,
+   "h": 1968
+  },
+  {
+   "n": "Freddy Fazbear's Pizza",
+   "ru": "Пиццерия Фредди Фазбера",
+   "b": "Freddy Fazbear's Pizza",
+   "v": 0,
+   "r": "Withered Isle",
+   "f": "Withered Isle/Freddy Fazbear's Pizza.png",
+   "t": "_thumbs/Withered Isle/Freddy Fazbear's Pizza.webp",
+   "a": [
+    "фредди",
+    "пицца",
+    "фнаф",
+    "fnaf",
+    "ffp"
+   ],
+   "k": "outline",
+   "s": 148,
+   "w": 2126,
+   "h": 2086
+  },
+  {
+   "n": "Garden of Joy",
+   "ru": "Сад счастья",
+   "b": "Garden of Joy",
+   "v": 0,
+   "r": "Withered Isle",
+   "f": "Withered Isle/Garden of Joy.jpg",
+   "t": "_thumbs/Withered Isle/Garden of Joy.webp",
+   "a": [
+    "сад",
+    "сад радости",
+    "гарден",
+    "goj"
+   ],
+   "k": "tiles",
+   "s": 164,
+   "w": 2048,
+   "h": 1792
+  },
+  {
+   "n": "Greenville Square",
+   "ru": "Площадь Гринвилла",
+   "b": "Greenville Square",
+   "v": 0,
+   "r": "Withered Isle",
+   "f": "Withered Isle/Greenville Square.png",
+   "t": "_thumbs/Withered Isle/Greenville Square.webp",
+   "a": [
+    "гринвилл",
+    "гринвиль",
+    "площадь",
+    "gs"
+   ],
+   "k": "outline",
+   "s": 160,
+   "w": 1460,
+   "h": 2364
+  },
+  {
+   "n": "Forgotten Ruins",
+   "ru": "Забытые руины",
+   "b": "Forgotten Ruins",
+   "v": 0,
+   "r": "The Decimated Borgo",
+   "f": "The Decimated Borgo/Forgotten Ruins.png",
+   "t": "_thumbs/The Decimated Borgo/Forgotten Ruins.webp",
+   "a": [
+    "форготтен",
+    "руины",
+    "забытые руины",
+    "подземелье",
+    "fr"
+   ],
+   "k": "outline",
+   "s": 132,
+   "w": 2026,
+   "h": 2304
+  },
+  {
+   "n": "The Shattered Square",
+   "ru": "Разрушенная площадь",
+   "b": "The Shattered Square",
+   "v": 0,
+   "r": "The Decimated Borgo",
+   "f": "The Decimated Borgo/The Shattered Square.png",
+   "t": "_thumbs/The Decimated Borgo/The Shattered Square.webp",
+   "a": [
+    "шаттеред",
+    "разрушенная площадь",
+    "площадь",
+    "ss"
+   ],
+   "k": "tiles",
+   "s": 144,
+   "w": 1792,
+   "h": 1792
+  },
+  {
+   "n": "Nostromo Wreckage",
+   "ru": "Крушение «Ностромо»",
+   "b": "Nostromo Wreckage",
+   "v": 0,
+   "r": "Dvarka Deepwood",
+   "f": "Dvarka Deepwood/Nostromo Wreckage.png",
+   "t": "_thumbs/Dvarka Deepwood/Nostromo Wreckage.webp",
+   "a": [
+    "ностромо",
+    "чужой",
+    "alien",
+    "nw"
+   ],
+   "k": "outline",
+   "s": 152,
+   "o": "_Old layouts/Nostromo Wreckage (old, 134 sqT).jpg",
+   "ot": "_thumbs/_Old layouts/Nostromo Wreckage (old, 134 sqT).webp",
+   "w": 1680,
+   "h": 2370,
+   "ow": 1792,
+   "oh": 1792
+  },
+  {
+   "n": "Toba Landing",
+   "ru": "Площадка Тоба",
+   "b": "Toba Landing",
+   "v": 0,
+   "r": "Dvarka Deepwood",
+   "f": "Dvarka Deepwood/Toba Landing.png",
+   "t": "_thumbs/Dvarka Deepwood/Toba Landing.webp",
+   "a": [
+    "тоба",
+    "toba",
+    "tl"
+   ],
+   "k": "outline",
+   "s": 136,
+   "o": "_Old layouts/Toba Landing (old, 130 sqT).jpg",
+   "ot": "_thumbs/_Old layouts/Toba Landing (old, 130 sqT).webp",
+   "w": 1980,
+   "h": 2020,
+   "ow": 2048,
+   "oh": 1792
+  },
+  {
+   "n": "Trickster's Delusion",
+   "ru": "Морок Трюкача",
+   "b": "Trickster's Delusion",
+   "v": 0,
+   "r": "Sleepless District",
+   "f": "Sleepless District/Trickster's Delusion.png",
+   "t": "_thumbs/Sleepless District/Trickster's Delusion.webp",
+   "a": [
+    "трикстер",
+    "сеул",
+    "клуб",
+    "td"
+   ],
+   "k": "outline",
+   "w": 1998,
+   "h": 2212
+  }
+ ],
+ "realms": [
+  {
+   "n": "The MacMillan Estate",
+   "ru": "Поместье МакМиллан",
+   "a": [
+    "макмилан",
+    "макмиллан",
+    "mcmillan",
+    "macmillan"
+   ]
+  },
+  {
+   "n": "Autohaven Wreckers",
+   "ru": "Свалка Автохевен",
+   "a": [
+    "автохевен",
+    "автохейвен",
+    "свалка",
+    "autohaven"
+   ]
+  },
+  {
+   "n": "Coldwind Farm",
+   "ru": "Ферма Колдвинд",
+   "a": [
+    "колдвин",
+    "ферма",
+    "coldwind"
+   ]
+  },
+  {
+   "n": "Crotus Prenn Asylum",
+   "ru": "Психлечебница Кротус Пренн",
+   "a": [
+    "кротус",
+    "психушка",
+    "лечебница",
+    "asylum"
+   ]
+  },
+  {
+   "n": "Haddonfield",
+   "ru": "Хэддонфилд",
+   "a": [
+    "хэддонфилд",
+    "хеддонфилд",
+    "майерс",
+    "myers"
+   ]
+  },
+  {
+   "n": "Backwater Swamp",
+   "ru": "Гнилое болото",
+   "a": [
+    "болото",
+    "swamp"
+   ]
+  },
+  {
+   "n": "Lery's Memorial Institute",
+   "ru": "Мемориальный институт Лэри",
+   "a": [
+    "лэри",
+    "лери",
+    "lery",
+    "lerys"
+   ]
+  },
+  {
+   "n": "Red Forest",
+   "ru": "Красный лес",
+   "a": [
+    "красный лес",
+    "лес",
+    "red forest"
+   ]
+  },
+  {
+   "n": "Springwood",
+   "ru": "Спрингвуд",
+   "a": [
+    "спрингвуд",
+    "бэтхам",
+    "бадхем",
+    "бэдхэм",
+    "фредди крюгер"
+   ]
+  },
+  {
+   "n": "Gideon Meat Plant",
+   "ru": "Мясокомбинат «Гидеон»",
+   "a": [
+    "гидеон",
+    "мясокомбинат",
+    "gideon"
+   ]
+  },
+  {
+   "n": "Yamaoka Estate",
+   "ru": "Поместье Ямаоки",
+   "a": [
+    "ямаока",
+    "ямаоки",
+    "yamaoka"
+   ]
+  },
+  {
+   "n": "Ormond",
+   "ru": "Ормонд",
+   "a": [
+    "ормонд",
+    "ormond"
+   ]
+  },
+  {
+   "n": "Hawkins National Laboratory",
+   "ru": "Национальная лаборатория Хоукинса",
+   "a": [
+    "хоукинс",
+    "лаба",
+    "лаборатория",
+    "hawkins",
+    "lab"
+   ]
+  },
+  {
+   "n": "Grave of Glenvale",
+   "ru": "Могила в Гленвейле",
+   "a": [
+    "гленвейл",
+    "салун",
+    "glenvale"
+   ]
+  },
+  {
+   "n": "Silent Hill",
+   "ru": "Сайлент Хилл",
+   "a": [
+    "сайлент хилл",
+    "silent hill",
+    "сх"
+   ]
+  },
+  {
+   "n": "Raccoon City",
+   "ru": "Раккун-Сити",
+   "a": [
+    "ракун",
+    "ракун сити",
+    "rpd",
+    "рпд",
+    "racoon"
+   ]
+  },
+  {
+   "n": "Forsaken Boneyard",
+   "ru": "Заброшенное кладбище",
+   "a": [
+    "гнездо",
+    "кладбище",
+    "boneyard"
+   ]
+  },
+  {
+   "n": "Withered Isle",
+   "ru": "Зачахший остров",
+   "a": [
+    "острова",
+    "остров",
+    "withered"
+   ]
+  },
+  {
+   "n": "The Decimated Borgo",
+   "ru": "Разоренная деревушка-борго",
+   "a": [
+    "борго",
+    "borgo"
+   ]
+  },
+  {
+   "n": "Dvarka Deepwood",
+   "ru": "Заросли Дварки",
+   "a": [
+    "дварка",
+    "dvarka"
+   ]
+  },
+  {
+   "n": "Sleepless District",
+   "ru": "Бессонный район",
+   "a": [
+    "трикстер",
+    "sleepless",
+    "сеул"
+   ]
+  }
+ ]
+}

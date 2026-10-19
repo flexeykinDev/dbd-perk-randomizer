@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Dices, ArrowLeft } from "lucide-react";
 import { useT } from "@/lib/i18n";
 import { useIsObsMode } from "@/lib/use-obs-mode";
+import { ClockLink } from "./clock-link";
 import { ThemeToggle } from "./theme-toggle";
 import { LanguageToggle } from "./language-toggle";
 
@@ -39,6 +40,7 @@ export function Nav() {
             <ArrowLeft className="size-3.5" />
             {t({ ru: "Vortex Hub", en: "Vortex Hub" })}
           </a>
+          <ClockLink />
           <LanguageToggle />
           <ThemeToggle />
         </div>

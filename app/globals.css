@@ -270,6 +270,47 @@
   }
 }
 
+/* The "new tool" shine on the nav's Clock link.
+ *
+ * One sweep of light across the pill, three times, then it stops. A loop that
+ * never ends stops being a signpost and becomes a thing to ignore, and the
+ * badge already persists — the point is to catch the eye once, not to keep
+ * asking.
+ *
+ * The dot is the part that stays, because it survives the animation ending and
+ * is the only cue left for someone who arrived mid-sweep. */
+@keyframes clock-shine {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(300%); }
+}
+
+@keyframes clock-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.55; transform: scale(0.82); }
+}
+
+.clock-shine {
+  background: linear-gradient(
+    100deg,
+    transparent 20%,
+    color-mix(in srgb, var(--accent) 38%, transparent) 50%,
+    transparent 80%
+  );
+  animation: clock-shine 1.9s ease-in-out 3;
+}
+
+.clock-dot {
+  animation: clock-dot 2.4s ease-in-out infinite;
+}
+
+/* The badge is information; the movement is decoration. Reduced motion keeps
+   the dot and drops both animations, so the link still says "new" without
+   anything sweeping across it. */
+@media (prefers-reduced-motion: reduce) {
+  .clock-shine { display: none; }
+  .clock-dot { animation: none; }
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-surface: var(--surface);
