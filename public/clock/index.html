@@ -112,6 +112,18 @@ input[type="search"]::-webkit-search-cancel-button, input[type="search"]::-webki
   transition: border-color .2s, transform .12s var(--ease-out), background .2s; }
 .iconbtn:hover { border-color: color-mix(in srgb, var(--accent) 55%, var(--border)); }
 .iconbtn:active { transform: scale(.95); }
+/* Way back to the randomizer. This page is reached from the site's nav but
+   is a standalone document under public/, so it inherits none of the app's
+   chrome — without this there was no exit at all except the browser's own
+   back button, which does not exist for anyone who opened it in a new tab.
+   Relative "../" rather than an absolute path, so it lands correctly both at
+   /clock/ in dev and under the /dbd-perk-randomizer/ base path on Pages. */
+.backbtn { color: var(--muted); text-decoration: none; flex: none; }
+.backbtn:hover { color: var(--text); }
+.backbtn svg { width: 16px; height: 16px; }
+/* Below ~720px the search field needs every pixel it can get, so the label
+   drops and the arrow alone carries it. The accessible name stays either way. */
+@media (max-width: 720px) { .backbtn .lbl { display: none; } .backbtn { padding: 0 10px; } }
 #setBtn svg { transition: transform .5s var(--ease-out); }
 #setBtn.on svg { transform: rotate(60deg); }
 
@@ -338,6 +350,10 @@ main { max-width: 1400px; margin: 0 auto; padding: 8px 16px 80px; position: rela
 
 <header id="hdr">
   <div class="bar">
+    <a class="iconbtn backbtn" href="../" title="Назад к рандомайзеру перков" aria-label="Назад к рандомайзеру перков">
+      <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
+      <span class="lbl">Рандомайзер</span>
+    </a>
     <div class="logo">
       <div class="mark"><svg viewBox="0 0 24 24"><path class="hand" d="M12 12V5.5"/><path d="M12 12l3.5 2"/></svg></div>
       <div>DBD Callouts<small id="count"></small></div>
