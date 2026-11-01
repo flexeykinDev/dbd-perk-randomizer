@@ -14,7 +14,7 @@ import { EmbedView } from "@/components/dbd/embed-view";
 import { StreamView } from "@/components/dbd/stream-view";
 import { registerServiceWorker } from "@/lib/register-sw";
 import { printConsoleBranding } from "@/lib/console-branding";
-import trailer from "@/data/trailer.json";
+import { currentTrailer } from "@/lib/trailer";
 
 export function RandomizerContent() {
   const t = useT();
@@ -36,6 +36,10 @@ export function RandomizerContent() {
     lang === "ru" ? "ru-RU" : "en-US",
     { year: "numeric", month: "long", day: "numeric" },
   );
+
+  // Resolved per render rather than once at import, so a tab left open
+  // across midnight picks up the new chapter's trailer on its next render.
+  const trailer = currentTrailer();
 
   if (isObsMode) return <ObsOverlay />;
   if (isEmbedMode) return <EmbedView />;
@@ -92,6 +96,7 @@ export function RandomizerContent() {
        * It is still here, still collapsible, still remembers being hidden —
        * it just comes after the thing the page is for. */}
       <div className="mt-6 w-full">
+        {/* Picked by date, so release morning swaps it with no deploy. */}
         <VideoEmbed src={trailer.embedUrl} title={trailer.title} />
       </div>
     </div>

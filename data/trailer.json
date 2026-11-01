@@ -1,4 +1,10 @@
 {
+  "_comment": "The chapter trailer under the board. `next` is the one that takes over on its availableFrom, so the site swaps itself on release day without a deploy - same clock as the perks and add-ons (lib/availability.ts). Hand-maintained: there is no trailer scraper. When `next` has gone live, fold it into the top level and write the following chapter into `next`.",
   "title": "Dead by Daylight | Chorus of Sin | Story Trailer",
-  "embedUrl": "https://www.youtube.com/embed/lkXRCkj62ZE"
+  "embedUrl": "https://www.youtube.com/embed/lkXRCkj62ZE",
+  "next": {
+    "title": "Dead by Daylight | Terrifier | Teaser",
+    "embedUrl": "https://www.youtube.com/embed/rsDR9xaPIJE",
+    "availableFrom": "2026-11-24"
+  }
 }

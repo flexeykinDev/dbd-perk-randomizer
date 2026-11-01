@@ -104,3 +104,26 @@ test("a scheduled character is wholly scheduled, never half", () => {
   const split = [...byCharacter].filter(([, dates]) => dates.size > 1).map(([c]) => c);
   assert.deepEqual(split, [], `characters with some content live and some not: ${split}`);
 });
+
+/* The trailer follows the same clock. Worth its own check because it is the
+ * one piece of chapter content that is hand-written rather than scraped, so
+ * nothing else would catch a typo in the date or a missing embed. */
+import { currentTrailer } from "./trailer";
+
+test("the trailer swaps itself on release day", () => {
+  const before = currentTrailer(new Date("2026-11-23T12:00:00Z"));
+  const after = currentTrailer(new Date("2026-11-24T12:00:00Z"));
+  for (const trailer of [before, after]) {
+    assert.match(trailer.embedUrl, /^https:\/\/www\.youtube\.com\/embed\/[\w-]{11}$/, trailer.embedUrl);
+    assert.ok(trailer.title.length > 0);
+  }
+  // Only meaningful while a next one is pending; once it has gone live and
+  // been folded into the top level these are equal, which is correct too.
+  const file = JSON.parse(
+    readFileSync(join(dataDir, "trailer.json"), "utf8"),
+  ) as { next?: { availableFrom?: string; embedUrl: string } };
+  if (file.next && !isAvailable(file.next)) {
+    assert.notEqual(before.embedUrl, after.embedUrl, "a pending trailer that never takes over");
+    assert.equal(after.embedUrl, file.next.embedUrl);
+  }
+});
