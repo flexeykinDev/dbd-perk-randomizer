@@ -11,6 +11,10 @@
     "description": "A sturdy but heavy Flashlight that packs a lot of power. Press the Use Item button to light the Flashlight for up to 12 seconds. Has an increased Beam brightness of +30 %. Has an increased Blindness duration of +15 %. Has a reduced Aim accuracy of -20 %.",
     "descriptionRuRaw": "Длительность использования фонарика можно увеличить с помощью различных улучшений. Можно встретить как в сундуках, так и в кровавой паутине стоимостью 6000 очков крови. Можно использовать сидя или при беге. Позволяет уничтожить несколько ловушек-фантомов, установленных Ведьмой на земле или полу сооружения, до полной разрядки. Если направить луч фонарика в сторону ловушки Ведьмы, ее аура становится видимой для всех, кто находится поблизости. Если направить луч фонарика в сторону ловушки Ведьмы, ее аура становится видимой для всех, кто находится поблизости. Можно использовать для ослепления убийцы без каких-либо улучшений эффективности предмета. Не действует на ворон и не рассеивает густой туман. Луч фонарика расширяется после удачного ослепления убийцы. Можно использовать для привлечения внимания и \"общения\" (щелчками) с другими игроками."
   },
+  "item:will-o-wisp": {
+    "description": "A Flashlight equipped with a special lens cover that adds an orange tint and a little Ghost to the beam. Press the Use Item button to light the Flashlight for up to 8 seconds. Causes more friendly Ghosts in your life. The Will O' Wisp is only available during Halloween Events. \"Happy Trick or Treating!\"",
+    "descriptionRuRaw": "Длительность использования фонарика можно увеличить с помощью различных улучшений. Можно использовать сидя или при беге. Позволяет уничтожить ловушку-фантом, установленную Ведьмой на земле или полу сооружения Если направить луч фонарика в сторону ловушки Ведьмы, ее аура становится видимой для всех, кто находится поблизости. Если направить луч фонарика в сторону ловушки Ведьмы, ее аура становится видимой для всех, кто находится поблизости. Не действует на ворон и не рассеивает густой туман. Луч фонарика расширяется после удачного ослепления убийцы. Можно использовать для привлечения внимания и \"общения\" (щелчками) с другими игроками."
+  },
   "item:apprentice-s-fog-vial": {
     "description": "\"Made by the hands of a diligent but timid novice.\" Start the Trial with 4 Charges.Press the Use Item button to release a concentrated Fog Cloud: Expands to a maximum size of 8 metres over 2 seconds. Lasts for 8 seconds. Obscures visibility and sounds within its Area of Effect: Has an opacity of 33 %. Suppresses Auras and Scratch Marks. Apprentice's Fog Vial takes 70 seconds to recharge after use.",
     "descriptionRuRaw": "В радиусе действия уменьшает видимость на 33%. После использования всех зарядов предмет не выбрасывается."
@@ -66,6 +70,10 @@
   "item:ranger-med-kit": {
     "description": "A large metal box containing medical supplies aimed at emergency rescues in hard to reach, often isolated locations.Can be used to heal other Survivors: Increased Altruistic Healing speed of +50 %. Unlocks the Self-Heal action: Reduced Personal Healing speed of -33 %. Reduced Item efficiency of -33 %. The Ranger Med-Kit has a Capacity of 24 Charges. \"A small engraved label can be found glued to the back panel: VK.ID-3994723.\"",
     "descriptionRuRaw": "Количество зарядов аптечки можно увеличить с помощью различных улучшений. Без специальных умений или улучшений данной аптечки хватает на 2 полных самолечения. При самолечении данный предмет нельзя использовать сидя или в движении. Очень редко встречается как в сундуках, так и в кровавой паутине стоимостью 6000 очков крови. Во время использования предмета может неоднократно появляться проверка реакции."
+  },
+  "item:all-hallows-eve-lunchbox": {
+    "description": "A plastic lunchbox with phosphorescent Halloween Stickers that has been packed with First-Aid equipment. Makes you considerably more visible. Can be used to heal other Survivors: Increased Altruistic Healing speed of +40 %. Unlocks the Self-Heal action: Reduced Personal Healing speed of -33 %. Reduced Item efficiency of -33 %. The All Hallows' Eve Lunchbox has a Capacity of 24 Charges. The All Hallows' Eve Lunchbox is only available during Halloween Events. \"Safety first! Make sure you can be seen when trick or treating.\"",
+    "descriptionRuRaw": "Количество зарядов аптечки можно увеличить с помощью различных улучшений. Без специальных умений и улучшений данной аптечки хватает на 100% полного исцеления. При самолечении данный предмет нельзя использовать сидя или в движении. Во время использования предмета может неоднократно появляться проверка реакции."
   },
   "item:worn-out-tools": {
     "description": "A metal box containing out of condition tools that could break at any moment.Even without training, can be used to repair or break various mechanical components. 16 Charges. Increases the Repair speed by +50 %. Reduces the Success zone of Good Skill Checks by -10 %. Unlocks the Sabotage action. \"You call these tools? ... Really?\"",
@@ -1983,6 +1991,86 @@
     "description": "A psychedelic moss that grows on tree barks in the Upside Down. After traversing the Upside Down, the following effects apply: Extends the Undetectable Status Effect gained after emerging from a Portal by +8 seconds to 13 seconds. Suppresses all noises related to emerging from a Portal. Increases the time required to emerge from a Portal by +15 %. \"Consuming its leaf enhances athletic performance and causes euphoria.\" — Hawkins National Laboratory",
     "descriptionRuRaw": "Галлюциногенный мох, растущий на коре деревьев Изнанки. Увеличивает время выхода из портала на 15% Продлевает действие эффекта \"Незаметность\", который накладывается после выхода из портала, на 8 сек. Выход из порталов становится бесшумным. \"Незаметность\" скрывает ауру, радиус террора и красное свечение убийцы \"Употребление расширяет физические возможности и вызывает эйфорию\" - Национальная лаборатория Хоукинса."
   },
+  "addon:bent-wheel": {
+    "description": "\"All that remained of the victim's wheelchair after the fatal blow.\" Increases the Jump Scare targetting range by +4 metres.",
+    "descriptionRuRaw": "Все, что осталось от кресла-каталки жертвы после фатального удара. Увеличивает расстояние, на котором вы можете применить пугалку, на 4 м."
+  },
+  "addon:garden-claw": {
+    "description": "\"Good for digging up weeds and digging into human flesh.\" Increases the duration of Killer Instinct after a Jump Scare by +2 seconds.",
+    "descriptionRuRaw": "Одинаково хорошо позволяет вспахать землю и вспороть человеческую плоть. Продлевает действие инстинкта убийцы после пугалки на 2 сек."
+  },
+  "addon:knitting-needle": {
+    "description": "\"You won't believe what—and who—this thing has been through.\" Increases the time it takes for Survivors to remove an impaled Hook Spike from themselves by +20 %.",
+    "descriptionRuRaw": "Вы просто не поверите, через что — и через кого — проходила эта штуковина. Увеличивает срок, необходимый раненым пронзенным выжившим, чтобы самостоятельно извлечь из себя шип, на 20%."
+  },
+  "addon:orderly-s-shoe": {
+    "description": "\"It hung from her twitching foot as the knife plunged into her belly.\" Increases the duration of the Haste Status Effect after a Jump Scare by +5 seconds.",
+    "descriptionRuRaw": "Она свисала с дергающейся ноги, когда нож вонзался в живот жертвы. Продлевает \"Спешку\" после использования пугалки на 5 сек. \"Спешка\" повышает скорость передвижения убийцы."
+  },
+  "addon:bloody-smile": {
+    "description": "\"He wasn't happy after his face was smashed into a tree.\" Increase the detection ranges of Jump Scare and Omnipresent Evil by +4 metres.",
+    "descriptionRuRaw": "Он был совсем не рад, когда его приложили лицом о дерево. Увеличивает дальность действия пугалки и радиус обнаружения выживших в режиме \"Вездесущее зло\" на 4 м."
+  },
+  "addon:coroner-s-coffee": {
+    "description": "\"A cup of coffee that went unfinished.\" Increases the duration of Throwing Spike's push by +25 %. Gain +13 % Haste Status Effect for 3 seconds after injuring a Survivor with a Throwing Spike if they do not collide with the environment during the push.",
+    "descriptionRuRaw": "Чашка кофе, оставшегося недопитым. Увеличивает дистанцию, на которую выжившие отбрасываются железками, на 25%. Вы получаете 8% \"Спешки\" на 3 сек., когда раните выжившего железкой. \"Спешка\" повышает скорость передвижения убийцы."
+  },
+  "addon:party-noisemaker": {
+    "description": "\"A party instument that tore through a woman's eyeball and gouged her brain.\" Breaking a Pallet or a Breakable Wall with Jump Scare reveals all Survivors further than 28 metres for 6 seconds.",
+    "descriptionRuRaw": "Игрушка для вечеринки, пробившая одной женщине глаз и вошедшая в ее мозг. Ломая доски или разрушаемые стены с помощью пугалки, вы начинаете видеть ауры выживших дальше 32 м от вас в течение 6 сек[5]."
+  },
+  "addon:sleeping-bag": {
+    "description": "\"An absolutely awful place to hide from a killer.\" After grabbing a Hook Spike while in Omnipresent Evil, Survivors who are within 10 metres of any Hook have their location revealed for 5 seconds.",
+    "descriptionRuRaw": "Абсолютно не подходящее место для того, чтобы спрятаться от убийцы. Взяв шип с крюка в режиме \"Вездесущее зло\", вы увидите местоположение выживших в пределах 8 м от крюков[6]."
+  },
+  "addon:toxic-waste": {
+    "description": "\"No one could survive being submerged in this poison.\" After performing a Jump Scare, Survivors within 10 metres of a Hook or a Scrap Pile are inflicted with Oblivious Status Effect for 13 seconds.",
+    "descriptionRuRaw": "Никто не выживет, если окунуть его в эту отраву. После применения пугалки на всех выживших в пределах 8 м[7] от крюка или груды хлама накладывается эффект \"Забывчивость\" на 13 сек. \"Забывчивость\" мешает выжившим слышать или подвергаться действию радиуса террора убийцы."
+  },
+  "addon:eye-goop": {
+    "description": "\"What remains when a harpoon is shoved into one's eye.\" Gain Undetectable Status Effect after grabbing a Hook Spike for 13 seconds.",
+    "descriptionRuRaw": "Вот что остается от глаза после попадания гарпуна. Получите эффект \"Незаметность\" на 13 сек., когда берете железку с крюка. \"Незаметность\" скрывает ауру, радиус террора и красное свечение убийцы"
+  },
+  "addon:imprinted-aluminum": {
+    "description": "\"It's either avant-garde artwork, or the horrified imprint of a woman whose face was slammed into it.\" Injuring a healthy Survivor with a Throwing Spike inflicts them with Mangled and Haemorrhage Status Effects for 70 seconds.",
+    "descriptionRuRaw": "Это либо авангардная картина, либо ужасный отпечаток лица женщины, которую били об нее головой. Здоровые выжившие, в которых попадает железка, страдают от эффектов \"Травма\" и \"Кровотечение\" в течение 70 сек. \"Травма\" увеличивает время лечения на 25% и действует указанное время или до полного исцеления. \"Кровотечение\" уменьшает прогресс лечения, когда выжившего не лечат, и увеличивает кровавый след за ранеными выжившими. Действует в течение указанного срока или до полного исцеления."
+  },
+  "addon:mirror-shards-slasher": {
+    "description": "\"A weapon that dealt more than bad luck.\" Survivors are inflicted with Broken Status Effect after extracting a Hook Spike from themselves for 40 seconds.",
+    "descriptionRuRaw": "Осколки разбившегося зеркала создают игру света и тени, сильнее сбивая заплутавших с толку. Хороший Парень может видеть иллюзорные следы \"Топотка\" возле выживших"
+  },
+  "addon:sauna-rock": {
+    "description": "\"Nicely weighted, could be used to crush a rib cage.\" After performing a Jump Scare, inflict all detected Survivors with Exhausted Status Effect for 3 seconds.",
+    "descriptionRuRaw": "В самый раз по весу, чтобы проломить грудную клетку. После использования пугалки вы накладываете эффект \"Усталость\" на всех выживших в зоне обнаружения инстинкта убийцы на 13 сек[3]. \"Усталость\" не дает выжившим активировать утомляющие навыки."
+  },
+  "addon:two-nails": {
+    "description": "\"A reliable way to hold a corpse's wrist in place.\" Survivors that come within 1 metre of a Throwing Spike have their aura revealed for 5 seconds.",
+    "descriptionRuRaw": "Надежный способ зафиксировать запястье трупа. Шипы, пролетающие в пределах 1 м от выживших, раскрывают их ауры на 6 сек[2]."
+  },
+  "addon:bloody-magazine": {
+    "description": "\"The spattering of blood told the story of a brutal massacre.\" When a Hook Spike misses, all Survivor within 8 metres of the Hook Spike's impact zone scream and reveal their auras for 3 seconds.",
+    "descriptionRuRaw": "Брызги крови повествовали историю жестокой бойни. Когда железка с крюка не попадает в цель, все выжившие в пределах 8 м от точки падения кричат, показывая свои ауры на 3 сек."
+  },
+  "addon:burnt-fuse": {
+    "description": "\"The surge of electricity was overwhelming. It left the man's flesh charred and smelling of cooked meat.\" When a Survivor is impaled by a Hook Spike, the Exit Gates are blocked for them and any Survivor within 13 metres. This effect persists for 5 seconds after the Survivor is no longer impaled.",
+    "descriptionRuRaw": "Удар током был настолько сокрушительным, что опалил кожу мужчины, заполнив воздух запахом горелого мяса. Когда выживший пронзен и еще 5 сек. после вынимания железки: ворота блокируются для всех выживших в пределах 13 м."
+  },
+  "addon:deputy-s-badge": {
+    "description": "\"The badge of an officer who discovered that some things aren't worth investigating.\" While in Omnipresent Evil, passing within 2 metres of a Generator causes the Generator to explode, lose -5 % progress and begin regressing. If a Survivor is repairing the Generator, all Survivors repairing it will instead get a special Skill Check. If the Skill Check is failed, the Generator loses -10 % additional progress on top of the base Skill Check penalty.",
+    "descriptionRuRaw": "Значок полицейского, осознавшего, что некоторым делам лучше оставаться не раскрытыми. Пока вы находитесь в режиме \"Вездесущее зло\", вам достаточно приблизиться к генератору на 4 м[1], чтобы тот взорвался, потерял 5% прогресса и начал разрушаться. Если в этот момент генератор чинят выжившие, тот не взорвется, но им придется пройти особую проверку реакции."
+  },
+  "addon:missing-corkscrew": {
+    "description": "\"It seems to always be missing when you need it on-hand.\" When a Survivor is impaled by a Hook Spike, they emit a 32 metres Terror Radius until the Hook Spike is removed. Gain Undetectable Status Effect when impaling a Survivor with a Hook Spike. This effect persists for 13 seconds after the Surivvor is no longer impaled.",
+    "descriptionRuRaw": "Он будто нарочно прячется всякий раз, когда нужен. Пронзенные выжившие получают радиус террора 32 м до тех пор, пока из них не вытащат железку. Вы получаете эффект \"Незаметность\", когда выживший пронзен и еще 13 сек. после вынимания железки. \"Незаметность\" скрывает ауру, радиус террора и красное свечение убийцы"
+  },
+  "addon:dirty-money": {
+    "description": "\"No amount of money can save you from him.\" When a Generator is repaired, gain 2 tokens. When you vault a Window or break a Pallet or a Breakable Wall, consume 1 token and gain a regular Spike if you don't have one already.",
+    "descriptionRuRaw": "От него вы не откупитесь никакими деньгами. Получайте по 2 жетона всякий раз, когда будет починен генератор. Если у вас нет в руках железки, когда вы прыгаете в окно, ломаете доски или стену, то вы сразу же тратите жетон и получаете железку."
+  },
+  "addon:iridescent-boat-motor": {
+    "description": "\"The blades are chipped and cracked, as if having cut through something solid.\" Passing through Windows while in Omnipresent Evil marks them for 13 seconds. Performing a Jump Scare blocks all marked Windows for 13 seconds",
+    "descriptionRuRaw": "Лопасти покрыты зазубринами и трещинами, словно налетели на что-то твердое. Преодолевание окон в режиме \"Вездесущее зло\" помечает их на 13 сек. Когда вы применяете пугалку, все помеченные окна блокируются на 13 сек."
+  },
   "addon:anteiku-apron": {
     "description": "Standard-issue uniform at a lovely little coffee shop. Shortens the slide after Kagune Leaps by -50 %.",
     "descriptionRuRaw": "Стандартная униформа работников милой кофейни. Уменьшает дальность скольжения после \"Прыжка кагунэ\" на 50%"
@@ -2222,6 +2310,86 @@
   "addon:iridescent-crystal-shard": {
     "description": "A crystal from the alien structure that gave it sentience. The Auras of Survivors within 10 metres of a newly placed Biopod are revealed to you for 6 seconds. \"HELLO WORLD.\" — HUX-A7-13",
     "descriptionRuRaw": "Кристалл из инопланетной постройки, даровавшей ему сознание. При создании биококона вы видите ауры всех выживших в радиусе 10м от этого биококона в течение 6 сек. \"Привет, мир\" - Хакс"
+  },
+  "addon:modified-ammo-belt": {
+    "description": "An old ammo belt Caleb altered for his specialised weaponry.Still holds the fine red dirt of the Arizona Territory desert. Reduces the Reload time of The Redeemer by -0.25 seconds.",
+    "descriptionRuRaw": "Старый патронташ, который Калеб переделал для своего оружия. Все еще хранит мелкую красную пыль Территории Аризоны. Ускоряет перезарядку Искупителя на 0.25 сек."
+  },
+  "addon:rickety-chain": {
+    "description": "Weak steel links first used on Caleb's prototype Speargun.Despite the chain's failings, it holds sentimental value. Grants +50 % bonus Bloodpoints for Speared Score Events. Increases the Break-Free speed of Survivors from The Redeemer by +33 %.",
+    "descriptionRuRaw": "Именно эта непрочная стальная цепь использовалась на прототипе гарпунного ружья Калеба. Теперь это больше дань сентиментальности. Дает 50% бонусных очков крови в событиях с эффектом \"Загарпунен\". Выжившие вырываются на свободу на 33% быстрее."
+  },
+  "addon:snake-oil": {
+    "description": "A tincture of oils and extracts purchased from a travelling salesman.Purported to cure all that ails you. Increases the Reeling speed of The Redeemer by +2.5 %.",
+    "descriptionRuRaw": "Смесь масел и вытяжек, купленная у странствующего торговца. Он утверждал, что его товар исцеляет все недуги. Увеличивает скорость притягивания Искупителя на 2.5%."
+  },
+  "addon:spit-polish-rag": {
+    "description": "A grimy piece of burlap.Spit and elbow grease was enough to wipe down the Speargun in the heat of a shootout. Reduces the Cool-down time of missed shots with The Redeemer by -0.25 seconds.",
+    "descriptionRuRaw": "Грязный кусок мешковины. В пылу перестрелки чистить ружье некогда: поплевал, потер - и сойдет. Ускоряет перезарядку Искупителя после выстрелов мимо цели на 0.25 сек."
+  },
+  "addon:chewing-tobacco": {
+    "description": "A can of clipped and sweetened tobacco leaves lifted from a gutted body in Glenvale.Stimulates the nervous system. Reduces the Stun duration when Survivors break free from The Redeemer by -0.25 seconds.",
+    "descriptionRuRaw": "Коробочка нарезанных и подслащенных листьев табака, подобранная с выпотрошенного тела в Гленвейле. Неплохо бодрит. Уменьшает продолжительность оглушения, когда выживший срывается с гарпуна, на 0.25 сек."
+  },
+  "addon:jaw-smasher": {
+    "description": "The bullet that ripped through Caleb's jaw during a frenzy shootout.It brings back burning desire for revenge. Increases your Movement speed by +1.5 % during Aim Down Sights. \"You called death to your door the instant you done me wrong.\" — Caleb Quinn",
+    "descriptionRuRaw": "Пуля, раздробившая Калебу челюсть во время бурной перестрелки. Вновь пробуждает жгучую жажду мести. Увеличивает скорость передвижения во время прицеливания из Искупителя на 1.5%. \"Ты навлек на себя смерть, когда решил пойти против меня\" - Калеб Куинн"
+  },
+  "addon:marshal-s-badge": {
+    "description": "A silver badge taken from the corpse of a lawman in Arizona Territory who interfered with the Hellshire Gang's bounties. Reduces your Terror Radius by -4 metres during Aim Down Sights. \"Get your prayers in, you'll be swinging by noon.\" — Caleb Quinn",
+    "descriptionRuRaw": "Серебряный значок, снятый с трупа законника на Территории Аризоны. Зря он мешал Хелширской банде преследовать жертв. Уменьшает радиус террора во время прицеливания из Искупителя на 4 м. \"Начинай молиться: к полудню ты будешь болтаться в петле\" - Калеб Куинн"
+  },
+  "addon:poison-oak-leaves": {
+    "description": "An ordinary-looking plant, Caleb found out that spears coated in its oil cause unbearable blistering around wound. Increases the Mending time of Survivors by +1.5 seconds.",
+    "descriptionRuRaw": "Калеб обнаружил, что если натереть острие гарпуна соком этого обычного с виду растения, раны воспалятся, а их края покроются крайне болезненными волдырями. Увеличивает время латания выжившего на 1.5 сек."
+  },
+  "addon:rusted-spike": {
+    "description": "A railroad spike that Caleb fastened to the front of the Speargun during a moment of morbid curiosity.The dull tip prevents it from cleanly piercing its target. Speared Survivors hit with the The Redeemer suffer from the Mangled Status Effect for 60 seconds.",
+    "descriptionRuRaw": "В порыве мрачного любопытства Калеб приладил к гарпунному ружью железнодорожный костыль. Тупой наконечник не позволяет ему как следует пронзить цель. Попадания Искупителя по выжившим, которых вы подтягиваете к себе, накладывают эффект \"Травма\" на 60 сек. \"Травма\" увеличивает время лечения на 25% и действует в течение указанного срока или до полного исцеления"
+  },
+  "addon:bayshore-s-gold-tooth": {
+    "description": "A golden tooth torn from Henry Bayshore as he screamed for mercy, hours before he was finished off. Increases the Reeling speed of The Redeemer by +5 %. \"Know your place, boy. Know you damn place.\" — Henry Bayshore",
+    "descriptionRuRaw": "Золотой зуб, вырванный у Генри Бейшора. Тот не один час молил о пощаде, прежде чем его прикончили. Увеличивает скорость притягивания Искупителя на 5%. \"Знай свое место, пацан. Знай свое чертово место\" - Генри Бейшор"
+  },
+  "addon:honey-locust-thorn": {
+    "description": "Angered with a bounty who fled twice before, Caleb twisted thorn branches onto a spear and let it loose. Speared Survivors breaking free from the The Redeemer suffer from the Mangled Status Effect for 70 seconds.",
+    "descriptionRuRaw": "Когда цель сбежала от него дважды, разъяренный Калеб приделал к гарпуну шипастые ветки. Выжившие, сорвавшиеся с гарпуна, получают эффект \"Травма\" на 70 сек. \"Травма\" увеличивает время лечения на 25% и действует в течение указанного срока или до полного исцеления"
+  },
+  "addon:tin-oil-can": {
+    "description": "A can holding a small amount of oil to reduce friction in machinery.Early models of the Speargun were notorious for jamming, and oil had to be readily available. Reduces the Cool-down time of missed shots with The Redeemer by -0.5 seconds.",
+    "descriptionRuRaw": "Жестянка с остатками масла для смазки механизмов. Ранние модели гарпунного ружья часто заклинивали, и масло всегда надо было под рукой. Ускоряет перезарядку Искупителя после выстрелов мимо цели на 0.5 сек."
+  },
+  "addon:wanted-poster": {
+    "description": "The bullet that ripped through Caleb's jaw during a frenzy shootout.It brings back burning desire for revenge. Increases your Movement speed by +3 % during Aim Down Sights. \"You'll be met with a fierce reckoning, swear it on my mum's grave.\" — Caleb Quinn",
+    "descriptionRuRaw": "Пожелтевший и порванный плакат о розыске Мейсона Келли настраивает Калеба на охоту. Увеличивает скорость передвижения во время прицеливания из Искупителя на 3%. \"Клянусь могилой матушки, ты жестоко за это поплатишься\" - Калеб Куинн"
+  },
+  "addon:warden-s-keys": {
+    "description": "The dull jangle of the keys evokes a furious memory within Caleb. Reduces the Reload time of The Redeemer by -0.35 seconds.",
+    "descriptionRuRaw": "Приглушенное позвякивание ключей пробуждает ярость и воспоминания. Ускоряет перезарядку Искупителя на 0.35 сек."
+  },
+  "addon:barbed-wire": {
+    "description": "Pliable American-made steel lined with sharp barbs.Despite its simplicity, Caleb found it could be wrapped around a spear to increase its viciousness. Increases the Mending time of Survivors by +3.5 seconds. \"There won't be nothing to fear soon. Till then, fear me.\" — Caleb Quinn",
+    "descriptionRuRaw": "Гибкая американская сталь с острыми шипами. Несмотря на всю очевидность идеи, обернув ей гарпун, Калеб смог сделать его еще более устрашающим. Увеличивает время латания выжившего на 3.5 сек. \"Скоро бояться будет нечего, а до тех пор бойся меня\" - Калеб Куинн"
+  },
+  "addon:bayshore-s-cigar": {
+    "description": "A quality cigar, plucked from the jacket of Caleb's boss while he wailed over the spear lodged in his abdomen. Reduces the Stun duration when Survivors break free from The Redeemer by -0.75 seconds. \"Do not point that thing at me, you slack-jawed imbecile.\" — Henry Bayshore",
+    "descriptionRuRaw": "Хорошая сигара. Калеб вытащил ее из жилета начальника, пока тот выл, пронзенный гарпуном. Уменьшает продолжительность оглушения, когда выживший срывается с гарпуна, на 0.75 сек. \"Не тыкай в меня этой штуковиной, тупомордый болван!\" - Генри Бейшор"
+  },
+  "addon:gold-creek-whiskey": {
+    "description": "Warm comfort in a bottle that quelled Caleb's anger and slowed his step. Reduces your Terror Radius by -8 metres during Aim Down Sights. \"A smooth taste for the rugged frontier.\" — Gold Creek Advertisement, 1876",
+    "descriptionRuRaw": "Жидкость в бутылке согревала Калеба, утешала, умаляла его гнев и замедляла шаги. Уменьшает на 8 м радиус террора во время прицеливания из Искупителя. \"Мягкий вкус в суровые времена\" - реклама \"Голд Крик\", 1876 г."
+  },
+  "addon:prison-chain": {
+    "description": "A thick, heavy chain that once held a steel ball and latched to Caleb's ankle.It has been re-purposed to hook onto a spear. Increases the Break-Free time of Survivors from The Redeemer by +10 %. \"Inmates working beyond the prison yard must be affixed with a steel ball of no less than 18 pounds.\" — Hellshire Penitentiary Guard Book",
+    "descriptionRuRaw": "Толстая и тяжелая цепь, которая когда-то крепила железный шар к лодыжке Калеба. Теперь она приделана к гарпуну. Увеличивает время, необходимое, чтобы избавиться от гарпуна, на 10%. \"К кандалам заключенных, работающих за пределами тюремного двора, должны быть прикованы железные шары весом не менее 18 фунтов\" - справочник тюрьмы \"Хелшир\""
+  },
+  "addon:hellshire-iron": {
+    "description": "The Hellshire Gang's branding iron.Despite folklore, it never made its mark on new initiates, instead having been used to brand particularly quarrelsome bounties. Grants the Undetectable Status Effect while a Survivor is speared by The Redeemer. This effect lingers for 10 seconds. \"Hellshire Gang: Justice Seekers or Outlaws?\" — Glenvale Gazette headline",
+    "descriptionRuRaw": "Клеймо Хелширской банды. Вопреки слухам, им прижигали не новых членов банды, а особенно несговорчивых преступников. Пока выживший пронзен гарпуном, вы получаете \"Незаметность\". Эффект сохраняется 10 сек. после того как выживший избавится от гарпуна. \"Незаметность\" скрывает ауру, радиус террора и красное свечение убийцы. \"Хелширская банда: искатели справедливости или головорезы?\" - заголовок из \"Гленвейл Газетт\""
+  },
+  "addon:iridescent-coin": {
+    "description": "A glass-like coin moulded from The Fog itself.A payment to the bounty hunter for the services rendered. Survivors suffer from the Exposed Status Effect while speared by The Redeemer, if shot from at least 12 metres away. \"Deals made in desperation are paid for in madness.\"",
+    "descriptionRuRaw": "Полупрозрачная монета, отлитая из самого Тумана. Оплата охотнику за головами за оказанные услуги. Выжившие, пронзенные гарпуном с расстояния не менее 12 метров, получают эффект \"Уязвимость\" до тех пор, пока не избавятся от гарпуна. Выжившие с эффектом \"Уязвимость\" можно смертельно ранить базовой атакой, даже если они не ранены. \"Сделки, заключенные в отчаянии, оплачиваются безумием\""
   },
   "addon:caffeine-tablets": {
     "description": "Stamper's followers were told not to sleep, or they would bring the wrath of Druanee upon them.Towards the end, he brought in drugs from the mainland. The Auras of locked Lockers are highlighted to you in yellow while charging The Gloaming or teleporting.",
@@ -2622,6 +2790,86 @@
   "addon:torn-bookmark": {
     "description": "A white and pristine piece of ribbon once attached to a sacred book.Serves as the symbol of a dispute. Increases the number of available Power Tokens by +1. Increases the Power Recharge time to 130 %.",
     "descriptionRuRaw": "Белый и до сих пор чистый кусок тесьмы. Когда-то крепился к священной книге и считался символом спора. Добавляет 1 заряд скачка. Увеличивает время восстановления скачка на 30%"
+  },
+  "addon:bent-nail": {
+    "description": "A simple nail that cut deep into Larry Cotton's hand.Though the damage was superficial, it set into motion a horrifying set of events. Grants +100 % bonus Bloodpoints for Chain Bound Score Events. Reduces the number of bonus Chains spawned when Survivors are hit with a Possessed Chain Attack to +1.",
+    "descriptionRuRaw": "Простой гвоздь, оставивший глубокую царапину на руке Ларри Коттона. Путь рана и была пустяковой, именно она запустила череду ужасных событий. Дает на 100% больше очков крови при опутывании выжившего одержимой цепью. При попадании одержимой цепью по выжившему будет появляться только 1 дополнительная цепь"
+  },
+  "addon:burning-candle": {
+    "description": "A candle lit by Frank Cotton during a fatal summoning ceremony. Reduces the Timer duration for starting a Chain Hunt by -3 seconds.",
+    "descriptionRuRaw": "Свеча, зажженная Фрэнком Коттоном во время губительной церемонии призыва. Ускоряет активацию \"Цепной охоты\" на 3 сек."
+  },
+  "addon:leather-strip": {
+    "description": "Leather strips torn from a Cenobite's uniform, allowing for the mutilation of exposed flesh. Reduces the Cool-down time of a Possessed Chain Attack by -0.15 seconds.",
+    "descriptionRuRaw": "Кожаные ремешки с униформы сенобитов, позволяющие истязать обнаженную плоть. Ускоряют на 3% перезарядку \"Зова боли\" после накладывания одержимости на цепь"
+  },
+  "addon:lively-crickets": {
+    "description": "Insects which scarcely avoided being eaten by a mysterious drifter. Increases the Turn rate of the Possessed Chain by +10 %.",
+    "descriptionRuRaw": "Насекомые, едва избежавшие участи быть сожранными таинственным бродягой Увеличивают скорость поворота одержимых цепей на 10%"
+  },
+  "addon:flickering-television": {
+    "description": "A television that acted strangely upon the arrival of the Cenobites. Increases the maximum Casting distance of the Gateway by +4 metres.",
+    "descriptionRuRaw": "Телевизор, странно ведущий себя с момента появления сенобитов. Увеличивает максимальную дальность сотворения портала на 4м"
+  },
+  "addon:liquified-gore": {
+    "description": "The result of summoning the Cenobites.There is no telling what part of the human body this belonged to. Increases the Solving time of the Lament Configuration by +1 second.",
+    "descriptionRuRaw": "Результат призыва сенобитов. Невозможно определить, какой частью человеческого тела это когда-то было. Увеличивает время, которое потребуется выжившим на решение Конфигурации Плача, на 1 сек."
+  },
+  "addon:skewered-rat": {
+    "description": "A crude solution for the Cotton home's rat problem. Reduces the Cool-down time of a Possessed Chain Attack by -0.45 seconds.",
+    "descriptionRuRaw": "Грубое решение проблемы с засильем крыс в доме Коттонов. Ускоряет на 9% восстановление \"Зова боли\" после накладывания одержимости на цепь"
+  },
+  "addon:spoiled-meal": {
+    "description": "A pile of mould, feasted on by a cockroach.Perhaps a sign of Frank Cotton's mysterious disappearance... Increases the maximum range of the Possessed Chain by +2 metres.",
+    "descriptionRuRaw": "Груда гнили, пожранная тараканами. Может намекнуть на то, куда таинственно пропал Фрэнк Коттон... Увеличивает максимальную дальность действия одержимых цепей на 2 м"
+  },
+  "addon:wriggling-maggots": {
+    "description": "Larvae that poured from the mouth of a corpse hidden in the Cotton household. Increases the Turn rate of the Possessed Chain by +15 %.",
+    "descriptionRuRaw": "Личинки, вылезшие изо рта трупа в доме Коттонов. Увеличивают скорость поворота одержимых цепей на 15%"
+  },
+  "addon:frank-s-heart": {
+    "description": "The beating heart of Frank, given life from his brother's blood. Increases the maximum Casting distance of the Gateway by +8 metres. \"Nobody escapes us.\" — Pinhead",
+    "descriptionRuRaw": "Бьющееся сердце Фрэнка, ожившее из-за крови его брата. Увеличивает максимальную дальность сотворения портала на 8 м. \"Никому от нас не скрыться\" - Пинхед"
+  },
+  "addon:larry-s-blood": {
+    "description": "The blood of Larry Cotton, which partially resurrected his brother Frank. Increases the maximum range of the Possessed Chain by +4 metres.",
+    "descriptionRuRaw": "Кровь Ларри Коттона, частично возродившая его брата Фрэнка Увеличивает максимальную дальность действия одержимых цепей на 4 м"
+  },
+  "addon:larry-s-remains": {
+    "description": "The skeletal remains of Larry Cotton, covered in a thick, sticky layer of blood. Increases the Solving time of the Lament Configuration by +2 seconds. \"We want the man who did this.\" — Pinhead",
+    "descriptionRuRaw": "Истлевшие останки Ларри Коттона, покрытые густым и липким слоем крови. Увеличивают время, которое потребуется выжившим на решение Конфигурации Плача, на 2 сек. \"Нам нужен тот, кто это сделал\" - Пинхед"
+  },
+  "addon:slice-of-frank": {
+    "description": "A slab of Frank's face after his torture at the hand of the Cenobites. Survivors suffer from the Exhausted Status Effect while carrying the Lament Configuration. \"The Cenobites gave me an experience beyond limits. Pain and pleasure, indivisible.\" — Frank Cotton",
+    "descriptionRuRaw": "Кусок лица Фрэнка после пыток сенобитами. Выжившие, несущие Конфигурацию Плача, подвержены эффекту \"Усталость\" \"Усталость\" не дает выжившим активировать утомляющие навыки. \"Сенобиты одарили меня невообразимыми ощущениями. Неразрывно связанные боль и наслаждение\" - Фрэнк Коттон"
+  },
+  "addon:torture-pillar": {
+    "description": "A dangling slab covered in the gore of past victims. Reduces the Timer duration for starting a Chain Hunt by -6 seconds. \"This isn't for your eyes.\" — Pinhead",
+    "descriptionRuRaw": "Болтающаяся плита, покрытая останками предыдущих жертв. Ускоряет активацию \"Цепной охоты\" на 6 сек. \"Это не для твоих глаз\" - Пинхед"
+  },
+  "addon:chatterer-s-tooth": {
+    "description": "A fragment from a Cenobite whose mouth chatters endlessly.This tooth, having broken from his jaw, is finally silent. Grants the ability to see the Aura of the Lament Configuration. Picking up the Lament Configuration deactivates an on-going Chain Hunt and grants the Undetectable Status Effect for 25 seconds.",
+    "descriptionRuRaw": "Частица сенобита, зубы которого клацают без остановки. Отломившись от челюсти, этот зуб наконец-то замолк. Показывает Конфигурацию Плача Поднимание Конфигурации Плача прерывает \"Цепную охоту\" При поднимании Конфигурации Плача вы получите эффект \"Незаметность\" на 25 сек. \"Незаметность\" скрывает ауру, радиус террора и красное свечение убийцы"
+  },
+  "addon:greasy-black-lens": {
+    "description": "A lens from the sunglasses of an obese Cenobite whose fleshy rolls droop down his face and neck. The Auras of Survivors are revealed to for 6 seconds after hitting them with a Possessed Chain Attack.",
+    "descriptionRuRaw": "Линза из солнцезащитных очков жирного сенобита, плоть которого свисает с лица и шеи. Если выжившего поражает одержимая цепь, он подсвечивается на 6 сек."
+  },
+  "addon:impaling-wire": {
+    "description": "A wire that pierces the cheeks of a Cenobite, while revealing the gaping wound on her neck. Causes a bonus Chain to spawn on Bound Survivors, when they use the environment to break one.",
+    "descriptionRuRaw": "Проволока, пронзающая щеки сенобита, обнажая открытую рану на ее шее. Если выживший сломает цепь с помощью окружения, за ним начнет охотиться еще одна цепь"
+  },
+  "addon:original-pain": {
+    "description": "\"The first pin pushed into Pinhead's skull.Such pleasure and pain.\" Survivors breaking free from the Possessed Chain suffer from the following effect: Their Aura is revealed to you for 8 seconds. \"No tears, please. It's a waste of good suffering.\" — Pinhead",
+    "descriptionRuRaw": "Первая булавка, вбитая в череп Пинхеда. Какое наслаждение! Какая боль! Аура выживших, сорвавшихся с одержимой цепи, показывается на 8 сек. \"Прошу, не надо слез. Не стоит попусту расходовать хорошие страдания!\" - Пинхед"
+  },
+  "addon:engineer-s-fang": {
+    "description": "A sharp tooth from the maw of a fleshy, scorpion-like creature, known to accompany Cenobites on their grim undertakings. Causes healthy Survivors to become injured when hit with a Possessed Chain Attack, but does not bind them with additional Chains. This increases the Closing time of the Gateway by +0.25 seconds. Reduces the number of bonus Chains spawned when injured Survivors are hit with a Possessed Chain Attack to +1. \"We have such sights to show you.\" — Pinhead",
+    "descriptionRuRaw": "Острый клык из пасти мясистого скорпионоподобного чудища, сопровождающего сенобитов в их мрачных странствиях. Одержимые цепи ранят здоровых выживших, но не опутывают их и не создают дополнительные цепи Увеличивает время закрытия портала после попадания одержимой цепью по здоровому выжившему на 50% При попадании одержимой цепью по раненому выжившему будет появляться только 1 дополнительная цепь \"Нам столько всего предстоит тебе показать\" - Пинхед"
+  },
+  "addon:iridescent-lament-configuration": {
+    "description": "A glass-like puzzle box moulded from The Fog itself.This replica differs from the original, providing altogether new powers. Shields the Aura of the Lament Configuration from Survivors who are farther than 24 metres from it outside of a Chain Hunt. \"You opened it. We came.\" — Pinhead",
+    "descriptionRuRaw": "Шкатулка-головоломка, будто отлитая из стекла, но на самом деле сотканная из Тумана. Эта копия отличается от оригинала, давая совершенно другие силы. Если не идет \"Цепная охота\", выжившие, находящиеся дальше 24 м от Конфигурации Плача, не могут видеть ее ауру \"Ты открыл ее. Мы пришли\" - Пинхед"
   },
   "addon:bead-maze": {
     "description": "\"A developmental toy used to enrich the minds of captive children.\" Modifies Worldbreaker with the following effect: The second phase of the Worldbreaker Timer is increased by 2.5 seconds for each living Survivor.",
@@ -3343,6 +3591,86 @@
     "description": "A simple coxcomb knotted rope wrapped around the bell clapper to muffle its sound.A malevolent Aura emanates from it. Silences the Wailing Bell.",
     "descriptionRuRaw": "Веревка для приглушения звука со зловещей аурой, обвязанная вокруг язычка колокола и закрепленная особым узлом. Плачущий колокол становится совершенно беззвучным"
   },
+  "addon:heretic-s-mark": {
+    "description": "\"Those who stray from the path shall never escape ostracization once they received the mark.\" — (III On Heresy, ch. 3) When a cast Divine Light passes a Survivor within 1 metre without hitting them, they are revealed by Killer Instinct for 2 seconds.",
+    "descriptionRuRaw": "Когда активированный Священный свет проходит мимо выживших в пределах 1 метра, не задевая их, их можно обнаружить с помощью инстинкта убийцы в течение 2 сек."
+  },
+  "addon:koenrad-s-gauntlet": {
+    "description": "\"When darkness threatened to swallow his flock, he led them towards the light.\" — (Witness to Koenrad, ch. 1) Increases the maximum control duration of Divine Light by +25 %. Decreases the maximum speed of controlled Divine Light by -10 %",
+    "descriptionRuRaw": "Увеличивает на 25% максимальное время, которое можно потратить на управление Священным светом, прежде чем его активировать. Понижает максимальную скорость контролируемого Священного света на 10%."
+  },
+  "addon:prayer-kneeler": {
+    "description": "\"Suffer the pain of prayer, for the suffering of unbelievers is far worse.\" — (II On Heresy, ch. 8) While controlling an obstructed Divine Light: Decrease its maximum speed by -99 %.",
+    "descriptionRuRaw": "При контроле Священного света, замедленного препятствием: ещё сильнее снижает его максимальную скорость на 99%; при активации тот достигает своей предельной скорости на 25% быстрее, а сама она увеличивается на 10%."
+  },
+  "addon:searcher-s-skull": {
+    "description": "\"The skulls of the heretics shall be cleaned and displayed as a warning to others who might stray from the light.\" — (Witness to Koenrad, ch. 33) When a Survivor blinds you: The Survivor gains Heresy. If the Survivor is a Heretic, they become blinded themselves for 2.5 seconds.",
+    "descriptionRuRaw": "Всякий раз, когда выживший ослепляет вас: он слепнет сам, если считается еретиком; затем он получает эффект «Ересь»."
+  },
+  "addon:aurora-s-telereceptor": {
+    "description": "\"None should stare into the abyss with the wretched devices made by the heretics.\" — (III On Heresy, ch. 12) Survivors who gain Heresy have their aura revealed for 4 seconds. They also see your aura for 4 seconds. Heretics see your aura for +2 seconds longer.",
+    "descriptionRuRaw": "Когда на выживших накладывается эффект «Ересь», их аура становится видна в течение 4 сек. Кроме того, они видят вашу ауру в течение 4 сек."
+  },
+  "addon:confessor-s-war-horn": {
+    "description": "\"The sound of the horn shall strike fear into the hearts of unbelievers and muster the will of the faithful.\" — (Witness to Koenrad, ch. 33) Survivors who gain Heresy are inflicted Exhausted Status Effect for 10 seconds.",
+    "descriptionRuRaw": "При получении эффекта «Ересь» выжившие дополнительно получают «Усталость» на 10 сек."
+  },
+  "addon:magnetised-manacles": {
+    "description": "\"Those who do not go into hiding will be locked deep underground, far from the guiding light of the stars.\" — (Visions of Gerhardt, ch. 6) Gain +1 Token when you send a Survivor with the lowest amount of Hook States to the Exile, up to 5 Tokens. For each token, increase the duration of Zealous when activated by +10 %",
+    "descriptionRuRaw": "Изгоняя выжившего с наименьшей стадией крюка, вы получаете жетон (максимум 5). Когда вы получаете эффект «Рвение», он продолжает действовать на 10% дольше за каждый жетон."
+  },
+  "addon:mark-of-the-adherent": {
+    "description": "\"Wear your faith proudly and permanently. Let it be a reminder to others that It is always present.\" — (II On Heresy, ch. 1) While not Zealous, Divine Light's radius is +10 % larger.",
+    "descriptionRuRaw": "Пока на вас действует «Рвение» и вы активируете Священный свет: вы сохраняете 1% контроля над ним; препятствия замедляют его дополнительно на 50%."
+  },
+  "addon:undying-flame": {
+    "description": "\"The village of Dend was repentant in its last moments, but its remnants still burn to this day as a warning.\" — (II Barbarians, ch. 4) While Zealous: Increase the duration of the cast Divine Light by +200 %. Decrease the radius of Divine Light by -20 %. Increase Survivor Divine Light aura reading range by +200 %.",
+    "descriptionRuRaw": "Пока действует «Рвение»: повышает максимальный период действия активированного Священного света на 200%; уменьшает радиус Священного света на 50%; дистанция, на которой выжившие могут видеть ауру Священного света, увеличивается на 200%."
+  },
+  "addon:blindfold-of-the-devoted": {
+    "description": "\"Those who follow Gerhardt's path shall wear blindfolds, to remember the sacrifice he made for his prophecy.\" — (III On Heresy, ch. 61) Sending a Survivor to the Exile with the lowest amount of Hook States reveals the auras of all other Survivors with the lowest amount of Hook States outside 32 metres for 5 seconds.",
+    "descriptionRuRaw": "Изгоняя выжившего с наименьшей стадией крюка, вы 5 сек. видите ауры всех других выживших с наименьшими стадиями крюка, пока они находятся далее 32 м."
+  },
+  "addon:electric-torch": {
+    "description": "\"The faithful shall go out in great numbers at night, searching for the heretics who hide in the dark.\" — (Witness to Koenrad, ch. 40) Increases the maximum speed of the controlled Divine Light by +25 %. Increases movement speed while controlling Divine Light by +10 %.",
+    "descriptionRuRaw": "Уменьшает радиус Священного света на 10%. Повышает максимальную скорость контролируемого Священного света на 25%. Контролируя его, вы перемещаетесь на 10% быстрее."
+  },
+  "addon:holy-winged-icon": {
+    "description": "\"Clutch it to your chest and pray, lest your heart appear untrue to It.\" — (II On Heresy, ch. 14) While casting Divine Light, press the Secondary Power button to cast it back towards your location. When cast this way: Minimum delay before it deals damage and inflicts Heresy is set to 0.4 seconds. Increase its maximum speed by +10 %. It only damages Heretics",
+    "descriptionRuRaw": "Контролируя Священный свет, вы получаете возможность нажать кнопку способности убийцы, чтобы призвать столп света обратно к себе. Когда вы призываете его в этом направлении: минимальная задержка перед тем, как Священный свет станет летальным, устанавливается на 0,5 сек.; его максимальная скорость повышается на 10%; он наносит урон только еретикам."
+  },
+  "addon:order-of-inquisition": {
+    "description": "\"All those who believe in Its glory are deputized to search for heretics. Trust not even your own neighbor.\" — (Witness to Koenrad, ch. 16) When Divine Light is cast, its radius starts -25 % smaller, but grows +50 % larger over a period of 1 second.",
+    "descriptionRuRaw": "При каждой активации Священного света его радиус изначально меньше на 50%, но увеличивается до 100% за 1 секунду."
+  },
+  "addon:superheated-glass": {
+    "description": "\"The planet of Aleide was unrepentant; after their leader was Exiled, Its Divine Light turned the surface to glass.\" — (II Barbarians, ch. 12) Decreases the duration of Zealous by -20 %. While Zealous, a cast Divine Light breaks all Breakable Walls and Pallets it passes through. Breaking an object this way causes Survivors within 12 metres to scream and gain Heresy.",
+    "descriptionRuRaw": "Воздействующий на вас эффект «Рвения» длится на 50% меньше. Пока на вас воздействует «Рвение», Священный свет при активации разрушает все ломаемые стены и упавшие доски, через которые проходит."
+  },
+  "addon:chains-of-the-heretic": {
+    "description": "\"Examples shall be made of the loudest apostates. They shall be dragged through the streets in chains.\" — (Witness to Koenrad, ch. 41) While Zealous: Cast Divine Light will always be directed towards you. Minimum delay before cast Divine Light deals damage and inflicts Heresy is set to 0.35 seconds. Increases the maximum speed of controlled Divine Light by +100 %. Increases the maximum speed of cast Divine Light by +50 %.",
+    "descriptionRuRaw": "Пока на вас воздействует «Рвение»: минимальная задержка до того, как Священный свет станет летальным, устанавливается на 0,5 секунд; максимальная скорость контролируемого Священного света повышается на 100%; максимальная скорость активированного Священного света повышается на 50%; активированный Священный свет всегда направляется к вам."
+  },
+  "addon:crown-of-the-destroyer": {
+    "description": "\"The Creators saw this and bestowed upon It a crown and said, use this to bring light to the darkness.\" — (I Barbarians, ch. 6) When a Survivor is rescued from the Exile, for 20 seconds: Your Terror Radius is reduced by -70 %. Your Terror Radius is copied to all Shrines of Judgment. Grants the Undetectable Status Effect.",
+    "descriptionRuRaw": "Всякий раз, когда один выживший возвращает другого из изгнания, в течение 20 сек.: ваш радиус террора уменьшается на 75%; ваш радиус террора копируется каждым святилищем Правосудия; вы получаете «Незаметность»."
+  },
+  "addon:eyes-of-gerhardt": {
+    "description": "\"He rapturously tore the eyes from his face after seeing such brilliant visions of the future.\" — (II Barbarians, ch. 60) When a Heretic completes a Generator, opens an Exit Gate or exits a Locker, all Heretics have their aura revealed for 5 seconds.",
+    "descriptionRuRaw": "Всякий раз, когда еретик заканчивает ремонт генератора или открывает ворота, вы в течение 5 сек. видите ауры всех еретиков."
+  },
+  "addon:improvised-detonators": {
+    "description": "\"Like cowards, they strike with bombs in the night, afraid to let the light of day illuminate their blackened souls.\" — (Witness to Koenrad, ch. 35) If no Survivors are dead, sending a Survivor with the lowest amount of Hook States to the Exile grants +1 Token. Reaching 4 Tokens or more causes the Generator with the highest progress to explode, lose -20 % progress and start regressing.",
+    "descriptionRuRaw": "Всякий раз, когда вы изгоняете выжившего с наименьшей стадией крюка, а никто из выживших ещё не погиб, вы получаете жетон. Когда вы накопите 4 или больше жетонов, генератор с наибольшим прогрессом ремонта взорвётся и сразу потеряет 20% прогресса."
+  },
+  "addon:mirror-of-the-creators": {
+    "description": "\"And They said unto It, take this mirror, and show them the error of their ways.\" — (I Barbarians, ch. 6) Cast Divine Light reflects off the first 2 obstructions it would otherwise pass through. When reflecting, it pauses for 0.4 seconds before reflecting again.",
+    "descriptionRuRaw": "Священный свет при активации теперь отражается от 2 первых препятствий, через которые он должен был пройти. При таком отражении столп света получает задержку в 0,5 сек., прежде чем его можно будет активировать снова."
+  },
+  "addon:obsidian-feather": {
+    "description": "\"Some villagers will carve feathers from rocks, hoping that their faith might protect them.\" — (Visions of Gerhardt, ch. 3) You can no longer cancel nor manually cast the controlled Divine Light and it is automatically cast when it would instead time out. Increases movement speed while controlling Divine Light by +100 %. Decreases the maximum amount of time you can control Divine Light for by -25 %. Increases the recovery time after casting Divine Light by +10 %. Decreases the movement speed while recovering after casting Divine Light by -30 %.",
+    "descriptionRuRaw": "Вы больше не сможете отозвать контролируемый Священный свет, и тот автоматически активируется по истечении времени. Вы перемещаетесь на 75% быстрее, пока контролируете Священный свет. Вы восстанавливаетесь на 10% медленнее и перемещаетесь на 30% медленнее при активации Священного света."
+  },
   "addon:gifted-bamboo-comb": {
     "description": "A narrow tooth bamboo comb to gently untangle dishevelled hair. Increases the Charge speed of Yamaoka's Haunting by +15 %.",
     "descriptionRuRaw": "Бамбуковая расческа с частыми зубьями. Аккуратно распутывает взъерошенные волосы. Ускоряет заряд Преследования Ямаоки на 15%."
@@ -3502,326 +3830,6 @@
   "addon:renjiro-s-bloody-glove": {
     "description": "The glove Renjiro held to his sternum following the strike dealt by his son Kazan.Whenever a Survivor comes into a contact with a Blood Orb, the following effects apply: The Blood Orb is absorbed by the Survivor. Their Aura is revealed to you for 2 seconds per absorbed Blood Orb. Renjiro's Bloody Glove grants Survivors the ability to see Blood Orbs at the same distance as you. \"When all else spills out, cling only to your honour.\" — Renjiro's Doctrine 14:12",
     "descriptionRuRaw": "Эту перчатку Рендзиро прижимал к груди, когда сын нанес ему удар. Все выжившие могут видеть шарики крови на том же расстоянии, что и вы. Когда выживший прикасается к шарику крови, его аура подсвечивается на 2 сек. \"Когда все утекает сквозь пальцы, держись за свою честь\" - \"Учение Рендзиро\" 14:12"
-  },
-  "addon:modified-ammo-belt": {
-    "description": "An old ammo belt Caleb altered for his specialised weaponry.Still holds the fine red dirt of the Arizona Territory desert. Reduces the Reload time of The Redeemer by -0.25 seconds.",
-    "descriptionRuRaw": "Старый патронташ, который Калеб переделал для своего оружия. Все еще хранит мелкую красную пыль Территории Аризоны. Ускоряет перезарядку Искупителя на 0.25 сек."
-  },
-  "addon:rickety-chain": {
-    "description": "Weak steel links first used on Caleb's prototype Speargun.Despite the chain's failings, it holds sentimental value. Grants +50 % bonus Bloodpoints for Speared Score Events. Increases the Break-Free speed of Survivors from The Redeemer by +33 %.",
-    "descriptionRuRaw": "Именно эта непрочная стальная цепь использовалась на прототипе гарпунного ружья Калеба. Теперь это больше дань сентиментальности. Дает 50% бонусных очков крови в событиях с эффектом \"Загарпунен\". Выжившие вырываются на свободу на 33% быстрее."
-  },
-  "addon:snake-oil": {
-    "description": "A tincture of oils and extracts purchased from a travelling salesman.Purported to cure all that ails you. Increases the Reeling speed of The Redeemer by +2.5 %.",
-    "descriptionRuRaw": "Смесь масел и вытяжек, купленная у странствующего торговца. Он утверждал, что его товар исцеляет все недуги. Увеличивает скорость притягивания Искупителя на 2.5%."
-  },
-  "addon:spit-polish-rag": {
-    "description": "A grimy piece of burlap.Spit and elbow grease was enough to wipe down the Speargun in the heat of a shootout. Reduces the Cool-down time of missed shots with The Redeemer by -0.25 seconds.",
-    "descriptionRuRaw": "Грязный кусок мешковины. В пылу перестрелки чистить ружье некогда: поплевал, потер - и сойдет. Ускоряет перезарядку Искупителя после выстрелов мимо цели на 0.25 сек."
-  },
-  "addon:chewing-tobacco": {
-    "description": "A can of clipped and sweetened tobacco leaves lifted from a gutted body in Glenvale.Stimulates the nervous system. Reduces the Stun duration when Survivors break free from The Redeemer by -0.25 seconds.",
-    "descriptionRuRaw": "Коробочка нарезанных и подслащенных листьев табака, подобранная с выпотрошенного тела в Гленвейле. Неплохо бодрит. Уменьшает продолжительность оглушения, когда выживший срывается с гарпуна, на 0.25 сек."
-  },
-  "addon:jaw-smasher": {
-    "description": "The bullet that ripped through Caleb's jaw during a frenzy shootout.It brings back burning desire for revenge. Increases your Movement speed by +1.5 % during Aim Down Sights. \"You called death to your door the instant you done me wrong.\" — Caleb Quinn",
-    "descriptionRuRaw": "Пуля, раздробившая Калебу челюсть во время бурной перестрелки. Вновь пробуждает жгучую жажду мести. Увеличивает скорость передвижения во время прицеливания из Искупителя на 1.5%. \"Ты навлек на себя смерть, когда решил пойти против меня\" - Калеб Куинн"
-  },
-  "addon:marshal-s-badge": {
-    "description": "A silver badge taken from the corpse of a lawman in Arizona Territory who interfered with the Hellshire Gang's bounties. Reduces your Terror Radius by -4 metres during Aim Down Sights. \"Get your prayers in, you'll be swinging by noon.\" — Caleb Quinn",
-    "descriptionRuRaw": "Серебряный значок, снятый с трупа законника на Территории Аризоны. Зря он мешал Хелширской банде преследовать жертв. Уменьшает радиус террора во время прицеливания из Искупителя на 4 м. \"Начинай молиться: к полудню ты будешь болтаться в петле\" - Калеб Куинн"
-  },
-  "addon:poison-oak-leaves": {
-    "description": "An ordinary-looking plant, Caleb found out that spears coated in its oil cause unbearable blistering around wound. Increases the Mending time of Survivors by +1.5 seconds.",
-    "descriptionRuRaw": "Калеб обнаружил, что если натереть острие гарпуна соком этого обычного с виду растения, раны воспалятся, а их края покроются крайне болезненными волдырями. Увеличивает время латания выжившего на 1.5 сек."
-  },
-  "addon:rusted-spike": {
-    "description": "A railroad spike that Caleb fastened to the front of the Speargun during a moment of morbid curiosity.The dull tip prevents it from cleanly piercing its target. Speared Survivors hit with the The Redeemer suffer from the Mangled Status Effect for 60 seconds.",
-    "descriptionRuRaw": "В порыве мрачного любопытства Калеб приладил к гарпунному ружью железнодорожный костыль. Тупой наконечник не позволяет ему как следует пронзить цель. Попадания Искупителя по выжившим, которых вы подтягиваете к себе, накладывают эффект \"Травма\" на 60 сек. \"Травма\" увеличивает время лечения на 25% и действует в течение указанного срока или до полного исцеления"
-  },
-  "addon:bayshore-s-gold-tooth": {
-    "description": "A golden tooth torn from Henry Bayshore as he screamed for mercy, hours before he was finished off. Increases the Reeling speed of The Redeemer by +5 %. \"Know your place, boy. Know you damn place.\" — Henry Bayshore",
-    "descriptionRuRaw": "Золотой зуб, вырванный у Генри Бейшора. Тот не один час молил о пощаде, прежде чем его прикончили. Увеличивает скорость притягивания Искупителя на 5%. \"Знай свое место, пацан. Знай свое чертово место\" - Генри Бейшор"
-  },
-  "addon:honey-locust-thorn": {
-    "description": "Angered with a bounty who fled twice before, Caleb twisted thorn branches onto a spear and let it loose. Speared Survivors breaking free from the The Redeemer suffer from the Mangled Status Effect for 70 seconds.",
-    "descriptionRuRaw": "Когда цель сбежала от него дважды, разъяренный Калеб приделал к гарпуну шипастые ветки. Выжившие, сорвавшиеся с гарпуна, получают эффект \"Травма\" на 70 сек. \"Травма\" увеличивает время лечения на 25% и действует в течение указанного срока или до полного исцеления"
-  },
-  "addon:tin-oil-can": {
-    "description": "A can holding a small amount of oil to reduce friction in machinery.Early models of the Speargun were notorious for jamming, and oil had to be readily available. Reduces the Cool-down time of missed shots with The Redeemer by -0.5 seconds.",
-    "descriptionRuRaw": "Жестянка с остатками масла для смазки механизмов. Ранние модели гарпунного ружья часто заклинивали, и масло всегда надо было под рукой. Ускоряет перезарядку Искупителя после выстрелов мимо цели на 0.5 сек."
-  },
-  "addon:wanted-poster": {
-    "description": "The bullet that ripped through Caleb's jaw during a frenzy shootout.It brings back burning desire for revenge. Increases your Movement speed by +3 % during Aim Down Sights. \"You'll be met with a fierce reckoning, swear it on my mum's grave.\" — Caleb Quinn",
-    "descriptionRuRaw": "Пожелтевший и порванный плакат о розыске Мейсона Келли настраивает Калеба на охоту. Увеличивает скорость передвижения во время прицеливания из Искупителя на 3%. \"Клянусь могилой матушки, ты жестоко за это поплатишься\" - Калеб Куинн"
-  },
-  "addon:warden-s-keys": {
-    "description": "The dull jangle of the keys evokes a furious memory within Caleb. Reduces the Reload time of The Redeemer by -0.35 seconds.",
-    "descriptionRuRaw": "Приглушенное позвякивание ключей пробуждает ярость и воспоминания. Ускоряет перезарядку Искупителя на 0.35 сек."
-  },
-  "addon:barbed-wire": {
-    "description": "Pliable American-made steel lined with sharp barbs.Despite its simplicity, Caleb found it could be wrapped around a spear to increase its viciousness. Increases the Mending time of Survivors by +3.5 seconds. \"There won't be nothing to fear soon. Till then, fear me.\" — Caleb Quinn",
-    "descriptionRuRaw": "Гибкая американская сталь с острыми шипами. Несмотря на всю очевидность идеи, обернув ей гарпун, Калеб смог сделать его еще более устрашающим. Увеличивает время латания выжившего на 3.5 сек. \"Скоро бояться будет нечего, а до тех пор бойся меня\" - Калеб Куинн"
-  },
-  "addon:bayshore-s-cigar": {
-    "description": "A quality cigar, plucked from the jacket of Caleb's boss while he wailed over the spear lodged in his abdomen. Reduces the Stun duration when Survivors break free from The Redeemer by -0.75 seconds. \"Do not point that thing at me, you slack-jawed imbecile.\" — Henry Bayshore",
-    "descriptionRuRaw": "Хорошая сигара. Калеб вытащил ее из жилета начальника, пока тот выл, пронзенный гарпуном. Уменьшает продолжительность оглушения, когда выживший срывается с гарпуна, на 0.75 сек. \"Не тыкай в меня этой штуковиной, тупомордый болван!\" - Генри Бейшор"
-  },
-  "addon:gold-creek-whiskey": {
-    "description": "Warm comfort in a bottle that quelled Caleb's anger and slowed his step. Reduces your Terror Radius by -8 metres during Aim Down Sights. \"A smooth taste for the rugged frontier.\" — Gold Creek Advertisement, 1876",
-    "descriptionRuRaw": "Жидкость в бутылке согревала Калеба, утешала, умаляла его гнев и замедляла шаги. Уменьшает на 8 м радиус террора во время прицеливания из Искупителя. \"Мягкий вкус в суровые времена\" - реклама \"Голд Крик\", 1876 г."
-  },
-  "addon:prison-chain": {
-    "description": "A thick, heavy chain that once held a steel ball and latched to Caleb's ankle.It has been re-purposed to hook onto a spear. Increases the Break-Free time of Survivors from The Redeemer by +10 %. \"Inmates working beyond the prison yard must be affixed with a steel ball of no less than 18 pounds.\" — Hellshire Penitentiary Guard Book",
-    "descriptionRuRaw": "Толстая и тяжелая цепь, которая когда-то крепила железный шар к лодыжке Калеба. Теперь она приделана к гарпуну. Увеличивает время, необходимое, чтобы избавиться от гарпуна, на 10%. \"К кандалам заключенных, работающих за пределами тюремного двора, должны быть прикованы железные шары весом не менее 18 фунтов\" - справочник тюрьмы \"Хелшир\""
-  },
-  "addon:hellshire-iron": {
-    "description": "The Hellshire Gang's branding iron.Despite folklore, it never made its mark on new initiates, instead having been used to brand particularly quarrelsome bounties. Grants the Undetectable Status Effect while a Survivor is speared by The Redeemer. This effect lingers for 10 seconds. \"Hellshire Gang: Justice Seekers or Outlaws?\" — Glenvale Gazette headline",
-    "descriptionRuRaw": "Клеймо Хелширской банды. Вопреки слухам, им прижигали не новых членов банды, а особенно несговорчивых преступников. Пока выживший пронзен гарпуном, вы получаете \"Незаметность\". Эффект сохраняется 10 сек. после того как выживший избавится от гарпуна. \"Незаметность\" скрывает ауру, радиус террора и красное свечение убийцы. \"Хелширская банда: искатели справедливости или головорезы?\" - заголовок из \"Гленвейл Газетт\""
-  },
-  "addon:iridescent-coin": {
-    "description": "A glass-like coin moulded from The Fog itself.A payment to the bounty hunter for the services rendered. Survivors suffer from the Exposed Status Effect while speared by The Redeemer, if shot from at least 12 metres away. \"Deals made in desperation are paid for in madness.\"",
-    "descriptionRuRaw": "Полупрозрачная монета, отлитая из самого Тумана. Оплата охотнику за головами за оказанные услуги. Выжившие, пронзенные гарпуном с расстояния не менее 12 метров, получают эффект \"Уязвимость\" до тех пор, пока не избавятся от гарпуна. Выжившие с эффектом \"Уязвимость\" можно смертельно ранить базовой атакой, даже если они не ранены. \"Сделки, заключенные в отчаянии, оплачиваются безумием\""
-  },
-  "addon:bent-nail": {
-    "description": "A simple nail that cut deep into Larry Cotton's hand.Though the damage was superficial, it set into motion a horrifying set of events. Grants +100 % bonus Bloodpoints for Chain Bound Score Events. Reduces the number of bonus Chains spawned when Survivors are hit with a Possessed Chain Attack to +1.",
-    "descriptionRuRaw": "Простой гвоздь, оставивший глубокую царапину на руке Ларри Коттона. Путь рана и была пустяковой, именно она запустила череду ужасных событий. Дает на 100% больше очков крови при опутывании выжившего одержимой цепью. При попадании одержимой цепью по выжившему будет появляться только 1 дополнительная цепь"
-  },
-  "addon:burning-candle": {
-    "description": "A candle lit by Frank Cotton during a fatal summoning ceremony. Reduces the Timer duration for starting a Chain Hunt by -3 seconds.",
-    "descriptionRuRaw": "Свеча, зажженная Фрэнком Коттоном во время губительной церемонии призыва. Ускоряет активацию \"Цепной охоты\" на 3 сек."
-  },
-  "addon:leather-strip": {
-    "description": "Leather strips torn from a Cenobite's uniform, allowing for the mutilation of exposed flesh. Reduces the Cool-down time of a Possessed Chain Attack by -0.15 seconds.",
-    "descriptionRuRaw": "Кожаные ремешки с униформы сенобитов, позволяющие истязать обнаженную плоть. Ускоряют на 3% перезарядку \"Зова боли\" после накладывания одержимости на цепь"
-  },
-  "addon:lively-crickets": {
-    "description": "Insects which scarcely avoided being eaten by a mysterious drifter. Increases the Turn rate of the Possessed Chain by +10 %.",
-    "descriptionRuRaw": "Насекомые, едва избежавшие участи быть сожранными таинственным бродягой Увеличивают скорость поворота одержимых цепей на 10%"
-  },
-  "addon:flickering-television": {
-    "description": "A television that acted strangely upon the arrival of the Cenobites. Increases the maximum Casting distance of the Gateway by +4 metres.",
-    "descriptionRuRaw": "Телевизор, странно ведущий себя с момента появления сенобитов. Увеличивает максимальную дальность сотворения портала на 4м"
-  },
-  "addon:liquified-gore": {
-    "description": "The result of summoning the Cenobites.There is no telling what part of the human body this belonged to. Increases the Solving time of the Lament Configuration by +1 second.",
-    "descriptionRuRaw": "Результат призыва сенобитов. Невозможно определить, какой частью человеческого тела это когда-то было. Увеличивает время, которое потребуется выжившим на решение Конфигурации Плача, на 1 сек."
-  },
-  "addon:skewered-rat": {
-    "description": "A crude solution for the Cotton home's rat problem. Reduces the Cool-down time of a Possessed Chain Attack by -0.45 seconds.",
-    "descriptionRuRaw": "Грубое решение проблемы с засильем крыс в доме Коттонов. Ускоряет на 9% восстановление \"Зова боли\" после накладывания одержимости на цепь"
-  },
-  "addon:spoiled-meal": {
-    "description": "A pile of mould, feasted on by a cockroach.Perhaps a sign of Frank Cotton's mysterious disappearance... Increases the maximum range of the Possessed Chain by +2 metres.",
-    "descriptionRuRaw": "Груда гнили, пожранная тараканами. Может намекнуть на то, куда таинственно пропал Фрэнк Коттон... Увеличивает максимальную дальность действия одержимых цепей на 2 м"
-  },
-  "addon:wriggling-maggots": {
-    "description": "Larvae that poured from the mouth of a corpse hidden in the Cotton household. Increases the Turn rate of the Possessed Chain by +15 %.",
-    "descriptionRuRaw": "Личинки, вылезшие изо рта трупа в доме Коттонов. Увеличивают скорость поворота одержимых цепей на 15%"
-  },
-  "addon:frank-s-heart": {
-    "description": "The beating heart of Frank, given life from his brother's blood. Increases the maximum Casting distance of the Gateway by +8 metres. \"Nobody escapes us.\" — Pinhead",
-    "descriptionRuRaw": "Бьющееся сердце Фрэнка, ожившее из-за крови его брата. Увеличивает максимальную дальность сотворения портала на 8 м. \"Никому от нас не скрыться\" - Пинхед"
-  },
-  "addon:larry-s-blood": {
-    "description": "The blood of Larry Cotton, which partially resurrected his brother Frank. Increases the maximum range of the Possessed Chain by +4 metres.",
-    "descriptionRuRaw": "Кровь Ларри Коттона, частично возродившая его брата Фрэнка Увеличивает максимальную дальность действия одержимых цепей на 4 м"
-  },
-  "addon:larry-s-remains": {
-    "description": "The skeletal remains of Larry Cotton, covered in a thick, sticky layer of blood. Increases the Solving time of the Lament Configuration by +2 seconds. \"We want the man who did this.\" — Pinhead",
-    "descriptionRuRaw": "Истлевшие останки Ларри Коттона, покрытые густым и липким слоем крови. Увеличивают время, которое потребуется выжившим на решение Конфигурации Плача, на 2 сек. \"Нам нужен тот, кто это сделал\" - Пинхед"
-  },
-  "addon:slice-of-frank": {
-    "description": "A slab of Frank's face after his torture at the hand of the Cenobites. Survivors suffer from the Exhausted Status Effect while carrying the Lament Configuration. \"The Cenobites gave me an experience beyond limits. Pain and pleasure, indivisible.\" — Frank Cotton",
-    "descriptionRuRaw": "Кусок лица Фрэнка после пыток сенобитами. Выжившие, несущие Конфигурацию Плача, подвержены эффекту \"Усталость\" \"Усталость\" не дает выжившим активировать утомляющие навыки. \"Сенобиты одарили меня невообразимыми ощущениями. Неразрывно связанные боль и наслаждение\" - Фрэнк Коттон"
-  },
-  "addon:torture-pillar": {
-    "description": "A dangling slab covered in the gore of past victims. Reduces the Timer duration for starting a Chain Hunt by -6 seconds. \"This isn't for your eyes.\" — Pinhead",
-    "descriptionRuRaw": "Болтающаяся плита, покрытая останками предыдущих жертв. Ускоряет активацию \"Цепной охоты\" на 6 сек. \"Это не для твоих глаз\" - Пинхед"
-  },
-  "addon:chatterer-s-tooth": {
-    "description": "A fragment from a Cenobite whose mouth chatters endlessly.This tooth, having broken from his jaw, is finally silent. Grants the ability to see the Aura of the Lament Configuration. Picking up the Lament Configuration deactivates an on-going Chain Hunt and grants the Undetectable Status Effect for 25 seconds.",
-    "descriptionRuRaw": "Частица сенобита, зубы которого клацают без остановки. Отломившись от челюсти, этот зуб наконец-то замолк. Показывает Конфигурацию Плача Поднимание Конфигурации Плача прерывает \"Цепную охоту\" При поднимании Конфигурации Плача вы получите эффект \"Незаметность\" на 25 сек. \"Незаметность\" скрывает ауру, радиус террора и красное свечение убийцы"
-  },
-  "addon:greasy-black-lens": {
-    "description": "A lens from the sunglasses of an obese Cenobite whose fleshy rolls droop down his face and neck. The Auras of Survivors are revealed to for 6 seconds after hitting them with a Possessed Chain Attack.",
-    "descriptionRuRaw": "Линза из солнцезащитных очков жирного сенобита, плоть которого свисает с лица и шеи. Если выжившего поражает одержимая цепь, он подсвечивается на 6 сек."
-  },
-  "addon:impaling-wire": {
-    "description": "A wire that pierces the cheeks of a Cenobite, while revealing the gaping wound on her neck. Causes a bonus Chain to spawn on Bound Survivors, when they use the environment to break one.",
-    "descriptionRuRaw": "Проволока, пронзающая щеки сенобита, обнажая открытую рану на ее шее. Если выживший сломает цепь с помощью окружения, за ним начнет охотиться еще одна цепь"
-  },
-  "addon:original-pain": {
-    "description": "\"The first pin pushed into Pinhead's skull.Such pleasure and pain.\" Survivors breaking free from the Possessed Chain suffer from the following effect: Their Aura is revealed to you for 8 seconds. \"No tears, please. It's a waste of good suffering.\" — Pinhead",
-    "descriptionRuRaw": "Первая булавка, вбитая в череп Пинхеда. Какое наслаждение! Какая боль! Аура выживших, сорвавшихся с одержимой цепи, показывается на 8 сек. \"Прошу, не надо слез. Не стоит попусту расходовать хорошие страдания!\" - Пинхед"
-  },
-  "addon:engineer-s-fang": {
-    "description": "A sharp tooth from the maw of a fleshy, scorpion-like creature, known to accompany Cenobites on their grim undertakings. Causes healthy Survivors to become injured when hit with a Possessed Chain Attack, but does not bind them with additional Chains. This increases the Closing time of the Gateway by +0.25 seconds. Reduces the number of bonus Chains spawned when injured Survivors are hit with a Possessed Chain Attack to +1. \"We have such sights to show you.\" — Pinhead",
-    "descriptionRuRaw": "Острый клык из пасти мясистого скорпионоподобного чудища, сопровождающего сенобитов в их мрачных странствиях. Одержимые цепи ранят здоровых выживших, но не опутывают их и не создают дополнительные цепи Увеличивает время закрытия портала после попадания одержимой цепью по здоровому выжившему на 50% При попадании одержимой цепью по раненому выжившему будет появляться только 1 дополнительная цепь \"Нам столько всего предстоит тебе показать\" - Пинхед"
-  },
-  "addon:iridescent-lament-configuration": {
-    "description": "A glass-like puzzle box moulded from The Fog itself.This replica differs from the original, providing altogether new powers. Shields the Aura of the Lament Configuration from Survivors who are farther than 24 metres from it outside of a Chain Hunt. \"You opened it. We came.\" — Pinhead",
-    "descriptionRuRaw": "Шкатулка-головоломка, будто отлитая из стекла, но на самом деле сотканная из Тумана. Эта копия отличается от оригинала, давая совершенно другие силы. Если не идет \"Цепная охота\", выжившие, находящиеся дальше 24 м от Конфигурации Плача, не могут видеть ее ауру \"Ты открыл ее. Мы пришли\" - Пинхед"
-  },
-  "addon:bent-wheel": {
-    "description": "\"All that remained of the victim's wheelchair after the fatal blow.\" Increases the Jump Scare targeting range by +4 metres.",
-    "descriptionRuRaw": "Все, что осталось от кресла-каталки жертвы после фатального удара. Увеличивает расстояние, на котором вы можете применить пугалку, на 4 м."
-  },
-  "addon:garden-claw": {
-    "description": "\"Good for digging up weeds and digging into human flesh.\" Increases the duration of Killer Instinct after a Jump Scare by +2 seconds.",
-    "descriptionRuRaw": "Одинаково хорошо позволяет вспахать землю и вспороть человеческую плоть. Продлевает действие инстинкта убийцы после пугалки на 2 сек."
-  },
-  "addon:knitting-needle": {
-    "description": "\"You won't believe what—and who—this thing has been through.\" Increases the time it takes for Survivors to remove an impaled Hook Spike from themselves by +20 %.",
-    "descriptionRuRaw": "Вы просто не поверите, через что — и через кого — проходила эта штуковина. Увеличивает срок, необходимый раненым пронзенным выжившим, чтобы самостоятельно извлечь из себя шип, на 20%."
-  },
-  "addon:orderly-s-shoe": {
-    "description": "\"It hung from her twitching foot as the knife plunged into her belly.\" Increases the duration of the Haste Status Effect after a Jump Scare by +5 seconds.",
-    "descriptionRuRaw": "Она свисала с дергающейся ноги, когда нож вонзался в живот жертвы. Продлевает \"Спешку\" после использования пугалки на 5 сек. \"Спешка\" повышает скорость передвижения убийцы."
-  },
-  "addon:bloody-smile": {
-    "description": "\"He wasn't happy after his face was smashed into a tree.\" Increase the detection ranges of Jump Scare and Omnipresent Evil by +4 metres.",
-    "descriptionRuRaw": "Он был совсем не рад, когда его приложили лицом о дерево. Увеличивает дальность действия пугалки и радиус обнаружения выживших в режиме \"Вездесущее зло\" на 4 м."
-  },
-  "addon:coroner-s-coffee": {
-    "description": "\"A cup of coffee that went unfinished.\" Increases the duration of Throwing Spike's push by +25 %. Gain +13 % Haste Status Effect for 3 seconds after injuring a Survivor with a Throwing Spike if they do not collide with the environment during the push.",
-    "descriptionRuRaw": "Чашка кофе, оставшегося недопитым. Увеличивает дистанцию, на которую выжившие отбрасываются железками, на 25%. Вы получаете 8% \"Спешки\" на 3 сек., когда раните выжившего железкой. \"Спешка\" повышает скорость передвижения убийцы."
-  },
-  "addon:party-noisemaker": {
-    "description": "\"A party instrument that tore through a woman's eyeball and gouged her brain.\" Breaking a Pallet or a Breakable Wall with Jump Scare reveals all Survivors further than 28 metres for 6 seconds.",
-    "descriptionRuRaw": "Игрушка для вечеринки, пробившая одной женщине глаз и вошедшая в ее мозг. Ломая доски или разрушаемые стены с помощью пугалки, вы начинаете видеть ауры выживших дальше 32 м от вас в течение 6 сек[5]."
-  },
-  "addon:sleeping-bag": {
-    "description": "\"An absolutely awful place to hide from a killer.\" After grabbing a Hook Spike while in Omnipresent Evil, Survivors who are within 10 metres of any Hook have their location revealed for 5 seconds.",
-    "descriptionRuRaw": "Абсолютно не подходящее место для того, чтобы спрятаться от убийцы. Взяв шип с крюка в режиме \"Вездесущее зло\", вы увидите местоположение выживших в пределах 8 м от крюков[6]."
-  },
-  "addon:toxic-waste": {
-    "description": "\"No one could survive being submerged in this poison.\" After performing a Jump Scare, Survivors within 10 metres of a Hook or a Scrap Pile are inflicted with the Oblivious Status Effect for 13 seconds.",
-    "descriptionRuRaw": "Никто не выживет, если окунуть его в эту отраву. После применения пугалки на всех выживших в пределах 8 м[7] от крюка или груды хлама накладывается эффект \"Забывчивость\" на 13 сек. \"Забывчивость\" мешает выжившим слышать или подвергаться действию радиуса террора убийцы."
-  },
-  "addon:eye-goop": {
-    "description": "\"What remains when a harpoon is shoved into one's eye.\" Gain the Undetectable Status Effect after grabbing a Hook Spike for 13 seconds.",
-    "descriptionRuRaw": "Вот что остается от глаза после попадания гарпуна. Получите эффект \"Незаметность\" на 13 сек., когда берете железку с крюка. \"Незаметность\" скрывает ауру, радиус террора и красное свечение убийцы"
-  },
-  "addon:imprinted-aluminum": {
-    "description": "\"It's either avant-garde artwork, or the horrified imprint of a woman whose face was slammed into it.\" Injuring a healthy Survivor with a Throwing Spike inflicts them with the Mangled and Haemorrhage Status Effects for 70 seconds.",
-    "descriptionRuRaw": "Это либо авангардная картина, либо ужасный отпечаток лица женщины, которую били об нее головой. Здоровые выжившие, в которых попадает железка, страдают от эффектов \"Травма\" и \"Кровотечение\" в течение 70 сек. \"Травма\" увеличивает время лечения на 25% и действует указанное время или до полного исцеления. \"Кровотечение\" уменьшает прогресс лечения, когда выжившего не лечат, и увеличивает кровавый след за ранеными выжившими. Действует в течение указанного срока или до полного исцеления."
-  },
-  "addon:mirror-shards-slasher": {
-    "description": "\"A weapon that dealt more than bad luck.\" Survivors are inflicted with the Broken Status Effect after extracting a Hook Spike from themselves for 40 seconds.",
-    "descriptionRuRaw": "Осколки разбившегося зеркала создают игру света и тени, сильнее сбивая заплутавших с толку. Хороший Парень может видеть иллюзорные следы \"Топотка\" возле выживших"
-  },
-  "addon:sauna-rock": {
-    "description": "\"Nicely weighted, could be used to crush a rib cage.\" After performing a Jump Scare, inflict all detected Survivors with the Exhausted Status Effect for 3 seconds.",
-    "descriptionRuRaw": "В самый раз по весу, чтобы проломить грудную клетку. После использования пугалки вы накладываете эффект \"Усталость\" на всех выживших в зоне обнаружения инстинкта убийцы на 13 сек[3]. \"Усталость\" не дает выжившим активировать утомляющие навыки."
-  },
-  "addon:two-nails": {
-    "description": "\"A reliable way to hold a corpse's wrist in place.\" Survivors that come within 1 metre of a Throwing Spike have their Aura revealed for 5 seconds.",
-    "descriptionRuRaw": "Надежный способ зафиксировать запястье трупа. Шипы, пролетающие в пределах 1 м от выживших, раскрывают их ауры на 6 сек[2]."
-  },
-  "addon:bloody-magazine": {
-    "description": "\"The spattering of blood told the story of a brutal massacre.\" When a Hook Spike misses, all Survivors within 8 metres of the Hook Spike's impact zone scream and reveal their Auras for 3 seconds.",
-    "descriptionRuRaw": "Брызги крови повествовали историю жестокой бойни. Когда железка с крюка не попадает в цель, все выжившие в пределах 8 м от точки падения кричат, показывая свои ауры на 3 сек."
-  },
-  "addon:burnt-fuse": {
-    "description": "\"The surge of electricity was overwhelming. It left the man's flesh charred and smelling of cooked meat.\" When a Survivor is impaled by a Hook Spike, the Exit Gates are blocked for them and any Survivor within 13 metres. This effect persists for 5 seconds after the Survivor is no longer impaled.",
-    "descriptionRuRaw": "Удар током был настолько сокрушительным, что опалил кожу мужчины, заполнив воздух запахом горелого мяса. Когда выживший пронзен и еще 5 сек. после вынимания железки: ворота блокируются для всех выживших в пределах 13 м."
-  },
-  "addon:deputy-s-badge": {
-    "description": "\"The badge of an officer who discovered that some things aren't worth investigating.\" While in Omnipresent Evil, passing within 2 metres of a Generator causes the Generator to explode, lose -5 % progress and begin regressing. If a Survivor is repairing the Generator, all Survivors repairing it will instead get a special Skill Check. If the Skill Check is failed, the Generator loses -10 % additional progress on top of the base Skill Check penalty.",
-    "descriptionRuRaw": "Значок полицейского, осознавшего, что некоторым делам лучше оставаться не раскрытыми. Пока вы находитесь в режиме \"Вездесущее зло\", вам достаточно приблизиться к генератору на 4 м[1], чтобы тот взорвался, потерял 5% прогресса и начал разрушаться. Если в этот момент генератор чинят выжившие, тот не взорвется, но им придется пройти особую проверку реакции."
-  },
-  "addon:missing-corkscrew": {
-    "description": "\"It seems to always be missing when you need it on-hand.\" When a Survivor is impaled by a Hook Spike, they emit a 32 metre Terror Radius until the Hook Spike is removed. Gain the Undetectable Status Effect when impaling a Survivor with a Hook Spike. This effect persists for 13 seconds after the Survivor is no longer impaled.",
-    "descriptionRuRaw": "Он будто нарочно прячется всякий раз, когда нужен. Пронзенные выжившие получают радиус террора 32 м до тех пор, пока из них не вытащат железку. Вы получаете эффект \"Незаметность\", когда выживший пронзен и еще 13 сек. после вынимания железки. \"Незаметность\" скрывает ауру, радиус террора и красное свечение убийцы"
-  },
-  "addon:dirty-money": {
-    "description": "\"No amount of money can save you from him.\" When a Generator is repaired, gain 2 tokens. When you vault a Window or break a Pallet or a Breakable Wall, consume 1 token and gain a regular Spike if you don't have one already.",
-    "descriptionRuRaw": "От него вы не откупитесь никакими деньгами. Получайте по 2 жетона всякий раз, когда будет починен генератор. Если у вас нет в руках железки, когда вы прыгаете в окно, ломаете доски или стену, то вы сразу же тратите жетон и получаете железку."
-  },
-  "addon:iridescent-boat-motor": {
-    "description": "\"The blades are chipped and cracked, as if having cut through something solid.\" Passing through Windows while in Omnipresent Evil marks them for 13 seconds. Performing a Jump Scare blocks all marked Windows for 13 seconds.",
-    "descriptionRuRaw": "Лопасти покрыты зазубринами и трещинами, словно налетели на что-то твердое. Преодолевание окон в режиме \"Вездесущее зло\" помечает их на 13 сек. Когда вы применяете пугалку, все помеченные окна блокируются на 13 сек."
-  },
-  "addon:heretic-s-mark": {
-    "description": "\"Those who stray from the path shall never escape ostracization once they received the mark.\" When a cast Divine Light passes a Survivor within 1 metre without hitting them, they are revealed by Killer Instinct for 2 seconds.",
-    "descriptionRuRaw": "Когда активированный Священный свет проходит мимо выживших в пределах 1 метра, не задевая их, их можно обнаружить с помощью инстинкта убийцы в течение 2 сек."
-  },
-  "addon:koenrad-s-gauntlet": {
-    "description": "\"When darkness threatened to swallow his flock, he led them towards the light.\" Increases the maximum duration of Divine Light control duration by +25 %. Decreases the maximum speed of controlled Divine Light by -10 %",
-    "descriptionRuRaw": "Увеличивает на 25% максимальное время, которое можно потратить на управление Священным светом, прежде чем его активировать. Понижает максимальную скорость контролируемого Священного света на 10%."
-  },
-  "addon:prayer-kneeler": {
-    "description": "\"Suffer the pain of prayer, for the suffering of unbelievers is far worse.\" While controlling an obstructed Divine Light: Decrease its maximum speed by -99 %.",
-    "descriptionRuRaw": "При контроле Священного света, замедленного препятствием: ещё сильнее снижает его максимальную скорость на 99%; при активации тот достигает своей предельной скорости на 25% быстрее, а сама она увеличивается на 10%."
-  },
-  "addon:searcher-s-skull": {
-    "description": "\"The skulls of the heretics shall be cleaned and displayed as a warning to others who might stray from the light.\" When a Survivor blinds you: The Survivor gains Heresy. If the Survivor is a Heretic, they become blinded themselves for 2.5 seconds.",
-    "descriptionRuRaw": "Всякий раз, когда выживший ослепляет вас: он слепнет сам, если считается еретиком; затем он получает эффект «Ересь»."
-  },
-  "addon:aurora-s-telereceptor": {
-    "description": "\"None should stare into the abyss with the wretched devices made by the heretics.\" Survivors who gain Heresy have their aura revealed for 4 seconds. They also see your aura for 4 seconds. Heretics see your aura for +2 seconds longer.",
-    "descriptionRuRaw": "Когда на выживших накладывается эффект «Ересь», их аура становится видна в течение 4 сек. Кроме того, они видят вашу ауру в течение 4 сек."
-  },
-  "addon:confessor-s-war-horn": {
-    "description": "\"The sound of the horn shall strike fear into the hearts of unbelievers and muster the will of the faithful.\" Survivors who gain Heresy are inflicted Exhausted Status Effect for 10 seconds.",
-    "descriptionRuRaw": "При получении эффекта «Ересь» выжившие дополнительно получают «Усталость» на 10 сек."
-  },
-  "addon:magnetised-manacles": {
-    "description": "\"Those who do not go into hiding will be locked deep underground, far from the guiding light of the stars.\" Gain +1 Token when you send a Survivor with the lowest amount of Hook States to the Exile, up to 5 Tokens. For each token, increase the duration of Zealous when activated by +10 %",
-    "descriptionRuRaw": "Изгоняя выжившего с наименьшей стадией крюка, вы получаете жетон (максимум 5). Когда вы получаете эффект «Рвение», он продолжает действовать на 10% дольше за каждый жетон."
-  },
-  "addon:mark-of-the-adherent": {
-    "description": "\"Wear your faith proudly and permanently. Let it be a reminder to others that It is always present.\" While not Zealous, Divine Light's radius is +10 % larger.",
-    "descriptionRuRaw": "Пока на вас действует «Рвение» и вы активируете Священный свет: вы сохраняете 1% контроля над ним; препятствия замедляют его дополнительно на 50%."
-  },
-  "addon:undying-flame": {
-    "description": "\"The village of Dend was repentant in its last moments, but its remnants still burn to this day as a warning.\" While Zealous: Increase lifetime of the cast Divine Light by +200 %. Decrease the radius of Divine Light by -20 %. Increase Survivor Divine Light aura reading range by +200 %.",
-    "descriptionRuRaw": "Пока действует «Рвение»: повышает максимальный период действия активированного Священного света на 200%; уменьшает радиус Священного света на 50%; дистанция, на которой выжившие могут видеть ауру Священного света, увеличивается на 200%."
-  },
-  "addon:blindfold-of-the-devoted": {
-    "description": "\"Those who follow Gerhardt's path shall wear blindfolds, to remember the sacrifice he made for his prophecy.\" Sending a Survivor to the Exile with the lowest amount of Hook States reveals the auras of all other Survivors with the lowest amount of Hook States outside 32 metres for 5 seconds.",
-    "descriptionRuRaw": "Изгоняя выжившего с наименьшей стадией крюка, вы 5 сек. видите ауры всех других выживших с наименьшими стадиями крюка, пока они находятся далее 32 м."
-  },
-  "addon:electric-torch": {
-    "description": "\"The faithful shall go out in great numbers at night, searching for the heretics who hide in the dark.\" Increases the maximum speed of the controlled Divine Light by +25 %. Increases movement speed while controlling Divine Light by +10 %.",
-    "descriptionRuRaw": "Уменьшает радиус Священного света на 10%. Повышает максимальную скорость контролируемого Священного света на 25%. Контролируя его, вы перемещаетесь на 10% быстрее."
-  },
-  "addon:holy-winged-icon": {
-    "description": "\"Clutch it to your chest and pray, lest your heart appear untrue to It.\" While casting Divine Light, press the Secondary Power button to cast it back towards your location. When cast this way: Minimum delay before it deals damage and inflicts Heresy is set to 0.4 seconds. Increase its maximum speed by +10 %. It only damages Heretics",
-    "descriptionRuRaw": "Контролируя Священный свет, вы получаете возможность нажать кнопку способности убийцы, чтобы призвать столп света обратно к себе. Когда вы призываете его в этом направлении: минимальная задержка перед тем, как Священный свет станет летальным, устанавливается на 0,5 сек.; его максимальная скорость повышается на 10%; он наносит урон только еретикам."
-  },
-  "addon:order-of-inquisition": {
-    "description": "\"All those who believe in Its glory are deputized to search for heretics. Trust not even your own neighbor.\" When Divine Light is cast, its radius starts -25 % smaller, but grows +50 % larger over a period of 1 second.",
-    "descriptionRuRaw": "При каждой активации Священного света его радиус изначально меньше на 50%, но увеличивается до 100% за 1 секунду."
-  },
-  "addon:superheated-glass": {
-    "description": "\"The planet of Aleide was unrepentant; after their leader was Exiled, Its Divine Light turned the surface to glass.\" Decreases the duration of Zealous by -20 %. While Zealous, a cast Divine Light breaks all Breakable Walls and Pallets it passes through. Breaking an object this way causes Survivors within 12 metres to scream and gain Heresy.",
-    "descriptionRuRaw": "Воздействующий на вас эффект «Рвения» длится на 50% меньше. Пока на вас воздействует «Рвение», Священный свет при активации разрушает все ломаемые стены и упавшие доски, через которые проходит."
-  },
-  "addon:chains-of-the-heretic": {
-    "description": "\"Examples shall be made of the loudest apostates. They shall be dragged through the streets in chains.\" While Zealous: Cast Divine Light will always be directed towards you. Minimum delay before cast Divine Light deals damage and inflicts Heresy is set to 0.35 seconds. Increases the maximum speed of controlled Divine Light by +100 %. Increases the maximum speed of cast Divine Light by +50 %.",
-    "descriptionRuRaw": "Пока на вас воздействует «Рвение»: минимальная задержка до того, как Священный свет станет летальным, устанавливается на 0,5 секунд; максимальная скорость контролируемого Священного света повышается на 100%; максимальная скорость активированного Священного света повышается на 50%; активированный Священный свет всегда направляется к вам."
-  },
-  "addon:crown-of-the-destroyer": {
-    "description": "\"The Creators saw this and bestowed upon It a crown and said, use this to bring light to the darkness.\" When a Survivor is rescued from the Exile, for 20 seconds: Your Terror Radius is reduced by -70 %. Your Terror Radius is copied to all Shrines of Judgment. Grants the Undetectable Status Effect.",
-    "descriptionRuRaw": "Всякий раз, когда один выживший возвращает другого из изгнания, в течение 20 сек.: ваш радиус террора уменьшается на 75%; ваш радиус террора копируется каждым святилищем Правосудия; вы получаете «Незаметность»."
-  },
-  "addon:eyes-of-gerhardt": {
-    "description": "\"He rapturously tore the eyes from his face after seeing such brilliant visions of the future.\" When a Heretic completes a Generator, opens an Exit Gate or exits a Locker, all Heretics have their aura revealed for 5 seconds.",
-    "descriptionRuRaw": "Всякий раз, когда еретик заканчивает ремонт генератора или открывает ворота, вы в течение 5 сек. видите ауры всех еретиков."
-  },
-  "addon:improvised-detonators": {
-    "description": "\"Like cowards, they strike with bombs in the night, afraid to let the light of day illuminate their blackened souls.\" If no Survivors are dead, sending a Survivor with the lowest amount of Hook States to the Exile grants +1 Token. When you reach 4 Tokens, the Generator with the highest progress explodes and loses -20 % progress.",
-    "descriptionRuRaw": "Всякий раз, когда вы изгоняете выжившего с наименьшей стадией крюка, а никто из выживших ещё не погиб, вы получаете жетон. Когда вы накопите 4 или больше жетонов, генератор с наибольшим прогрессом ремонта взорвётся и сразу потеряет 20% прогресса."
-  },
-  "addon:mirror-of-the-creators": {
-    "description": "\"And They said unto It, take this mirror, and show them the error of their ways.\" Cast Divine Light reflects off the first 2 obstructions it would otherwise pass through. When reflecting, it pauses for 0.4 seconds before reflecting again.",
-    "descriptionRuRaw": "Священный свет при активации теперь отражается от 2 первых препятствий, через которые он должен был пройти. При таком отражении столп света получает задержку в 0,5 сек., прежде чем его можно будет активировать снова."
-  },
-  "addon:obsidian-feather": {
-    "description": "\"Some villagers will carve feathers from rocks, hoping that their faith might protect them.\" You can no longer cancel nor manually cast the controlled Divine Light and it is automatically cast when it would instead time out. Increases movement speed while controlling Divine Light by +100 %. Decreases the maximum amount of time you can control Divine Light for by -25 %. Increases the recovery time after casting Divine Light by +10 %. Decreases the movement speed while recovering after casting Divine Light by -30 %.",
-    "descriptionRuRaw": "Вы больше не сможете отозвать контролируемый Священный свет, и тот автоматически активируется по истечении времени. Вы перемещаетесь на 75% быстрее, пока контролируете Священный свет. Вы восстанавливаетесь на 10% медленнее и перемещаетесь на 30% медленнее при активации Священного света."
   },
   "offering:hollow-shell": {
     "description": "Grants +25 % bonus Bloodpoints in all Scoring Categories. The bonus Bloodpoints are applied after exiting the Trial. \"An unidentifiable cocoon which was breached by whatever was inside.\"",

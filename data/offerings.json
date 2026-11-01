@@ -1,37 +1,85 @@
 [
   {
     "kind": "offering",
+    "role": "both",
+    "category": "Realm Selection",
+    "icon": "/loadout/offering/alien-flora.webp",
+    "slug": "alien-flora",
+    "name": {
+      "en": "Alien Flora",
+      "ru": "Инопланетная флора"
+    },
+    "addedAt": "2020-01-01T00:00:00.000Z"
+  },
+  {
+    "kind": "offering",
     "role": "killer",
     "category": "Bonus Bloodpoints",
-    "icon": "/loadout/offering/hollow-shell.webp",
-    "slug": "hollow-shell",
+    "icon": "/loadout/offering/ardent-raven-wreath.webp",
+    "slug": "ardent-raven-wreath",
     "name": {
-      "en": "Hollow Shell",
-      "ru": "Пустая оболочка"
+      "en": "Ardent Raven Wreath",
+      "ru": "Пламенный венок ворона"
+    },
+    "addedAt": "2020-01-01T00:00:00.000Z"
+  },
+  {
+    "kind": "offering",
+    "role": "killer",
+    "category": "Bonus Bloodpoints",
+    "icon": "/loadout/offering/ardent-shrike-wreath.webp",
+    "slug": "ardent-shrike-wreath",
+    "name": {
+      "en": "Ardent Shrike Wreath",
+      "ru": "Пламенный венок сорокопута"
+    },
+    "addedAt": "2020-01-01T00:00:00.000Z"
+  },
+  {
+    "kind": "offering",
+    "role": "killer",
+    "category": "Bonus Bloodpoints",
+    "icon": "/loadout/offering/ardent-spotted-owl-wreath.webp",
+    "slug": "ardent-spotted-owl-wreath",
+    "name": {
+      "en": "Ardent Spotted Owl Wreath",
+      "ru": "Пламенный венок пятнистой совы"
+    },
+    "addedAt": "2020-01-01T00:00:00.000Z"
+  },
+  {
+    "kind": "offering",
+    "role": "killer",
+    "category": "Bonus Bloodpoints",
+    "icon": "/loadout/offering/ardent-tanager-wreath.webp",
+    "slug": "ardent-tanager-wreath",
+    "name": {
+      "en": "Ardent Tanager Wreath",
+      "ru": "Пламенный венок танагры"
     },
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "kind": "offering",
     "role": "survivor",
-    "category": "Bonus Bloodpoints",
-    "icon": "/loadout/offering/sealed-envelope.webp",
-    "slug": "sealed-envelope",
+    "category": "Luck",
+    "icon": "/loadout/offering/black-salt-statuette.webp",
+    "slug": "black-salt-statuette",
     "name": {
-      "en": "Sealed Envelope",
-      "ru": "Запечатанный конверт"
+      "en": "Black Salt Statuette",
+      "ru": "Статуэтка из черной соли"
     },
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "kind": "offering",
     "role": "killer",
-    "category": "Bonus Bloodpoints",
-    "icon": "/loadout/offering/survivor-pudding.webp",
-    "slug": "survivor-pudding",
+    "category": "Wards",
+    "icon": "/loadout/offering/black-ward.webp",
+    "slug": "black-ward",
     "name": {
-      "en": "Survivor Pudding",
-      "ru": "Пудинг из выживших"
+      "en": "Black Ward",
+      "ru": "Черный защитник"
     },
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
@@ -62,12 +110,120 @@
   {
     "kind": "offering",
     "role": "survivor",
-    "category": "Bonus Bloodpoints",
-    "icon": "/loadout/offering/fresh-primrose-blossom.webp",
-    "slug": "fresh-primrose-blossom",
+    "category": "Luck",
+    "icon": "/loadout/offering/cream-chalk-pouch.webp",
+    "slug": "cream-chalk-pouch",
     "name": {
-      "en": "Fresh Primrose Blossom",
-      "ru": "Свежий цветок примулы"
+      "en": "Cream Chalk Pouch",
+      "ru": "Мешок с мелом кремового цвета"
+    },
+    "addedAt": "2020-01-01T00:00:00.000Z"
+  },
+  {
+    "kind": "offering",
+    "role": "killer",
+    "category": "Map Modifications",
+    "icon": "/loadout/offering/cut-coin.webp",
+    "slug": "cut-coin",
+    "name": {
+      "en": "Cut Coin",
+      "ru": "Разрезанная монета"
+    },
+    "addedAt": "2020-01-01T00:00:00.000Z"
+  },
+  {
+    "kind": "offering",
+    "role": "killer",
+    "category": "Bonus Bloodpoints",
+    "icon": "/loadout/offering/devout-raven-wreath.webp",
+    "slug": "devout-raven-wreath",
+    "name": {
+      "en": "Devout Raven Wreath",
+      "ru": "Молитвенный венок ворона"
+    },
+    "addedAt": "2020-01-01T00:00:00.000Z"
+  },
+  {
+    "kind": "offering",
+    "role": "killer",
+    "category": "Bonus Bloodpoints",
+    "icon": "/loadout/offering/devout-shrike-wreath.webp",
+    "slug": "devout-shrike-wreath",
+    "name": {
+      "en": "Devout Shrike Wreath",
+      "ru": "Молитвенный венок сорокопута"
+    },
+    "addedAt": "2020-01-01T00:00:00.000Z"
+  },
+  {
+    "kind": "offering",
+    "role": "killer",
+    "category": "Bonus Bloodpoints",
+    "icon": "/loadout/offering/devout-spotted-owl-wreath.webp",
+    "slug": "devout-spotted-owl-wreath",
+    "name": {
+      "en": "Devout Spotted Owl Wreath",
+      "ru": "Молитвенный венок пятнистой совы"
+    },
+    "addedAt": "2020-01-01T00:00:00.000Z"
+  },
+  {
+    "kind": "offering",
+    "role": "killer",
+    "category": "Bonus Bloodpoints",
+    "icon": "/loadout/offering/devout-tanager-wreath.webp",
+    "slug": "devout-tanager-wreath",
+    "name": {
+      "en": "Devout Tanager Wreath",
+      "ru": "Молитвенный венок танагры"
+    },
+    "addedAt": "2020-01-01T00:00:00.000Z"
+  },
+  {
+    "kind": "offering",
+    "role": "killer",
+    "category": "Memento Mori",
+    "icon": "/loadout/offering/ebony-memento-mori.webp",
+    "slug": "ebony-memento-mori",
+    "name": {
+      "en": "Ebony Memento Mori",
+      "ru": "Эбеновое Memento Mori"
+    },
+    "addedAt": "2020-01-01T00:00:00.000Z"
+  },
+  {
+    "kind": "offering",
+    "role": "both",
+    "category": "Map Modifications",
+    "icon": "/loadout/offering/faint-reagent.webp",
+    "slug": "faint-reagent",
+    "name": {
+      "en": "Faint Reagent",
+      "ru": "Слабый реагент"
+    },
+    "addedAt": "2020-01-01T00:00:00.000Z"
+  },
+  {
+    "kind": "offering",
+    "role": "survivor",
+    "category": "Bonus Bloodpoints",
+    "icon": "/loadout/offering/fragrant-bog-laurel.webp",
+    "slug": "fragrant-bog-laurel",
+    "name": {
+      "en": "Fragrant Bog Laurel",
+      "ru": "Душистый вереск"
+    },
+    "addedAt": "2020-01-01T00:00:00.000Z"
+  },
+  {
+    "kind": "offering",
+    "role": "survivor",
+    "category": "Bonus Bloodpoints",
+    "icon": "/loadout/offering/fragrant-crispleaf-amaranth.webp",
+    "slug": "fragrant-crispleaf-amaranth",
+    "name": {
+      "en": "Fragrant Crispleaf Amaranth",
+      "ru": "Душистый лист ширицы"
     },
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
@@ -80,18 +236,6 @@
     "name": {
       "en": "Fragrant Primrose Blossom",
       "ru": "Душистый цветок примулы"
-    },
-    "addedAt": "2020-01-01T00:00:00.000Z"
-  },
-  {
-    "kind": "offering",
-    "role": "survivor",
-    "category": "Bonus Bloodpoints",
-    "icon": "/loadout/offering/fresh-sweet-william.webp",
-    "slug": "fresh-sweet-william",
-    "name": {
-      "en": "Fresh Sweet William",
-      "ru": "Свежая гвоздика"
     },
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
@@ -123,18 +267,6 @@
     "kind": "offering",
     "role": "survivor",
     "category": "Bonus Bloodpoints",
-    "icon": "/loadout/offering/fragrant-bog-laurel.webp",
-    "slug": "fragrant-bog-laurel",
-    "name": {
-      "en": "Fragrant Bog Laurel",
-      "ru": "Душистый вереск"
-    },
-    "addedAt": "2020-01-01T00:00:00.000Z"
-  },
-  {
-    "kind": "offering",
-    "role": "survivor",
-    "category": "Bonus Bloodpoints",
     "icon": "/loadout/offering/fresh-crispleaf-amaranth.webp",
     "slug": "fresh-crispleaf-amaranth",
     "name": {
@@ -147,215 +279,23 @@
     "kind": "offering",
     "role": "survivor",
     "category": "Bonus Bloodpoints",
-    "icon": "/loadout/offering/fragrant-crispleaf-amaranth.webp",
-    "slug": "fragrant-crispleaf-amaranth",
+    "icon": "/loadout/offering/fresh-primrose-blossom.webp",
+    "slug": "fresh-primrose-blossom",
     "name": {
-      "en": "Fragrant Crispleaf Amaranth",
-      "ru": "Душистый лист ширицы"
-    },
-    "addedAt": "2020-01-01T00:00:00.000Z"
-  },
-  {
-    "kind": "offering",
-    "role": "killer",
-    "category": "Bonus Bloodpoints",
-    "icon": "/loadout/offering/devout-tanager-wreath.webp",
-    "slug": "devout-tanager-wreath",
-    "name": {
-      "en": "Devout Tanager Wreath",
-      "ru": "Молитвенный венок танагры"
-    },
-    "addedAt": "2020-01-01T00:00:00.000Z"
-  },
-  {
-    "kind": "offering",
-    "role": "killer",
-    "category": "Bonus Bloodpoints",
-    "icon": "/loadout/offering/ardent-tanager-wreath.webp",
-    "slug": "ardent-tanager-wreath",
-    "name": {
-      "en": "Ardent Tanager Wreath",
-      "ru": "Пламенный венок танагры"
-    },
-    "addedAt": "2020-01-01T00:00:00.000Z"
-  },
-  {
-    "kind": "offering",
-    "role": "killer",
-    "category": "Bonus Bloodpoints",
-    "icon": "/loadout/offering/devout-raven-wreath.webp",
-    "slug": "devout-raven-wreath",
-    "name": {
-      "en": "Devout Raven Wreath",
-      "ru": "Молитвенный венок ворона"
-    },
-    "addedAt": "2020-01-01T00:00:00.000Z"
-  },
-  {
-    "kind": "offering",
-    "role": "killer",
-    "category": "Bonus Bloodpoints",
-    "icon": "/loadout/offering/ardent-raven-wreath.webp",
-    "slug": "ardent-raven-wreath",
-    "name": {
-      "en": "Ardent Raven Wreath",
-      "ru": "Пламенный венок ворона"
-    },
-    "addedAt": "2020-01-01T00:00:00.000Z"
-  },
-  {
-    "kind": "offering",
-    "role": "killer",
-    "category": "Bonus Bloodpoints",
-    "icon": "/loadout/offering/devout-spotted-owl-wreath.webp",
-    "slug": "devout-spotted-owl-wreath",
-    "name": {
-      "en": "Devout Spotted Owl Wreath",
-      "ru": "Молитвенный венок пятнистой совы"
-    },
-    "addedAt": "2020-01-01T00:00:00.000Z"
-  },
-  {
-    "kind": "offering",
-    "role": "killer",
-    "category": "Bonus Bloodpoints",
-    "icon": "/loadout/offering/ardent-spotted-owl-wreath.webp",
-    "slug": "ardent-spotted-owl-wreath",
-    "name": {
-      "en": "Ardent Spotted Owl Wreath",
-      "ru": "Пламенный венок пятнистой совы"
-    },
-    "addedAt": "2020-01-01T00:00:00.000Z"
-  },
-  {
-    "kind": "offering",
-    "role": "killer",
-    "category": "Bonus Bloodpoints",
-    "icon": "/loadout/offering/devout-shrike-wreath.webp",
-    "slug": "devout-shrike-wreath",
-    "name": {
-      "en": "Devout Shrike Wreath",
-      "ru": "Молитвенный венок сорокопута"
-    },
-    "addedAt": "2020-01-01T00:00:00.000Z"
-  },
-  {
-    "kind": "offering",
-    "role": "killer",
-    "category": "Bonus Bloodpoints",
-    "icon": "/loadout/offering/ardent-shrike-wreath.webp",
-    "slug": "ardent-shrike-wreath",
-    "name": {
-      "en": "Ardent Shrike Wreath",
-      "ru": "Пламенный венок сорокопута"
+      "en": "Fresh Primrose Blossom",
+      "ru": "Свежий цветок примулы"
     },
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
     "kind": "offering",
     "role": "survivor",
-    "category": "Luck",
-    "icon": "/loadout/offering/cream-chalk-pouch.webp",
-    "slug": "cream-chalk-pouch",
+    "category": "Bonus Bloodpoints",
+    "icon": "/loadout/offering/fresh-sweet-william.webp",
+    "slug": "fresh-sweet-william",
     "name": {
-      "en": "Cream Chalk Pouch",
-      "ru": "Мешок с мелом кремового цвета"
-    },
-    "addedAt": "2020-01-01T00:00:00.000Z"
-  },
-  {
-    "kind": "offering",
-    "role": "survivor",
-    "category": "Luck",
-    "icon": "/loadout/offering/ivory-chalk-pouch.webp",
-    "slug": "ivory-chalk-pouch",
-    "name": {
-      "en": "Ivory Chalk Pouch",
-      "ru": "Мешок с мелом из слоновой кости"
-    },
-    "addedAt": "2020-01-01T00:00:00.000Z"
-  },
-  {
-    "kind": "offering",
-    "role": "survivor",
-    "category": "Luck",
-    "icon": "/loadout/offering/black-salt-statuette.webp",
-    "slug": "black-salt-statuette",
-    "name": {
-      "en": "Black Salt Statuette",
-      "ru": "Статуэтка из черной соли"
-    },
-    "addedAt": "2020-01-01T00:00:00.000Z"
-  },
-  {
-    "kind": "offering",
-    "role": "survivor",
-    "category": "Luck",
-    "icon": "/loadout/offering/vigo-s-jar-of-salty-lips.webp",
-    "slug": "vigo-s-jar-of-salty-lips",
-    "name": {
-      "en": "Vigo's Jar of Salty Lips",
-      "ru": "Банка Виго с засоленными губами"
-    },
-    "addedAt": "2020-01-01T00:00:00.000Z"
-  },
-  {
-    "kind": "offering",
-    "role": "both",
-    "category": "Map Modifications",
-    "icon": "/loadout/offering/torn-blueprint.webp",
-    "slug": "torn-blueprint",
-    "name": {
-      "en": "Torn Blueprint",
-      "ru": "Порванный чертеж"
-    },
-    "addedAt": "2020-01-01T00:00:00.000Z"
-  },
-  {
-    "kind": "offering",
-    "role": "survivor",
-    "category": "Map Modifications",
-    "icon": "/loadout/offering/tarnished-coin.webp",
-    "slug": "tarnished-coin",
-    "name": {
-      "en": "Tarnished Coin",
-      "ru": "Потускневшая монета"
-    },
-    "addedAt": "2020-01-01T00:00:00.000Z"
-  },
-  {
-    "kind": "offering",
-    "role": "killer",
-    "category": "Map Modifications",
-    "icon": "/loadout/offering/cut-coin.webp",
-    "slug": "cut-coin",
-    "name": {
-      "en": "Cut Coin",
-      "ru": "Разрезанная монета"
-    },
-    "addedAt": "2020-01-01T00:00:00.000Z"
-  },
-  {
-    "kind": "offering",
-    "role": "survivor",
-    "category": "Map Modifications",
-    "icon": "/loadout/offering/shiny-coin.webp",
-    "slug": "shiny-coin",
-    "name": {
-      "en": "Shiny Coin",
-      "ru": "Блестящая монета"
-    },
-    "addedAt": "2020-01-01T00:00:00.000Z"
-  },
-  {
-    "kind": "offering",
-    "role": "both",
-    "category": "Map Modifications",
-    "icon": "/loadout/offering/faint-reagent.webp",
-    "slug": "faint-reagent",
-    "name": {
-      "en": "Faint Reagent",
-      "ru": "Слабый реагент"
+      "en": "Fresh Sweet William",
+      "ru": "Свежая гвоздика"
     },
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
@@ -373,6 +313,30 @@
   },
   {
     "kind": "offering",
+    "role": "killer",
+    "category": "Bonus Bloodpoints",
+    "icon": "/loadout/offering/hollow-shell.webp",
+    "slug": "hollow-shell",
+    "name": {
+      "en": "Hollow Shell",
+      "ru": "Пустая оболочка"
+    },
+    "addedAt": "2020-01-01T00:00:00.000Z"
+  },
+  {
+    "kind": "offering",
+    "role": "survivor",
+    "category": "Luck",
+    "icon": "/loadout/offering/ivory-chalk-pouch.webp",
+    "slug": "ivory-chalk-pouch",
+    "name": {
+      "en": "Ivory Chalk Pouch",
+      "ru": "Мешок с мелом из слоновой кости"
+    },
+    "addedAt": "2020-01-01T00:00:00.000Z"
+  },
+  {
+    "kind": "offering",
     "role": "both",
     "category": "Map Modifications",
     "icon": "/loadout/offering/murky-reagent.webp",
@@ -380,30 +344,6 @@
     "name": {
       "en": "Murky Reagent",
       "ru": "Мутный реагент"
-    },
-    "addedAt": "2020-01-01T00:00:00.000Z"
-  },
-  {
-    "kind": "offering",
-    "role": "both",
-    "category": "Map Modifications",
-    "icon": "/loadout/offering/vigo-s-blueprint.webp",
-    "slug": "vigo-s-blueprint",
-    "name": {
-      "en": "Vigo's Blueprint",
-      "ru": "Чертеж Виго"
-    },
-    "addedAt": "2020-01-01T00:00:00.000Z"
-  },
-  {
-    "kind": "offering",
-    "role": "killer",
-    "category": "Map Modifications",
-    "icon": "/loadout/offering/rotten-oak.webp",
-    "slug": "rotten-oak",
-    "name": {
-      "en": "Rotten Oak",
-      "ru": "Гнилой дуб"
     },
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
@@ -434,48 +374,36 @@
   {
     "kind": "offering",
     "role": "killer",
-    "category": "Memento Mori",
-    "icon": "/loadout/offering/ebony-memento-mori.webp",
-    "slug": "ebony-memento-mori",
+    "category": "Map Modifications",
+    "icon": "/loadout/offering/rotten-oak.webp",
+    "slug": "rotten-oak",
     "name": {
-      "en": "Ebony Memento Mori",
-      "ru": "Эбеновое Memento Mori"
+      "en": "Rotten Oak",
+      "ru": "Гнилой дуб"
     },
     "addedAt": "2020-01-01T00:00:00.000Z"
-  },
-  {
-    "kind": "offering",
-    "role": "both",
-    "category": "Realm Selection",
-    "icon": "/loadout/offering/alien-flora.webp",
-    "slug": "alien-flora",
-    "name": {
-      "en": "Alien Flora",
-      "ru": "Инопланетная флора"
-    },
-    "addedAt": "2020-01-01T00:00:00.000Z"
-  },
-  {
-    "kind": "offering",
-    "role": "killer",
-    "category": "Shrouds",
-    "icon": "/loadout/offering/shroud-of-vanishing.webp",
-    "slug": "shroud-of-vanishing",
-    "name": {
-      "en": "Shroud of Vanishing",
-      "ru": "Покров исчезновения"
-    },
-    "addedAt": "2026-08-19T08:56:36.678Z"
   },
   {
     "kind": "offering",
     "role": "survivor",
-    "category": "Shrouds",
-    "icon": "/loadout/offering/vigo-s-shroud.webp",
-    "slug": "vigo-s-shroud",
+    "category": "Bonus Bloodpoints",
+    "icon": "/loadout/offering/sealed-envelope.webp",
+    "slug": "sealed-envelope",
     "name": {
-      "en": "Vigo's Shroud",
-      "ru": "Платок Виго"
+      "en": "Sealed Envelope",
+      "ru": "Запечатанный конверт"
+    },
+    "addedAt": "2020-01-01T00:00:00.000Z"
+  },
+  {
+    "kind": "offering",
+    "role": "survivor",
+    "category": "Map Modifications",
+    "icon": "/loadout/offering/shiny-coin.webp",
+    "slug": "shiny-coin",
+    "name": {
+      "en": "Shiny Coin",
+      "ru": "Блестящая монета"
     },
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
@@ -494,12 +422,84 @@
   {
     "kind": "offering",
     "role": "killer",
-    "category": "Wards",
-    "icon": "/loadout/offering/black-ward.webp",
-    "slug": "black-ward",
+    "category": "Shrouds",
+    "icon": "/loadout/offering/shroud-of-vanishing.webp",
+    "slug": "shroud-of-vanishing",
     "name": {
-      "en": "Black Ward",
-      "ru": "Черный защитник"
+      "en": "Shroud of Vanishing",
+      "ru": "Покров исчезновения"
+    },
+    "addedAt": "2026-08-19T08:56:36.678Z"
+  },
+  {
+    "kind": "offering",
+    "role": "killer",
+    "category": "Bonus Bloodpoints",
+    "icon": "/loadout/offering/survivor-pudding.webp",
+    "slug": "survivor-pudding",
+    "name": {
+      "en": "Survivor Pudding",
+      "ru": "Пудинг из выживших"
+    },
+    "addedAt": "2020-01-01T00:00:00.000Z"
+  },
+  {
+    "kind": "offering",
+    "role": "survivor",
+    "category": "Map Modifications",
+    "icon": "/loadout/offering/tarnished-coin.webp",
+    "slug": "tarnished-coin",
+    "name": {
+      "en": "Tarnished Coin",
+      "ru": "Потускневшая монета"
+    },
+    "addedAt": "2020-01-01T00:00:00.000Z"
+  },
+  {
+    "kind": "offering",
+    "role": "both",
+    "category": "Map Modifications",
+    "icon": "/loadout/offering/torn-blueprint.webp",
+    "slug": "torn-blueprint",
+    "name": {
+      "en": "Torn Blueprint",
+      "ru": "Порванный чертеж"
+    },
+    "addedAt": "2020-01-01T00:00:00.000Z"
+  },
+  {
+    "kind": "offering",
+    "role": "both",
+    "category": "Map Modifications",
+    "icon": "/loadout/offering/vigo-s-blueprint.webp",
+    "slug": "vigo-s-blueprint",
+    "name": {
+      "en": "Vigo's Blueprint",
+      "ru": "Чертеж Виго"
+    },
+    "addedAt": "2020-01-01T00:00:00.000Z"
+  },
+  {
+    "kind": "offering",
+    "role": "survivor",
+    "category": "Luck",
+    "icon": "/loadout/offering/vigo-s-jar-of-salty-lips.webp",
+    "slug": "vigo-s-jar-of-salty-lips",
+    "name": {
+      "en": "Vigo's Jar of Salty Lips",
+      "ru": "Банка Виго с засоленными губами"
+    },
+    "addedAt": "2020-01-01T00:00:00.000Z"
+  },
+  {
+    "kind": "offering",
+    "role": "survivor",
+    "category": "Shrouds",
+    "icon": "/loadout/offering/vigo-s-shroud.webp",
+    "slug": "vigo-s-shroud",
+    "name": {
+      "en": "Vigo's Shroud",
+      "ru": "Платок Виго"
     },
     "addedAt": "2020-01-01T00:00:00.000Z"
   },

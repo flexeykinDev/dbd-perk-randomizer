@@ -30,6 +30,7 @@ import {
   guardIdStability,
   type PieceIdentity,
 } from "./id-stability";
+import { stableSlugs } from "./stable-slugs";
 import { splitDescriptions, type DescriptionEntry, type DescriptionLookup } from "./split-descriptions";
 import { resolveImageUrl, WIKI_GG } from "./wiki-source";
 import {
@@ -1145,15 +1146,29 @@ async function main() {
   // Cannibal and The Hillbilly; genuinely different add-ons, not a
   // scraper duplicate). Left alone they'd all slugify identically and
   // silently collide into one stable ID, one icon file, and one React
-  // key wherever the UI lists add-ons — so any slug seen before gets the
-  // owning character appended to disambiguate it.
-  const usedAddonSlugs = new Set<string>();
-  for (const row of addonRows) {
-    if (usedAddonSlugs.has(row.piece.slug)) {
-      row.piece = { ...row.piece, slug: `${row.piece.slug}-${slugify(row.character)}` };
-    }
-    usedAddonSlugs.add(row.piece.slug);
+  // key wherever the UI lists add-ons, so the losers get the owning
+  // character appended.
+  //
+  // WHICH one loses is the part that has to be decided against the shipped
+  // data rather than against this run's ordering — see stable-slugs.ts for
+  // the swap that taught us so. Only the add-on slugs are passed in: an
+  // item or an offering sharing the string is a different `kind:` and never
+  // collided here.
+  const committedAddonOwners = new Map<string, string>();
+  for (const [key, identity] of Object.entries(readCommittedIdentities() ?? {})) {
+    if (!key.startsWith("addon:") || !identity.character) continue;
+    committedAddonOwners.set(key.slice("addon:".length), identity.character);
   }
+  const resolvedSlugs = stableSlugs(
+    addonRows.map((row) => ({ slug: row.piece.slug, character: row.character })),
+    committedAddonOwners,
+    (slug, character) => `${slug}-${slugify(character)}`,
+  );
+  addonRows.forEach((row, index) => {
+    if (resolvedSlugs[index] !== row.piece.slug) {
+      row.piece = { ...row.piece, slug: resolvedSlugs[index] };
+    }
+  });
 
   const addons: (Addon & DescriptionEntry)[] = addonRows.map((row) =>
     row.role === "survivor"
@@ -1324,10 +1339,25 @@ async function main() {
   );
 
   mkdirSync(DATA_DIR, { recursive: true });
+  /* Sorted by slug, because the row ORDER is load-bearing and the wiki's is
+     not ours to depend on.
+     getRandomLoadout rolls with shuffle(pool, createSeededRandom(seed)) - a
+     Fisher-Yates over the array as it arrives, so the same seed over a
+     differently ordered pool rolls a different build. Every share link and
+     every saved History entry carries a seed. Left unsorted, the pool's order
+     is whatever order the wiki happened to list things in that week, which
+     means someone else's link quietly stops reproducing the build it was made
+     from - no error, no guard, just a different answer.
+     Slug rather than name: the slug is what the id map, the icon filenames and
+     the share links are all keyed on, and it is unique by construction after
+     the disambiguation above. Sorting by a localised name would hand the
+     ordering to the collator instead of the wiki, which is no better. */
+  const bySlug = <T extends { slug: string }>(rows: readonly T[]): T[] =>
+    [...rows].sort((a, b) => (a.slug < b.slug ? -1 : a.slug > b.slug ? 1 : 0));
   writeFileSync(LOADOUT_DESCRIPTIONS_JSON, JSON.stringify(loadoutDescriptions, null, 2) + "\n");
-  writeFileSync(ITEMS_JSON, JSON.stringify(itemSplit.rows, null, 2) + "\n");
-  writeFileSync(ADDONS_JSON, JSON.stringify(addonSplit.rows, null, 2) + "\n");
-  writeFileSync(OFFERINGS_JSON, JSON.stringify(offeringSplit.rows, null, 2) + "\n");
+  writeFileSync(ITEMS_JSON, JSON.stringify(bySlug(itemSplit.rows), null, 2) + "\n");
+  writeFileSync(ADDONS_JSON, JSON.stringify(bySlug(addonSplit.rows), null, 2) + "\n");
+  writeFileSync(OFFERINGS_JSON, JSON.stringify(bySlug(offeringSplit.rows), null, 2) + "\n");
   writeFileSync(LOADOUT_META_JSON, JSON.stringify(meta, null, 2) + "\n");
   writeFileSync(LOADOUT_IDS_JSON, JSON.stringify(loadoutIds, null, 2) + "\n");
   writeFileSync(LOADOUT_ICON_SOURCES_JSON, JSON.stringify(iconSources, null, 2) + "\n");

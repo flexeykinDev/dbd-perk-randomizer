@@ -1008,5 +1008,7 @@
   "addon:air-freshener": "Освежитель воздуха",
   "addon:tilling-blade": "Пахотный инструмент",
   "addon:jewellery": "Бижутерия",
-  "addon:jewellery-box": "Коробка с бижутерией"
+  "addon:jewellery-box": "Коробка с бижутерией",
+  "item:all-hallows-eve-lunchbox": "Ланчбокс всех святых",
+  "item:will-o-wisp": "Блуждающий огонек"
 }

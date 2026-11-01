@@ -37,6 +37,26 @@ import type { Lang } from "../i18n";
 const ATTRIBUTED_QUOTE_RE = /"([^"]+)"\s*[-—]\s*(.+)\s*$/;
 const ATTRIBUTED_QUOTE_NESTED_RE = /"(.+)"\s*[-—]\s*(.+)\s*$/;
 const BARE_QUOTE_RE = /"([^"]+)"\s*$/;
+// A fifth shape, and the only one where the quote comes FIRST and the
+// mechanic follows it:
+//
+//   "The faithful shall go out at night..." — (Witness to Koenrad, ch. 40)
+//   Increases the maximum speed of the controlled Divine Light by +25 %.
+//
+// The Inquisitor's add-ons are written this way — a scripture citation in
+// parentheses rather than a speaker — and the four end-anchored patterns
+// above cannot see it, which would be harmless on its own. What was not
+// harmless is that ATTRIBUTED_QUOTE_RE *half* sees it: it matches the quote
+// and the dash, and then `(.+)$` runs greedily to the end of the string, so
+// the whole mechanical description got filed as the speaker's name and the
+// body came back empty. Twenty add-ons rendered with no Core Effect and no
+// prose at all until this was added.
+//
+// Anchored at the start and requiring the parenthesised form, because that
+// is what distinguishes this from the ordinary trailing case; the body is
+// whatever follows, which is the opposite of every pattern above.
+const LEADING_ATTRIBUTED_QUOTE_RE = /^\s*"([^"]+)"\s*[-—]\s*\(([^)]+)\)\s*/;
+
 const BARE_QUOTE_NESTED_RE = /"(.+)"\s*$/;
 
 // The RU wiki writes a lore quote to a different convention than the EN
@@ -126,12 +146,35 @@ function splitTrailingAttributedQuote(
   return null;
 }
 
+function quoted(inner: string, lang: Lang): string {
+  return lang === "ru" ? `«${inner}»` : `“${inner}”`;
+}
+
 export function splitQuote(text: string, lang: Lang): { body: string; quote: string | null } {
+  const leading = LEADING_ATTRIBUTED_QUOTE_RE.exec(text);
+  if (leading && leading[2].trim().length <= ATTRIBUTION_MAX_LENGTH) {
+    return {
+      body: text.slice(leading[0].length).trim(),
+      quote: `${quoted(leading[1], lang)} — ${leading[2].trim()}`,
+    };
+  }
   const attributed = text.match(ATTRIBUTED_QUOTE_RE) ?? text.match(ATTRIBUTED_QUOTE_NESTED_RE);
-  if (attributed && attributed.index !== undefined) {
+  /* The same two guards splitTrailingAttributedQuote applies, and for the same
+     reason: an attribution is a name, so anything long or carrying a figure is
+     mechanical text that this pattern has mistaken for a credit. Without them
+     the greedy `(.+)$` silently eats a description, which is exactly what the
+     Inquisitor's add-ons did. Degrading to "no quote here" leaves the lore
+     sentence in the body, where the sentence-level lore heuristic drops it
+     from Core anyway - the same place it sat before any of this existed. */
+  const credit = attributed?.[2]?.trim() ?? "";
+  if (
+    attributed &&
+    attributed.index !== undefined &&
+    credit.length <= ATTRIBUTION_MAX_LENGTH &&
+    !credit.includes("%")
+  ) {
     const body = text.slice(0, attributed.index).trim();
-    const quoted = lang === "ru" ? `«${attributed[1]}»` : `“${attributed[1]}”`;
-    return { body, quote: `${quoted} — ${attributed[2].trim()}` };
+    return { body, quote: `${quoted(attributed[1], lang)} — ${credit}` };
   }
   // Ahead of the bare patterns, not after them. Those anchor on the very
   // end of the string, and the RU credit line usually *ends* on a quoted
@@ -143,14 +186,14 @@ export function splitQuote(text: string, lang: Lang): { body: string; quote: str
   // where it doesn't apply.
   const trailing = splitTrailingAttributedQuote(text);
   if (trailing) {
-    const quoted = lang === "ru" ? `«${trailing.inner}»` : `“${trailing.inner}”`;
-    return { body: trailing.body, quote: `${quoted} — ${trailing.attribution}` };
+    return {
+      body: trailing.body,
+      quote: `${quoted(trailing.inner, lang)} — ${trailing.attribution}`,
+    };
   }
   const bare = text.match(BARE_QUOTE_RE) ?? text.match(BARE_QUOTE_NESTED_RE);
   if (bare && bare.index !== undefined) {
-    const body = text.slice(0, bare.index).trim();
-    const quoted = lang === "ru" ? `«${bare[1]}»` : `“${bare[1]}”`;
-    return { body, quote: quoted };
+    return { body: text.slice(0, bare.index).trim(), quote: quoted(bare[1], lang) };
   }
   return { body: text.trim(), quote: null };
 }
