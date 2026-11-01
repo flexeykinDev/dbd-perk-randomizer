@@ -2539,6 +2539,54 @@
     "addedAt": "2020-01-01T00:00:00.000Z"
   },
   {
+    "slug": "best-gift-ever",
+    "role": "survivor",
+    "name": {
+      "en": "Best Gift Ever",
+      "ru": "Best Gift Ever"
+    },
+    "character": "Sienna",
+    "icon": "/perks/survivor/best-gift-ever.webp",
+    "tags": [
+      "generator",
+      "healing",
+      "aura",
+      "stealth",
+      "items"
+    ],
+    "addedAt": "2026-11-01T12:30:34.926Z",
+    "availableFrom": "2026-11-24"
+  },
+  {
+    "slug": "shared-trauma",
+    "role": "survivor",
+    "name": {
+      "en": "Shared Trauma",
+      "ru": "Shared Trauma"
+    },
+    "character": "Sienna",
+    "icon": "/perks/survivor/shared-trauma.webp",
+    "tags": [
+      "aura",
+      "exhaustion"
+    ],
+    "addedAt": "2026-11-01T12:30:34.926Z",
+    "availableFrom": "2026-11-24"
+  },
+  {
+    "slug": "valkyrie-s-rage",
+    "role": "survivor",
+    "name": {
+      "en": "Valkyrie's Rage",
+      "ru": "Valkyrie's Rage"
+    },
+    "character": "Sienna",
+    "icon": "/perks/survivor/valkyrie-s-rage.webp",
+    "tags": [],
+    "addedAt": "2026-11-01T12:30:34.926Z",
+    "availableFrom": "2026-11-24"
+  },
+  {
     "slug": "a-nurse-s-calling",
     "role": "killer",
     "name": {
@@ -4556,5 +4604,49 @@
       "chase"
     ],
     "addedAt": "2020-01-01T00:00:00.000Z"
+  },
+  {
+    "slug": "funny-business",
+    "role": "killer",
+    "name": {
+      "en": "Funny Business",
+      "ru": "Funny Business"
+    },
+    "character": "Terrifier",
+    "icon": "/perks/killer/funny-business.webp",
+    "tags": [
+      "gen-regression",
+      "chase"
+    ],
+    "addedAt": "2026-11-01T12:30:34.926Z",
+    "availableFrom": "2026-11-24"
+  },
+  {
+    "slug": "kill-spree",
+    "role": "killer",
+    "name": {
+      "en": "Kill Spree",
+      "ru": "Kill Spree"
+    },
+    "character": "Terrifier",
+    "icon": "/perks/killer/kill-spree.webp",
+    "tags": [],
+    "addedAt": "2026-11-01T12:30:34.926Z",
+    "availableFrom": "2026-11-24"
+  },
+  {
+    "slug": "laughingstock",
+    "role": "killer",
+    "name": {
+      "en": "Laughingstock",
+      "ru": "Laughingstock"
+    },
+    "character": "Terrifier",
+    "icon": "/perks/killer/laughingstock.webp",
+    "tags": [
+      "aura-info"
+    ],
+    "addedAt": "2026-11-01T12:30:34.926Z",
+    "availableFrom": "2026-11-24"
   }
 ]

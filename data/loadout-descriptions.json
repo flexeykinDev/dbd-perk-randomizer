@@ -3831,6 +3831,66 @@
     "description": "The glove Renjiro held to his sternum following the strike dealt by his son Kazan.Whenever a Survivor comes into a contact with a Blood Orb, the following effects apply: The Blood Orb is absorbed by the Survivor. Their Aura is revealed to you for 2 seconds per absorbed Blood Orb. Renjiro's Bloody Glove grants Survivors the ability to see Blood Orbs at the same distance as you. \"When all else spills out, cling only to your honour.\" — Renjiro's Doctrine 14:12",
     "descriptionRuRaw": "Эту перчатку Рендзиро прижимал к груди, когда сын нанес ему удар. Все выжившие могут видеть шарики крови на том же расстоянии, что и вы. Когда выживший прикасается к шарику крови, его аура подсвечивается на 2 сек. \"Когда все утекает сквозь пальцы, держись за свою честь\" - \"Учение Рендзиро\" 14:12"
   },
+  "addon:allie-s-scalp": {
+    "description": "\"The most horrifying moments start with a simple cut.\" Once per Trial, downing a Tortured Survivor with a basic-attack applies Terrified."
+  },
+  "addon:blackened-heart": {
+    "description": "\"A still-beating heart, dark and crawling with worms.\" After Taunting a Survivor, downing a Survivor with a Toy grants that Toy +1 extra Deadliness point."
+  },
+  "addon:bottle-of-bleach": {
+    "description": "\"Causes agonizing pain when applied to wounds. And kills 99.9% of household bacteria!\" Decreases Torture decay rate by -15 %."
+  },
+  "addon:mike-s-phone": {
+    "description": "\"It's busted, just like Mike's head.\" Hitting a non-regressing Generator with a Toy causes it to lose -5 % progress and start regressing."
+  },
+  "addon:bloodstained-bullet": {
+    "description": "\"A bloody bullet that was lodged in Tara's corpse.\" Shooting a Survivor further than 16 metres away grants +10 % Haste Status Effect for 10 seconds. When you apply Torture, the next Bag of Toys search is guaranteed to contain the Handgun."
+  },
+  "addon:brooke-s-pustule": {
+    "description": "\"A weeping blister that bubbled as acid ate through Brooke's face.\" While standing in the Acid Puddle and for 5 seconds after, increase basic-breaking speed of Pallets and Breakable Walls by +25 %. When you apply Torture, the next Bag of Toys search is guaranteed to contain the Acid Bottle."
+  },
+  "addon:burnt-wings": {
+    "description": "\"Everything Sienna held dear went up in flames.\" Increases the duration of Flames by +5 seconds. When you apply Torture, the next Bag of Toys search is guaranteed to contain the Flamethrower."
+  },
+  "addon:shiny-tricycle": {
+    "description": "\"Three wheels means you'll maintain your balance on the bloodiest of floors.\" When the Bike Horn detects more than 1 Survivor, reveal other Survivors who were not detected for 8 seconds. When you apply Torture, the next Bag of Toys search is guaranteed to contain the Bike Horn."
+  },
+  "addon:sienna-s-flesh": {
+    "description": "\"A strip of skin torn from Sienna during a brutal beating.\" Increases the range of the Flail by +20 %. When you apply Torture, the next Bag of Toys search is guaranteed to contain the Flail."
+  },
+  "addon:candy-head-bowl": {
+    "description": "\"Dig deep into Mom's skull and grab a treat.\" Detecting a Survivor with the Bike Horn resets Bag of Toys cool-down."
+  },
+  "addon:dead-opossum": {
+    "description": "\"A lifeless carcass that still holds plenty of entertainment value.\" Hitting a Survivor with the Handgun or the Flail reveals all other Survivor locations within 24 metres for 3 seconds."
+  },
+  "addon:emily": {
+    "description": "\"A small porcelain doll that must be wondering where Mommy went.\" Toys available in the Bag of Toys appear in a set order: Bike Horn. Handgun. Flamethrower. Flail. Acid Bottle."
+  },
+  "addon:thornton-salt": {
+    "description": "\"It's a bit digested but otherwise still good.\" Tortured Survivors suffer from Mangled and Haemorrhage Status Effects. These effects linger for 40 seconds after Torture is removed."
+  },
+  "addon:victoria-s-eye": {
+    "description": "\"It's a bit digested but otherwise still good.\" Hitting a Survivor with the Acid Bottle or the Flamethrower reveals their aura for 5 seconds."
+  },
+  "addon:art-crispies": {
+    "description": "\"A surprise in every box!\" When you Torture a Survivor, you both gain between +5 % and +15 % Haste Status Effect for 5 seconds."
+  },
+  "addon:explosive-gift": {
+    "description": "\"A disarmingly joyful gift that's sure to be a blast.\" For each Toy with maximum Deadliness, reduce your Terror Radius size by -20 %."
+  },
+  "addon:jonathan-s-skull": {
+    "description": "\"The bespectacled skull of Sienna's brother. Hilarious!\" Damaging or Torturing a Survivor with a Toy grants 1 Token, up to 10 Tokens. Manually Taunting consumes all Tokens then, if at least 1 Token was consumed, reveal all Survivor auras within 8 metres plus +2 metres per Token for 6 seconds."
+  },
+  "addon:wacky-jacks": {
+    "description": "\"110% of your recommended daily intake of sugar.\" Reduces maximum possible Deadliness points by -1 point to 5 points."
+  },
+  "addon:duct-tape": {
+    "description": "\"Made for restraining victims but could probably be used to keep things in place.\" Equipping a Toy within 0.5 seconds of opening the Bag of Toys reduces its cool-down by -5 seconds."
+  },
+  "addon:the-ninth-circle": {
+    "description": "\"Sadistic, creepy, and shockingly gory. What kind of person would be interested in this?\" Taunting a Survivor for the first time grants 1 Token. When the Exit Gates are powered and The Ninth Circle has 4 Tokens, reduce the cool-down of Bag of Toys to 1 second."
+  },
   "offering:hollow-shell": {
     "description": "Grants +25 % bonus Bloodpoints in all Scoring Categories. The bonus Bloodpoints are applied after exiting the Trial. \"An unidentifiable cocoon which was breached by whatever was inside.\"",
     "descriptionRuRaw": "Даёт 25% бонусных очков крови во всех категориях."

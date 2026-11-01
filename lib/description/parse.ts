@@ -55,6 +55,34 @@ const BARE_QUOTE_RE = /"([^"]+)"\s*$/;
 // Anchored at the start and requiring the parenthesised form, because that
 // is what distinguishes this from the ordinary trailing case; the body is
 // whatever follows, which is the opposite of every pattern above.
+// And the same shape with no credit at all, which is how the Terrifier's
+// add-ons are written:
+//
+//   "Causes agonizing pain when applied to wounds. And kills 99.9% of
+//   household bacteria!" Decreases Torture decay rate by -15 %.
+//
+// Two sentences inside one quote is what makes this its own case. The
+// end-anchored bare patterns cannot see a quote at the front, so the whole
+// thing stayed in the body and the sentence splitter cut it in half - and
+// the second half kept a number, so the lore heuristic kept it and the card
+// showed `And kills **99.9%** of household bacteria!"` as a mechanic,
+// dangling quote mark and all.
+//
+// Deliberately limited to a quote that spans more than one SENTENCE. Several
+// hundred add-ons open on a single quoted flavour line, and those are already
+// handled - they stay in the body and the sentence-level lore heuristic drops
+// them from Core. Pulling those out here too would change the quote shown on
+// every one of those cards, which is a product decision and not this fix. A
+// sentence break inside the quote is precisely what lets the splitter cut it
+// in half, so it is also precisely the case that needs catching.
+//
+// Guarded by the same two thresholds as the trailing RU case, because the
+// risk here is the opposite one: a description that merely OPENS on a quoted
+// term (`"Industrial strength" battery that...`) is body text, not lore. A
+// term is short and is one or two words; a lore line is neither. The
+// remainder must also be non-empty, or this is just a quote on its own and
+// belongs to the bare patterns below.
+const LEADING_BARE_QUOTE_RE = /^\s*"([^"]+)"\s*/;
 const LEADING_ATTRIBUTED_QUOTE_RE = /^\s*"([^"]+)"\s*[-—]\s*\(([^)]+)\)\s*/;
 
 const BARE_QUOTE_NESTED_RE = /"(.+)"\s*$/;
@@ -194,6 +222,30 @@ export function splitQuote(text: string, lang: Lang): { body: string; quote: str
   const bare = text.match(BARE_QUOTE_RE) ?? text.match(BARE_QUOTE_NESTED_RE);
   if (bare && bare.index !== undefined) {
     return { body: text.slice(0, bare.index).trim(), quote: quoted(bare[1], lang) };
+  }
+  /* Last of all, and both halves of that matter.
+     After the ATTRIBUTED forms, because several perks carry an opening flavour
+     line AND a closing character quote - Left Behind opens "You will get the
+     job done..." and closes on Bill Overbeck - and the speaker's line is the
+     one the card should show. Given first refusal this took the preamble and
+     threw the speaker away.
+     After the BARE ones for the same reason without a speaker: Crimson
+     Ceremony Book opens on "A book about an ancient god." and closes on
+     "Speak! I am the Crimson One!", and taking the opening left the closing
+     one in the body for the splitter to cut in half - reintroducing the exact
+     stray quote mark this rule exists to remove. */
+  const leadingBare = LEADING_BARE_QUOTE_RE.exec(text);
+  if (leadingBare) {
+    const inner = leadingBare[1];
+    const rest = text.slice(leadingBare[0].length).trim();
+    if (
+      rest !== "" &&
+      inner.length >= LORE_QUOTE_MIN_LENGTH &&
+      inner.trim().split(/\s+/).length >= LORE_QUOTE_MIN_WORDS &&
+      /[.!?]\s+\S/.test(inner)
+    ) {
+      return { body: rest, quote: quoted(inner, lang) };
+    }
   }
   return { body: text.trim(), quote: null };
 }

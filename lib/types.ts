@@ -34,6 +34,12 @@ export interface Perk {
   /** ISO date this perk was first seen by the scraper — carried forward
    *  across runs so it doesn't reset every scrape. */
   addedAt: string;
+  /** The day this becomes real, YYYY-MM-DD, for content that ships with the
+   *  build before it is in the game. Absent for everything already playable,
+   *  which is almost everything. See lib/availability.ts - the client hides
+   *  these until the day, so the site picks up a new Chapter on its release
+   *  date rather than on the next scrape. */
+  availableFrom?: string;
 }
 
 export interface PerksMeta {
@@ -73,6 +79,12 @@ interface LoadoutPieceBase {
   name: { en: string; ru: string };
   icon: string;
   addedAt: string;
+  /** The day this becomes real, YYYY-MM-DD, for content that ships with the
+   *  build before it is in the game. Absent for everything already playable,
+   *  which is almost everything. See lib/availability.ts - the client hides
+   *  these until the day, so the site picks up a new Chapter on its release
+   *  date rather than on the next scrape. */
+  availableFrom?: string;
 }
 
 export interface Item extends LoadoutPieceBase {

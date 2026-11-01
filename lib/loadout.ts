@@ -15,6 +15,7 @@ import type {
   PerkRole,
 } from "./types";
 import { createSeededRandom, shuffle } from "./seeded-random";
+import { available } from "./availability";
 
 /** Display names for the survivor item types, shared by the loadout HUD and
  *  the pool manager's category filter so the two can't drift apart. */
@@ -28,9 +29,11 @@ export const ITEM_TYPE_LABEL: Record<ItemType, { ru: string; en: string }> = {
   toolbox: { ru: "Набор инструментов", en: "Toolbox" },
 };
 
-export const items: Item[] = itemsData as Item[];
-export const addons: Addon[] = addonsData as Addon[];
-export const offerings: Offering[] = offeringsData as Offering[];
+/* Same single point as lib/perks.ts, and for the same reason: a new killer's
+   add-ons must not be rollable before the killer is. */
+export const items: Item[] = available(itemsData as Item[]);
+export const addons: Addon[] = available(addonsData as Addon[]);
+export const offerings: Offering[] = available(offeringsData as Offering[]);
 const killerPowerIcons: Record<string, string> = killerPowerIconsData;
 
 /** A killer's Power icon (e.g. Bear Trap for The Trapper), scraped from

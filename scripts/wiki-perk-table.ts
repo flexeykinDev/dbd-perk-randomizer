@@ -52,6 +52,10 @@ export interface ScrapedRow {
    *  Kept rather than just stripped, because on a source that publishes
    *  pre-release content it's the signal that a row may not be live. */
   upcoming: boolean;
+  /** Set by the release gate when this row belongs to an announced Chapter
+   *  with a recorded release date. Ships with the build and stays hidden
+   *  client-side until the day - see lib/availability.ts. */
+  availableFrom?: string;
 }
 
 /** The Perks page's own column headings, used to find the two perk tables

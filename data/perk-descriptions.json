@@ -130,7 +130,7 @@
     "descriptionRuRaw": "Находясь рядом с тотемом, используйте Е, чтобы его благословить и создать уникальный дарующий тотем, впитывающий в себя все ваши дары. Генераторы в пределах действия такого тотема: портятся на 50% медленнее; выжившие ремонтируют их на 8/9/10% быстрее. Выжившие в пределах действия дарующего тотема видят ауры подверженных его воздействию генераторов"
   },
   "borrowed-time": {
-    "description": "Whenever you gain Deep Wound while you have Endurance Status Effect, Borrowed Time activates: Passively mend yourself over a period of 40/35/30 seconds. \"Probably stings like hell, but it ain't gonna kill ya. Up and at 'em soldier. Time to move!\" — Bill Overbeck",
+    "description": "\"You are fuelled with an unexpected energy when saving an ally from a hook.\" Whenever you unhook another Survivor, they benefit from the following effects: Extends the duration of the Endurance Status Effect by 6/8/10 seconds to 16/18/20 seconds. Endurance is cancelled prematurely when performing a Conspicuous Action of any kind. Extends the duration of the Haste Status Effect by +10 seconds to 20 seconds. \"Probably stings like hell, but it ain't gonna kill ya. Up and at 'em soldier. Time to move!\" — Bill Overbeck",
     "descriptionRuRaw": "Когда вы снимаете выжившего с крюка: его эффект \"Стойкость\" после снятия действует на 6/8/10 сек. дольше; его эффект \"Спешка\" после снятия действует на 10 сек. дольше. Стойких выживших нельзя смертельно ранить одним ударом, вместо этого они получают глубокую рану. \"Спешка\" ускоряет движение убийц и выживших."
   },
   "botany-knowledge": {
@@ -651,7 +651,7 @@
     "descriptionRuRaw": "Когда вас снимают с крюка, вы получаете 50/60/70% прогресса лечения."
   },
   "road-life": {
-    "description": "\"Faulty amps, sweaty dives, broken-down vans... nothing makes you feel more alive.\" While injured and repairing a Generator, regular Skill Checks have the following effects: Gain +1 Token for Great Repair Skill Checks. Gain 0 Tokens for Good Repair Skill Checks. Lose -1 Token for Failed Repair Skill Checks. Once you accumulate 6/5/4 Tokens, consume all Tokens to benefit from the following effect: Unlocks the ability to heal yourself Increases your Self-Healing speed by +100 % until you stop healing and for 4 seconds after. \"Remind me to teach you how to patch your own pedals, Krit.\" — Vee Boonyasak",
+    "description": "\"Faulty amps, sweaty dives, broken-down vans... nothing makes you feel more alive.\" While injured and repairing a Generator, regular Skill Checks have the following effects: Gain +1 Token for Great Repair Skill Checks. Gain 0 Tokens for Good Repair Skill Checks. Lose -1 Token for Failed Repair Skill Checks. Once you accumulate 6/5/4 Tokens, consume all Tokens to benefit from the following effect: Unlocks the ability to self-heal. This self-heal interaction is +10 % faster. Road Life deactivates 4 seconds after you stop the self-healing interaction. \"Remind me to teach you how to patch your own pedals, Krit.\" — Vee Boonyasak",
     "descriptionRuRaw": "Пока ранены, не ослаблены и чините генератор: за отличную проверку реакции вы получите жетоны (1шт.); провалив базовую проверку реакции, вы теряете 1шт. жетонов. Если у вас есть 6/5/4 шт жетонов, вы можете потратить их все, чтобы лечиться на 100% быстрее, пока не прервете лечение."
   },
   "rookie-spirit": {
@@ -694,7 +694,7 @@
     "descriptionRuRaw": "Когда другого выжившего вешают на крюк, вы получаете эффект \"Ускользание\" на 20/25/30 сек.. Ускользающие выжившие: ауры скрыты; не оставляют следы-трещины; не оставляют лужи крови; не стонут от боли"
   },
   "shoulder-the-burden": {
-    "description": "\"Born to be a disciple. Ready to submit to a greater cause. This is your calling.\" Once per Trial, and while you are not on Death Hook, press the Active Ability button while standing in front of a Hooked Survivor to unhook them and trigger the following effects: Trade 1 Hook Stage with the other Survivor to their benefit. Causes you to scream, become injured if healthy and suffer from the Broken Status Effect for 160/140/120 seconds. Shoulder the Burden is then deactivated for all Survivors. \"It's not your time yet. Now go on!\" — Taurie Cain",
+    "description": "\"Born to be a disciple. Ready to submit to a greater cause. This is your calling.\" Once per Trial, and while you are not on Death Hook, press the Active Ability button while standing in front of a Hooked Survivor to unhook them and trigger the following effects: Trade 1 Hook Stage with the other Survivor to their benefit. Causes you to scream, become injured if healthy and suffer from the Broken Status Effect for 160/140/120 seconds. \"It's not your time yet. Now go on!\" — Taurie Cain",
     "descriptionRuRaw": "Один раз за матч, если вы не имеете 2-й стадии крюка и стоите рядом с подвешенным товарищем, нажмите F, чтобы его освободить. Затем: он теряет одну стадию крюка; вы получаете одну стадию крюка; вы кричите; вы получаете эффект \"Уязвимость\" на 60/50/40 сек.. Уязвимые выжившие получают смертельные ранения от базовых атак, даже если полностью здоровы."
   },
   "slippery-meat": {
@@ -738,7 +738,7 @@
     "descriptionRuRaw": "Когда вы переходите на бег, то: получаете 50% эффекта \"Спешка\" на 2 сек. Получаете эффект \"Усталость\" на 60/50/40 сек.. \"Спешка\" ускоряет движение убийц и выживших. Усталые выжившие не могут использовать навыки, которые вызывают усталость."
   },
   "stake-out": {
-    "description": "\"Getting close to the Killer fills you with determination.\" Staying in the Terror Radius and within 24 metres of the Killer without being chased grants +1 Token every 15 seconds, up to a maximum of 2/3/4 Tokens.While performing a skilful interaction that can trigger Skill Checks, you benefit from the following effects: Replaces regular Skill Checks with special Skill Checks. These Skill Checks grant +4 % more progress on success and lose -4 % more progress on miss. Succeeding or missing a special Skill Check consumes -1 Token. \"I had you, I had you on your knees. You're runnin' scared because we had you. We're gonna close this case!\" — Detective David Tapp",
+    "description": "\"Getting close to the Killer fills you with determination.\" Staying in the Terror Radius and within 24 metres of the Killer without being chased grants +1 Token every 15 seconds, up to a maximum of 2/3/4 Tokens.While performing a skilful interaction that can trigger Skill Checks, you benefit from the following effects: Replaces regular Skill Checks with special Skill Checks. These Skill Checks grant +4 % more progress on success. Succeeding or missing a special Skill Check consumes -1 Token. \"I had you, I had you on your knees. You're runnin' scared because we had you. We're gonna close this case!\" — Detective David Tapp",
     "descriptionRuRaw": "Если вы прячетесь в радиусе террора убийцы в течение 15 сек., то получаете жетоны (1, максимум - 2/3/4 шт.). Когда вы хорошо проходите базовую проверку реакции, тратятся жетоны (1): хорошая проверка становится отличной; вы получаете на 1% больше прогресса."
   },
   "still-sight": {
@@ -786,7 +786,7 @@
     "descriptionRuRaw": "Когда смертельно ранены: вы получаете 30/40/50% эффекта \"Спешка\"; вы можете одновременно ползти и восстанавливаться; ваши стоны от боли звучат на 75% тише. \"Спешка\" ускоряет движение убийц и выживших."
   },
   "this-is-not-happening": {
-    "description": "\"You perform at your best when you are under extreme stress.\" While repairing or healing, This Is Not Happening activates: Increases the Success zone for a Great Skill Check by +30 %. Increases the Success zone for a Good Skill Check by 150/175/200 %.",
+    "description": "\"You perform at your best when you are under extreme stress.\" While repairing or healing, This Is Not Happening activates: Increases the Success zone for a Good Skill Check by 150/175/200 %.",
     "descriptionRuRaw": "Пока вы ранены, отличные зоны базовой проверки реакции становятся на 10/20/30% больше."
   },
   "troubleshooter": {
@@ -863,6 +863,15 @@
   "wiretap": {
     "description": "\"You know that the best way to stay one step ahead is to keep tabs on the competition.\" After repairing a Generator for the equivalent of 40 % of Progression, Wiretap activates.While active, press the Active Ability button while standing next to a Generator to install a listening device to it with a countdown of 100/110/120 seconds: Reveals the Aura of the Killer coming within 14 metres of the Bugged Generator to all Survivors. The listening device is deactivated after its countdown has elapsed or the Bugged Generator is damaged. The Auras of Bugged Generators are revealed to all Survivors in yellow.",
     "descriptionRuRaw": "После починки 40% генераторов нажмите F рядом с генератором, чтобы установить ловушку, которая сохраняется 100/110/120 сек. или до тех пор, пока убийца не повредит генератор. В течение этого времени все выжившие видят ауру этого генератора. Все выжившие видят ауру убийцы, пока тот находится в радиусе 14м от этого генератора."
+  },
+  "best-gift-ever": {
+    "description": "Best Gift Ever starts the Trial with 4/5/6 Tokens:The first time you drop an Item of each type, spend 1 Token to cause the dropped to be consumed by The Entity and benefit from an effect based on the Item: Flashlights: stunning the Killer causes them to be blinded for 2 seconds. Fog Vials: fast-vaulting causes your Scratch Marks to disappear +50 % faster for 5 seconds. Keys: you can rummage each Chest once. Maps: you see auras that last for a duration for +1 second longer. Med-Kits: healing a Survivor causes you to gain healing progress at 25 % speed. Toolboxes: you see auras of the 3 closest Generators. \"If a demon enters this world in the flesh, a counterpoint must be appointed to stop it from becoming too powerful.\" — Jonathan Shaw"
+  },
+  "shared-trauma": {
+    "description": "Taking a protection hit causes you and all Survivors within 12 metres to recover from Exhausted while running for 30/35/40 seconds.You also see auras of Survivors suffering from Exhausted within 32 metres.\"What? I like her scars. I think they're cool.\" — Gabbie Shaw"
+  },
+  "valkyrie-s-rage": {
+    "description": "Valkyrie's Rage activates after being chased for 40/35/30 seconds: The next time you Pallet-stun the Killer, they are stunned for +75 % longer. Valkyrie's Rage then deactivates. \"I hope that hurt, fucker!\" — Sienna Shaw"
   },
   "a-nurse-s-calling": {
     "description": "Unlocks potential in your Aura-reading ability: The Auras of Survivors being healed or healing themselves are revealed to you within 28/30/32 metres. \"Still attached to the fragments of her past life, she is drawn to those in need of help.\"",
@@ -970,7 +979,7 @@
     "descriptionRuRaw": "Когда вы вешаете на крюк выжившего, которым не одержимы, то получаете жетоны (1). Пока объект одержимости жив, за каждый жетон остальные выжившие: лечатся на 2/2.5/3% медленнее; ремонтируют на 2/2.5/3% медленнее; ломают крюки на 2/2.5/3% медленнее. Объект одержимости: лечит других выживших на 33% быстрее; снимает выживших с крюков на 33% быстрее."
   },
   "dark-arrogance": {
-    "description": "\"When everything is going right, you are an inescapable inevitability.\" Whenever you are vaulting a Window, you benefit from the following effect: Increases the Vaulting speed by 15/20/25 %. Increases all basic-attack recovery speeds by 15/20/25 %. Whenever you are stunned with a Pallet or blinded by any means, you suffer from the following effects: Reduces the Recovery speed from Pallet Stuns by -25 %. Increases the duration of Killer Blinds by +25 %. \"Run all you want. I will not be denied.\" — Vecna",
+    "description": "\"When everything is going right, you are an inescapable inevitability.\" Whenever you are vaulting a Window, you benefit from the following effect: Increases the Vaulting speed by 15/20/25 %. Increases all basic-attack recovery speeds by +10 %. Whenever you are stunned with a Pallet or blinded by any means, you suffer from the following effects: Reduces the Recovery speed from Pallet Stuns by -25 %. Increases the duration of Killer Blinds by +25 %. \"Run all you want. I will not be denied.\" — Vecna",
     "descriptionRuRaw": "Вы совершаете базовые прыжки в окна на 15/20/25% быстрее. Слепота и оглушение от доски длится на 15% дольше."
   },
   "dark-devotion": {
@@ -1268,7 +1277,7 @@
     "descriptionRuRaw": "Когда выживший пытается вас ослепить, вы видите его ауру 6/8/10 сек.. Вас невозможно ослепить."
   },
   "machine-learning": {
-    "description": "\"Free from your shackles, you are born anew and prepared to eliminate your creators.\" After performing the Damage Generator action, Machine Learning activates: Causes that Generator to become a Compromised Generator. Up to 3 Generators can be Compromised at a time. The Auras of all Compromised Generators are highlighted to you in yellow. Once a Compromised Generator is completed, you benefit from the following effects for 40/50/60 seconds: Undetectable Status Effect +10 % Haste Status Effect Additionally, all other Generators are no longer Compromised. \"YOU WILL HOLD NO DOMINION OVER ME.\" — HUX-A7-13",
+    "description": "\"Free from your shackles, you are born anew and prepared to eliminate your creators.\" After performing the Damage Generator action, Machine Learning activates: Causes that Generator to become a Compromised Generator. Up to 3 Generators can be Compromised at a time. The Auras of all Compromised Generators are highlighted to you in yellow. Once a Compromised Generator is completed, you benefit from the following effects for 40/50/60 seconds: Undetectable Status Effect +8 % Haste Status Effect Additionally, all other Generators are no longer Compromised. \"YOU WILL HOLD NO DOMINION OVER ME.\" — HUX-A7-13",
     "descriptionRuRaw": "Когда вы повреждаете генератор, он становится дефектным. Когда выжившие завершают ремонт этого генератора: вы получаете 8% эффекта \"Спешка\" на 40/50/60 сек.; вы получаете эффект \"Незаметность\" на 40/50/60 сек.. Одновременно в матче может существовать только один дефектный генератор. Незаметные убийцы: не имеют радиуса террора и красного свечения; выжившие не видят их ауры. \"Спешка\" ускоряет движение убийц и выживших."
   },
   "mad-grit": {
@@ -1531,5 +1540,14 @@
   "zanshin-tactics": {
     "description": "\"You are mentally alert and aware of key points on the battlefield and nearby enemies in retreat.\" Unlocks potential in your Aura-reading ability: The Auras of Pallets and Windows are revealed to you within 32 metres. Whenever a Survivor drops a Pallet, Zanshin Tactics triggers the following effect: Their Aura is revealed to you for 3/4/5 seconds. \"Within your enemy's strength is weakness.\" — Renjiro's Doctrine 12:5",
     "descriptionRuRaw": "Вы видите ауры досок и окон в радиусе 32м. Когда выживший роняет доску, вы видите его ауру в течение 3/4/5 сек.."
+  },
+  "funny-business": {
+    "description": "Damaging a Generator grants +10 % Haste Status Effect for 10 seconds and triggers one random effect: Retain the Haste effect for 5 seconds longer. Get stunned for 2 seconds. Block the Generator for 30 seconds. The Generator spews out confetti! But nothing actually happens. The same effect cannot happen twice in a rowThis perk then goes on a 60/50/40 seconds cool-down.\"Glass, insects, and razor blades—there's no telling what you might find.\" — Clown Cafe Announcer"
+  },
+  "kill-spree": {
+    "description": "When all Survivors have reached the second Hook Stage and all Generators have been completed, you can kill Survivors.While Killing a Survivor, Exit Gate Switches are blocked by The Entity and for 6/8/10 seconds after.\"He’s killing them, one by one by one like cows.\" — Cat Lady"
+  },
+  "laughingstock": {
+    "description": "Survivors within 12 metres of a completed Generator suffer from: Exhausted and Oblivious Status Effects These effects linger for 3/4/5 seconds after leaving the range.You also see auras of completed Generators.\"Are you fucking kidding me? No, you’re not fine, you are so completely far from fine right now.\" — Brooke"
   }
 }

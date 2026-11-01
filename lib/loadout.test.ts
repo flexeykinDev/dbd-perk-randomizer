@@ -110,9 +110,24 @@ test("every loadout piece is actually translated into Russian", () => {
     (supplemental.entries ?? []).flatMap((e) => e.addons.map((a) => a.name)),
   );
 
+  // The same exemption, reached a different way: a Chapter that ships with
+  // the build before it releases (availableFrom — see lib/availability.ts)
+  // cannot have a Russian row either, because the RU wiki documents a killer
+  // some time AFTER the EN one does, and this one is not out yet in any
+  // language. Checked here rather than waived wholesale, so it covers exactly
+  // the pieces nobody could have translated and clears itself on the first
+  // scrape after the RU wiki catches up.
+  //
+  // What it costs is worth writing down: for the days between release and
+  // that scrape, a Russian player sees these add-ons under their English
+  // names. The alternative was inventing the localisation, which would put
+  // words in the game's mouth — see the RU name sync, which only ever copies
+  // what the wiki says.
+  const notOutYet = (p: { availableFrom?: string }) => Boolean(p.availableFrom);
+
   const cyrillic = /[Ѐ-ӿ]/;
   const untranslated = [...items, ...addons, ...offerings].filter(
-    (p) => !cyrillic.test(p.name.ru) && !awaitingSource.has(p.name.en),
+    (p) => !cyrillic.test(p.name.ru) && !awaitingSource.has(p.name.en) && !notOutYet(p),
   );
   assert.deepEqual(
     untranslated.slice(0, 10).map((p) => `${p.kind}:${p.name.en}`),

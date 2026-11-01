@@ -25,6 +25,7 @@ import sharp from "sharp";
 import { slugify } from "../lib/slugify";
 import { gateScrapedRows, partitionByRelease } from "./release-gate";
 import { guardAgainstShrink } from "./scrape-census";
+import { vettedCharacters, vettedSlugs } from "./release-gate";
 import {
   guardIdentityStability,
   guardIdStability,
@@ -134,7 +135,7 @@ const SOURCE = WIKI_GG;
  *  Judging add-ons against the loadout files alone treated them as unknown
  *  and withheld 60 add-ons for killers already on the site. */
 function loadKnownLoadout(): { characters: Set<string>; slugs: Set<string> } {
-  const read = (file: string): { slug: string; character?: string }[] =>
+  const read = (file: string): { slug: string; character?: string; availableFrom?: string }[] =>
     existsSync(file) ? JSON.parse(readFileSync(file, "utf8")) : [];
   const loadout = [...read(ADDONS_JSON), ...read(ITEMS_JSON), ...read(OFFERINGS_JSON)];
   const perks = read(join(DATA_DIR, "perks.json"));
@@ -150,14 +151,16 @@ function loadKnownLoadout(): { characters: Set<string>; slugs: Set<string> } {
     ? Object.keys(JSON.parse(readFileSync(join(DATA_DIR, "characters.json"), "utf8")))
     : [];
   return {
-    characters: new Set([
-      ...portraits,
-      ...[...loadout, ...perks].map((p) => p.character).filter((c): c is string => !!c),
-    ]),
+    // Scheduled content is subtracted from all three inputs, portraits
+    // included — see vettedCharacters. The perk scrape runs first and writes
+    // the new Chapter's perks and portrait, so without this the add-on gate
+    // reads that as "already vetted" and ships the killer's twenty add-ons
+    // live on the strength of the run that just happened.
+    characters: vettedCharacters([...loadout, ...perks], portraits),
     // Slugs stay loadout-only: a perk and an add-on sharing a slug are
     // different things, and treating a perk's slug as proof an add-on has
     // shipped would let a genuinely new add-on through on a coincidence.
-    slugs: new Set(loadout.map((p) => p.slug)),
+    slugs: vettedSlugs(loadout),
   };
 }
 
@@ -192,10 +195,22 @@ function gateLoadoutRows<T>(
     knownSlugs: known.slugs,
     releaseDates: characterReleaseDates,
   });
-  for (const { row, reason } of held) {
+  /* Dated holds ship hidden; undated ones are dropped. Same split as the
+     perk scrape - see the note there and lib/availability.ts. A new killer's
+     add-ons have to follow the same clock as their perks, or release morning
+     would roll them a killer with an empty add-on pool. */
+  const scheduled = held.filter((h) => h.availableFrom);
+  for (const { row, reason } of held.filter((h) => !h.availableFrom)) {
     console.log(`  Holding back ${getPiece(row).slug} — ${reason}`);
   }
-  return live;
+  for (const { row, availableFrom, reason } of scheduled) {
+    /* Written onto the piece rather than the row because the piece is what
+       toLocalized turns into the shipped object; the row is a wrapper that
+       differs per call site. */
+    getPiece(row).availableFrom = availableFrom;
+    console.log(`  Shipping ${getPiece(row).slug} hidden until release — ${reason}`);
+  }
+  return [...live, ...scheduled.map((h) => h.row)];
 }
 
 interface SupplementalAddonEntry {
@@ -398,6 +413,9 @@ interface ScrapedPiece {
    *  Kept rather than just stripped, because on a source that publishes
    *  pre-release content it's the signal that a row may not be live. */
   upcoming: boolean;
+  /** Set by gateLoadoutRows for an announced Chapter with a recorded release
+   *  date: the piece ships now and the client hides it until the day. */
+  availableFrom?: string;
 }
 
 // Reads a 3-column [icon, name, description] wikitable — the same row
@@ -1008,6 +1026,7 @@ async function main() {
     description: string;
     descriptionRuRaw?: string;
     addedAt: string;
+    availableFrom?: string;
   } {
     const key = `${kind}:${piece.slug}`;
     const prev = previousBySlug.get(key);
@@ -1018,6 +1037,7 @@ async function main() {
       description: piece.description,
       descriptionRuRaw: override?.descriptionRu ?? descriptionRuRaw[key],
       addedAt: prev?.addedAt ?? scrapedAt,
+      availableFrom: piece.availableFrom,
     };
   }
 
@@ -1276,9 +1296,12 @@ async function main() {
       addons: `${SOURCE.wikiBase}/${ADDONS_PAGE}`,
       offerings: `${SOURCE.wikiBase}/${OFFERINGS_PAGE}`,
     },
-    itemCount: items.length,
-    addonCount: addons.length,
-    offeringCount: offerings.length,
+    /* In-the-game counts, not in-the-file counts - same reason as the perk
+       meta: these render server-side and so cannot depend on the visitor's
+       date. */
+    itemCount: items.filter((i) => !i.availableFrom).length,
+    addonCount: addons.filter((a) => !a.availableFrom).length,
+    offeringCount: offerings.filter((o) => !o.availableFrom).length,
   };
 
   // --- Killer Power icons ---

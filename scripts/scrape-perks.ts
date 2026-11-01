@@ -14,7 +14,7 @@ import {
   requestHeaders,
 } from "./lib/wiki";
 import { slugify } from "../lib/slugify";
-import { gateScrapedRows } from "./release-gate";
+import { gateScrapedRows, vettedCharacters, vettedSlugs } from "./release-gate";
 import { guardAgainstShrink } from "./scrape-census";
 import { guardIdStability } from "./id-stability";
 import { splitDescriptions, type DescriptionEntry } from "./split-descriptions";
@@ -324,8 +324,11 @@ async function main() {
   // previous scrape found it or a person added it by hand. A character
   // stays trusted once it has shipped.
   const previousPerks = [...previous.values()];
-  const knownCharacters = new Set(previousPerks.map((p) => p.character));
-  const knownSlugs = new Set(previousPerks.map((p) => p.slug));
+  /* Scheduled rows do not vouch for themselves - see vettedCharacters. Without
+     this the first run to publish a Chapter early would make it "known", and
+     every run after that would ship it live. */
+  const knownCharacters = vettedCharacters(previousPerks);
+  const knownSlugs = vettedSlugs(previousPerks);
 
   // Only a source that documents unreleased Chapters needs this; on one
   // that doesn't, gating would just block new characters from arriving.
@@ -348,10 +351,24 @@ async function main() {
         knownSlugs,
         releaseDates: characterReleaseDates,
       });
-      for (const { row, reason } of held) {
+      /* Two fates, not one. A hold with a date is an announced Chapter
+         somebody vetted, so it ships now carrying that date and the client
+         keeps it hidden until the day (lib/availability.ts) - which is how a
+         build that is already deployed picks up a new killer on release
+         morning instead of whenever the weekly job next runs. A hold without
+         a date is content nobody has looked at, and is dropped exactly as
+         before. */
+      const scheduled = held.filter((h) => h.availableFrom);
+      for (const { row, reason } of held.filter((h) => !h.availableFrom)) {
         console.log(`  Holding back ${role}/${row.slug} — ${reason}`);
       }
-      scrapedByRole[role] = live;
+      for (const { row, reason } of scheduled) {
+        console.log(`  Shipping ${role}/${row.slug} hidden until release — ${reason}`);
+      }
+      scrapedByRole[role] = [
+        ...live,
+        ...scheduled.map(({ row, availableFrom }) => ({ ...row, availableFrom })),
+      ];
     }
   }
 
@@ -447,6 +464,10 @@ async function main() {
         // every description into the first page load.
         tags: classifyPerk({ name, description, role }),
         addedAt: prev?.addedAt ?? scrapedAt,
+        // Undefined for everything already in the game, and JSON.stringify
+        // drops it, so the field only exists on the handful of rows it
+        // describes rather than on all 321.
+        availableFrom: row.availableFrom,
       });
       if (row.character && row.characterPortraitUrl && !characterPortraitUrls.has(row.character)) {
         characterPortraitUrls.set(row.character, row.characterPortraitUrl);
@@ -487,8 +508,15 @@ async function main() {
   const meta: PerksMeta = {
     scrapedAt,
     sourceUrl: WIKI_PAGE_URL,
-    survivorCount: perks.filter((p) => p.role === "survivor").length,
-    killerCount: perks.filter((p) => p.role === "killer").length,
+    /* Counts what is in the game, not what is in the file. These two render
+       in the footer of the server-rendered page, so they cannot be computed
+       from a date in the browser without desyncing hydration - they are
+       settled here instead. The cost is that for the few days between a
+       Chapter's release and the next scrape the footer undercounts by that
+       Chapter's perks, which is a stale number in one line rather than a
+       mismatch on every visit. */
+    survivorCount: perks.filter((p) => p.role === "survivor" && !p.availableFrom).length,
+    killerCount: perks.filter((p) => p.role === "killer" && !p.availableFrom).length,
   };
 
   // Checked before anything is written, so a run that trips the guard

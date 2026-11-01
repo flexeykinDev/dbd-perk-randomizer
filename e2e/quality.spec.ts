@@ -7,7 +7,7 @@
 // malformed share link still shows a header. The suite only catches them if
 // something is actually looking.
 import { test, expect, type Page } from "@playwright/test";
-import perkData from "../data/perks.json";
+import { perks as perkData } from "./perk-data";
 
 /** Resolves any CSS colour — including the lab()/oklab() Tailwind v4 emits,
  *  which a hand-rolled rgb() parser turns into silently wrong ratios — by

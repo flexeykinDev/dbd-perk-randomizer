@@ -183,6 +183,19 @@
   {
     "kind": "addon",
     "role": "killer",
+    "character": "Terrifier",
+    "icon": "/loadout/addon/allie-s-scalp.webp",
+    "slug": "allie-s-scalp",
+    "name": {
+      "en": "Allie's Scalp",
+      "ru": "Allie's Scalp"
+    },
+    "addedAt": "2026-11-01T12:30:46.908Z",
+    "availableFrom": "2026-11-24"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
     "character": "Dark Lord",
     "icon": "/loadout/addon/alucard-s-shield.webp",
     "slug": "alucard-s-shield",
@@ -312,6 +325,19 @@
       "ru": "Превосходный глушитель"
     },
     "addedAt": "2020-01-01T00:00:00.000Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Terrifier",
+    "icon": "/loadout/addon/art-crispies.webp",
+    "slug": "art-crispies",
+    "name": {
+      "en": "Art Crispies",
+      "ru": "Art Crispies"
+    },
+    "addedAt": "2026-11-01T12:30:46.908Z",
+    "availableFrom": "2026-11-24"
   },
   {
     "kind": "addon",
@@ -763,6 +789,19 @@
   {
     "kind": "addon",
     "role": "killer",
+    "character": "Terrifier",
+    "icon": "/loadout/addon/blackened-heart.webp",
+    "slug": "blackened-heart",
+    "name": {
+      "en": "Blackened Heart",
+      "ru": "Blackened Heart"
+    },
+    "addedAt": "2026-11-01T12:30:46.908Z",
+    "availableFrom": "2026-11-24"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
     "character": "Oni",
     "icon": "/loadout/addon/blackened-toenail.webp",
     "slug": "blackened-toenail",
@@ -956,6 +995,19 @@
   {
     "kind": "addon",
     "role": "killer",
+    "character": "Terrifier",
+    "icon": "/loadout/addon/bloodstained-bullet.webp",
+    "slug": "bloodstained-bullet",
+    "name": {
+      "en": "Bloodstained Bullet",
+      "ru": "Bloodstained Bullet"
+    },
+    "addedAt": "2026-11-01T12:30:46.908Z",
+    "availableFrom": "2026-11-24"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
     "character": "Twins",
     "icon": "/loadout/addon/bloody-black-hood.webp",
     "slug": "bloody-black-hood",
@@ -1136,6 +1188,19 @@
   {
     "kind": "addon",
     "role": "killer",
+    "character": "Terrifier",
+    "icon": "/loadout/addon/bottle-of-bleach.webp",
+    "slug": "bottle-of-bleach",
+    "name": {
+      "en": "Bottle of Bleach",
+      "ru": "Bottle of Bleach"
+    },
+    "addedAt": "2026-11-01T12:30:46.908Z",
+    "availableFrom": "2026-11-24"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
     "character": "Clown",
     "icon": "/loadout/addon/bottle-of-chloroform.webp",
     "slug": "bottle-of-chloroform",
@@ -1306,6 +1371,19 @@
   {
     "kind": "addon",
     "role": "killer",
+    "character": "Terrifier",
+    "icon": "/loadout/addon/brooke-s-pustule.webp",
+    "slug": "brooke-s-pustule",
+    "name": {
+      "en": "Brooke's Pustule",
+      "ru": "Brooke's Pustule"
+    },
+    "addedAt": "2026-11-01T12:30:46.908Z",
+    "availableFrom": "2026-11-24"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
     "character": "Skull Merchant",
     "icon": "/loadout/addon/brown-noise-generator.webp",
     "slug": "brown-noise-generator",
@@ -1374,6 +1452,19 @@
       "ru": "Сожженные письма"
     },
     "addedAt": "2020-01-01T00:00:00.000Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Terrifier",
+    "icon": "/loadout/addon/burnt-wings.webp",
+    "slug": "burnt-wings",
+    "name": {
+      "en": "Burnt Wings",
+      "ru": "Burnt Wings"
+    },
+    "addedAt": "2026-11-01T12:30:46.908Z",
+    "availableFrom": "2026-11-24"
   },
   {
     "kind": "addon",
@@ -1483,6 +1574,19 @@
       "ru": "Последний вздох Кемпбелла"
     },
     "addedAt": "2020-01-01T00:00:00.000Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Terrifier",
+    "icon": "/loadout/addon/candy-head-bowl.webp",
+    "slug": "candy-head-bowl",
+    "name": {
+      "en": "Candy Head Bowl",
+      "ru": "Candy Head Bowl"
+    },
+    "addedAt": "2026-11-01T12:30:46.908Z",
+    "availableFrom": "2026-11-24"
   },
   {
     "kind": "addon",
@@ -2438,6 +2542,19 @@
   {
     "kind": "addon",
     "role": "killer",
+    "character": "Terrifier",
+    "icon": "/loadout/addon/dead-opossum.webp",
+    "slug": "dead-opossum",
+    "name": {
+      "en": "Dead Opossum",
+      "ru": "Dead Opossum"
+    },
+    "addedAt": "2026-11-01T12:30:46.908Z",
+    "availableFrom": "2026-11-24"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
     "character": "Shape",
     "icon": "/loadout/addon/dead-rabbit.webp",
     "slug": "dead-rabbit",
@@ -2846,6 +2963,19 @@
   {
     "kind": "addon",
     "role": "killer",
+    "character": "Terrifier",
+    "icon": "/loadout/addon/duct-tape.webp",
+    "slug": "duct-tape",
+    "name": {
+      "en": "Duct Tape",
+      "ru": "Duct Tape"
+    },
+    "addedAt": "2026-11-01T12:30:46.908Z",
+    "availableFrom": "2026-11-24"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
     "character": "Nurse",
     "icon": "/loadout/addon/dull-bracelet.webp",
     "slug": "dull-bracelet",
@@ -2978,6 +3108,19 @@
   {
     "kind": "addon",
     "role": "killer",
+    "character": "Terrifier",
+    "icon": "/loadout/addon/emily.webp",
+    "slug": "emily",
+    "name": {
+      "en": "Emily",
+      "ru": "Emily"
+    },
+    "addedAt": "2026-11-01T12:30:46.908Z",
+    "availableFrom": "2026-11-24"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
     "character": "Animatronic",
     "icon": "/loadout/addon/endo-cpu.webp",
     "slug": "endo-cpu",
@@ -3046,6 +3189,19 @@
       "ru": "Разряженные аккумуляторы"
     },
     "addedAt": "2020-01-01T00:00:00.000Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Terrifier",
+    "icon": "/loadout/addon/explosive-gift.webp",
+    "slug": "explosive-gift",
+    "name": {
+      "en": "Explosive Gift",
+      "ru": "Explosive Gift"
+    },
+    "addedAt": "2026-11-01T12:30:46.908Z",
+    "availableFrom": "2026-11-24"
   },
   {
     "kind": "addon",
@@ -5030,6 +5186,19 @@
   {
     "kind": "addon",
     "role": "killer",
+    "character": "Terrifier",
+    "icon": "/loadout/addon/jonathan-s-skull.webp",
+    "slug": "jonathan-s-skull",
+    "name": {
+      "en": "Jonathan's Skull",
+      "ru": "Jonathan's Skull"
+    },
+    "addedAt": "2026-11-01T12:30:46.908Z",
+    "availableFrom": "2026-11-24"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
     "character": "Shape",
     "icon": "/loadout/addon/judith-s-journal.webp",
     "slug": "judith-s-journal",
@@ -6182,6 +6351,19 @@
       "ru": "Винтажный радиоприемник"
     },
     "addedAt": "2026-08-17T19:16:57.947Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Terrifier",
+    "icon": "/loadout/addon/mike-s-phone.webp",
+    "slug": "mike-s-phone",
+    "name": {
+      "en": "Mike's Phone",
+      "ru": "Mike's Phone"
+    },
+    "addedAt": "2026-11-01T12:30:46.908Z",
+    "availableFrom": "2026-11-24"
   },
   {
     "kind": "addon",
@@ -8659,6 +8841,19 @@
   {
     "kind": "addon",
     "role": "killer",
+    "character": "Terrifier",
+    "icon": "/loadout/addon/shiny-tricycle.webp",
+    "slug": "shiny-tricycle",
+    "name": {
+      "en": "Shiny Tricycle",
+      "ru": "Shiny Tricycle"
+    },
+    "addedAt": "2026-11-01T12:30:46.908Z",
+    "availableFrom": "2026-11-24"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
     "character": "Houndmaster",
     "icon": "/loadout/addon/ship-figurehead.webp",
     "slug": "ship-figurehead",
@@ -8728,6 +8923,19 @@
       "ru": "Пронзительный свист"
     },
     "addedAt": "2020-01-01T00:00:00.000Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Terrifier",
+    "icon": "/loadout/addon/sienna-s-flesh.webp",
+    "slug": "sienna-s-flesh",
+    "name": {
+      "en": "Sienna's Flesh",
+      "ru": "Sienna's Flesh"
+    },
+    "addedAt": "2026-11-01T12:30:46.908Z",
+    "availableFrom": "2026-11-24"
   },
   {
     "kind": "addon",
@@ -9805,6 +10013,19 @@
   {
     "kind": "addon",
     "role": "killer",
+    "character": "Terrifier",
+    "icon": "/loadout/addon/the-ninth-circle.webp",
+    "slug": "the-ninth-circle",
+    "name": {
+      "en": "The Ninth Circle",
+      "ru": "The Ninth Circle"
+    },
+    "addedAt": "2026-11-01T12:30:46.908Z",
+    "availableFrom": "2026-11-24"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
     "character": "Wraith",
     "icon": "/loadout/addon/the-serpent-soot.webp",
     "slug": "the-serpent-soot",
@@ -9873,6 +10094,19 @@
       "ru": "Густое варево"
     },
     "addedAt": "2020-01-01T00:00:00.000Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Terrifier",
+    "icon": "/loadout/addon/thornton-salt.webp",
+    "slug": "thornton-salt",
+    "name": {
+      "en": "Thornton Salt",
+      "ru": "Thornton Salt"
+    },
+    "addedAt": "2026-11-01T12:30:46.908Z",
+    "availableFrom": "2026-11-24"
   },
   {
     "kind": "addon",
@@ -10563,6 +10797,19 @@
   {
     "kind": "addon",
     "role": "killer",
+    "character": "Terrifier",
+    "icon": "/loadout/addon/victoria-s-eye.webp",
+    "slug": "victoria-s-eye",
+    "name": {
+      "en": "Victoria's Eye",
+      "ru": "Victoria's Eye"
+    },
+    "addedAt": "2026-11-01T12:30:46.908Z",
+    "availableFrom": "2026-11-24"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
     "character": "Mastermind",
     "icon": "/loadout/addon/video-conference-device.webp",
     "slug": "video-conference-device",
@@ -10692,6 +10939,19 @@
       "ru": "Вострый меч"
     },
     "addedAt": "2020-01-01T00:00:00.000Z"
+  },
+  {
+    "kind": "addon",
+    "role": "killer",
+    "character": "Terrifier",
+    "icon": "/loadout/addon/wacky-jacks.webp",
+    "slug": "wacky-jacks",
+    "name": {
+      "en": "Wacky Jacks",
+      "ru": "Wacky Jacks"
+    },
+    "addedAt": "2026-11-01T12:30:46.908Z",
+    "availableFrom": "2026-11-24"
   },
   {
     "kind": "addon",

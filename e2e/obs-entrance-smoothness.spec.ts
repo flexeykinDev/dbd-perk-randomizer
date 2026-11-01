@@ -1,5 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
-import perks from "../data/perks.json";
+import { perks } from "./perk-data";
 
 /* "Smooth, not abrupt" as something a test can actually check.
  *

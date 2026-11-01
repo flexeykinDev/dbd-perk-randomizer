@@ -3,10 +3,20 @@ import metaData from "@/data/meta.json";
 import charactersData from "@/data/characters.json";
 import slugAliasData from "@/data/perk-slug-aliases.json";
 import { GENERAL_CHARACTER, type Perk, type PerkRole, type PerksMeta } from "./types";
+import { available } from "./availability";
 import { createSeededRandom, shuffle } from "./seeded-random";
 import { pickCoherentPerks, type CoherenceLevel } from "./coherence";
 
-export const perks: Perk[] = perksData as Perk[];
+/* Filtered once, here, rather than at each call site. Everything downstream -
+   the roll, the pool, search, stats, teachables, the character list - reads
+   this array, so a Chapter that is in the data but not in the game is simply
+   not a thing the rest of the app can see. Anything that got this wrong at one
+   of a dozen call sites would be a build telling someone to run a perk they
+   cannot own, which is the whole hazard. Nothing server-rendered depends on
+   the contents (the footer's counts come from meta.json), so re-evaluating
+   this in the browser against the visitor's own date cannot desync hydration -
+   which is what lets an already-deployed build pick up a Chapter on the day. */
+export const perks: Perk[] = available(perksData as Perk[]);
 export const perksMeta: PerksMeta = metaData as PerksMeta;
 const characterPortraits: Record<string, string> = charactersData;
 

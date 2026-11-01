@@ -14,6 +14,8 @@
 // So every supplemental entry carries an explicit `releasedAt`, and this
 // is the one place that decides whether it counts as live yet.
 
+import { isAvailable } from "../lib/availability";
+
 /** Thrown for a malformed or missing date so a bad entry can never be
  *  silently swallowed — see the note on `isReleased`. */
 export class ReleaseDateError extends Error {}
@@ -85,6 +87,78 @@ export function isReleased(
  * see `publishesPreRelease` at the call site. Fandom keeps its existing
  * behaviour exactly, including picking up a new character on its own.
  */
+/**
+ * The characters the gate should treat as vetted, given what has shipped.
+ *
+ * This exists because shipping unreleased content early broke the old answer.
+ * "Vetted" used to mean "present in the data", which was sound while the data
+ * only ever held live content: a character was in the file because a previous
+ * run or a person had cleared it. Now a file can also hold a Chapter that is
+ * merely scheduled, and the first run after that wrote Terrifier into
+ * perks.json then waved its twenty add-ons straight through as a known
+ * character - the gate vouching for something on the strength of its own
+ * earlier output.
+ *
+ * So a character is trusted unless everything it owns is still scheduled.
+ * That keeps the loop closed in both directions: a Chapter stays untrusted
+ * for as long as it is unreleased, however many runs happen in between, and
+ * becomes trusted on its release day without anyone editing anything.
+ *
+ * `alsoKnown` is data/characters.json, the portrait map, which is merged
+ * rather than rebuilt and so remembers characters that have dropped out of
+ * the perk table (The Cenobite's perks became general and took it out of
+ * perks.json, leaving its add-ons vouched for only by the file about to be
+ * overwritten). It is subject to the same subtraction, because it is now
+ * populated from scheduled rows too and would otherwise be the exact hole
+ * described above.
+ */
+export function vettedCharacters(
+  rows: ReadonlyArray<{ character?: string | null; availableFrom?: string }>,
+  alsoKnown: readonly string[] = [],
+  now?: Date,
+): Set<string> {
+  const live = new Set<string>();
+  const scheduled = new Set<string>();
+  for (const row of rows) {
+    if (!row.character) continue;
+    (isAvailable(row, now) ? live : scheduled).add(row.character);
+  }
+  const out = new Set([...alsoKnown, ...live]);
+  for (const character of scheduled) {
+    if (!live.has(character)) out.delete(character);
+  }
+  return out;
+}
+
+/** The slugs that count as already shipped — scheduled rows do not, for the
+ *  same reason as above: a perk the last run published early has not been
+ *  seen by a player yet, so it cannot vouch for itself. */
+export function vettedSlugs(
+  rows: ReadonlyArray<{ slug: string; availableFrom?: string }>,
+  now?: Date,
+): Set<string> {
+  return new Set(rows.filter((row) => isAvailable(row, now)).map((row) => row.slug));
+}
+
+/** A row the gate withheld, and why.
+ *
+ *  `availableFrom` is the distinction that matters to the caller. It is set
+ *  only when the hold is "this character is announced and releases on a date
+ *  somebody wrote down" - a known quantity with a known end. The other two
+ *  reasons (no recorded date; a brand-new perk against an unreleased patch)
+ *  mean nobody has vetted the row at all, so they carry no date and the
+ *  caller drops them exactly as before.
+ *
+ *  Shipping a dated row early is safe only because the client refuses to show
+ *  it until the day - see isAvailable in lib/availability.ts. Without that
+ *  half, this field would be a way to publish a Chapter early, which is the
+ *  one thing this file exists to prevent. */
+export interface HeldRow<T> {
+  row: T;
+  reason: string;
+  availableFrom?: string;
+}
+
 export function gateScrapedRows<T>(
   rows: T[],
   {
@@ -111,9 +185,9 @@ export function gateScrapedRows<T>(
     releaseDates: Record<string, string>;
     now?: Date;
   },
-): { live: T[]; held: { row: T; reason: string }[] } {
+): { live: T[]; held: HeldRow<T>[] } {
   const live: T[] = [];
-  const held: { row: T; reason: string }[] = [];
+  const held: HeldRow<T>[] = [];
 
   for (const row of rows) {
     const character = getCharacter(row);
@@ -131,7 +205,14 @@ export function gateScrapedRows<T>(
       // A date that IS present is held to the same standard as a
       // supplemental one: malformed throws rather than being guessed at.
       if (!isReleased(releasedAt, `character "${character}"`, now)) {
-        held.push({ row, reason: `"${character}" releases ${releasedAt}` });
+        /* Dated, so the caller may ship it early and let it surface on the
+           day - see HeldRow.availableFrom. The other two holds carry no
+           date and stay dropped. */
+        held.push({
+          row,
+          reason: `"${character}" releases ${releasedAt}`,
+          availableFrom: releasedAt,
+        });
         continue;
       }
     }

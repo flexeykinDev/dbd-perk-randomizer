@@ -366,6 +366,10 @@
       "ru": "Скорость ремонта +**10 %**. Открывает саботаж, скорость саботажа +**100 %**. Зарядов: **18**.",
       "en": "Repair speed +**10 %**. Unlocks Sabotage, Sabotage speed +**100 %**. **18** Charges."
     },
+    "item:all-hallows-eve-lunchbox": {
+      "ru": "Лечение союзника +**40 %**. Открывает самолечение: скорость -**33 %**, расход предмета -**33 %**. Зарядов: **24**. Выживший заметнее.",
+      "en": "Altruistic Healing speed +**40 %**. Unlocks Self-Heal: speed -**33 %**, Item efficiency -**33 %**. **24** Charges. Makes you more visible."
+    },
     "item:annotated-map": {
       "ru": "Показывает ауры досок и окон в радиусе **40 м** на **14 сек.** Вспомогательное действие ставит луч света для всех выживших. Зарядов: **6**.",
       "en": "Reveals the Auras of Pallets and Windows within **40 metres** for **14 seconds**. Secondary Action plants a Beam of Light for all Survivors. **6** Charges."
@@ -453,6 +457,10 @@
     "item:vigo-s-fog-vial": {
       "ru": "Облако тумана до **8 м**: разрастается за **1.2 сек.**, держится **12 сек.** Непрозрачность **33 %**, скрывает ауры и следы. Зарядов: **4**.",
       "en": "Fog Cloud up to **8 metres**: expands over **1.2 seconds**, lasts **12 seconds**. Opacity **33 %**, suppresses Auras and Scratch Marks. **4** Charges."
+    },
+    "item:will-o-wisp": {
+      "ru": "Светит до **8 сек.**",
+      "en": "Lights for up to **8 seconds**."
     },
     "item:worn-out-tools": {
       "ru": "Скорость ремонта +**50 %**, зона «Хорошо» в проверках реакции -**10 %**. Открывает саботаж. Зарядов: **16**.",
